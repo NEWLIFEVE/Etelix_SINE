@@ -676,6 +676,7 @@ class SiteController extends Controller
             return Reportes::reportTitle($start,$end);
         }
     }
+    
 }
 ?>
 

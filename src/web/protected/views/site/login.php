@@ -11,9 +11,9 @@ $this->breadcrumbs=array(
 ?>
 <div class="bodylogin">
 	<div class="cuadro">
-            <label class="titulo">
-			SINE
-		</label>
+                <p class="titulo">
+			<font class="SI">SI</font><font class="NE">NE</font>
+		</p>
 		<div class="cuadro_login">
 			<p class="login_titulo">
 				<font color="Gray"  size="4">Ingrese sus Datos</font>
