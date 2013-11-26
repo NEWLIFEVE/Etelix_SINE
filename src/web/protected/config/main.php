@@ -37,8 +37,8 @@ return array(
         ),
     // application components
     'components'=>array(
-        'reportes'=>array(
-            'class'=>"application.components.Reportes",
+        'reports'=>array(
+            'class'=>"application.components.reports",
         ),
         'mail'=>array(
             'class'=>"application.components.EnviarEmail",

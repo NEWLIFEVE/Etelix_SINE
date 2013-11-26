@@ -6,6 +6,8 @@
   {
         $SINE.UI.resolve_reports_menu($(this));
         $SINE.UI.elijeOpciones($(this));
+        $SINE.AJAX.init();
+        $SINE.UI.export_report();
   });
   /**
    * funcion encargada de mostrar y esconder los botones excel, mail, etc en la barra de herramientas
@@ -34,8 +36,10 @@
         $('.chang_Oper_Grup,.grupo').show('fast');
         $('.chang_Grup_Oper,.operador').hide('fast');
   });
-    
-    
-    
-    
-    
+  /**
+   * da valor a los radios de provisiones
+   */
+  $('#No_prov, #Si_prov').on('click',function()
+  {   
+        $SINE.UI.agrega_Val_radio($(this),$('#No_prov, #Si_prov'));
+  });

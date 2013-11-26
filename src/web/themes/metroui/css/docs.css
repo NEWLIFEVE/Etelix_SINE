@@ -408,11 +408,12 @@ img.oculta
     position: fixed;
     right: 0px;
     height: 112%;
-    margin-top: -569px;
+    margin-top: -588px;
     opacity: 0.5;
     padding-top: 4%;
     width: 12%;
     display: none;
+    border-left: 2px solid;
 }
 #next_tool  
 {
@@ -427,60 +428,6 @@ img.oculta
     margin-left: 5%;
     opacity: 0.8;
     margin-top: 0px;
-}
-
-/*Especificos*/
-.start,
-.end,
-.middle_carrier,
-.middle_group
-{
-    position: relative;
-    width: 90px;
-    margin-bottom: 0px;
-    background: none !important;
-}
-.start
-{
-    left: 15em;
-}
-.middle
-{
-    left: 16em;
-    position: relative;
-}
-.middle_carrier,
-.middle_group
-{
-    left: 100%;
-    width: 75%;
-}
-.end
-{
-    left: 20.5em;
-    padding-left: 16px;
-    margin-left: -50px;
-    margin-right: -64px;
-}
-.date
-{
-    top:-4em;
-}
-.time
-{
-    top:-4em;
-}
-.carrier
-{
-    top:-4em;
-}
-.group
-{
-    top:-4em;
-}
-#footer_especificos
-{
-    margin-top: 8em;
 }
 /*Estilos del autocompletar*/
 #ui-datepicker-div table.ui-datepicker-calendar
@@ -506,9 +453,19 @@ li.ui-menu-item a
 }
 .ui-state-focus
 {
-    background: rgb(104, 173, 104) !important;
+    background: #2E62B4 !important;
     color:white !important;
+    border-radius: 0px!important;
 }
-
-/***Especificos**/
-
+.btn, .btn-primary
+{
+    border-radius: 0px!important;
+    background: silver!important;
+    color:#2E62B4!important; 
+}
+.active
+{
+    border-radius: 0px!important;
+    background: #2E62B4!important; 
+    color:white!important; 
+}
