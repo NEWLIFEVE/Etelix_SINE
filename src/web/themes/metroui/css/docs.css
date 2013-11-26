@@ -143,7 +143,7 @@ text-shadow: none;
 }
 .NE
 {
-   color: #16499a;
+   color: white;
    font-size: xx-large; 
 }
 .cuadro_login
@@ -434,8 +434,7 @@ img.oculta
 {
     background: #F5F5F5 !important;
 }
-#ui-datepicker-div div.ui-datepicker-title,
-#ui-datepicker-div table.ui-datepicker-calendar thead
+#ui-datepicker-div div.ui-datepicker-title
 {
     color:white;
 }
