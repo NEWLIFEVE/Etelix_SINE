@@ -29,11 +29,11 @@ $this->breadcrumbs=array(
 			?>
 			<div class="login">
 				<?php echo $form->labelEx($model,''); ?>
-				<?php echo $form->textField($model,'username'); ?>
+				<?php echo $form->textField($model,'username',array('placeholder' => 'usuario')); ?>
 			</div>
 			<div class="login">
 				<?php echo $form->labelEx($model,''); ?>
-				<?php echo $form->passwordField($model,'password'); ?>
+				<?php echo $form->passwordField($model,'password',array('placeholder' => 'contraseña')); ?>
 			</div>
 			<div class="row rememberMe">
 				<div class="botonLogin">
