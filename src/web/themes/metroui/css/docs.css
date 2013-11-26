@@ -134,10 +134,17 @@ text-shadow: none;
 .titulo
 {
     text-align: center;
-    color:white;
-    font-size: 2em;
-    margin-bottom: 1%;
     padding-top: 10px;
+}
+.SI
+{
+   color: white;
+   font-size: xx-large; 
+}
+.NE
+{
+   color: white;
+   font-size: xx-large; 
 }
 .cuadro_login
 {
@@ -204,16 +211,7 @@ div.login.error input#LoginForm_password
     position:absolute; 
     width:28px;
 }
-#capa
-{
-    background:#E2E8EE; 
-    color: #848484;
-    height: 420px;
-    margin:6em auto;
-    width:600px;
-    margin-top: 0%;
-    margin-left: 23%;
-}
+
 #claseboot
 {
     height:75px; 
@@ -222,47 +220,7 @@ div.login.error input#LoginForm_password
     padding-top: 3em;
     width:458px; 
 }
-#two
-{
-    height:135px;
-    margin-left: 18px;
-    margin:10px;
-    width:420px; 
-}
-#segundacapa
-{
-    background:white; 
-    height:400px; 
-    margin-left: 650px; 
-    padding-top: 30px;
-    position:absolute; 
-    top:0; 
-    width:600px;
-}
-#three
-{
-    height:5px;
-    margin-left: 10px;
-    margin:0px;
-    width:5px; 
-}
 
-/**
- * Vista Index
- */
-.reportes
-{
-    margin-left: 5em;
-    padding-bottom: 41px;
-    padding-top: 23px;
-    text-align: left;
-}
-#one
-{
-    height:135px;
-    margin:10px;
-    width:600px; 
-}
 #flecha-forward 
 {
     color: #848484;
@@ -271,48 +229,6 @@ div.login.error input#LoginForm_password
     text-decoration:none !important;
 }
 
-.vistas
-{
-    margin: 4em auto;
-    text-align: center;
-}
-/**
- * Vista de Rutinarios
- */
-.rutinarios
-{
-    height: 466px;
-    margin: 0 auto;
-    width: 75%;
-}
-.rutinarios h1
-{
-    padding-left: 25px;
-    padding-top: 5px;
-    text-align: left;
-}
-.rutinarios h1 a
-{
-    color: #848484;
-    text-decoration:none; 
-}
-.especificos
-{
-    height: 466px;
-    margin: 0 auto;
-    width: 75%;
-}
-.especificos h1
-{
-    padding-left: 25px;
-    padding-top: 5px;
-    text-align: left;
-}
-.especificos h1 a
-{
-    color: #848484;
-    text-decoration:none; 
-}
 .titulo90
 {
     -moz-transform-origin: 50% 50%;
@@ -324,10 +240,231 @@ div.login.error input#LoginForm_password
     -webkit-transform-origin: 50% 50%;
     -webkit-transform:rotate(-90deg);
     color: silver;
-    font-size: 3em;
-    margin-top: 25%;
+    font-size: 6em;
+    margin-top: 30%;
     transform-origin: 50% 50%;
     transform: rotate(-90deg);
     width: 10%;
+    margin-left: -20%;
+}
+.listadeReportes
+{
+    border-right: 7px solid #2E62B4;
+    height: 485px;
+    width: 358px;
+    margin-top: -25%;
+    background: white; 
+    position: relative;
+}  
+.Reportes
+{
+    background: white;
+    width: 92%;
+    height: 77px;
+    margin-top: 0%;
+    margin-left: 4%;
+    float: left;
+    padding-left: 28px;
+    border-bottom: 1px solid silver;
+}
+.Reportes:hover 
+{
+    background: silver;
+    border-bottom: 1px solid #2E62B4;
+}
+.Reportes:link 
+{
+    background: #2E62B4;
+    border-bottom: 1px solid white;
+    width: 96%;
+}
+.subtitulos
+{
+    font-size: xx-large;
+    text-align: center;
+    margin-top: -36%;
+    position: absolute;
+    margin-left: 0%;
+}
+.h1_report
+{
+    color:#2E62B4!important;
+}
+.h1_reportClick
+{
+    color:white!important;
+}
+.formulario
+{
+    /*background: red;*/
+    height: 485px;
+    margin-top: -485px;
+    width: 0%;
+    position: static;
+    margin-left: 39%;
+    padding-left: 22px;
+    display:none;
+}
+select, input
+{
+    height: 43px!important;
+}
+.formInputs
+{
+    display: inline-block;
+}
+.botones {
+    width: 142px;
+    float: right;
+    margin-right: 10px;
 }
 
+img.ver
+{
+    width: 100%;
+}
+img.oculta
+{
+    display: none;
+    width: 100%;
+}
+.Oper_grupo:hover img.ver
+{
+    display: none;
+}
+.Oper_grupo:hover img.oculta
+{
+    display: inline;
+}
+.botones:hover img.ver
+{
+    display: none;
+}
+.botones:hover img.oculta
+{
+    display: inline;
+}
+#botones_exportar
+{
+    margin-top: 28px;
+    display: block;
+    position: absolute;
+    margin-left: 0%;
+}
+    /* < ESTILOS DE DATEPICKER UI*/
+.ui-state-default 
+{
+    background: silver !important;
+    color: #2E62B4 !important;
+    font-size: x-large;
+    border: 0px solid!important;
+}
+.ui-state-default:hover 
+{
+    background: #2E62B4!important;
+    color: white!important;
+}
+
+#ui-datepicker-div 
+{
+    background: #3F3C3C!important;
+    color: #2E62B4;
+    width: 21%;
+    border: 0px solid;
+    border-radius: initial!important;
+}
+.ui-datepicker-header.ui-widget-header.ui-helper-clearfix.ui-corner-all 
+{
+    background: #333333;
+    color:white;
+    font-size: larger;
+    border: 0px solid;
+}
+.ui-datepicker .ui-datepicker-prev-hover, .ui-datepicker-next-hover
+{
+    border-radius: initial!important;
+    background: white!important;
+}
+    /* /> ESTILOS DE DATEPICKER UI*/
+.chang_Oper_Grup,.chang_Grup_Oper
+{
+    width: 4%;
+}
+.barra_tools
+{
+    background: rgb(2, 2, 2);
+    position: fixed;
+    right: 0px;
+    height: 112%;
+    margin-top: -559px;
+    opacity: 0.5;
+    padding-top: 4%;
+    display: none;
+    width:61px;
+}
+.barra_tools_click 
+{
+    background: rgb(2, 2, 2);
+    position: fixed;
+    right: 0px;
+    height: 112%;
+    margin-top: -588px;
+    opacity: 0.5;
+    padding-top: 4%;
+    width: 12%;
+    display: none;
+    border-left: 2px solid;
+}
+#next_tool  
+{
+    width: 74%;
+    margin-left: 14%;
+    opacity: 0.8;
+    margin-top: 0px;
+}
+#back_tool  
+{
+    width: 43%;
+    margin-left: 5%;
+    opacity: 0.8;
+    margin-top: 0px;
+}
+/*Estilos del autocompletar*/
+#ui-datepicker-div table.ui-datepicker-calendar
+{
+    background: #F5F5F5 !important;
+}
+#ui-datepicker-div div.ui-datepicker-title
+{
+    color:white;
+}
+.ui-state-default
+{
+    border-color: #F5F5F5 !important;
+}
+ul.ui-widget-content
+{
+    background: #F5F5F5 !important;
+}
+li.ui-menu-item a
+{
+    color:#848484;
+}
+.ui-state-focus
+{
+    background: #2E62B4 !important;
+    color:white !important;
+    border-radius: 0px!important;
+}
+.btn, .btn-primary
+{
+    border-radius: 0px!important;
+    background: silver!important;
+    color:#2E62B4!important; 
+}
+.active
+{
+    border-radius: 0px!important;
+    background: #2E62B4!important; 
+    color:white!important; 
+}

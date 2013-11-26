@@ -19,7 +19,7 @@
  * @property TypeOfUser $idTypeOfUser
  * @property ProfilesSine[] $profilesSines
  */
-class UsersRenoc extends CActiveRecord
+class UsersSine extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.

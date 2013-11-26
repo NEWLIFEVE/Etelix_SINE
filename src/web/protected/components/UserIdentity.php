@@ -21,9 +21,9 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
 		if (strpos($this->username,"@")) {
-			$user=  UsersRenoc::model()->findByAttributes(array('email'=>$this->username));
+			$user=  UsersSine::model()->findByAttributes(array('email'=>$this->username));
 		} else {
-			$user=UsersRenoc::model()->findByAttributes(array('username'=>$this->username));
+			$user=UsersSine::model()->findByAttributes(array('username'=>$this->username));
 		}
 		if($user===null){
 			if (strpos($this->username,"@")) {
@@ -57,7 +57,7 @@ class UserIdentity extends CUserIdentity
 	}
 	public static function getEmail()
 	{
-		$usuario=UsersRenoc::model()->findByAttributes(array('username'=>Yii::app()->user->name));
+		$usuario=UsersSine::model()->findByAttributes(array('username'=>Yii::app()->user->name));
 		return $usuario->email;
 	}
 }
