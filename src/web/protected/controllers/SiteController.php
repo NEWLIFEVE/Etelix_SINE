@@ -133,22 +133,26 @@ class SiteController extends Controller
         Yii::app()->user->logout();
         $this->redirect(Yii::app()->homeUrl);
     }
-
+    /**
+     * funcion encargada de enviar reportes por correo
+     */
     public function actionMail()
     {
-       $var=Yii::app()->reports->prueba($_POST['grupo'],$_POST['operador'],$_POST['fecha'],$_POST['Si_prov'],$_POST['No_prov']);
+       $var=Yii::app()->reportes->mail($_POST['grupo'],$_POST['operador'],$_POST['fecha'],$_POST['Si_prov'],$_POST['No_prov']);
        echo 'los datos son:<br>'.$var;
     } 
-    
+    /**
+     * funcion encargada de exportar reportes por excel
+     */
     public function actionExcel()
     {
         $archivos=array();
-//            if(isset($_GET['grupo'])) 
+            if(isset($_GET['grupo'])) 
                 $grupo=$_GET['grupo'];
-//            if(isset($_GET['lista']['SOA']))
-//            {
-                $archivos['SOA']['cuerpo']=Yii::app()->reports->SOA($grupo);
-//            }
+            if(isset($_GET['lista']['SOA']))
+            {
+                $archivos['SOA']['cuerpo']=Yii::app()->reportes->SOA($grupo);
+            }
 
         foreach($archivos as $key => $archivo)
         {
@@ -156,7 +160,12 @@ class SiteController extends Controller
         }
         
     } 
-    
+    /**
+     * genera el archivo excel
+     * @param type $nombre
+     * @param type $html
+     * @param type $salida
+     */
     public function genExcel($nombre,$html,$salida=true)
     {
             if($salida)
@@ -187,6 +196,3 @@ class SiteController extends Controller
     }
 }
 ?>
-
-
-

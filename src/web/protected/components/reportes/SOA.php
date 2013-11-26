@@ -2,12 +2,12 @@
 /**
 * @package reportes
 */
-class SOA extends reportes
+class SOA extends Reportes
 {
 
 	public static function reporte($grupo)
 	{
-            $var=$grupo."hola";
+            $var="angelo ".$grupo."hola hola hola hola";
             return $var;
         }
 }
