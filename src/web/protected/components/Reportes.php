@@ -33,5 +33,13 @@ class Reportes extends CApplicationComponent
         $var=balance::reporte($grupo,$fecha,$Si_prov,$Si_disp);
         return $var;
     }
+    public static function define_disp($Si_disp)
+    {
+        if($Si_disp!=NULL)
+           $disp_sql="";
+        else 
+           $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
+        return $disp_sql;
+    }
 }
 ?>

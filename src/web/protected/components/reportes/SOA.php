@@ -21,7 +21,7 @@ class SOA extends Reportes
             //forma los tr de la tabla, donde va la informacion
             $cuerpo_tabla="<tr style='background:white;color:#2E62B4;border:1px solid black;'>
                             <td>".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,"d").")</td>
-                            <td>".$model->issue_date."</td><td>".$model->from_date."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>.$model->amount.</td>
+                            <td>".$model->issue_date."</td><td>".$model->from_date."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>$model->amount</td>
                            </tr>";
             //concatena los tr que contienen informacion con la cabecera y resto de la tabla
             $tabla_SOA="<h1>tabla de prueba SOA</h1>
@@ -61,13 +61,6 @@ class SOA extends Reportes
          * @param type $Si_disp
          * @return string
          */
-        public static function define_disp($Si_disp)
-        {
-            if($Si_disp!=NULL)
-               $disp_sql="";
-            else 
-               $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
-            return $disp_sql;
-        }
+
 }
 ?>

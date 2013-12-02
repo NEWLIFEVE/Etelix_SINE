@@ -30,14 +30,14 @@
  * @property integer $id_destination_supplier
  *
  * The followings are the available model relations:
+ * @property AccountingDocument $idAccountingDocument
+ * @property AccountingDocument[] $accountingDocuments
  * @property Carrier $idCarrier
  * @property Currency $idCurrency
+ * @property Destination $idDestination
+ * @property DestinationSupplier $idDestinationSupplier
  * @property TypeAccountingDocument $idTypeAccountingDocument
- * @property AccountingDocument $idAccountingDocument
- * @property Destination $id_destination
- * @property DestinationSupplier $id_destination_supplier
- * @property AccountingDocument[] $accountingDocuments
- * @property AccountingDocumentTemp[] $accountingDocuments
+ * @property AccountingDocumentTemp[] $accountingDocumentTemps
  */
 class AccountingDocument extends CActiveRecord
 {
@@ -48,10 +48,7 @@ class AccountingDocument extends CActiveRecord
 	{
 		return 'accounting_document';
 	}
-        public $carrier_groups;
-        public $amount_etx;
-        public $amount_carrier;
-        public $dispute;
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -61,14 +58,14 @@ class AccountingDocument extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('id_type_accounting_document', 'required'),
-			array('id_type_accounting_document, id_carrier, id_currency, confirm, id_accounting_document, id_destination, id_destination_supplier, dispute', 'numerical', 'integerOnly'=>true),
+			array('id_type_accounting_document, id_carrier, id_currency, confirm, id_accounting_document, id_destination, id_destination_supplier', 'numerical', 'integerOnly'=>true),
 			array('minutes, amount, min_etx, min_carrier, rate_etx, rate_carrier', 'numerical'),
 			array('doc_number', 'length', 'max'=>50),
 			array('note', 'length', 'max'=>250),
-			array('issue_date, from_date, to_date, valid_received_date, sent_date, email_received_date, valid_received_hour, email_received_hour,dispute', 'safe'),
+			array('issue_date, from_date, to_date, valid_received_date, sent_date, email_received_date, valid_received_hour, email_received_hour', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, issue_date, from_date, to_date, valid_received_date, sent_date, doc_number, minutes, amount, note, id_type_accounting_document, id_carrier, email_received_date, valid_received_hour, email_received_hour, id_currency, confirm, min_etx, min_carrier, rate_etx, rate_carrier, id_accounting_document, id_destination, id_destination_supplier, dispute', 'safe', 'on'=>'search'),
+			array('id, issue_date, from_date, to_date, valid_received_date, sent_date, doc_number, minutes, amount, note, id_type_accounting_document, id_carrier, email_received_date, valid_received_hour, email_received_hour, id_currency, confirm, min_etx, min_carrier, rate_etx, rate_carrier, id_accounting_document, id_destination, id_destination_supplier', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,14 +77,14 @@ class AccountingDocument extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idCarrier' => array(self::BELONGS_TO, 'Carrier', 'id_carrier'),
-			'idCurrency' => array(self::BELONGS_TO, 'Currency', 'id_currency'),
-			'idTypeAccountingDocument' => array(self::BELONGS_TO, 'TypeAccountingDocument', 'id_type_accounting_document'),
 			'idAccountingDocument' => array(self::BELONGS_TO, 'AccountingDocument', 'id_accounting_document'),
 			'accountingDocuments' => array(self::HAS_MANY, 'AccountingDocument', 'id_accounting_document'),
-                        'accountingDocumentTemps' => array(self::HAS_MANY, 'AccountingDocumentTemp', 'id_accounting_document'),
-                        'idDestination' => array(self::BELONGS_TO, 'Destination', 'id_destination'),
-                        'idDestinationSupplier' => array(self::BELONGS_TO, 'DestinationSupplier', 'id_destination_supplier'),
+			'idCarrier' => array(self::BELONGS_TO, 'Carrier', 'id_carrier'),
+			'idCurrency' => array(self::BELONGS_TO, 'Currency', 'id_currency'),
+			'idDestination' => array(self::BELONGS_TO, 'Destination', 'id_destination'),
+			'idDestinationSupplier' => array(self::BELONGS_TO, 'DestinationSupplier', 'id_destination_supplier'),
+			'idTypeAccountingDocument' => array(self::BELONGS_TO, 'TypeAccountingDocument', 'id_type_accounting_document'),
+			'accountingDocumentTemps' => array(self::HAS_MANY, 'AccountingDocumentTemp', 'id_accounting_document'),
 		);
 	}
 
@@ -98,29 +95,29 @@ class AccountingDocument extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'issue_date' => 'Fecha de Emisión',
-			'from_date' => 'Inicio Periodo a Facturar',
-			'to_date' => 'Fin Periodo a Facturar',
+			'issue_date' => 'Issue Date',
+			'from_date' => 'From Date',
+			'to_date' => 'To Date',
 			'valid_received_date' => 'Valid Received Date',
-			'email_received_date' => 'Fecha de recepción de Email',
+			'sent_date' => 'Sent Date',
+			'doc_number' => 'Doc Number',
+			'minutes' => 'Minutes',
+			'amount' => 'Amount',
+			'note' => 'Note',
+			'id_type_accounting_document' => 'Id Type Accounting Document',
+			'id_carrier' => 'Id Carrier',
+			'email_received_date' => 'Email Received Date',
 			'valid_received_hour' => 'Valid Received Hour',
-			'email_received_hour' => 'Hora de recepción de Email',
-			'sent_date' => 'Fecha de envio',
-			'doc_number' => 'Número de documento',
-			'minutes' => 'Minutos',
-			'amount' => 'Monto',
-			'note' => 'Nota',
-			'id_type_accounting_document' => 'Tipo de documento contable',
-			'id_carrier' => 'Carrier',
-			'id_currency' => 'Moneda',
-			'confirm' => 'Confirmada',
+			'email_received_hour' => 'Email Received Hour',
+			'id_currency' => 'Id Currency',
+			'confirm' => 'Confirm',
 			'min_etx' => 'Min Etx',
 			'min_carrier' => 'Min Carrier',
-			'rate_etx' => 'Tarifa Etx',
-			'rate_carrier' => 'Tarifa Carrier',
-			'id_accounting_document' => 'Documento Relacionado',
-                        'id_destination' => 'Destino Etelix',
-			'id_destination_supplier' => 'Destino Proveedor',
+			'rate_etx' => 'Rate Etx',
+			'rate_carrier' => 'Rate Carrier',
+			'id_accounting_document' => 'Id Accounting Document',
+			'id_destination' => 'Id Destination',
+			'id_destination_supplier' => 'Id Destination Supplier',
 		);
 	}
 
@@ -164,8 +161,8 @@ class AccountingDocument extends CActiveRecord
 		$criteria->compare('rate_etx',$this->rate_etx);
 		$criteria->compare('rate_carrier',$this->rate_carrier);
 		$criteria->compare('id_accounting_document',$this->id_accounting_document);
-                $criteria->compare('$id_destination',$this->id_destination);
-		$criteria->compare('$id_destination_supplier',$this->id_destination_supplier);
+		$criteria->compare('id_destination',$this->id_destination);
+		$criteria->compare('id_destination_supplier',$this->id_destination_supplier);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -183,4 +180,3 @@ class AccountingDocument extends CActiveRecord
 		return parent::model($className);
 	}
 }
-?>

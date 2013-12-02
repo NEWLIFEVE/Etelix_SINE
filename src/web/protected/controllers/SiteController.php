@@ -147,9 +147,9 @@ class SiteController extends Controller
         {
              $fecha=(string)$_POST['fecha'];
             if(isset($_POST['grupo'])) $grupo=CarrierGroups::getID($_POST['grupo']);
-//            if(isset($_POST['Si_prov'])) $Si_prov=SOA::define_prov($_POST['Si_prov']);
+//            if(isset($_POST['Si_prov'])) $Si_prov=Reportes::define_prov($_POST['Si_prov']);
             if(isset($_POST['Si_prov'])) $Si_prov=($_POST['Si_prov']);
-            if(isset($_POST['Si_disp'])) $Si_disp=SOA::define_disp($_POST['Si_disp']);
+            if(isset($_POST['Si_disp'])) $Si_disp=Reportes::define_disp($_POST['Si_disp']);
             
             switch ($_POST['tipo_report']) {
               case 'soa':
@@ -192,16 +192,16 @@ class SiteController extends Controller
             $fecha=(string)$_GET['fecha'];
             if(isset($_GET['grupo']))   $grupo=CarrierGroups::getID($_GET['grupo']);          //            if(isset($_GET['Si_prov'])) $Si_prov=SOA::define_prov($_GET['Si_prov']);
             if(isset($_GET['Si_prov'])) $Si_prov=($_GET['Si_prov']);
-            if(isset($_GET['Si_disp'])) $Si_disp=SOA::define_disp($_GET['Si_disp']);
+            if(isset($_GET['Si_disp'])) $Si_disp=Reportes::define_disp($_GET['Si_disp']);
             
             switch ($_GET['tipo_report']) {
               case 'soa':
                    $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha);
-                   $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_prov,$Si_disp);
+                   $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_disp,$Si_prov);
                    break;
               case 'balance':
                    $archivos['balance']['nombre']="SINE - ".$this->letra."balance".self::reportTitle($fecha);
-                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_prov,$Si_disp);
+                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_disp,$Si_prov);
                    break;
             }  
         }
