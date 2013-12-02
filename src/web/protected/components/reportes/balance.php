@@ -13,7 +13,7 @@ class balance extends Reportes
                             <td>".$model->issue_date."</td><td>".$model->from_date."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>$model->amount</td>
                            </tr>";
             //concatena los tr que contienen informacion con la cabecera y resto de la tabla
-            $tabla_Balance="<h1>tabla de prueba SOA</h1>
+            $tabla_Balance="<h1>tabla de prueba balance</h1>
                         <table style='background:rgb(188, 245, 253);border:1px solid black;text-align:center;'>
                          <tr style='border:1px solid black;'>
                           <td>Descripcion</td><td>issue_date</td><td>Due date</td><td>Payments (Etx to IDT)</td><td>Invoices receved</td><td>Payments (IDT to Etx)</td><td>Invoices collect</td><td>Due balance</td>
