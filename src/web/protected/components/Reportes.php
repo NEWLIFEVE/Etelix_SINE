@@ -15,9 +15,9 @@ class Reportes extends CApplicationComponent
      * @param type $Si_disp
      * @return type
      */
-    public function SOA($grupo,$fecha,$Si_prov,$Si_disp)
+    public function SOA($grupo,$fecha,$Si_disp)
     {
-        $var=SOA::reporte($grupo,$fecha,$Si_disp,$Si_prov);
+        $var=SOA::reporte($grupo,$fecha,$Si_disp);
         return $var;
     }
     /**
@@ -33,6 +33,12 @@ class Reportes extends CApplicationComponent
         $var=balance::reporte($grupo,$fecha,$Si_prov,$Si_disp);
         return $var;
     }
+    /**
+     * define si la consulta traera las disputas o no
+     * si es diferente de null, el sql es standar, es decir, traera las disputas, sino, entonces el sql no traera las disputas, puesto que le esta indicando la condicion de "NOT IN (5,6)"
+     * @param type $Si_disp
+     * @return string
+     */
     public static function define_disp($Si_disp)
     {
         if($Si_disp!=NULL)

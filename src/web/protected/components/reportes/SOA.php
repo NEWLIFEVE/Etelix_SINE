@@ -4,21 +4,10 @@
 */
 class SOA extends Reportes
 {
-	public static function reporte($grupo,$fecha,$Si_disp,$Si_prov)
+	public static function reporte($grupo,$fecha,$Si_disp)
 	{
-                                                                                                    if($Si_prov!=NULL)
-                                                                                                    $tablaProv="<h3>provisiones</h3><table style='background:#83380E; color:white;border-bottom: 4px solid silver;text-align:center;'>
-                                                                                                                 <tr>
-                                                                                                                  <td>grupo</td><td>fecha</td><td>Prov</td>
-                                                                                                                 </tr>
-                                                                                                                 <tr style='background:white;color:#2E62B4;'>
-                                                                                                                  <td>$grupo</td><td>".Utility::formatDateSINE($fecha,"F j - Y")."".Utility::formatDateSINE($fecha,"m - F - y")."</td><td>$Si_prov</td>
-                                                                                                                 </tr>
-                                                                                                                </table>";else $tablaProv=NULL;
-
             $model=SOA::get_Model($grupo,$fecha,$Si_disp);//trae el sql pricipal
-
-            //forma los tr de la tabla, donde va la informacion
+            //forma los tr de la tabla, donde va la informacion  <!--Utility::formatDateSINE($fecha,"F j - Y")."".Utility::formatDateSINE($fecha,"m - F - y")-->
             $cuerpo_tabla="<tr style='background:white;color:#2E62B4;border:1px solid black;'>
                             <td>".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,"d").")</td>
                             <td>".$model->issue_date."</td><td>".$model->from_date."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>".$model->amount."</td><td>$model->amount</td>
@@ -31,10 +20,7 @@ class SOA extends Reportes
                           </tr>
                           $cuerpo_tabla
                         </table>";
-
-            $reporte=$tabla_SOA."<br>".$tablaProv;
-
-            return $reporte;
+            return $tabla_SOA;
         }
         /**
          * sql para el reporte soa
@@ -54,13 +40,5 @@ class SOA extends Reportes
             
             return AccountingDocument::model()->findBySql($sql);
         }
-
-        /**
-         * define si la consulta traera las disputas o no
-         * si es diferente de null, el sql es standar, es decir, traera las disputas, sino, entonces el sql no traera las disputas, puesto que le esta indicando la condicion de "NOT IN (5,6)"
-         * @param type $Si_disp
-         * @return string
-         */
-
 }
 ?>
