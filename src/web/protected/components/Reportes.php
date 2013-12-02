@@ -28,9 +28,9 @@ class Reportes extends CApplicationComponent
      * @param type $Si_disp
      * @return type
      */
-    public function balance($grupo,$fecha,$Si_prov,$Si_disp)
+    public function balance($grupo,$fecha,$Si_disp)
     {
-        $var=balance::reporte($grupo,$fecha,$Si_prov,$Si_disp);
+        $var=balance::reporte($grupo,$fecha,$Si_disp);
         return $var;
     }
     /**
