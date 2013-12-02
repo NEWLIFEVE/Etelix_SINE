@@ -47,7 +47,7 @@ class EnviarEmail extends CApplicationComponent
                     $mailer->addCC($value);
                 }
             }
-            $mailer->FromName='RENOC';
+            $mailer->FromName='SINE';
             $mailer->CharSet='UTF-8';
             $mailer->Subject=Yii::t('', $asunto);
             $mailer->AddAttachment($ruta); //Archivo adjunto

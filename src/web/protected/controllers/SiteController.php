@@ -138,36 +138,92 @@ class SiteController extends Controller
      */
     public function actionMail()
     {
-       $var=Yii::app()->reportes->mail($_POST['grupo'],$_POST['operador'],$_POST['fecha'],$_POST['Si_prov'],$_POST['No_prov']);
-       echo 'los datos son:<br>'.$var;
+        $this->vaciarAdjuntos();
+        $this->letra=Log::preliminar($_POST['fecha']);
+        $fecha=$grupo=null;
+        $correos=null;
+        $user=UserIdentity::getEmail();
+        if(isset($_POST['fecha']))
+        {
+             $fecha=(string)$_POST['fecha'];
+            if(isset($_POST['grupo'])) $grupo=CarrierGroups::getID($_POST['grupo']);
+//            if(isset($_POST['Si_prov'])) $Si_prov=SOA::define_prov($_POST['Si_prov']);
+            if(isset($_POST['Si_prov'])) $Si_prov=($_POST['Si_prov']);
+            if(isset($_POST['Si_disp'])) $Si_disp=SOA::define_disp($_POST['Si_disp']);
+            
+            switch ($_POST['tipo_report']) {
+              case 'soa':
+                   $correos['soa']['asunto']="SINE - ".$this->letra." SOA".self::reportTitle($fecha);
+                   $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_prov,$Si_disp);
+                   $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
+                   break;
+              case 'balance':
+                   $correos['balance']['asunto']="SINE - ".$this->letra." balance".self::reportTitle($fecha);
+                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_prov,$Si_disp);
+                   $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
+                   break;
+            }  
+        }
+        $tiempo=30*count($correos);
+        ini_set('max_execution_time', $tiempo);
+        foreach($correos as $key => $correo)
+        { 
+            //Esto es para que no descargue los archivos cuando se genere uno de estos reportes
+            if(stripos($correo['asunto'],"Evolucion")==false && stripos($correo['asunto'],"Comercial")==false)
+            {
+                $this->genExcel($correo['asunto'],$correo['cuerpo'],false);
+            }
+            Yii::app()->mail->enviar($correo['cuerpo'], $user, $correo['asunto'],$correo['ruta']);
+        }
+        echo "Mensaje Enviado";
+       
     } 
     /**
      * funcion encargada de exportar reportes por excel
      */
     public function actionExcel()
     {
+        $this->vaciarAdjuntos();
+        $this->letra=Log::preliminar($_GET['fecha']);
+        $fecha=$grupo=null;
         $archivos=array();
-            if(isset($_GET['grupo'])) 
-                $grupo=$_GET['grupo'];
-            if(isset($_GET['lista']['SOA']))
-            {
-                $archivos['SOA']['cuerpo']=Yii::app()->reportes->SOA($grupo);
-            }
-
+        if(isset($_GET['fecha']))
+        {
+            $fecha=(string)$_GET['fecha'];
+            if(isset($_GET['grupo']))   $grupo=CarrierGroups::getID($_GET['grupo']);          //            if(isset($_GET['Si_prov'])) $Si_prov=SOA::define_prov($_GET['Si_prov']);
+            if(isset($_GET['Si_prov'])) $Si_prov=($_GET['Si_prov']);
+            if(isset($_GET['Si_disp'])) $Si_disp=SOA::define_disp($_GET['Si_disp']);
+            
+            switch ($_GET['tipo_report']) {
+              case 'soa':
+                   $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha);
+                   $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_prov,$Si_disp);
+                   break;
+              case 'balance':
+                   $archivos['balance']['nombre']="SINE - ".$this->letra."balance".self::reportTitle($fecha);
+                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_prov,$Si_disp);
+                   break;
+            }  
+        }
         foreach($archivos as $key => $archivo)
         {
             $this->genExcel($archivo['nombre'],$archivo['cuerpo']);
         }
-        
-    } 
+    }
     /**
-     * genera el archivo excel
+     * 
      * @param type $nombre
      * @param type $html
      * @param type $salida
      */
     public function genExcel($nombre,$html,$salida=true)
     {
+        if(stripos($nombre,"Evolucion") || stripos($nombre,"Comercial"))
+        {
+            header("Location: /adjuntos/{$nombre}.xlsx");
+        }
+        else
+        {
             if($salida)
             {
                 header("Content-type: application/vnd.ms-excel; charset=utf-8"); 
@@ -193,6 +249,48 @@ class SiteController extends Controller
                 </html>";
                 fwrite($fp,$cuerpo);
             }
+        }
+    }
+        /**
+     * @access public
+     */
+    public function vaciarAdjuntos()
+    {
+        $ruta=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR;
+            if(is_dir($ruta))
+            {
+                $archivos=@scandir($ruta);
+            }
+            if(count($archivos)>1)
+            {
+                foreach ($archivos as $key => $value)
+                {
+                    if($key>1)
+                    { 
+                        if($value!='index.html')
+                        {
+                            unlink($ruta.$value);
+                        }
+                    }
+                }
+            }
+    }
+    /**
+     * 
+     * @param type $start
+     * @param type $end
+     * @return type
+     */
+    private static function reportTitle($start,$end=null)
+    {
+        if($end==null)
+        {
+            return " al ".str_replace("-","",$start);
+        }
+        else
+        {
+            return Reportes::reportTitle($start,$end);
+        }
     }
 }
 ?>

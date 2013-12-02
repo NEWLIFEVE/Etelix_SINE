@@ -120,7 +120,7 @@ text-shadow: none;
     font: normal 10pt Arial,Helvetica,sans-serif;
     height: 200%;
     margin-left: -187px;
-    margin-top: -19px;
+    margin-top: -20px;
     padding-top: 20px;
     position: absolute;
     width: 158.5%;
@@ -301,10 +301,12 @@ div.login.error input#LoginForm_password
     margin-top: -485px;
     width: 0%;
     position: static;
-    margin-left: 39%;
+    margin-left: 19%;
     padding-left: 22px;
+    padding-right: 164px;
     display:none;
 }
+
 select, input
 {
     height: 43px!important;
@@ -312,6 +314,7 @@ select, input
 .formInputs
 {
     display: inline-block;
+    padding-left: 10px;
 }
 .botones {
     width: 142px;
@@ -388,7 +391,7 @@ img.oculta
     /* /> ESTILOS DE DATEPICKER UI*/
 .chang_Oper_Grup,.chang_Grup_Oper
 {
-    width: 4%;
+    width: 6%;
 }
 .barra_tools
 {
@@ -467,4 +470,9 @@ li.ui-menu-item a
     border-radius: 0px!important;
     background: #2E62B4!important; 
     color:white!important; 
+}
+.titlePage 
+{
+    font-size: larger!important;
+    font-weight: bold;
 }

@@ -26,7 +26,6 @@
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery-ui-timepicker-addon.js"></script>
         <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/favicon.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-        <link rel="stylesheet" href="/resources/demos/style.css" />
     </head>
     <body class="metro">
         <header class="bg-dark">
@@ -35,12 +34,12 @@
             -->
             <div class="navigation-bar dark">
                 <div class="navigation-bar-content container">
-                    <a href="/" class="element"><span class="icon-list"> </span> <?php echo Yii::app()->name; ?> <!--<sup>ETELIX</sup>--></a>
+                    <a href="/" class="element titlePage"><span class="icon-list"> </span> <?php echo Yii::app()->name; ?> <!--<sup>ETELIX</sup>--></a>
                     
                     <?php if (!Yii::app()->user->isGuest): ?>
                         <span class="element-divider"></span>
 
-                        <?php echo CHtml::link('<i class="icon-home on-right on-left"></i> Home', array('/site/index'), array('class' => 'element')); ?>
+                        <?php // echo CHtml::link('<i class="icon-home on-right on-left"></i> Home', array('/site/index'), array('class' => 'element')); ?>
                     
                                                                         <!--<div class="element">-->
                                                                         <?php // echo CHtml::link('<i class="icon-box-add on-right on-left"></i> Tickets', '#', array('class' => 'dropdown-toggle')); ?>
@@ -58,7 +57,7 @@
                                                 //                        )); ?>
                                                                         <!--</div>-->
                         <?php // if(Yii::app()->getSession()->get('role') === 1) echo CHtml::link('<i class="icon-user on-right on-left"></i> Usuarios', array('/usuarios/index'), array('class' => 'element')); ?>
-                        <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout', array('/site/logout'), array('class' => 'element')); ?>
+                        <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout ('.Yii::app()->user->name.')', array('/site/logout'), array('class' => 'element')); ?>
                         <span class="element-divider"></span>
                     <?php endif; ?> 
                 </div>
@@ -80,7 +79,7 @@
             </div>
     
         <div id="footer">
-            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. 
+            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.0
         </div>
             
     <div class="clear"></div>

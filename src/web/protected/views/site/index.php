@@ -40,6 +40,7 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <form id="form_report_sine">
     <div  class="formulario">
+        <input id="tipo_report"type="hidden"value=""/>
         <div class="formInputs operador">
             <h3>Operador</h3>
             <input type="text" id="operador"value=""/>
@@ -48,23 +49,30 @@ $this->pageTitle = Yii::app()->name;
             <h3>Grupo</h3>
             <input type="text" id="grupo"value=""/>
         </div>
-        <div class='formInputs chang_Oper_Grup Oper_grupo'>
+        <div id="chang_Oper_Grup" class='formInputs chang_Oper_Grup Oper_grupo'>
             <img src="/images/operador.png" class='ver'>
             <img src="/images/operador_hover.png" title='oculta el input de grupo y muestra el de operador' class='oculta'>
         </div>
-        <div class='formInputs chang_Grup_Oper Oper_grupo'>
+        <div id="chang_Grup_Oper" class='formInputs chang_Grup_Oper Oper_grupo'>
             <img src="/images/grupo.png" class='ver'>
             <img src="/images/grupo_hover.png" title='oculta el input de operador y muestra el de grupo' class='oculta'>
         </div>
         <div class="formInputs fecha">
             <h3>Fecha</h3>
-            <input type="text" id="datepicker" />
+            <input type="text" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <div class='provisiones'>
+        <div class='formInputs provisiones'>
             <h3>Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
                 <button name="Si_prov" id="Si_prov" type="button" value=""class="btn btn-primary">Si</button>
                 <button name="No_prov" id="No_prov" type="button" value=""class="btn btn-primary">No</button>
+            </div>  
+        </div> 
+        <div class='formInputs disputas'>
+            <h3>Disputas</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <button name="Si_disp" id="Si_disp" type="button" value=""class="btn btn-primary">Si</button>
+                <button name="No_disp" id="No_disp" type="button" value=""class="btn btn-primary">No</button>
             </div>  
         </div>
     </div>

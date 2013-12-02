@@ -76,6 +76,6 @@
     });
 })( jQuery );
 
-$(function () {
-    $('[data-role=dropdown]').dropdown();
-});
+//$(function () {
+//    $('[data-role=dropdown]').dropdown();
+//});

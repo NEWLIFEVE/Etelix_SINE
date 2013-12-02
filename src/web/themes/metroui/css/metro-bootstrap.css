@@ -2156,7 +2156,7 @@ a {
 }
 .metro .page {
   width: 100%;
-  min-height: 100%;
+  min-height: 200%;/*si hay problemas con el height de la interfaz, aqui puede estar el problema, seria devolver a 100%*/
   margin: 0;
   padding: 0;
 }
@@ -2218,7 +2218,7 @@ a {
   text-decoration: none !important;
 }
 .metro .page .page-region .page-region-content {
-  min-height: 330px;
+  min-height: 530px;
   position: fixed;
 }
 .metro .page .page-region .page-region-content:before,
