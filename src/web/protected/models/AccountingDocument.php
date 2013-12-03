@@ -41,6 +41,12 @@
  */
 class AccountingDocument extends CActiveRecord
 {
+          
+        public $group;
+        public $carrier;
+        public $type;
+        public $currency;
+        public $tp;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -48,8 +54,8 @@ class AccountingDocument extends CActiveRecord
 	{
 		return 'accounting_document';
 	}
-
-	/**
+  
+        /**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -60,12 +66,12 @@ class AccountingDocument extends CActiveRecord
 			array('id_type_accounting_document', 'required'),
 			array('id_type_accounting_document, id_carrier, id_currency, confirm, id_accounting_document, id_destination, id_destination_supplier', 'numerical', 'integerOnly'=>true),
 			array('minutes, amount, min_etx, min_carrier, rate_etx, rate_carrier', 'numerical'),
-			array('doc_number', 'length', 'max'=>50),
+			array('doc_number, Group, Carrier, Type, Currency, TP', 'length', 'max'=>50),
 			array('note', 'length', 'max'=>250),
-			array('issue_date, from_date, to_date, valid_received_date, sent_date, email_received_date, valid_received_hour, email_received_hour', 'safe'),
+			array('issue_date, from_date, to_date, valid_received_date, sent_date, email_received_date, valid_received_hour, email_received_hour,Group, Carrier, Type, Currency, TP', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, issue_date, from_date, to_date, valid_received_date, sent_date, doc_number, minutes, amount, note, id_type_accounting_document, id_carrier, email_received_date, valid_received_hour, email_received_hour, id_currency, confirm, min_etx, min_carrier, rate_etx, rate_carrier, id_accounting_document, id_destination, id_destination_supplier', 'safe', 'on'=>'search'),
+			array('id, issue_date, from_date, to_date, valid_received_date, sent_date, doc_number, minutes, amount, note, id_type_accounting_document, id_carrier, email_received_date, valid_received_hour, email_received_hour, id_currency, confirm, min_etx, min_carrier, rate_etx, rate_carrier, id_accounting_document, id_destination, id_destination_supplier, Group, Carrier, Type, Currency, TP ', 'safe', 'on'=>'search'),
 		);
 	}
 

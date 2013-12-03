@@ -153,11 +153,11 @@ class SiteController extends Controller
             switch ($_POST['tipo_report']) {
               case 'soa':
                    $correos['soa']['asunto']="SINE - ".$this->letra." SOA".self::reportTitle($fecha);
-                   $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_disp);
+                   $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_disp,$_POST['grupo']);
                    $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                    break;
               case 'balance':
-                   $correos['balance']['asunto']="SINE - ".$this->letra." balance".self::reportTitle($fecha);
+                   $correos['balance']['asunto']="BALANCE - ".$this->letra." balance".self::reportTitle($fecha);
                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_disp);
                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                    break;
@@ -198,7 +198,7 @@ class SiteController extends Controller
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$Si_disp);
                    break;
               case 'balance':
-                   $archivos['balance']['nombre']="SINE - ".$this->letra."balance".self::reportTitle($fecha);
+                   $archivos['balance']['nombre']="BALANCE - ".$this->letra."balance".self::reportTitle($fecha);
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$Si_disp);
                    break;
             }  

@@ -15,9 +15,9 @@ class Reportes extends CApplicationComponent
      * @param type $Si_disp
      * @return type
      */
-    public function SOA($grupo,$fecha,$Si_disp)
+    public function SOA($grupo,$fecha,$Si_disp,$grupoName)
     {
-        $var=SOA::reporte($grupo,$fecha,$Si_disp);
+        $var=SOA::reporte($grupo,$fecha,$Si_disp,$grupoName);
         return $var;
     }
     /**
@@ -46,6 +46,125 @@ class Reportes extends CApplicationComponent
         else 
            $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
         return $disp_sql;
+    }
+    /**
+     * fucnion encargada de determinar el due_date apartir de termino pago y issue_date
+     * @param type $tp
+     * @param type $fecha
+     * @return type
+     */
+    public static function define_due_date($tp, $fecha)
+    {
+        $tpdia='+'.$tp.' day';
+        $due_date=date('Y-m-d', strtotime($tpdia, strtotime ($fecha))) ;
+        
+        return $due_date;
+    }
+    public static function define_description($model)
+    {
+        switch ($model->id_type_accounting_document){
+            case "3":
+            case "4":
+                $description="WT";
+                break;
+            case "9":
+                $description="Saldo al ".$model->issue_date;
+                break;
+            default:
+                $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,"d").")";
+
+        }
+        return $description;
+    }
+        
+    public static function define_fact_env($model)
+    {
+        if ($model->id_type_accounting_document==1){
+            return $model->currency.$model->amount;
+        }else{
+            return "";
+        }
+    }
+    
+    public static function define_fact_rec($model)
+    {
+        if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
+            return $model->currency.$model->amount;
+        }else{
+            return "";
+        }
+    }
+        
+    public static function define_pagos($model)
+    {
+        if ($model->id_type_accounting_document==3){
+            return $model->currency.$model->amount;
+        }else{
+            return "";
+        }
+    }
+    
+    public static function define_cobros($model)
+    {
+        if ($model->id_type_accounting_document==4){
+            return $model->currency.$model->amount;
+        }else{
+            return "";
+        }
+    }
+    
+    public static function define_dias_TP($termino_pago)
+    {
+        switch ($termino_pago) {
+              case "P-Semanales":
+              case "7/7":
+              case "15/7":
+              case "30/7":
+                   $tp=7;
+                  break;
+              case "P-Mensuales":
+              case "30/30":
+                   $tp=30;
+                  break;
+              case "7/3":
+                   $tp=3;
+                  break;
+              case "7/5":
+              case "15/5":
+                   $tp=5;
+                  break;
+              case "15/15":
+                   $tp=15;
+                  break;
+        }return $tp;
+    }
+    
+        public static function cabecera($etiquetas,$estilos)
+    {
+        $cabecera="<tr>";
+        if(count($etiquetas)>1)
+        {
+            if(count($estilos)>1)
+            {
+                foreach($etiquetas as $key => $value)
+                {
+                    $cabecera.="<th style='".$estilos[$key]."'>".$value."</th>";
+                }
+            }
+            else
+            {
+                foreach ($etiquetas as $key => $value)
+                {
+                    $cabecera.="<th style='".$estilos."'>".$value."</th>";
+                }
+            }
+        }
+        else
+        {
+            $cabecera.="<th style='".$estilos."'>".$etiquetas[0]."</th>";
+        }
+        $cabecera.="</tr>";
+        return $cabecera;
     }
 }
 ?>
