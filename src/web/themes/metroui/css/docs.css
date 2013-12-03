@@ -476,3 +476,26 @@ li.ui-menu-item a
     font-size: larger!important;
     font-weight: bold;
 }
+.cargando
+{
+    background-color: rgba(0,0,0,0.7);
+    content: "";
+    height: 100%;
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    width: 100%;
+    z-index: 1030;
+}
+.mensaje
+{
+    background-color: white;
+    color: #6E6E6E;
+    /*left: 30%;*/
+    margin: -30% 32% auto;
+    padding: 23px 30px 43px 28px;
+    position:fixed;
+    text-align: center;
+    width: 490px;
+    z-index: 1031;
+}

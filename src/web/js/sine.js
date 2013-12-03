@@ -130,12 +130,40 @@ $SINE.UI=(function()
         function export_report()
         {
             $('#mail, #excel').on('click',function()
-            {
+            {   
                 var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&Si_prov="+$('#Si_prov').val()+"&No_prov="+$('#No_prov').val()+"&Si_disp="+$('#Si_disp').val()+"&No_disp="+$('#No_disp').val(),
                 id=$(this).attr('id');
-                    if(id=="mail"){$SINE.AJAX.send("POST","/Site/Mail",formulario);}
-                             else {$SINE.AJAX.send("GET","/Site/Excel",formulario);}  
+             if(id=="mail"){    
+                  $SINE.AJAX.send("POST","/Site/Mail",formulario);
+                  $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
+               }else{  
+                       $SINE.AJAX.send("GET","/Site/Excel",formulario);
+                    }  
             });
+        }
+        /**
+         * 
+         * @param {type} cuerpo_msj
+         * @param {type} imagen
+         * @returns {undefined}
+         */
+        function msj_cargando(cuerpo_msj,imagen)
+        {
+           $(".cargando, .mensaje").remove();
+           var msj=$("<div class='cargando'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"' ></div>").hide(); 
+               $("body").append(msj); 
+               msj.fadeIn('slow');
+        }
+        /**
+         * 
+         * @param {type} cuerpo_msj
+         * @param {type} imagen
+         * @returns {undefined}
+         */
+        function msj_change(cuerpo_msj,imagen)
+        {
+             $(".mensaje").html(cuerpo_msj+"<p><img style='width: 33%;' src='/images/"+imagen+"'>");
+             setTimeout(function() { $(".cargando, .mensaje").fadeOut('slow'); }, 1000);
         }
         
         
@@ -151,7 +179,9 @@ $SINE.UI=(function()
                 resolve_reports_menu:resolve_reports_menu,
                 agrega_Val_radio:agrega_Val_radio,
                 export_report:export_report,
-                resolvedButton:resolvedButton
+                resolvedButton:resolvedButton,
+                msj_cargando:msj_cargando,
+                msj_change:msj_change
 	};
 })();
 
@@ -219,10 +249,8 @@ $SINE.AJAX=(function()
                  data: formulario,
                  success: function(data)
                  {
-                     console.log(data);
-                     if(action=="/Site/Excel")
-//                     window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp=");
-                window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp="); 
+                     if(action=="/Site/Excel") window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200"); 
+                     else $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png");    
                  }
             });
         }
