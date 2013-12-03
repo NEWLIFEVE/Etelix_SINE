@@ -40,7 +40,7 @@ $this->breadcrumbs=array(
 					<div class="input-control checkbox" data-role="input-control">
                                             <label>
                                             <?php echo $form->checkBox($model,'rememberMe'); ?>
-                                            <span class="check"></span>  Remember Me
+                                            <span class="check"></span>  Recuerdame
                                             <?php echo $form->error($model,'rememberMe'); ?>
                                             </label>
                                         </div>

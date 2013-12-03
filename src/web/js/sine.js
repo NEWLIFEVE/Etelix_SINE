@@ -43,7 +43,7 @@ $SINE.UI=(function()
 	{
             var dio_click=click[0].id;
                 $(no_Click).val(''); 
-                if (dio_click=='Si_prov')$(click).val('1');
+                if (dio_click=='Si_prov'||dio_click=='Si_disp')$(click).val('1');
                 else $(click).val('0');
         }
         /**
@@ -53,17 +53,16 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            $('.formulario').fadeOut('slide');
-            var ocultar =['.operador, .grupo, .datepicker, .provisiones,.chang_Oper_Grup,.chang_Grup_Oper'],
+            var ocultar =['.operador, .grupo, .datepicker, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper'],
             nombre=obj[0].id;
             switch (nombre) 
             {
                 case "soa":
-                  var mostrar =['.grupo,.chang_Oper_Grup, .datepicker, .provisiones']; 
+                  var mostrar =['.grupo, .datepicker, .provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "balance":
-                  var mostrar =['.operador,.chang_Grup_Oper, .datepicker, .provisiones']; 
+                  var mostrar =['.grupo, .chang_Oper_Grup,.datepicker, .provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
@@ -75,28 +74,31 @@ $SINE.UI=(function()
                 case "refi_prov": 
                   break;
             }
-            $('.formulario').css('width','81%').fadeIn('slide');  
-            $('.barra_tools_click').fadeIn();
+            $("#tipo_report").val(nombre);
+            $('.formulario').css('display','block').css('width','81%').css('margin-left','39%');
+            $('.barra_tools_click').show();
         }
         /**
-         * 
+         * se encarga de indicar que boton e input ocultar o mostrar en el cambio entre grupos y operador
          * @param {type} obj
          * @returns {undefined}
          */
-//         function _show_hide_tools(obj)
-//	 {
-//              $('#botones_exportar,#next_tool,#back_tool').remove();
-//             if(obj.attr('class')=='barra_tools')
-//             {
-//                $(".barra_tools").append("<div id='back_tool'><img src='/images/back_tool.png'></div><footer id='botones_exportar'><div id='excel' class='botones'><img src='/images/excel.png' class='ver'><img src='/images/excel_hover.png' title='Exportar Reportes en Excel' class='oculta'></div><div id='mail' class='botones'><img src='/images/mail.png' class='ver'><img src='/images/mail_hover.png' title='Enviar Reportes a su Correo Electronico' class='oculta'></div></footer>");
-//                $(".barra_tools").removeClass('barra_tools').addClass('barra_tools_click');
-//             }
-//             else
-//             {
-//                $(".barra_tools_click").removeClass('barra_tools_click').addClass('barra_tools').append("<div id='next_tool'><img src='/images/next_tool.png'></div>");
-//             }  
-//         }
-
+        function resolvedButton(obj)
+	{
+            var ocultar =['.chang_Grup_Oper,.operador,.chang_Oper_Grup,.grupo'],
+            nombre=obj[0].id;
+            switch (nombre) 
+            {
+                case "chang_Grup_Oper":
+                  var mostrar =['.chang_Oper_Grup,.grupo']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  break;
+                case "chang_Oper_Grup":
+                  var mostrar =['.chang_Grup_Oper,.operador']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  break;
+            }
+        }
         /**
 	 * Metodo encargado de la actualizacion de las facturas en disputas y notas de credito
 	 * @access public
@@ -125,16 +127,19 @@ $SINE.UI=(function()
          /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
         */
-       function export_report()
-       {
+        function export_report()
+        {
             $('#mail, #excel').on('click',function()
-            {//                var formulario=$SINE.AJAX._getFormPost($("form_report_sine"));
-                var formulario="grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&Si_prov="+$('#Si_prov').val()+"&No_prov="+$('#No_prov').val();
-                var id=$(this).attr('id');
+            {
+                var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&Si_prov="+$('#Si_prov').val()+"&No_prov="+$('#No_prov').val()+"&Si_disp="+$('#Si_disp').val()+"&No_disp="+$('#No_disp').val(),
+                id=$(this).attr('id');
                     if(id=="mail"){$SINE.AJAX.send("POST","/Site/Mail",formulario);}
                              else {$SINE.AJAX.send("GET","/Site/Excel",formulario);}  
             });
-       }
+        }
+        
+        
+        
 	/**
 	 * Retorna los mestodos publicos
 	 */
@@ -145,8 +150,8 @@ $SINE.UI=(function()
                 elijeOpciones:elijeOpciones,
                 resolve_reports_menu:resolve_reports_menu,
                 agrega_Val_radio:agrega_Val_radio,
-                export_report:export_report
-               
+                export_report:export_report,
+                resolvedButton:resolvedButton
 	};
 })();
 
@@ -170,26 +175,26 @@ $SINE.AJAX=(function()
 	 */
 	function _getNamesCarriers()
 	{
-		$.ajax({url:"Carrier/Nombres",success:function(datos)
-		{
-			$SINE.DATA.carriers=JSON.parse(datos);
-			$SINE.DATA.nombresCarriers=Array();
-			for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
-			{
-				$SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
-			};$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
-		}
-		});
-		$.ajax({url:"Grupos/Nombres",success:function(datos)
-		{
-			$SINE.DATA.groups=JSON.parse(datos);
-			$SINE.DATA.nombresGroups=Array();
-			for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
-			{
-				$SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
-			};$('input#grupo').autocomplete({source:$SINE.DATA.nombresGroups});
-		}
-		});
+            $.ajax({url:"../Carrier/Nombres",success:function(datos)
+            {
+                    $SINE.DATA.carriers=JSON.parse(datos);
+                    $SINE.DATA.nombresCarriers=Array();
+                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
+                    {
+                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
+                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
+            }
+            });
+            $.ajax({url:"../Grupos/Nombres",success:function(datos)
+            {
+                    $SINE.DATA.groups=JSON.parse(datos);
+                    $SINE.DATA.nombresGroups=Array();
+                    for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
+                    {
+                            $SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
+                    };$('input#grupo').autocomplete({source:$SINE.DATA.nombresGroups});
+            }
+            });
 	}
 	/**
 	 * Inicializa las funciones del submodulo
@@ -199,7 +204,6 @@ $SINE.AJAX=(function()
 	{
 		_getNamesCarriers();
 	}
-        
         /**
         * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
         * @param {type} type
@@ -216,11 +220,12 @@ $SINE.AJAX=(function()
                  success: function(data)
                  {
                      console.log(data);
-                     alert(data);
+                     if(action=="/Site/Excel")
+//                     window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp=");
+                window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp="); 
                  }
             });
         }
-
 	return {init:init,
                 _getFormPost:_getFormPost,
                 send:send
