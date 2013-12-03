@@ -38,11 +38,15 @@
                                 <td style='text-align: right;'>".$document->currency.$acumulado."</td>
                                </tr>";
                 }
+                $tabla_SOA.="</table>";
+                return $tabla_SOA;
+            }else{
+                return 'No hay data o algo fallo';
             }
             //concatena los tr que contienen informacion con la cabecera y resto de la tabla
-            $tabla_SOA.="</table>";
+            
 
-            return $tabla_SOA;
+            
         }
         /**
          * sql para el reporte soa
