@@ -81,6 +81,8 @@ class Reportes extends CApplicationComponent
     {
         if ($model->id_type_accounting_document==1){
             return $model->currency.$model->amount;
+        }elseif($model->id_type_accounting_document==7){
+            return $model->currency."-".$model->amount;
         }else{
             return "";
         }
@@ -90,6 +92,8 @@ class Reportes extends CApplicationComponent
     {
         if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
             return $model->currency.$model->amount;
+        }elseif($model->id_type_accounting_document==8){
+            return $model->currency."-".$model->amount;
         }else{
             return "";
         }
@@ -110,6 +114,31 @@ class Reportes extends CApplicationComponent
             return $model->currency.$model->amount;
         }else{
             return "";
+        }
+    }
+    public static function define_balance_amount($model,$acumulado)
+    {
+        switch ($model->id_type_accounting_document){
+            case "9":
+                return $model->amount;
+                break;
+            case "1":
+                return $acumulado + $model->amount;
+                break;
+            case "2":
+                return $acumulado - $model->amount;
+                break;
+            case "3":
+                return $acumulado + $model->amount;
+                break;
+            case "4":
+                return $acumulado - $model->amount;
+            case "7":
+                return $acumulado - $model->amount;
+            case "8":
+                return $acumulado + $model->amount;
+                break;
+            
         }
     }
     
