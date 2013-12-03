@@ -22,21 +22,19 @@
                               </tr>";
 
                 foreach ($accounting_document as $key => $document) {
-//                    $tp=1;
+
                     $tp=Reportes::define_dias_TP($document->tp);
                     $due_date=Reportes::define_due_date($tp, $document->issue_date);
-    //                                        
 
                     $tabla_SOA.="<tr style='background:white;color:black;border:1px solid black;'>
-                                <td style='text-align: left;'>".Reportes::define_description($document)."</td>
-                                <td style='text-align: center;'>" . $document->issue_date . "</td>
-                                <td style='text-align: center;'>" . $due_date . "</td>
+                                <td style='text-align: left;'>" . Reportes::define_description($document)."</td>
+                                <td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>
+                                <td style='text-align: center;'>" . Utility::formatDateSINE( $due_date,"d-M-y") . "</td>
                                 <td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>
                                 <td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>
                                 <td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>
                                 <td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>
                                 <td style='text-align: right;'>" . $document->type . "</td>
-                                
                                </tr>";
                 }
             }
@@ -45,7 +43,6 @@
 
             return $tabla_SOA;
         }
-
         /**
          * sql para el reporte soa
          * @param type $grupo
@@ -63,7 +60,6 @@
 
             return AccountingDocument::model()->findAllBySql($sql);
         }
-
     }
 
     ?>

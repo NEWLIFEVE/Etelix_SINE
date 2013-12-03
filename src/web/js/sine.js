@@ -220,6 +220,9 @@ $SINE.AJAX=(function()
                  success: function(data)
                  {
                      console.log(data);
+                     if(action=="/Site/Excel")
+//                     window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp=");
+                window.open("http://sine.local/Site/Excel?tipo_report=soa&grupo=BSG&operador=&fecha=2013-12-03&Si_prov=1&No_prov=&Si_disp=1&No_disp="); 
                  }
             });
         }

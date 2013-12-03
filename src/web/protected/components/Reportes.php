@@ -28,9 +28,9 @@ class Reportes extends CApplicationComponent
      * @param type $Si_disp
      * @return type
      */
-    public function balance($grupo,$fecha,$Si_disp)
+    public function balance($grupo,$fecha,$Si_disp,$grupoName)
     {
-        $var=balance::reporte($grupo,$fecha,$Si_disp);
+        $var=balance::reporte($grupo,$fecha,$Si_disp,$grupoName);
         return $var;
     }
     /**
@@ -68,7 +68,7 @@ class Reportes extends CApplicationComponent
                 $description="WT";
                 break;
             case "9":
-                $description="Saldo al ".$model->issue_date;
+                $description="Saldo al ".Utility::formatDateSINE($model->issue_date,"Y");
                 break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,"d").")";
