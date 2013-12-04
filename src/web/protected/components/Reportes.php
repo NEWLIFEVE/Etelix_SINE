@@ -60,6 +60,11 @@ class Reportes extends CApplicationComponent
         
         return $due_date;
     }
+    /**
+     * 
+     * @param type $model
+     * @return string
+     */
     public static function define_description($model)
     {
         switch ($model->id_type_accounting_document){
@@ -72,76 +77,90 @@ class Reportes extends CApplicationComponent
                 break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,"d").")";
-
         }
         return $description;
     }
-        
+    /**
+     * 
+     * @param type $model
+     * @return string
+     */  
     public static function define_fact_env($model)
     {
         if ($model->id_type_accounting_document==1){
-            return $model->currency.$model->amount;
+            return $model->currency.Yii::app()->format->format_decimal($model->amount);
         }elseif($model->id_type_accounting_document==7){
-            return $model->currency."-".$model->amount;
+            return $model->currency."-".Yii::app()->format->format_decimal($model->amount);
         }else{
             return "";
         }
     }
-    
+    /**
+     * 
+     * @param type $model
+     * @return string
+     */
     public static function define_fact_rec($model)
     {
         if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
-            return $model->currency.$model->amount;
+            return $model->currency.Yii::app()->format->format_decimal($model->amount);
         }elseif($model->id_type_accounting_document==8){
-            return $model->currency."-".$model->amount;
+            return $model->currency."-".Yii::app()->format->format_decimal($model->amount);
         }else{
             return "";
         }
     }
-        
+    /**
+     * 
+     * @param type $model
+     * @return string
+     */    
     public static function define_pagos($model)
     {
         if ($model->id_type_accounting_document==3){
-            return $model->currency.$model->amount;
+            return $model->currency.Yii::app()->format->format_decimal($model->amount);
         }else{
             return "";
         }
     }
-    
+    /**
+     * 
+     * @param type $model
+     * @return string
+     */
     public static function define_cobros($model)
     {
         if ($model->id_type_accounting_document==4){
-            return $model->currency.$model->amount;
+            return $model->currency.Yii::app()->format->format_decimal($model->amount);
         }else{
             return "";
         }
     }
+    /**
+     * 
+     * @param type $model
+     * @param type $acumulado
+     * @return type
+     */
     public static function define_balance_amount($model,$acumulado)
     {
         switch ($model->id_type_accounting_document){
             case "9":
-                return $model->amount;
+                return Yii::app()->format->format_decimal($model->amount);
                 break;
-            case "1":
-                return $acumulado + $model->amount;
+            case "1":case "3":case "8":
+                return Yii::app()->format->format_decimal($acumulado + $model->amount);
                 break;
-            case "2":
-                return $acumulado - $model->amount;
+            case "2":case "4":case "7":
+                return Yii::app()->format->format_decimal($acumulado - $model->amount);
                 break;
-            case "3":
-                return $acumulado + $model->amount;
-                break;
-            case "4":
-                return $acumulado - $model->amount;
-            case "7":
-                return $acumulado - $model->amount;
-            case "8":
-                return $acumulado + $model->amount;
-                break;
-            
         }
     }
-    
+    /**
+     * 
+     * @param type $termino_pago
+     * @return int
+     */
     public static function define_dias_TP($termino_pago)
     {
         switch ($termino_pago) {
@@ -167,8 +186,13 @@ class Reportes extends CApplicationComponent
                   break;
         }return $tp;
     }
-    
-        public static function cabecera($etiquetas,$estilos)
+    /**
+     * 
+     * @param type $etiquetas
+     * @param type $estilos
+     * @return string
+     */
+    public static function cabecera($etiquetas,$estilos)
     {
         $cabecera="<tr>";
         if(count($etiquetas)>1)

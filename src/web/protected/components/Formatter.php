@@ -1,6 +1,6 @@
 <?php
 
-class Formatter  extends CApplicationComponent{   
+class Formatter extends CApplicationComponent{   
    //***************************************************************************
    // Initialization
    //***************************************************************************

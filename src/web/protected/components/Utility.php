@@ -164,15 +164,15 @@ Class Utility
                 return $horaAmPm;
         }
         
-            
-   public static function format_decimal($num,$decimales=3)
-    {        
-        $english_format_number2 = number_format($num, 10, ',', '.');
-        $numtext=strval($english_format_number2);
-        $position = strpos($numtext, ',');
-        $numsub = substr($numtext,0,$position+$decimales); 
-        return $numsub;
-    }
+//         esta funcion no va aqui, pero por si acaso, la comento   
+//   public static function format_decimal($num,$decimales=3)
+//    {        
+//        $english_format_number2 = number_format($num, 10, ',', '.');
+//        $numtext=strval($english_format_number2);
+//        $position = strpos($numtext, ',');
+//        $numsub = substr($numtext,0,$position+$decimales); 
+//        return $numsub;
+//    }
 	/*
 	* Encargada de cambiar las comas recibidas por un punto.
 	*/

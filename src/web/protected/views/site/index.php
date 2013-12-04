@@ -38,7 +38,8 @@ $this->pageTitle = Yii::app()->name;
         <h1 class='h1_report h1REFI_PROV'>REFI PROV</h1>
     </div><br>
 </div>
-<form id="form_report_sine">
+<div>
+<form id="formulario">
     <div  class="formulario">
         <input id="tipo_report"type="hidden"value=""/>
         <div class="formInputs operador">
@@ -77,6 +78,7 @@ $this->pageTitle = Yii::app()->name;
         </div>
     </div>
 </form>
+</div>
 <div class="barra_tools_click">
     <!--<h7>Opciones</h7>-->
 <!--    <div id="next_tool">

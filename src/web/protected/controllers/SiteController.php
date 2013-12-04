@@ -147,8 +147,8 @@ class SiteController extends Controller
         {
              $fecha=(string)$_POST['fecha'];
             if(isset($_POST['grupo'])) $grupo=CarrierGroups::getID($_POST['grupo']);
-//            if(isset($_POST['Si_prov'])) $Si_prov=Reportes::define_prov($_POST['Si_prov']);
-            if(isset($_POST['Si_disp'])) $Si_disp=Reportes::define_disp($_POST['Si_disp']);
+//            if(isset($_POST['si_prov'])) $Si_prov=Reportes::define_prov($_POST['si_prov']);
+            if(isset($_POST['si_disp'])) $Si_disp=Reportes::define_disp($_POST['si_disp']);
             
             switch ($_POST['tipo_report']) {
               case 'soa':
@@ -167,14 +167,10 @@ class SiteController extends Controller
         ini_set('max_execution_time', $tiempo);
         foreach($correos as $key => $correo)
         { 
-            //Esto es para que no descargue los archivos cuando se genere uno de estos reportes
-            if(stripos($correo['asunto'],"Evolucion")==false && stripos($correo['asunto'],"Comercial")==false)
-            {
-                $this->genExcel($correo['asunto'],$correo['cuerpo'],false);
-            }
+            $this->genExcel($correo['asunto'],$correo['cuerpo'],false);
             Yii::app()->mail->enviar($correo['cuerpo'], $user, $correo['asunto'],$correo['ruta']);
         }
-        echo "Mensaje Enviado";
+        echo "Mensaje Enviado"; 
     } 
     /**
      * funcion encargada de exportar reportes por excel
@@ -190,7 +186,7 @@ class SiteController extends Controller
             $fecha=(string)$_GET['fecha'];
             if(isset($_GET['grupo']))   $grupo=CarrierGroups::getID($_GET['grupo']);      
 //            if(isset($_GET['Si_prov'])) $Si_prov=SOA::define_prov($_GET['Si_prov']);
-            if(isset($_GET['Si_disp'])) $Si_disp=Reportes::define_disp($_GET['Si_disp']);
+            if(isset($_GET['si_disp'])) $Si_disp=Reportes::define_disp($_GET['si_disp']);
             
             switch ($_GET['tipo_report']) {
               case 'soa':

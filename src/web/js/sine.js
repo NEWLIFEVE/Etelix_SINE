@@ -42,9 +42,9 @@ $SINE.UI=(function()
         function agrega_Val_radio(click,no_Click)
 	{
             var dio_click=click[0].id;
-                $(no_Click).val(''); 
-                if (dio_click=='Si_prov'||dio_click=='Si_disp')$(click).val('1');
-                else $(click).val('0');
+            $(no_Click).val(''); 
+            if (dio_click=='Si_prov'||dio_click=='Si_disp')$(click).val('1');
+            else $(click).val('0');
         }
         /**
          * 
@@ -121,25 +121,32 @@ $SINE.UI=(function()
          * @param {type} value
          * @returns {undefined}
          */
-        function changeCss(clase,attr,value){
+        function changeCss(clase,attr,value)
+        {
             $(clase).css(attr,value);
         }
-         /**
+       /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
+        * @param {type} click
+        * @returns {undefined}
         */
-        function export_report()
+        function export_report(click)
         {
-            $('#mail, #excel').on('click',function()
-            {   
-                var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&Si_prov="+$('#Si_prov').val()+"&No_prov="+$('#No_prov').val()+"&Si_disp="+$('#Si_disp').val()+"&No_disp="+$('#No_disp').val(),
-                id=$(this).attr('id');
-             if(id=="mail"){    
-                  $SINE.AJAX.send("POST","/Site/Mail",formulario);
-                  $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
-               }else{  
-                       $SINE.AJAX.send("GET","/Site/Excel",formulario);
-                    }  
-            });
+            if($('#grupo').val()==""||$('#grupo').val()==null)
+                {
+                    $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>No ha seleccionado ningun grupo</h2>","stop.png","3000","60px");  
+                }else{
+                    var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&si_prov="+$('#Si_prov').val()+"&no_prov="+$('#No_prov').val()+"&si_disp="+$('#Si_disp').val()+"&no_disp="+$('#No_disp').val(),
+                    id=$(click).attr('id');
+                    if(id=="mail")
+                     {    
+                        $SINE.AJAX.send("POST","/site/mail",formulario);
+                        $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
+                     }else{  
+                             $SINE.AJAX.send("GET","/Site/Excel",formulario);
+                          } 
+                }
+  
         }
         /**
          * 
@@ -149,25 +156,24 @@ $SINE.UI=(function()
          */
         function msj_cargando(cuerpo_msj,imagen)
         {
-           $(".cargando, .mensaje").remove();
-           var msj=$("<div class='cargando'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"' ></div>").hide(); 
-               $("body").append(msj); 
-               msj.fadeIn('slow');
+            $(".fondo_negro, .mensaje").remove();
+            var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"' ></div>").hide(); 
+            $("body").append(msj); 
+            msj.fadeIn('slow');
         }
         /**
          * 
          * @param {type} cuerpo_msj
          * @param {type} imagen
+         * @param {type} tiempo
+         * @param {type} img_width
          * @returns {undefined}
          */
-        function msj_change(cuerpo_msj,imagen)
+        function msj_change(cuerpo_msj,imagen,tiempo,img_width)
         {
-             $(".mensaje").html(cuerpo_msj+"<p><img style='width: 33%;' src='/images/"+imagen+"'>");
-             setTimeout(function() { $(".cargando, .mensaje").fadeOut('slow'); }, 1000);
+            $(".mensaje").html(cuerpo_msj+"<p><img style='width: "+img_width+";' src='/images/"+imagen+"'>");
+            setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, tiempo);
         }
-        
-        
-        
 	/**
 	 * Retorna los mestodos publicos
 	 */
@@ -249,8 +255,13 @@ $SINE.AJAX=(function()
                  data: formulario,
                  success: function(data)
                  {
-                     if(action=="/Site/Excel") window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200"); 
-                     else $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png");    
+                     if(action=="/Site/Excel")
+                     { 
+                         window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200"); 
+                     }else{
+                         $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");  
+                         console.log(data);
+                     }
                  }
             });
         }

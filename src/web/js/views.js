@@ -1,3 +1,8 @@
+  
+  $(document).on('ready',function()
+  {
+        $SINE.AJAX.init();
+  });
   /**
    * funcion encargada de cambiar estilos y comportamiento de menu principal de reportes
    * @access public
@@ -6,14 +11,20 @@
   {
         $SINE.UI.resolve_reports_menu($(this));
         $SINE.UI.elijeOpciones($(this));
-        $SINE.AJAX.init();
-        $SINE.UI.export_report();
+  });
+  /**
+   * responde al click de los botones para exportar reportes
+   */
+  $('#mail, #excel').on('click',function()
+  {
+        $SINE.UI.export_report($(this));
   });
   /**
   * 
   * @returns {undefined}
   */
-  $(function() {
+  $(function() 
+  {
         $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
   });
   /**
@@ -21,7 +32,7 @@
    */
   $('#chang_Oper_Grup,#chang_Grup_Oper').on('click',function()
   {   
-      $SINE.UI.resolvedButton($(this));
+        $SINE.UI.resolvedButton($(this));
   });
   /**
    * da valor a los radios de provisiones en reportes
