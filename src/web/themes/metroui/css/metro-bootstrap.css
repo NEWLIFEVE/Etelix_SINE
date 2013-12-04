@@ -2156,7 +2156,7 @@ a {
 }
 .metro .page {
   width: 100%;
-  min-height: 100%;
+  min-height: 200%;/*si hay problemas con el height de la interfaz, aqui puede estar el problema, seria devolver a 100%*/
   margin: 0;
   padding: 0;
 }
@@ -2218,7 +2218,7 @@ a {
   text-decoration: none !important;
 }
 .metro .page .page-region .page-region-content {
-  min-height: 330px;
+  min-height: 530px;
   position: fixed;
 }
 .metro .page .page-region .page-region-content:before,
@@ -3472,15 +3472,15 @@ a {
 }
 .metro .input-control.checkbox .check,
 .metro .input-control.radio .check {
-  width: 20px;
-  height: 20px;
-  background-color: #ffffff;
-  border: 2px #d9d9d9 solid;
-  padding: 0;
-  margin: 0;
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
+ width: 21px;
+ height: 20px;
+ background-color: #ffffff;
+ border: 2px #d9d9d9 solid;
+ padding: 0;
+ margin: 0;
+ position: relative;
+ display: flex;
+ vertical-align: initial; 
 }
 .metro .input-control.checkbox:hover .check,
 .metro .input-control.radio:hover .check {
@@ -4663,6 +4663,7 @@ a {
 }
 .metro .navigation-bar .navigation-bar-content .element:hover {
   background-color: #00aafd;
+  text-decoration: none;
 }
 .metro .navigation-bar .navigation-bar-content .element > a.dropdown-toggle {
   color: inherit;
@@ -4754,6 +4755,7 @@ a {
 }
 .metro .input-element:hover {
   background-color: inherit !important;
+  text-decoration: none;
 }
 .metro .navigation-bar.dark {
   background-color: #333333;

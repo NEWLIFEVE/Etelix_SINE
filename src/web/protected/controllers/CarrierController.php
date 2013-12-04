@@ -28,7 +28,7 @@ class CarrierController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index'),
+				'actions'=>array('index','nombres'),
 				'users'=>array('*'),
 			),
 		);

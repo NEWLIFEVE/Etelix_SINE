@@ -11,9 +11,9 @@ $this->breadcrumbs=array(
 ?>
 <div class="bodylogin">
 	<div class="cuadro">
-            <label class="titulo">
-			SINE
-		</label>
+                <p class="titulo">
+			<font class="SI">SI</font><font class="NE">NE</font>
+		</p>
 		<div class="cuadro_login">
 			<p class="login_titulo">
 				<font color="Gray"  size="4">Ingrese sus Datos</font>
@@ -29,18 +29,18 @@ $this->breadcrumbs=array(
 			?>
 			<div class="login">
 				<?php echo $form->labelEx($model,''); ?>
-				<?php echo $form->textField($model,'username'); ?>
+				<?php echo $form->textField($model,'username',array('placeholder' => 'usuario')); ?>
 			</div>
 			<div class="login">
 				<?php echo $form->labelEx($model,''); ?>
-				<?php echo $form->passwordField($model,'password'); ?>
+				<?php echo $form->passwordField($model,'password',array('placeholder' => 'contraseña')); ?>
 			</div>
 			<div class="row rememberMe">
 				<div class="botonLogin">
 					<div class="input-control checkbox" data-role="input-control">
                                             <label>
                                             <?php echo $form->checkBox($model,'rememberMe'); ?>
-                                            <span class="check"></span>  Remember Me
+                                            <span class="check"></span>  Recuerdame
                                             <?php echo $form->error($model,'rememberMe'); ?>
                                             </label>
                                         </div>

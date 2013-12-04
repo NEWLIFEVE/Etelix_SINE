@@ -18,15 +18,14 @@
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/prettify/prettify.js"></script>
         <!--COMENTARIO TEST-->
         <!-- Local JavaScript -->
-        <!--<script src="<?php // echo Yii::app()->theme->baseUrl; ?>/js/metro/metro-loader.js"></script>-->
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/metro/metro-dropdown.js"></script>
         <!-- Local JavaScript -->
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/docs.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/github.info.js"></script>
-        
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery.ui.datepicker-es.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery-ui-timepicker-addon.js"></script>
-        <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/favicon.ico" type="image/x-icon"/> 
+        <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     </head>
     <body class="metro">
         <header class="bg-dark">
@@ -35,12 +34,12 @@
             -->
             <div class="navigation-bar dark">
                 <div class="navigation-bar-content container">
-                    <a href="/" class="element"><span class="icon-grid-view"></span> <?php echo Yii::app()->name; ?> <sup>ETELIX</sup></a>
+                    <a href="/" class="element titlePage"><span class="icon-list"> </span> <?php echo Yii::app()->name; ?> <!--<sup>ETELIX</sup>--></a>
                     
                     <?php if (!Yii::app()->user->isGuest): ?>
                         <span class="element-divider"></span>
 
-                        <?php echo CHtml::link('<i class="icon-home on-right on-left"></i> Home', array('/site/index'), array('class' => 'element')); ?>
+                        <?php // echo CHtml::link('<i class="icon-home on-right on-left"></i> Home', array('/site/index'), array('class' => 'element')); ?>
                     
                                                                         <!--<div class="element">-->
                                                                         <?php // echo CHtml::link('<i class="icon-box-add on-right on-left"></i> Tickets', '#', array('class' => 'dropdown-toggle')); ?>
@@ -58,7 +57,7 @@
                                                 //                        )); ?>
                                                                         <!--</div>-->
                         <?php // if(Yii::app()->getSession()->get('role') === 1) echo CHtml::link('<i class="icon-user on-right on-left"></i> Usuarios', array('/usuarios/index'), array('class' => 'element')); ?>
-                        <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout', array('/site/logout'), array('class' => 'element')); ?>
+                        <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout ('.Yii::app()->user->name.')', array('/site/logout'), array('class' => 'element')); ?>
                         <span class="element-divider"></span>
                     <?php endif; ?> 
                 </div>
@@ -80,7 +79,7 @@
             </div>
     
         <div id="footer">
-            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. 
+            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.0
         </div>
             
     <div class="clear"></div>
@@ -88,5 +87,18 @@
         <script>
         var _root_ = "<?php echo Yii::app()->getBaseUrl(true) . '/'; ?>";
         </script>
+        <!-- Javascript - jQuery -->
+	<script src="http://code.jquery.com/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="<?php echo Yii::app()->baseUrl; ?>/js/jquery-2.0.2.min.js"><\/script>')</script>
+	<script src="<?php echo Yii::app()->baseUrl; ?>/js/sine.js"></script>
+	<script src="<?php echo Yii::app()->baseUrl; ?>/js/views.js"></script>
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script>
+		var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+			g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+			s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
     </body>
 </html>
