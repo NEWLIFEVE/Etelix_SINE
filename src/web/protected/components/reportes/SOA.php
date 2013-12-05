@@ -3,8 +3,8 @@
     /**
      * @package reportes
      */
-    class SOA extends Reportes {
-
+    class SOA extends Reportes 
+    {
         public static function reporte($grupo, $fecha, $no_disp,$grupoName) 
         {
             $acumulado = 0;
@@ -45,7 +45,7 @@
                     }
                 $tabla_SOA.="</table>";
                 $tabla_SOA.="<br><table align='right'>
-                             <tr>
+                             <tr><td></td><td></td><td></td><td></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>Balance in favor of $grupoName</h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>9800</h3></td>
                              </tr>

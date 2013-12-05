@@ -135,9 +135,19 @@ class Reportes extends CApplicationComponent
     public static function define_fact_env($model)
     {
         if ($model->id_type_accounting_document==1){
-            return Yii::app()->format->format_decimal($model->amount);
+            return $model->amount;
         }elseif($model->id_type_accounting_document==7){
-            return "-".Yii::app()->format->format_decimal($model->amount);
+            return "-".$model->amount;
+        }else{
+            return "";
+        }
+    }
+    public static function define_currency_fe($model)
+    {
+        if ($model->id_type_accounting_document==1){
+            return $model->currency;
+        }elseif($model->id_type_accounting_document==7){
+            return "-".$model->currency;
         }else{
             return "";
         }
@@ -150,9 +160,19 @@ class Reportes extends CApplicationComponent
     public static function define_fact_rec($model)
     {
         if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
-            return Yii::app()->format->format_decimal($model->amount);
+            return $model->amount;
         }elseif($model->id_type_accounting_document==8){
-            return "-".Yii::app()->format->format_decimal($model->amount);
+            return $model->amount;
+        }else{
+            return "";
+        }
+    }
+    public static function define_currency_fr($model)
+    {
+        if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
+            return $model->currency;
+        }elseif($model->id_type_accounting_document==8){
+            return $model->currency."-";
         }else{
             return "";
         }
@@ -165,7 +185,15 @@ class Reportes extends CApplicationComponent
     public static function define_pagos($model)
     {
         if ($model->id_type_accounting_document==3){
-            return Yii::app()->format->format_decimal($model->amount);
+            return $model->amount;
+        }else{
+            return "";
+        }
+    }
+    public static function define_currency_p($model)
+    {
+        if ($model->id_type_accounting_document==3){
+            return $model->currency;
         }else{
             return "";
         }
@@ -178,7 +206,15 @@ class Reportes extends CApplicationComponent
     public static function define_cobros($model)
     {
         if ($model->id_type_accounting_document==4){
-            return Yii::app()->format->format_decimal($model->amount);
+            return $model->amount;
+        }else{
+            return "";
+        }
+    }
+    public static function define_currency_c($model)
+    {
+        if ($model->id_type_accounting_document==4){
+            return $model->currency;
         }else{
             return "";
         }
@@ -193,13 +229,13 @@ class Reportes extends CApplicationComponent
     {
         switch ($model->id_type_accounting_document){
             case "9":
-                return Yii::app()->format->format_decimal($model->amount);
+                return $model->amount;
                 break;
             case "1":case "3":case "8":
-                return Yii::app()->format->format_decimal($acumulado + $model->amount);
+                return $acumulado + $model->amount;
                 break;
             case "2":case "4":case "7":
-                return Yii::app()->format->format_decimal($acumulado - $model->amount);
+                return $acumulado - $model->amount;
                 break;
         }
     }
