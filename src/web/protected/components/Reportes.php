@@ -75,7 +75,7 @@ class Reportes extends CApplicationComponent
                 $description="WT - ".$model->group." to Etelix";
                 break;
             case "9":
-                $description="Balance at - ".Utility::formatDateSINE($model->issue_date,"M-Y");
+                $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
             case "2":
                 $description =" #". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -120,7 +120,8 @@ class Reportes extends CApplicationComponent
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
                 break;
             case "7": case "8":
-                $estilos=" style='background:white;color:blue;border:1px solid black;'";
+//                $estilos=" style='background:white;color:blue;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid black;'";
                 break;
             default:
                 $estilos = " style='background:white;color:black;border:1px solid black;'";

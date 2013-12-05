@@ -190,7 +190,7 @@ class SiteController extends Controller
             
             switch ($_GET['tipo_report']) {
               case 'soa':
-                   $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha);
+                   $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$_GET['grupo']);
                    break;
               case 'balance':

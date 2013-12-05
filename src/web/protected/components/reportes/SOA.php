@@ -12,9 +12,9 @@
             $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,"2");         //trae el sql para consultas de elementos o atributos puntuales
             $tabla_SOA="";
             if ($accounting_document != null) {
-                $tabla_SOA.= "<h1>SOA $grupoName-Etelix</h1>";
-                $tabla_SOA.="<h3 style='margin-top:-5%;text-align:right'>".$fecha." - ".date("g:i a")."</h3>";
-                $tabla_SOA.= "<h5 style='color:green;'>'All amounts are expresed in ".$acc_doc_detal->currency."'</h5>
+                $tabla_SOA.= "<h1>SOA $grupoName-Etelix <h3>(".$fecha." - ".date("g:i a").")</h3></h1>";
+//                $tabla_SOA.="<h3 style='margin-top:-5%;text-align:right'>".$fecha." - ".date("g:i a")."</h3>";
+                $tabla_SOA.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
                               <table style='background:#3466B4;border:1px solid black;text-align:center;'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
@@ -45,9 +45,9 @@
                     }
                 $tabla_SOA.="</table>";
                 $tabla_SOA.="<br><table align='right'>
-                             <tr><td></td><td></td><td></td><td></td>
+                             <tr><td></td><td></td><td></td><td></td><td></td><td></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>Balance in favor of $grupoName</h3></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>9800</h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>(not yet)</h3></td>
                              </tr>
                              </table>";
                 return $tabla_SOA;
