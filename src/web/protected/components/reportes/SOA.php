@@ -40,7 +40,7 @@
                         $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
                         $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
                         $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
-                        $tabla_SOA.="<td style='text-align: right;'>" . $acumulado."</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($acumulado,3)."</td>";
                         $tabla_SOA.="</tr>";            
                     }
                 $tabla_SOA.="</table>";
