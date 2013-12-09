@@ -68,7 +68,7 @@
                 where a.id_carrier IN(Select id from carrier where id_carrier_groups=$grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date < '{$fecha}'
                 $no_disp
-                order by issue_date";
+                order by issue_date, from _date";
                 
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
