@@ -137,13 +137,15 @@ class Reportes extends CApplicationComponent
     {
         if ($model->id_type_accounting_document==1){
             return Yii::app()->format->format_decimal($model->amount,3);
+        }elseif($model->id_type_accounting_document==9 && $model->amount>=0){
+            return Yii::app()->format->format_decimal($model->amount,3);
         }elseif($model->id_type_accounting_document==7){
             return "-".Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
         }
     }
-    public static function define_currency_fe($model)
+    public static function define_currency_fe($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==1){
             return $model->currency;
@@ -160,15 +162,17 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fact_rec($model)
     {
-        if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
+        if ($model->id_type_accounting_document==2){
             return Yii::app()->format->format_decimal($model->amount,3);
+        }elseif($model->id_type_accounting_document==9 && $model->amount<0){
+            return Yii::app()->format->format_decimal(($model->amount)*-1,3);
         }elseif($model->id_type_accounting_document==8){
             return Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
         }
     }
-    public static function define_currency_fr($model)
+    public static function define_currency_fr($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
             return $model->currency;
@@ -191,7 +195,7 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
-    public static function define_currency_p($model)
+    public static function define_currency_p($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==3){
             return $model->currency;
@@ -212,7 +216,7 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
-    public static function define_currency_c($model)
+    public static function define_currency_c($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==4){
             return $model->currency;
