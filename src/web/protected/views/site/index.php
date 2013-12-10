@@ -11,7 +11,7 @@ $this->pageTitle = Yii::app()->name;
             SINE
 </article>
     
-<div class='subtitulos'><h1>Seleccione el reporte</h1></div>
+<div class='subtitulos'><h1>Seleccione reporte</h1></div>
 
 <div class="listadeReportes">
     <div class="Reportes SOA" id="soa">
