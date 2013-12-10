@@ -58,7 +58,7 @@
                 $tabla_SOA.="<br><table align='right'>
                              <tr><td></td><td></td><td></td><td></td><td></td><td></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>".Reportes::define_a_favor($acc_doc_detal,$acumulado)."</h3></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>"  . Yii::app()->format->format_decimal($acumulado,3). "</h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</h3></td>
                              </tr>
                              </table>";
                 return $tabla_SOA;
