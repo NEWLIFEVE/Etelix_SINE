@@ -134,7 +134,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_null()
     {
-        $estilos = " style='background:white;color:black;border:0px;'";
+        $estilos = " style='background:white;color:black;border:1px solid white;'";
         return $estilos;
     }
     /**

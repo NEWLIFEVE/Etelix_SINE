@@ -19,7 +19,7 @@
                 $tabla_SOA.= "<h1>SOA $grupoName-Etelix <h3>(".$fecha." - ".date("g:i a").")</h3></h1>";
 //                $tabla_SOA.="<h3 style='margin-top:-5%;text-align:right'>".$fecha." - ".date("g:i a")."</h3>";
                 $tabla_SOA.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
-                              <table style='background:#3466B4; solid black;text-align:center;'>
+                              <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
