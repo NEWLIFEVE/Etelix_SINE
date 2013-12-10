@@ -20,8 +20,17 @@
   }
 }
 @media (max-width: 360px) { 
-    .cuadro_login{ width: 87%;margin-left: -354px;}
+    .cuadro{margin-left: 143px!important;margin-top: -14px!important;height: 566px!important;}
+    input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
     .metro input[type="submit"].primary{width: 213px!important;}
     #remember{display: run-in!important;}
+    .subtitulos{width: 294px;}
+    .listadeReportes {margin-left: -27px;margin-top: -260px!important;}
+    .formulario{background: white;height: 600px!important;margin-top: -588px!important;width: 41%!important;position: absolute!important;margin-left: -3%!important;}
+    input{width: 296px!important;}
+    
+    #botones_exportar {margin-left: -10%!important;}
+    .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -145px!important;}
+    .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
 }
 
