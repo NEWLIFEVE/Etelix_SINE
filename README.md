@@ -13,6 +13,7 @@ Realese 1.0.1
        -Hora en el archivo y nombre de archivo
        -Eliminado el (-) en valores negativos, solo en columna due-balance
        -Eliminado due date para pagos y cobros y saldo inicial
+       -Ordenado por Issue_date y el periodo de facturación.
 
 Release 1.0
 - Reporte SOA funcionando sin provisiones
