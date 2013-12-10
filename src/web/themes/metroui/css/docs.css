@@ -125,6 +125,9 @@ text-shadow: none;
     position: absolute;
     width: 158.5%;
 }
+@media screen and (max-width: 600px) { /* 13 / 390 */
+    .contratoForm{ width: 45%;}
+}
 .cuadro
 {
     height: 450px;
@@ -152,7 +155,8 @@ text-shadow: none;
     height: 75%;
     padding: 16%;
     text-align: center;
-}  
+}
+
 input#LoginForm_username
 {
     background-position:198px -17px;

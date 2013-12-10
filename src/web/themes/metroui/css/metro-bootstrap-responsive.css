@@ -19,4 +19,9 @@
     height: 80px;
   }
 }
+@media (max-width: 360px) { 
+    .cuadro_login{ width: 87%;margin-left: -354px;}
+    .metro input[type="submit"].primary{width: 213px!important;}
+    #remember{display: run-in!important;}
+}
 

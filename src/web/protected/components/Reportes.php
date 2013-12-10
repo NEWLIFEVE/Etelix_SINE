@@ -129,6 +129,36 @@ class Reportes extends CApplicationComponent
         return $estilos;
     }
     /**
+     * deja los bordes en cero y el fonde en blaco para los tr  de las tabla, por ejemplo en el tr de totales, para que solo resalten los td donde hay informacion
+     * @return string
+     */
+    public static function define_estilos_null()
+    {
+        $estilos = " style='background:white;color:black;border:0px;'";
+        return $estilos;
+    }
+    /**
+     * define el estilo de los td´s td donde se alojen totales en los reportes
+     * @return string
+     */
+    public static function define_estilos_totals()
+    {
+        $estilos = " style='background:white;color:black;border:1px solid black;'";
+        return $estilos;
+    }
+    /**
+     * define a favor de quien esta el balance final en los SOA... la regla es que si el balance es negativo, esta a favor del operador, de lo contrario estara a favor de etelix
+     * @param type $model
+     * @param type $acumulado
+     * @return string
+     */
+    public static function define_a_favor($model,$acumulado)
+    {
+        if($acumulado < 0)$afavor="Balance in favor of ".$model->group;
+        else $afavor="Balance in favor of Etelix";
+        return $afavor;
+    }
+    /**
      * 
      * @param type $model
      * @return string

@@ -37,7 +37,7 @@ $this->breadcrumbs=array(
 			</div>
 			<div class="row rememberMe">
 				<div class="botonLogin">
-					<div class="input-control checkbox" data-role="input-control">
+					<div id="remember"class="input-control checkbox" data-role="input-control">
                                             <label>
                                             <?php echo $form->checkBox($model,'rememberMe'); ?>
                                             <span class="check"></span>  Recuerdame
