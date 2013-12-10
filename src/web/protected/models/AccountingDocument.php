@@ -47,6 +47,7 @@ class AccountingDocument extends CActiveRecord
         public $type;
         public $currency;
         public $tp;
+        public $totals;
 	/**
 	 * @return string the associated database table name
 	 */

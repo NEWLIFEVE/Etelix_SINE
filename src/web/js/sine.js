@@ -133,7 +133,7 @@ $SINE.UI=(function()
         function export_report(click)
         {
             if($('#grupo').val()==""||$('#grupo').val()==null)
-                {
+                {                                             //hay que mejorarlo...
                     $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>No ha seleccionado ningun grupo</h2>","stop.png","3000","60px");  
                 }else{
                     var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&si_prov="+$('#Si_prov').val()+"&no_prov="+$('#No_prov').val()+"&si_disp="+$('#Si_disp').val()+"&no_disp="+$('#No_disp').val(),
@@ -143,10 +143,19 @@ $SINE.UI=(function()
                         $SINE.AJAX.send("POST","/site/mail",formulario);
                         $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
                      }else{  
-                             $SINE.AJAX.send("GET","/Site/Excel",formulario);
+                             $SINE.UI.genExcel("/Site/Excel",formulario);
                           } 
                 }
-  
+        }
+        /**
+         * 
+         * @param {type} action
+         * @param {type} formulario
+         * @returns {undefined}
+         */
+        function genExcel(action,formulario)
+        {
+            window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200");  
         }
         /**
          * 
@@ -187,7 +196,8 @@ $SINE.UI=(function()
                 export_report:export_report,
                 resolvedButton:resolvedButton,
                 msj_cargando:msj_cargando,
-                msj_change:msj_change
+                msj_change:msj_change,
+                genExcel:genExcel
 	};
 })();
 
@@ -244,7 +254,7 @@ $SINE.AJAX=(function()
         * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
         * @param {type} type
         * @param {type} action
-        * * @param {type} formulario
+        * @param {type} formulario
         * @returns {undefined}
         */
         function send(type,action,formulario)
