@@ -8,25 +8,25 @@
         public static function reporte($grupo, $fecha, $no_disp,$grupoName) 
         {
             $acumulado = 0;
+            $acumuladoPago = 0;
+            $acumuladoCobro = 0;
+            $acumuladoFacEnv = 0;
+            $acumuladoFacRec = 0;
             $accounting_document = SOA::get_Model($grupo, $fecha, $no_disp,"1"); //trae el sql pricipal
-            $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,"2");//trae el sql para consultas de elementos o atributos puntuales  
-            $total_fac_env=SOA::get_amount_totals($grupo, $fecha, $no_disp,"1");
-            $total_fac_rec=SOA::get_amount_totals($grupo, $fecha, $no_disp,"2");
-            $total_pagos=SOA::get_amount_totals($grupo, $fecha, $no_disp,"3");
-            $total_cobros=SOA::get_amount_totals($grupo, $fecha, $no_disp,"4");
+            $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,"2");//trae el sql para consultas de elementos o atributos puntuales
+            
             $tabla_SOA="";
             if ($accounting_document != null) {
                 $tabla_SOA.= "<h1>SOA $grupoName-Etelix <h3>(".$fecha." - ".date("g:i a").")</h3></h1>";
-//                $tabla_SOA.="<h3 style='margin-top:-5%;text-align:right'>".$fecha." - ".date("g:i a")."</h3>";
                 $tabla_SOA.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
                               <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
                               <td style='width:100px;'>Due Date</td>
-                              <td style='width:100px;'>Payments on account (Etelix to $grupoName)</td>
+                              <td style='width:100px;'>Payments on account <br>(Etelix to $grupoName)</td>
                               <td style='width:100px;'>Received invoices</td>
-                              <td style='width:100px;'>Payments on account ($grupoName to Etelix)</td>
+                              <td style='width:100px;'>Payments on account <br>($grupoName to Etelix)</td>
                               <td style='width:100px;'>Invoices to collect</td>
                               <td style='width:100px;'>Due Balance</td>
                               </tr>";
@@ -35,6 +35,10 @@
                         $tp=Reportes::define_dias_TP($document->tp);
                         $due_date=Reportes::define_due_date($tp, $document->issue_date);
                         $acumulado=Reportes::define_balance_amount($document,$acumulado);
+                        $acumuladoPago=Reportes::define_total_pago($document,$acumuladoPago);
+                        $acumuladoCobro =Reportes::define_total_cobro($document,$acumuladoCobro);
+                        $acumuladoFacEnv =Reportes::define_total_fac_env($document,$acumuladoFacEnv);
+                        $acumuladoFacRec =Reportes::define_total_fac_rec($document,$acumuladoFacRec);
                         
                         $tabla_SOA.="<tr " . Reportes::define_estilos($document) . ">";
                         $tabla_SOA.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
@@ -48,17 +52,17 @@
                         $tabla_SOA.="</tr>";            
                     }
                 $tabla_SOA.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($total_pagos->totals,3)."</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($total_fac_rec->totals,3)."</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($total_cobros->totals,3)."</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($total_fac_env->totals,3)."</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoPago,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoFacRec,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoCobro,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoFacEnv,3). "</td>
                              <td></td>
                              </tr>";
                 $tabla_SOA.="</table>";
                 $tabla_SOA.="<br><table align='right'>
                              <tr><td></td><td></td><td></td><td></td><td></td><td></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>".Reportes::define_a_favor($acc_doc_detal,$acumulado)."</h3></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>"  . Yii::app()->format->format_decimal($acumulado,3). "</h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>" .Reportes::define_a_favor($acc_doc_detal,$acumulado). "</h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>" . Yii::app()->format->format_decimal($acumulado*-1,3). "</h3></td>
                              </tr>
                              </table>";
                 return $tabla_SOA;
@@ -84,17 +88,6 @@
                 
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
-        }
-        
-        private static function get_amount_totals($grupo, $fecha, $no_disp,$tipo_doc) 
-        {
-            $sql = "select SUM(a.amount) AS totals
-                from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                where a.id_carrier IN(Select id from carrier where id_carrier_groups=$grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                and id_type_accounting_document=$tipo_doc   $no_disp ";
-                
-                return AccountingDocument::model()->findBySql($sql);
         }
     }
 

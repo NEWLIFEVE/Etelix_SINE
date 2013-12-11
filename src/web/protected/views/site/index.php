@@ -76,6 +76,9 @@ $this->pageTitle = Yii::app()->name;
                 <button name="No_disp" id="No_disp" type="button" value=""class="btn btn-primary">No</button>
             </div>  
         </div>
+        <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
+        <div class="trabajando"><img src="/images/trabajando.png" class='ver'></div><!--este div es para indicar que la interfaz no esta lista-->
+        <!--.................-->
     </div>
 </form>
 </div>

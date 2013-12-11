@@ -53,30 +53,46 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador, .grupo, .datepicker, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper'],
+            var ocultar =['.operador, .grupo, .datepicker, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha'],
             nombre=obj[0].id;
             switch (nombre) 
             {
                 case "soa":
-                  var mostrar =['.grupo, .datepicker, .provisiones,.disputas']; 
+                  var mostrar =['.grupo, .datepicker, .provisiones,.disputas,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
+                  //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
-                  var mostrar =['.grupo, .chang_Oper_Grup,.datepicker, .provisiones,.disputas']; 
+                  var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
+                    var mostrar =['.trabajando']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
+                    var mostrar =['.trabajando']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
+                    var mostrar =['.trabajando']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
+                    var mostrar =['.trabajando']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
             $("#tipo_report").val(nombre);
             $('.formulario').css('display','block').css('width','81%').css('margin-left','39%');
             $('.barra_tools_click').show();
+            
+            //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
+            if(nombre=="soa")
+                {
+                    $('.trabajando').fadeOut('fast');
+                }
+                //.....
         }
         /**
          * se encarga de indicar que boton e input ocultar o mostrar en el cambio entre grupos y operador

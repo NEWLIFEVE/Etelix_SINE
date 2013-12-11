@@ -13,12 +13,18 @@ class Formatter extends CApplicationComponent{
 
 
     public function format_decimal($num,$decimales=3)
-    {   if($num!=""){     
-        $english_format_number2 = number_format($num, 10, ',', '.');
-        $numtext=strval($english_format_number2);
-        $position = strpos($numtext, ',');
-        $numsub = substr($numtext,0,$position+$decimales); 
-        return $numsub;
+    {   
+          if($num!=""){ 
+            if( strlen($num)<=3)
+             { 
+                $numsub=$num.".00";
+                return $numsub;
+             }
+                $english_format_number2 = number_format($num, 10, ',', '.');
+                $numtext=strval($english_format_number2);
+                $position = strpos($numtext, ',');
+                $numsub = substr($numtext,0,$position+$decimales); 
+                return $numsub;
         }else{
             return "";
         }

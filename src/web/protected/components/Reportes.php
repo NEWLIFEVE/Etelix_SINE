@@ -275,6 +275,72 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
+     * determina el total de pagos, por ahora solo tiene esa funcion 
+     * @param type $model
+     * @param type $acumuladoPago
+     * @return type
+     */
+    public static function define_total_pago($model,$acumuladoPago)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "3":
+                return $acumuladoPago + $model->amount;
+                break;
+            default:
+                return $acumuladoPago;
+                break;
+        }
+    }
+    /**
+     * determina el total de cobros, por ahora solo tiene esa funcion
+     * @param type $model
+     * @param type $acumuladoCobro
+     * @return type
+     */
+    public static function define_total_cobro($model,$acumuladoCobro)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "4":
+                return $acumuladoCobro + $model->amount;
+                break;
+            default:
+                return $acumuladoCobro;
+                break;
+        }
+    }
+    /**
+     * Calcula total de facturas recibidas, para incluir en el total el saldo final, este debe ser negativo, y entonces el mismo seria restado para ello se multiplica por -1 antes de hacer la operacion, en si, el saldo se le descuenta al total. en el caso de las notas de credito, estas se le sumaran al total
+     * @param type $model
+     * @param type $acumuladoFacRec
+     * @return type
+     */
+    public static function define_total_fac_rec($model,$acumuladoFacRec)
+    {
+        if ($model->id_type_accounting_document==2){
+                return $acumuladoFacRec + $model->amount; }
+            elseif($model->id_type_accounting_document==9 && $model->amount<0){
+                return $acumuladoFacRec - ($model->amount*-1); }
+            elseif($model->id_type_accounting_document==8) {
+                return $acumuladoFacRec + $model->amount;}
+            else{return $acumuladoFacRec;} 
+    }
+    /**
+     * Calcula total de facturas enviadas, para incluir en el total el saldo final, este debe ser positivo, y entonces el mismo seria sumado al total. en el caso de las notas de credito, estas se le restarian al total
+     * @param type $model
+     * @param type $acumuladoFacEnv
+     * @return type
+     */
+    public static function define_total_fac_env($model,$acumuladoFacEnv)
+    {
+        if ($model->id_type_accounting_document==1){
+                return $acumuladoFacEnv + $model->amount; }
+            elseif($model->id_type_accounting_document==9 && $model->amount>0){
+                return $acumuladoFacEnv + $model->amount; }
+            elseif($model->id_type_accounting_document==7) {
+                return $acumuladoFacEnv - $model->amount;}
+            else{return $acumuladoFacEnv;} 
+    }
+    /**
      * 
      * @param type $termino_pago
      * @return int

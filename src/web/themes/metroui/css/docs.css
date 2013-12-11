@@ -503,3 +503,11 @@ li.ui-menu-item a
     width: 490px;
     z-index: 1031;
 }
+/*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
+.trabajando 
+{
+    width: 417px;
+    padding: 110px;
+    display: none;
+}
+/*....*/
