@@ -158,6 +158,11 @@ class Reportes extends CApplicationComponent
         else $afavor="Balance in favor of Etelix";
         return $afavor;
     }
+    public static function define_a_favor_monto($acumulado)
+    {
+        if($acumulado < 0)$acumulado=$acumulado*-1;
+        return $acumulado;
+    }
     /**
      * 
      * @param type $model
