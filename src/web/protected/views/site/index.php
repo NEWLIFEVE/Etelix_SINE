@@ -77,7 +77,7 @@ $this->pageTitle = Yii::app()->name;
             </div>  
         </div>
         <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
-        <div class="trabajando"><img src="/images/trabajando.png" class='ver'></div><!--este div es para indicar que la interfaz no esta lista-->
+        <div class="trabajando"><img src="/images/trabajando.png" class='ver'><h2>Estamos trabajando...</h2></div><!--este div es para indicar que la interfaz no esta lista-->
         <!--.................-->
     </div>
 </form>

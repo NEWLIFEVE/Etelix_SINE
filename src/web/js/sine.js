@@ -85,12 +85,15 @@ $SINE.UI=(function()
             }
             $("#tipo_report").val(nombre);
             $('.formulario').css('display','block').css('width','81%').css('margin-left','39%');
-            $('.barra_tools_click').show();
+//            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
             if(nombre=="soa")
                 {
-                    $('.trabajando').fadeOut('fast');
+                    $('.trabajando').hide('slow');
+                    $('.barra_tools_click').show('fast');
+                }else{
+                    $('.barra_tools_click').hide('fast');
                 }
                 //.....
         }
