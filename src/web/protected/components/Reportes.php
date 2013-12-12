@@ -39,9 +39,9 @@ class Reportes extends CApplicationComponent
     public static function Define_grupo($grupo)
     {    
            if($grupo=="CABINAS PERU")  
-               return "301";
+               return "id_carrier_groups=301 OR id_carrier_groups=44";
            else   
-               return CarrierGroups::getID($grupo);
+               return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
     /**
      * define si la consulta traera las disputas o no
