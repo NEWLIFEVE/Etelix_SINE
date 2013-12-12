@@ -63,23 +63,23 @@ $SINE.UI=(function()
                   break; 
                   //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
-                  var mostrar =['.trabajando']; 
+                  var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -94,6 +94,7 @@ $SINE.UI=(function()
                     $('.barra_tools_click').show('fast');
                 }else{
                     $('.barra_tools_click').hide('fast');
+                    $('.trabajando').show('slow');
                 }
                 //.....
         }
@@ -127,10 +128,10 @@ $SINE.UI=(function()
         function formChangeAccDoc(ocultar, mostrar)
         {
             for (var i=0, j=ocultar.length - 1; i <= j; i++){
-                $(ocultar[i]).fadeOut('fast');              
+                $(ocultar[i]).hide('fast');              
             }
             for (var x=0, z=mostrar.length - 1; x <= z; x++){
-                $(mostrar[x]).fadeIn('fast');              
+                $(mostrar[x]).show('slow');              
             }  
         }
         /**

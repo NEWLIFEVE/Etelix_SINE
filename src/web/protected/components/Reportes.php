@@ -11,27 +11,37 @@ class Reportes extends CApplicationComponent
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
      * @param type $fecha
-     * @param type $Si_prov
      * @param type $no_disp
+     * @param type $no_prov
+     * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$grupoName)
+    public function SOA($grupo,$fecha,$no_disp,$no_prov,$grupoName)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$grupoName);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
     }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
      * @param type $fecha
-     * @param type $Si_prov
      * @param type $no_disp
+     * @param type $no_prov
+     * @param type $grupoName
      * @return type
      */
-    public function balance($grupo,$fecha,$no_disp,$grupoName)
+    public function balance($grupo,$fecha,$no_disp,$no_prov,$grupoName)
     {
-        $var=balance::reporte($grupo,$fecha,$no_disp,$grupoName);
+        $var=balance::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
+    }
+
+    public static function Define_grupo($grupo)
+    {    
+           if($grupo=="CABINAS PERU")  
+               return "301";
+           else   
+               return CarrierGroups::getID($grupo);
     }
     /**
      * define si la consulta traera las disputas o no
@@ -46,6 +56,14 @@ class Reportes extends CApplicationComponent
         else  
            $disp_sql="";
         return $disp_sql;
+    }
+    public static function define_prov($no_prov)
+    {
+        if($no_prov=="0")
+           $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
+        else  
+           $prov_sql="";
+        return $prov_sql;
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date

@@ -5,15 +5,15 @@
      */
     class SOA extends Reportes 
     {
-        public static function reporte($grupo, $fecha, $no_disp,$grupoName) 
+        public static function reporte($grupo, $fecha, $no_disp,$no_prov,$grupoName) 
         {
             $acumulado = 0;
             $acumuladoPago = 0;
             $acumuladoCobro = 0;
             $acumuladoFacEnv = 0;
             $acumuladoFacRec = 0;
-            $accounting_document = SOA::get_Model($grupo, $fecha, $no_disp,"1"); //trae el sql pricipal
-            $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,"2");//trae el sql para consultas de elementos o atributos puntuales
+            $accounting_document = SOA::get_Model($grupo, $fecha, $no_disp,$no_prov,"1"); //trae el sql pricipal
+            $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,$no_prov,"2");//trae el sql para consultas de elementos o atributos puntuales
             
             $tabla_SOA="";
             if ($accounting_document != null) {
@@ -76,16 +76,18 @@
          * @param type $grupo
          * @param type $fecha
          * @param type $no_disp
+         * @param type $no_prov
+         * @param type $tipoSql
          * @return type
          */
-        private static function get_Model($grupo, $fecha, $no_disp,$tipoSql) 
+        private static function get_Model($grupo, $fecha, $no_disp,$no_prov,$tipoSql) 
         {
             $sql = "select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                 where a.id_carrier IN(Select id from carrier where id_carrier_groups=$grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                $no_disp
-                order by issue_date,from_date";
+                $no_disp 
+                order by issue_date,from_date $no_prov";
                 
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
