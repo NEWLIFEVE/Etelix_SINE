@@ -39,9 +39,9 @@
 /*resolucion para telefonos como smasung, LG, android en general "vertical"*/
 @media (max-width: 360px) 
 { 
-    .cuadro{margin-left: 143px!important;margin-top: -14px!important;height: 566px!important;}
+    .cuadro{margin-left: 81px!important;margin-top: -14px!important;height: 566px!important;}
     input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
-    .metro input[type="submit"].primary{width: 213px!important;}
+    .metro input[type="submit"].primary{width: 213px!important;margin-top: -6%!important;}
     #remember{display: run-in!important;}
     .subtitulos{width: 294px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: -260px!important;}
