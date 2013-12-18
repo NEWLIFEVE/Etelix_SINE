@@ -125,7 +125,6 @@
            
            $tabla_refac.="</table>";
            
-           var_dump($sori->amount);
            return $tabla_refac;
         }
         /**
