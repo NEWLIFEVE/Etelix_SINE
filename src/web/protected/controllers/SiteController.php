@@ -207,8 +207,8 @@ class SiteController extends Controller
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
                    break;
               case 'refac':
-                   $correos['refac']['asunto']="SINE - ".$this->letra."refac".self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
+                   $archivos['refac']['nombre']="SINE - ".$this->letra."refac".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
                    break;
             }  
         }

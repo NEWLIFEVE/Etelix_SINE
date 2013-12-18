@@ -21,7 +21,7 @@
            $tabla_refac.="<table>
                           <tr>
                           <td " . $style_title . " colspan='3'></td>
-                          <td " . $style_title . " colspan='4'><b>REFAC " . Reportes::define_num_dias($fecha_from, $fecha_to) . " " . str_replace("-","",$fecha_from) . "-" . str_replace("-","",$fecha_to) . " al " . str_replace("-","",$fecha) . "</b></td><td " . $style_title . " colspan='3'></td>
+                          <td " . $style_title . " colspan='4'><b>REFAC " . Reportes::define_num_dias($fecha_from, $fecha_to) . " " . str_replace("-","",$fecha_from) . " - " . str_replace("-","",$fecha_to) . " al " . str_replace("-","",$fecha) . "</b></td><td " . $style_title . " colspan='3'></td>
                           </tr>
                           </table>";
            $tabla_refac.="<br><table>
@@ -60,13 +60,13 @@
            $tabla_refac.="<tr> 
                           <td " . $style_basic . ">" .$captura->carrier. "</td>
                           <td " . $style_basic . ">" .$captura->minutes. "</td>
-                          <td " . $style_basic . ">" .$captura->amount. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($captura->amount,3). "</td>
                           </tr>";   
           }
            $tabla_refac.="<tr>
                           <td " .$style_captura. "><b>TOTAL</b></td>
                           <td " .$style_captura. "></td>
-                          <td " .$style_totals. "><b>" .$acumulado_captura. "</b></td>
+                          <td " .$style_totals. "><b>" .Yii::app()->format->format_decimal($acumulado_captura,3). "</b></td>
                           </tr>";
            $tabla_refac.="</table>
                           </td>
@@ -85,14 +85,14 @@
            $tabla_refac.="<tr>
                           <td " . $style_basic . ">" .$sori->carrier. "</td>
                           <td " . $style_basic . ">" .$sori->minutes. "</td>
-                          <td " . $style_basic . ">" .$sori->amount. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($sori->amount,3). "</td>
                           <td " . $style_basic . ">" .$sori->doc_number. "</td>
                           </tr>";   
           }
            $tabla_refac.="<tr>
                           <td " .$style_sori. "><b>TOTAL</b></td>
                           <td " .$style_sori. "></td>
-                          <td " .$style_totals. "><b>" .$acumulado_sori. "</b></td>
+                          <td " .$style_totals. "><b>" .Yii::app()->format->format_decimal($acumulado_sori,3). "</b></td>
                           <td " .$style_sori. "></td>
                           </tr>";
            $tabla_refac.="</table>
@@ -110,14 +110,14 @@
 //             $acumulado_diference=Reportes::define_total_diference($sori,$acumulado_sori_captura);
            $tabla_refac.="<tr>
                           <td " . $style_basic . ">" .$sori->carrier. "</td>
-                          <td " . $style_basic . ">" .refac::define_diferencias_minut($sori, 100). "</td>
-                          <td " . $style_basic . ">" .refac::define_diferencias_mont($sori, 100). "</td>
+                          <td " . $style_basic . ">" .$sori->minutes. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($sori->amount,3). "</td>
                           </tr>";   
           }
            $tabla_refac.="<tr>
                           <td " .$style_diference. "><b>TOTAL</b></td>
                           <td " .$style_diference. "></td>
-                          <td " .$style_totals. "><b>$1500</b></td>
+                          <td " .$style_totals. "><b>$1500,00</b></td>
                           </tr>";
            $tabla_refac.="</table>
                           </td>
@@ -125,7 +125,7 @@
            
            $tabla_refac.="</table>";
            
-           
+           var_dump($sori->amount);
            return $tabla_refac;
         }
         /**
