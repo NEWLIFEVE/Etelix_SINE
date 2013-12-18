@@ -62,6 +62,14 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
+        <div class="formInputs fecha_from">
+            <h3>Desde</h3>
+            <input type="text" id="datepicker_from" value=""/>
+        </div>
+        <div class="formInputs fecha_to">
+            <h3>Hasta</h3>
+            <input type="text" id="datepicker_to" value=""/>
+        </div>
         <div class='formInputs provisiones'>
             <h3>Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
@@ -76,6 +84,9 @@ $this->pageTitle = Yii::app()->name;
                 <button name="No_disp" id="No_disp" type="button" value=""class="btn btn-primary">No</button>
             </div>  
         </div>
+        <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
+        <div class="trabajando"><img src="/images/trabajando.png" class='ver'><h2>Estamos trabajando...</h2></div><!--este div es para indicar que la interfaz no esta lista-->
+        <!--.................-->
     </div>
 </form>
 </div>

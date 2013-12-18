@@ -14,6 +14,10 @@
 {
   
 }
+
+/*@media only screen and (max-width: 320px) {}*/
+
+/*resolucion para iphone "vertical"*/
 @media (max-width: 480px) 
 {
     .tile { width: 80px; height: 80px;}
@@ -27,20 +31,28 @@
     .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -145px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;} 
     input{width: 328px!important;}
+    
+    /*PROVISIONAL*/
+    .trabajando {width: 323px;padding: 11px;}
 }
-/*@media only screen and (max-width: 320px) {}*/
+
+/*resolucion para telefonos como smasung, LG, android en general "vertical"*/
 @media (max-width: 360px) 
 { 
-    .cuadro{margin-left: 143px!important;margin-top: -14px!important;height: 566px!important;}
+    .cuadro{margin-left: 81px!important;margin-top: -14px!important;height: 566px!important;}
     input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
-    .metro input[type="submit"].primary{width: 213px!important;}
+    .metro input[type="submit"].primary{width: 213px!important;margin-top: -6%!important;}
     #remember{display: run-in!important;}
     .subtitulos{width: 294px;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px;margin-top: -260px!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: -260px!important;}
     .formulario{background: white;height: 600px!important;margin-top: -551px!important;width: 41%!important;position: absolute!important;margin-left: -3%!important;}
     input{width: 296px!important;}
+    .formInputs {margin-left: -46%!important;}
+    .disputas {margin-left: -8%!important;}
     #botones_exportar {margin-left: -15%!important;}
     .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -145px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
+    /*PROVISIONAL*/
+    .trabajando {width: 323px!important;padding: 2px!important;}
 }
 

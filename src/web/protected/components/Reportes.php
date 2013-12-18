@@ -11,27 +11,48 @@ class Reportes extends CApplicationComponent
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
      * @param type $fecha
-     * @param type $Si_prov
      * @param type $no_disp
+     * @param type $no_prov
+     * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$grupoName)
+    public function SOA($grupo,$fecha,$no_disp,$no_prov,$grupoName)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$grupoName);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
     }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
      * @param type $fecha
-     * @param type $Si_prov
      * @param type $no_disp
+     * @param type $no_prov
+     * @param type $grupoName
      * @return type
      */
-    public function balance($grupo,$fecha,$no_disp,$grupoName)
+    public function balance($grupo,$fecha,$no_disp,$no_prov,$grupoName)
     {
-        $var=balance::reporte($grupo,$fecha,$no_disp,$grupoName);
+        $var=balance::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
+    }
+    /**
+     * 
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @return type
+     */
+    public function refac($fecha_from,$fecha_to,$fecha)
+    {
+        $var=refac::reporte($fecha_from,$fecha_to,$fecha);
+        return $var;
+    }
+
+    public static function define_grupo($grupo)
+    {    
+           if($grupo=="CABINAS PERU")  
+               return "id_carrier_groups=301 OR id_carrier_groups=443";
+           else   
+               return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
     /**
      * define si la consulta traera las disputas o no
@@ -46,6 +67,14 @@ class Reportes extends CApplicationComponent
         else  
            $disp_sql="";
         return $disp_sql;
+    }
+    public static function define_prov($no_prov)
+    {
+        if($no_prov=="0")
+           $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
+        else  
+           $prov_sql="";
+        return $prov_sql;
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date
@@ -280,6 +309,72 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
+     * determina el total de pagos, por ahora solo tiene esa funcion 
+     * @param type $model
+     * @param type $acumuladoPago
+     * @return type
+     */
+    public static function define_total_pago($model,$acumuladoPago)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "3":
+                return $acumuladoPago + $model->amount;
+                break;
+            default:
+                return $acumuladoPago;
+                break;
+        }
+    }
+    /**
+     * determina el total de cobros, por ahora solo tiene esa funcion
+     * @param type $model
+     * @param type $acumuladoCobro
+     * @return type
+     */
+    public static function define_total_cobro($model,$acumuladoCobro)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "4":
+                return $acumuladoCobro + $model->amount;
+                break;
+            default:
+                return $acumuladoCobro;
+                break;
+        }
+    }
+    /**
+     * Calcula total de facturas recibidas, para incluir en el total el saldo final, este debe ser negativo, y entonces el mismo seria restado para ello se multiplica por -1 antes de hacer la operacion, en si, el saldo se le descuenta al total. en el caso de las notas de credito, estas se le sumaran al total
+     * @param type $model
+     * @param type $acumuladoFacRec
+     * @return type
+     */
+    public static function define_total_fac_rec($model,$acumuladoFacRec)
+    {
+        if ($model->id_type_accounting_document==2){
+                return $acumuladoFacRec + $model->amount; }
+            elseif($model->id_type_accounting_document==9 && $model->amount<0){
+                return $acumuladoFacRec - ($model->amount*-1); }
+            elseif($model->id_type_accounting_document==8) {
+                return $acumuladoFacRec + $model->amount;}
+            else{return $acumuladoFacRec;} 
+    }
+    /**
+     * Calcula total de facturas enviadas, para incluir en el total el saldo final, este debe ser positivo, y entonces el mismo seria sumado al total. en el caso de las notas de credito, estas se le restarian al total
+     * @param type $model
+     * @param type $acumuladoFacEnv
+     * @return type
+     */
+    public static function define_total_fac_env($model,$acumuladoFacEnv)
+    {
+        if ($model->id_type_accounting_document==1){
+                return $acumuladoFacEnv + $model->amount; }
+            elseif($model->id_type_accounting_document==9 && $model->amount>0){
+                return $acumuladoFacEnv + $model->amount; }
+            elseif($model->id_type_accounting_document==7) {
+                return $acumuladoFacEnv - $model->amount;}
+            else{return $acumuladoFacEnv;} 
+    }
+    /**
      * 
      * @param type $termino_pago
      * @return int
@@ -336,6 +431,70 @@ class Reportes extends CApplicationComponent
         }
         $cabecera.="</tr>";
         return $cabecera;
+    }
+    /**
+     * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
+     * @param type $fecha_first
+     * @param type $fecha_last
+     * @return type
+     */
+     public static function define_num_dias($fecha_first,$fecha_last)
+     {
+         $from_date =strtotime($fecha_first);
+         $to_date =strtotime($fecha_last);
+              $from = date("d",$from_date );
+              $to = date("d",$to_date );
+          $result_dias= $from - $to;
+          $resultadoPeriodo=Reportes::define_periodo($result_dias);
+        return $resultadoPeriodo;
+     }
+     /**
+      * complementa a define_num_dias, primero pasa por esa para determinar el numero de dias, y en base a eso esta funcion determina el tipo de periodo
+      * @param type $var
+      * @return string
+      */
+     public static function define_periodo($var)
+     {
+         if($var<0) $var=$var*-1;
+         
+         if($var=="1"||$var=="0")  return "DIARIO";
+         
+         if($var>="2"&&$var<="7")  return "SEMANAL";
+         
+         if($var>="8"&&$var<="19") return "QUINCENAL";
+         
+         if($var>="20"&&$var<="31")return "MENSUAL";  
+     }
+     /**
+      * 
+      * @param type $model
+      * @param type $acumulado_sori
+      * @return type
+      */
+    public static function define_total_sori($model,$acumulado_sori)
+    {
+        return $acumulado_sori + $model->amount;
+    }
+    /**
+     * 
+     * @param type $model
+     * @param type $acumulado_captura
+     * @return type
+     */
+    public static function define_total_captura($model,$acumulado_captura)
+    {
+//                return $acumulado_captura + $model->revenue;
+        return $acumulado_captura + $model->amount;
+    }
+    /**
+     * 
+     * @param type $model
+     * @param type $acumulado_diference
+     * @return type
+     */
+    public static function define_total_diference($model,$acumulado_diference)
+    {
+        return $acumulado_diference + $model->amount;
     }
 }
 ?>
