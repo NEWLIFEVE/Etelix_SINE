@@ -139,6 +139,13 @@
             $sql = "SELECT a.id, a.doc_number, a.amount, a.minutes, a.id_carrier, c.name AS carrier
                     FROM accounting_document a, carrier c WHERE a.id_carrier=c.id AND id_type_accounting_document=1 AND from_date>='{$fecha_from}' AND to_date<='{$fecha_to}'ORDER BY from_date ";
             return AccountingDocument::model()->findAllBySql($sql);
+//    SELECT 
+//      a.id, a.doc_number, a.amount, a.minutes, 
+//      b.id AS id_prueba, b.doc_number AS doc_number_prueba, b.amount AS amount_prueba, b.minutes AS minutes_prueba,
+//      c.name AS carrier, (a.amount - b.amount) AS amount_diference, (a.minutes - b.minutes) AS minutes_diference
+//    FROM accounting_document a, carrier c, accounting_document b
+//    WHERE a.id_carrier=c.id AND b.id_carrier=c.id AND a.id_type_accounting_document=1 AND b.id_type_accounting_document=1 AND a.from_date>='2013-11-15' AND a.to_date<='2013-11-25' AND b.from_date>='2013-11-15' AND b.to_date<='2013-11-25'ORDER BY a.from_date , b.from_date 
+
         }
         /**
          * 
