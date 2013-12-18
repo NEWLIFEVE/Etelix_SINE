@@ -53,12 +53,12 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador, .grupo, .datepicker, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha'],
+            var ocultar =['.operador, .grupo, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha,.fecha_from,.fecha_to'],
             nombre=obj[0].id;
             switch (nombre) 
             {
                 case "soa":
-                  var mostrar =['.grupo, .datepicker, .provisiones,.disputas,.fecha']; 
+                  var mostrar =['.grupo, .provisiones,.disputas,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                   //POR AHORA SOLO FUNCIONA SOA...
@@ -67,7 +67,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
-                    var mostrar =['']; 
+                    var mostrar =['#datepicker_from,#datepicker_to,.fecha_from,.fecha_to']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
@@ -88,7 +88,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa")
+            if(nombre=="soa"||nombre=="refac")
                 {
                     $('.trabajando').hide('slow');
                     $('.barra_tools_click').show('fast');
@@ -148,15 +148,15 @@ $SINE.UI=(function()
        /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
         * @param {type} click
-        * @returns {undefined}
+        * @returns {undefined}      * 
         */
         function export_report(click)
         {
-            if($('#grupo').val()==""||$('#grupo').val()==null)
+            if($('#grupo').val()=="" && $("#tipo_report").val()=="soa")
                 {                                             //hay que mejorarlo...
                     $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>No ha seleccionado ningun grupo</h2>","stop.png","3000","60px");  
                 }else{
-                    var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha="+$('#datepicker').val()+"&si_prov="+$('#Si_prov').val()+"&no_prov="+$('#No_prov').val()+"&si_disp="+$('#Si_disp').val()+"&no_disp="+$('#No_disp').val(),
+                    var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha_from="+$('#datepicker_from').val()+"&fecha_to="+$('#datepicker_to').val()+"&fecha="+$('#datepicker').val()+"&si_prov="+$('#Si_prov').val()+"&no_prov="+$('#No_prov').val()+"&si_disp="+$('#Si_disp').val()+"&no_disp="+$('#No_disp').val(),
                     id=$(click).attr('id');
                     if(id=="mail")
                      {    
@@ -285,13 +285,8 @@ $SINE.AJAX=(function()
                  data: formulario,
                  success: function(data)
                  {
-                     if(action=="/Site/Excel")
-                     { 
-                         window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200"); 
-                     }else{
                          $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");  
                          console.log(data);
-                     }
                  }
             });
         }

@@ -140,13 +140,15 @@ class SiteController extends Controller
     {
         $this->vaciarAdjuntos();
         $this->letra=Log::preliminar($_POST['fecha']);
-        $fecha=$grupo=null;
+        $fecha=$grupo=$fecha_from=$fecha_to=null;
         $correos=null;
         $user=UserIdentity::getEmail();
         if(isset($_POST['fecha']))
         {
              $fecha=(string)$_POST['fecha'];
-            if(isset($_POST['grupo']))   $grupo=Reportes::Define_grupo($_POST['grupo']);
+             $fecha_from=(string)$_POST['fecha_from'];
+             $fecha_to=(string)$_POST['fecha_to'];
+            if(($_POST['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_POST['grupo']);   
             if(isset($_POST['no_prov'])) $no_prov=Reportes::define_prov($_POST['no_prov']);
             if(isset($_POST['no_disp'])) $no_disp=Reportes::define_disp($_POST['no_disp']);
             
@@ -157,9 +159,14 @@ class SiteController extends Controller
                    $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                    break;
               case 'balance':
-                   $correos['balance']['asunto']="BALANCE - ".$this->letra." balance".self::reportTitle($fecha);
+                   $correos['balance']['asunto']="SINE - ".$this->letra." balance".self::reportTitle($fecha);
                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$no_disp,$no_prov,$_POST['grupo']);
                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
+                   break;
+               case 'refac':
+                   $correos['refac']['asunto']="SINE - ".$this->letra." refac".self::reportTitle($fecha);
+                   $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
+                   $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                    break;
             }  
         }
@@ -179,13 +186,15 @@ class SiteController extends Controller
     {
         $this->vaciarAdjuntos();
         $this->letra=Log::preliminar($_GET['fecha']);
-        $fecha=$grupo=null;
+        $fecha=$grupo=$fecha_from=$fecha_to=null;
         $archivos=array();
         if(isset($_GET['fecha']))
         {
             $fecha=(string)$_GET['fecha'];
-            if(isset($_GET['grupo']))   $grupo=Reportes::Define_grupo($_GET['grupo']);      
-            if(isset($_GET['no_prov'])) $no_prov=SOA::define_prov($_GET['no_prov']);
+            $fecha_from=(string)$_GET['fecha_from'];
+            $fecha_to=(string)$_GET['fecha_to'];
+            if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
+            if(isset($_GET['no_prov'])) $no_prov=SOA::define_prov($_GET['no_prov']);     
             if(isset($_GET['no_disp'])) $no_disp=Reportes::define_disp($_GET['no_disp']);
             
             switch ($_GET['tipo_report']) {
@@ -194,8 +203,12 @@ class SiteController extends Controller
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
                    break;
               case 'balance':
-                   $archivos['balance']['nombre']="BALANCE - ".$this->letra."balance".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['balance']['nombre']="SINE - ".$this->letra."balance".self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
+                   break;
+              case 'refac':
+                   $correos['refac']['asunto']="SINE - ".$this->letra."refac".self::reportTitle($fecha)."-".date("g:i a");
+                   $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
                    break;
             }  
         }

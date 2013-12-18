@@ -35,11 +35,22 @@ class Reportes extends CApplicationComponent
         $var=balance::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
     }
+    /**
+     * 
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @return type
+     */
+    public function refac($fecha_from,$fecha_to,$fecha)
+    {
+        $var=refac::reporte($fecha_from,$fecha_to,$fecha);
+        return $var;
+    }
 
-    public static function Define_grupo($grupo)
+    public static function define_grupo($grupo)
     {    
            if($grupo=="CABINAS PERU")  
-               return "id_carrier_groups=301 OR id_carrier_groups=44";
+               return "id_carrier_groups=301 OR id_carrier_groups=443";
            else   
                return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
@@ -420,6 +431,70 @@ class Reportes extends CApplicationComponent
         }
         $cabecera.="</tr>";
         return $cabecera;
+    }
+    /**
+     * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
+     * @param type $fecha_first
+     * @param type $fecha_last
+     * @return type
+     */
+     public static function define_num_dias($fecha_first,$fecha_last)
+     {
+         $from_date =strtotime($fecha_first);
+         $to_date =strtotime($fecha_last);
+              $from = date("d",$from_date );
+              $to = date("d",$to_date );
+          $result_dias= $from - $to;
+          $resultadoPeriodo=Reportes::define_periodo($result_dias);
+        return $resultadoPeriodo;
+     }
+     /**
+      * complementa a define_num_dias, primero pasa por esa para determinar el numero de dias, y en base a eso esta funcion determina el tipo de periodo
+      * @param type $var
+      * @return string
+      */
+     public static function define_periodo($var)
+     {
+         if($var<0) $var=$var*-1;
+         
+         if($var=="1"||$var=="0")  return "DIARIO";
+         
+         if($var>="2"&&$var<="7")  return "SEMANAL";
+         
+         if($var>="8"&&$var<="19") return "QUINCENAL";
+         
+         if($var>="20"&&$var<="31")return "MENSUAL";  
+     }
+     /**
+      * 
+      * @param type $model
+      * @param type $acumulado_sori
+      * @return type
+      */
+    public static function define_total_sori($model,$acumulado_sori)
+    {
+        return $acumulado_sori + $model->amount;
+    }
+    /**
+     * 
+     * @param type $model
+     * @param type $acumulado_captura
+     * @return type
+     */
+    public static function define_total_captura($model,$acumulado_captura)
+    {
+//                return $acumulado_captura + $model->revenue;
+        return $acumulado_captura + $model->amount;
+    }
+    /**
+     * 
+     * @param type $model
+     * @param type $acumulado_diference
+     * @return type
+     */
+    public static function define_total_diference($model,$acumulado_diference)
+    {
+        return $acumulado_diference + $model->amount;
     }
 }
 ?>

@@ -70,6 +70,19 @@
                 return 'No hay data o algo fallo';
             }
         }
+        
+        /**
+         * 
+         * @param type $grupo
+         * @return string
+         */
+        public static function define_grupo($grupo)
+        {    
+               if($grupo=="CABINAS PERU")  
+                   return "id_carrier_groups=301 OR id_carrier_groups=443";
+               else   
+                   return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
+        }
         /**
          * sql para el reporte soa
          * @param type $grupo

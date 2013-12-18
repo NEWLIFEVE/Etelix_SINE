@@ -62,6 +62,14 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
+        <div class="formInputs fecha_from">
+            <h3>Desde</h3>
+            <input type="text" id="datepicker_from" value=""/>
+        </div>
+        <div class="formInputs fecha_to">
+            <h3>Hasta</h3>
+            <input type="text" id="datepicker_to" value=""/>
+        </div>
         <div class='formInputs provisiones'>
             <h3>Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
