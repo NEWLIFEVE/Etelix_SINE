@@ -503,6 +503,28 @@ li.ui-menu-item a
     width: 490px;
     z-index: 1031;
 }
+.fecha_to 
+{
+    margin-right: 110px;
+}
+select 
+{
+    width: 207px!important;
+}
+input::-webkit-input-placeholder 
+{
+    color:    #4A6DA3;
+}
+#No_disp,#Si_disp ,#No_prov,#Si_prov
+{
+    width: 11%;
+    height: 1.88em!important;
+    position: static;
+}
+.disputas 
+{
+    margin-left: -211px;
+}
 /*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
 .trabajando 
 {

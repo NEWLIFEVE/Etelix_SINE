@@ -62,7 +62,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_disp($no_disp)
     {
-        if($no_disp=="0")
+        if($no_disp=="No")
            $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
         else  
            $disp_sql="";
@@ -70,7 +70,7 @@ class Reportes extends CApplicationComponent
     }
     public static function define_prov($no_prov)
     {
-        if($no_prov=="0")
+        if($no_prov=="No")
            $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
         else  
            $prov_sql="";
@@ -82,11 +82,10 @@ class Reportes extends CApplicationComponent
      * @param type $fecha
      * @return type
      */
-    public static function define_due_date($tp, $fecha)
+    public static function define_due_date($tp, $fecha, $signo)
     {
-        $tpdia='+'.$tp.' day';
+        $tpdia=$signo.$tp.' day';
         $due_date=date('Y-m-d', strtotime($tpdia, strtotime ($fecha))) ;
-        
         return $due_date;
     }
     /**
@@ -374,6 +373,13 @@ class Reportes extends CApplicationComponent
                 return $acumuladoFacEnv - $model->amount;}
             else{return $acumuladoFacEnv;} 
     }
+
+    public static function define_fecha_from($termino_pago, $fecha_to)
+    {
+        $tp=Reportes::define_dias_TP($termino_pago);
+        $fecha_from=Reportes::define_due_date($tp, $fecha_to,"-");
+        return $fecha_from;
+    }
     /**
      * 
      * @param type $termino_pago
@@ -457,13 +463,15 @@ class Reportes extends CApplicationComponent
      {
          if($var<0) $var=$var*-1;
          
-         if($var=="1"||$var=="0")  return "DIARIO";
+         if($var=="7"||$var=="23")  return "SEMANAL";
          
-         if($var>="2"&&$var<="7")  return "SEMANAL";
+         if($var=="15"||$var=="14") return "QUINCENAL";
          
-         if($var>="8"&&$var<="19") return "QUINCENAL";
+         if($var=="30"||$var=="1"||$var=="0")return "MENSUAL"; 
          
-         if($var>="20"&&$var<="31")return "MENSUAL";  
+         if($var=="3"||$var=="27") return "3 DIAS";
+         
+         if($var=="5"||$var=="25") return "5 DIAS";
      }
      /**
       * 

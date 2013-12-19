@@ -139,18 +139,18 @@ class SiteController extends Controller
     public function actionMail()
     {
         $this->vaciarAdjuntos();
-        $this->letra=Log::preliminar($_POST['fecha']);
+        $this->letra=Log::preliminar($_POST['datepicker']);
         $fecha=$grupo=$fecha_from=$fecha_to=null;
         $correos=null;
         $user=UserIdentity::getEmail();
-        if(isset($_POST['fecha']))
+        if(isset($_POST['datepicker']))
         {
-             $fecha=(string)$_POST['fecha'];
-             $fecha_from=(string)$_POST['fecha_from'];
-             $fecha_to=(string)$_POST['fecha_to'];
+             $fecha=(string)$_POST['datepicker'];
+             $fecha_to=(string)$_POST['datepicker_to'];
+            if(($_POST['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_POST['id_termino_pago'],$fecha_to);   
             if(($_POST['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_POST['grupo']);   
-            if(isset($_POST['no_prov'])) $no_prov=Reportes::define_prov($_POST['no_prov']);
-            if(isset($_POST['no_disp'])) $no_disp=Reportes::define_disp($_POST['no_disp']);
+            if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov']);
+            if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp']);
             
             switch ($_POST['tipo_report']) {
               case 'soa':
@@ -185,17 +185,17 @@ class SiteController extends Controller
     public function actionExcel()
     {
         $this->vaciarAdjuntos();
-        $this->letra=Log::preliminar($_GET['fecha']);
+        $this->letra=Log::preliminar($_GET['datepicker']);
         $fecha=$grupo=$fecha_from=$fecha_to=null;
         $archivos=array();
-        if(isset($_GET['fecha']))
+        if(isset($_GET['datepicker']))
         {
-            $fecha=(string)$_GET['fecha'];
-            $fecha_from=(string)$_GET['fecha_from'];
-            $fecha_to=(string)$_GET['fecha_to'];
+            $fecha=(string)$_GET['datepicker'];
+            $fecha_to=(string)$_GET['datepicker_to'];
+            if(($_GET['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_termino_pago'],$fecha_to);       
             if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
-            if(isset($_GET['no_prov'])) $no_prov=SOA::define_prov($_GET['no_prov']);     
-            if(isset($_GET['no_disp'])) $no_disp=Reportes::define_disp($_GET['no_disp']);
+            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov']);     
+            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp']);
             
             switch ($_GET['tipo_report']) {
               case 'soa':

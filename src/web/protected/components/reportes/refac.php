@@ -7,9 +7,9 @@
     {
         public static function reporte($fecha_from,$fecha_to,$fecha) 
         {
-            $style_title="style='background:#4A8DB9;text-align:center;'";$style_description="style='background:silver;text-align:center;'";$style_basic="style='border:1px solid black;text-align:left;'";
-            $style_captura="style='border:1px solid black;background:orange;text-align:center;'";$style_sori="style='border:1px solid black;background:#4A8DB9;text-align:center;'";
-            $style_diference="style='border:1px solid black;background:#058F4D;text-align:center;'";$style_totals="style='border:1px solid black;background:silver;text-align:center;'";$style_corrige="style='margin-top:-48px'";
+            $style_title="style='background:#96B6E6;text-align:center;'";$style_description="style='background:silver;text-align:center;'";$style_basic="style='border:1px solid black;text-align:left;'";
+            $style_captura="style='border:1px solid black;background:rgb(231, 148, 59);text-align:center;'";$style_sori="style='border:1px solid black;background:#96B6E6;text-align:center;'";
+            $style_diference="style='border:1px solid black;background:#18B469;text-align:center;'";$style_totals="style='border:1px solid black;background:silver;text-align:center;'";$style_corrige="style='margin-top:-48px'";
             $acumulado_captura=0;
             $acumulado_sori=0;
             $acumulado_diference=0;
@@ -44,7 +44,7 @@
                           <td colspan='3'" .$style_diference. "><b>DIFERENCIAS</b></td>
                           </tr>";
            
-           
+                              //           *************CAPTURA*************
            $tabla_refac.="<tr>
                           <td colspan='3'>
                           <table>
@@ -68,6 +68,7 @@
                           <td " .$style_captura. "></td>
                           <td " .$style_totals. "><b>" .Yii::app()->format->format_decimal($acumulado_captura,3). "</b></td>
                           </tr>";
+                                  //           *************SORI*************
            $tabla_refac.="</table>
                           </td>
                           <td colspan='4'>
@@ -95,6 +96,7 @@
                           <td " .$style_totals. "><b>" .Yii::app()->format->format_decimal($acumulado_sori,3). "</b></td>
                           <td " .$style_sori. "></td>
                           </tr>";
+                                 //           *************DIFERENCIA*************
            $tabla_refac.="</table>
                           </td>
                           <td colspan='3'>
@@ -145,26 +147,6 @@
 //    FROM accounting_document a, carrier c, accounting_document b
 //    WHERE a.id_carrier=c.id AND b.id_carrier=c.id AND a.id_type_accounting_document=1 AND b.id_type_accounting_document=1 AND a.from_date>='2013-11-15' AND a.to_date<='2013-11-25' AND b.from_date>='2013-11-15' AND b.to_date<='2013-11-25'ORDER BY a.from_date , b.from_date 
 
-        }
-        /**
-         * 
-         * @param type $sori
-         * @param type $captura
-         * @return type
-         */
-        public static function define_diferencias_minut($sori,$captura)
-        {
-            return $sori->minutes - $captura;
-        }
-        /**
-         * 
-         * @param type $sori
-         * @param type $captura
-         * @return type
-         */
-        public static function define_diferencias_mont($sori,$captura)
-        {
-            return $sori->amount - $captura;
         }
     }
 
