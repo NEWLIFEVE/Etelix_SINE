@@ -67,7 +67,7 @@
                              </table>";
                 return $tabla_SOA;
             }else{
-                return 'No hay data o algo fallo';
+                return 'No hay data, o por favor consulte en la distribucion comercial los carrier pertenecientes al grupo';
             }
         }
         

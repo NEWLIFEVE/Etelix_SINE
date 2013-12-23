@@ -160,13 +160,18 @@ class SiteController extends Controller
                    break;
               case 'balance':
                    $correos['balance']['asunto']="SINE - ".$this->letra." balance".self::reportTitle($fecha);
-                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance($grupo,$fecha,$no_disp,$no_prov,$_POST['grupo']);
+                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$no_prov,$_POST['grupo']);
                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                    break;
                case 'refac':
                    $correos['refac']['asunto']="SINE - ".$this->letra." refac".self::reportTitle($fecha);
                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
                    $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
+                   break;
+               case 'refi_prov':
+                   $correos['refi_prov']['asunto']="SINE - ".$this->letra." refi_prov".self::reportTitle($fecha);
+                   $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha_to,$fecha);
+                   $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                    break;
             }  
         }
@@ -209,6 +214,10 @@ class SiteController extends Controller
               case 'refac':
                    $archivos['refac']['nombre']="SINE - ".$this->letra."refac".self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
+                   break;
+              case 'refi_prov':
+                   $archivos['refi_prov']['nombre']="SINE - ".$this->letra."refi_prov".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha_to,$fecha);
                    break;
             }  
         }

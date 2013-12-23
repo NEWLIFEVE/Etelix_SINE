@@ -3,7 +3,7 @@
     /**
      * @package reportes
      */
-    class refac extends Reportes 
+    class refi_prov extends Reportes 
     {
         public static function reporte($fecha_from,$fecha_to,$fecha) 
         {
@@ -14,14 +14,14 @@
             $acumulado_sori=0;
             $acumulado_diference=0;
                        
-            $model = refac::get_Model_sori($fecha_from, $fecha_to); //trae el sql pricipal de sori
+            $model = refi_prov::get_Model($fecha_from, $fecha_to); //trae el sql pricipal de sori
             $tabla_refac="";
             $tabla_refac.="<table><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>";
            
            $tabla_refac.="<table>
                           <tr>
                           <td " . $style_title . " colspan='3'></td>
-                          <td " . $style_title . " colspan='4'><b>REFAC " . Reportes::define_num_dias($fecha_from, $fecha_to) . " " . str_replace("-","",$fecha_from) . " - " . str_replace("-","",$fecha_to) . " al " . str_replace("-","",$fecha) . "</b></td><td " . $style_title . " colspan='3'></td>
+                          <td " . $style_title . " colspan='4'><b>REFI PROV " . Reportes::define_num_dias($fecha_from, $fecha_to) . " " . str_replace("-","",$fecha_from) . " - " . str_replace("-","",$fecha_to) . " al " . str_replace("-","",$fecha) . "</b></td><td " . $style_title . " colspan='3'></td>
                           </tr>
                           </table>";
            $tabla_refac.="<br><table>
@@ -55,13 +55,12 @@
                           </tr>";
          foreach ($model as $key => $captura) 
           {
-            $model_captura = refac::get_Model_balance($captura,$fecha_from, $fecha_to); //trae el sql pricipal de captura
             $acumulado_captura=Reportes::define_total_captura($captura,$acumulado_captura);
             
            $tabla_refac.="<tr> 
                           <td " . $style_basic . ">" .$captura->carrier. "</td>
-                          <td " . $style_basic . ">" .$model_captura->minutes. "</td>
-                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($model_captura->revenue,3). "</td>
+                          <td " . $style_basic . ">" .$captura->minutos_balance. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($captura->monto_balance,3). "</td>
                           </tr>";   
           }
            $tabla_refac.="<tr>
@@ -69,7 +68,6 @@
                           <td " .$style_captura. "></td>
                           <td " .$style_totals. "><b>" .Yii::app()->format->format_decimal($acumulado_captura,3). "</b></td>
                           </tr>";
-           
                                   //           *************SORI*************
            $tabla_refac.="</table>
                           </td>
@@ -79,7 +77,7 @@
                           <td " .$style_sori. "><b>OPERADOR</b></td>
                           <td " .$style_sori. "><b>MINUTOS</b></td>
                           <td " .$style_sori. "><b>MONTO</b></td>
-                          <td " .$style_sori. "><b>Num FACTURA</b></td>
+                          <td " .$style_sori. "><b>N° FACTURA</b></td>
                           </tr>";
          foreach ($model as $key => $sori) 
           {
@@ -87,8 +85,8 @@
             
            $tabla_refac.="<tr>
                           <td " . $style_basic . ">" .$sori->carrier. "</td>
-                          <td " . $style_basic . ">" .$sori->minutes. "</td>
-                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($sori->amount,3). "</td>
+                          <td " . $style_basic . ">" .$sori->minutos_fac. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($sori->monto_fac,3). "</td>
                           <td " . $style_basic . ">" .$sori->doc_number. "</td>
                           </tr>";   
           }
@@ -109,17 +107,13 @@
                           <td " .$style_diference. "><b>MONTO</b></td>
                           </tr>";
            
-         foreach ($model as $key => $diference) 
+         foreach ($model as $key => $sori_captura) 
           {
-             $model_captura = refac::get_Model_balance($diference,$fecha_from, $fecha_to); //trae el sql pricipal de captura
-             $dif_amount=$diference->amount - $model_captura->revenue;
-             $dif_minutes=$diference->minutes - $model_captura->minutes;
-             $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
-             
+             $acumulado_diference=Reportes::define_total_diference($sori_captura,$acumulado_diference);
            $tabla_refac.="<tr>
-                          <td " . $style_basic . ">" .$diference->carrier. "</td>
-                          <td " . $style_basic . ">" .$dif_minutes. "</td>
-                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($dif_amount,3). "</td>
+                          <td " . $style_basic . ">" .$sori_captura->carrier. "</td>
+                          <td " . $style_basic . ">" .$sori_captura->min_diference. "</td>
+                          <td " . $style_basic . ">" .Yii::app()->format->format_decimal($sori_captura->monto_diference,3). "</td>
                           </tr>";   
           }
            $tabla_refac.="<tr>
@@ -141,20 +135,23 @@
          * @param type $fecha_to
          * @return type
          */
-        private static function get_Model_sori($fecha_from, $fecha_to) 
+        private static function get_Model($fecha_from, $fecha_to) 
         {
-            $sql = "SELECT a.id, a.doc_number, a.amount, a.minutes, a.id_carrier, c.name AS carrier
-                    FROM accounting_document a, carrier c WHERE a.id_carrier=c.id AND id_type_accounting_document=2 AND from_date>='{$fecha_from}' AND to_date<='{$fecha_to}'ORDER BY from_date ";
+            $sql = "SELECT c.name AS carrier, a.doc_number, a.amount AS monto_fac, b.revenue AS monto_balance, a.minutes AS minutos_fac, b.minutes AS minutos_balance, (b.revenue - a.amount) AS monto_diference, (b.minutes - a.minutes) AS min_diference
+                    FROM carrier c, accounting_document a, (SELECT id_carrier_supplier, SUM(revenue) AS revenue, SUM(minutes) AS minutes
+                    FROM balance
+                    WHERE date_balance BETWEEN '{$fecha_from}' AND '{$fecha_to}'
+                    AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') 
+                    AND id_destination<>(SELECT id FROM destination WHERE name='Unknown_Destination')
+                    AND id_destination_int IS NULL
+                    GROUP BY id_carrier_supplier) b
+                    WHERE a.id_carrier=c.id 
+                      AND a.id_type_accounting_document=2
+                      AND a.id_carrier=b.id_carrier_supplier
+                      AND a.from_date>='{$fecha_from}' AND a.to_date<='{$fecha_to}'";
             return AccountingDocument::model()->findAllBySql($sql);
         }
-        private static function get_Model_balance($model,$fecha_from, $fecha_to) 
-        {
-            $sql = "SELECT SUM(minutes) AS  minutes, SUM(revenue) as revenue
-                    FROM balance
-                    WHERE date_balance between '{$fecha_from}' AND '{$fecha_to}' AND id_carrier_customer={$model->id_carrier} and id_destination IS NULL"; 
-            return Balance::model()->findBySql($sql);
-        }
     }
-    ?>
 
+    ?>
 
