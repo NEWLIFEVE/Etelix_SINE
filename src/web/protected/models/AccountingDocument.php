@@ -48,6 +48,12 @@ class AccountingDocument extends CActiveRecord
         public $currency;
         public $tp;
         public $totals;
+        public $monto_balance;
+        public $monto_fac;
+        public $minutos_fac;
+        public $minutos_balance;
+        public $min_diference;
+        public $monto_diference;
 	/**
 	 * @return string the associated database table name
 	 */

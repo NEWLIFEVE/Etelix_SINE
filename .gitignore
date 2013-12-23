@@ -1,12 +1,13 @@
-src/web/protected/runtime/*
+src/web/protected/runtime/*.*
 src/web/assets/*
+src/web/assets/*.*
 
 #sublimetext
 /*.sublime-project
 *.sublime-workspace
 
 # netbeans
-nbproject/private/
+nbproject/
 build/
 nbbuild/
 dist/
@@ -20,12 +21,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
-src/web/uploads/*.xls
-
-=======
-src/web/assets/
-protected/runtime/
-themes/classic/views/
-/nbproject/private/
 

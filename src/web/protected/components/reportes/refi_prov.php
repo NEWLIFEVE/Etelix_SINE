@@ -3,7 +3,7 @@
     /**
      * @package reportes
      */
-    class refac extends Reportes 
+    class refi_prov extends Reportes 
     {
         public static function reporte($fecha_from,$fecha_to) 
         {
@@ -16,7 +16,7 @@
             $acumulado_sori=0;
             $acumulado_diference=0;
                        
-            $facturas = refac::getFacturas($fecha_from, $fecha_to); //trae el sql pricipal de sori
+            $facturas = refi_prov::getFacturas($fecha_from, $fecha_to); //trae el sql pricipal de sori
             $seg=count($facturas);
             ini_set('max_execution_time', $seg);
             $tabla_refac="<table>";
@@ -66,7 +66,7 @@
                           </tr>";
            foreach ($facturas as $key => $factura)
            {
-              $model_captura = refac::get_Model_balance($factura); //trae el sql pricipal de captura
+              $model_captura = refi_prov::get_Model_balance($factura); //trae el sql pricipal de captura
               $acumulado_captura=Reportes::define_total_captura($factura,$acumulado_captura); 
               $acumulado_sori=Reportes::define_total_sori($factura,$acumulado_sori);
               $dif_amount=$factura->amount - $model_captura->revenue;
@@ -120,7 +120,7 @@
             $sql="SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
                   FROM accounting_document a, carrier c
                   WHERE a.id_carrier=c.id
-                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Factura Enviada')
+                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Factura Recibida')
                     AND from_date>='{$fecha_from}'
                     AND to_date<='{$fecha_to}'
                   ORDER BY from_date";
@@ -132,10 +132,10 @@
             $sql="SELECT SUM(minutes) AS  minutes, SUM(revenue) as revenue
                   FROM balance
                   WHERE date_balance>='{$model->from_date}' AND date_balance<='{$model->to_date}'
-                    AND id_carrier_customer={$model->id_carrier}
-                    AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier')
-                    AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination')
-                    AND id_destination IS NULL"; 
+                    AND id_carrier_supplier={$model->id_carrier}
+                    AND id_carrier_customer<>(SELECT id FROM carrier WHERE name='Unknown_Carrier')
+                    AND id_destination<>(SELECT id FROM destination WHERE name='Unknown_Destination_int')
+                    AND id_destination_int IS NULL"; 
             return Balance::model()->findBySql($sql);
         }
     }

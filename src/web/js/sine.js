@@ -43,8 +43,8 @@ $SINE.UI=(function()
 	{
             var dio_click=click[0].id;
             $(no_Click).val(''); 
-            if (dio_click=='Si_prov'||dio_click=='Si_disp')$(click).val('1');
-            else $(click).val('0');
+            if (dio_click=='Si_prov'||dio_click=='Si_disp'){$(click).val('Si');$(click).blur();}
+            else {$(click).val('No');$(click).blur();}
         }
         /**
          * 
@@ -53,7 +53,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador, .grupo, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha,.fecha_from,.fecha_to'],
+            var ocultar =['.operador, .grupo, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha,.termino_pago,.fecha_to'],
             nombre=obj[0].id;
             switch (nombre) 
             {
@@ -67,7 +67,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
-                    var mostrar =['#datepicker_from,#datepicker_to,.fecha_from,.fecha_to']; 
+                    var mostrar =['#datepicker_to,.termino_pago,.fecha_to']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
@@ -79,7 +79,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
-                    var mostrar =['']; 
+                    var mostrar =['#datepicker_to,.termino_pago,.fecha_to']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -88,7 +88,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="refac")
+            if(nombre=="soa"||nombre=="refac"||nombre=="refi_prov")
                 {
                     $('.trabajando').hide('slow');
                     $('.barra_tools_click').show('fast');
@@ -152,21 +152,62 @@ $SINE.UI=(function()
         */
         function export_report(click)
         {
-            if($('#grupo').val()=="" && $("#tipo_report").val()=="soa")
-                {                                             //hay que mejorarlo...
-                    $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>No ha seleccionado ningun grupo</h2>","stop.png","3000","60px");  
+              var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
+              console.log(valid_input);
+              if(valid_input==0)
+                {
+                    $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
                 }else{
-                    var formulario="tipo_report="+$("#tipo_report").val()+"&grupo="+$('#grupo').val()+"&operador="+$('#operador').val()+"&fecha_from="+$('#datepicker_from').val()+"&fecha_to="+$('#datepicker_to').val()+"&fecha="+$('#datepicker').val()+"&si_prov="+$('#Si_prov').val()+"&no_prov="+$('#No_prov').val()+"&si_disp="+$('#Si_disp').val()+"&no_disp="+$('#No_disp').val(),
                     id=$(click).attr('id');
                     if(id=="mail")
                      {    
-                        $SINE.AJAX.send("POST","/site/mail",formulario);
+                        $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
                         $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
                      }else{  
-                             $SINE.UI.genExcel("/Site/Excel",formulario);
+                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
                           } 
                 }
         }
+         /**
+         * 
+         * @param {type} tipo
+         * @returns {unresolved}
+         */
+	function seleccionaCampos(tipo)
+	{  
+           switch (tipo){
+            case 'soa':
+                var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
+                break               
+            case 'refac':
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
+                break               
+            case 'refi_prov':
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
+                break               
+           }
+           console.log(respuesta);
+           return respuesta;
+        }
+        /**
+         * 
+         * @param {type} campos
+         * @returns {Number}
+         */
+        function validaCampos(campos)
+	{  
+            for (var i=0, j=campos.length - 1; i <= j; i++)
+                {
+                    if(campos[i].value==""){
+                        console.dir(campos[i]);
+                        console.log(campos[i]);
+                         var respuesta=0;
+                        break;
+                     }else{respuesta=1;}
+                };
+                return respuesta;
+        }
+        
         /**
          * 
          * @param {type} action
@@ -217,7 +258,9 @@ $SINE.UI=(function()
                 resolvedButton:resolvedButton,
                 msj_cargando:msj_cargando,
                 msj_change:msj_change,
-                genExcel:genExcel
+                genExcel:genExcel,
+                validaCampos:validaCampos,
+                seleccionaCampos:seleccionaCampos
 	};
 })();
 

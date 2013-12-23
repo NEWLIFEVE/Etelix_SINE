@@ -33,7 +33,7 @@
                 foreach ($accounting_document as $key => $document) 
                     {
                         $tp=Reportes::define_dias_TP($document->tp);
-                        $due_date=Reportes::define_due_date($tp, $document->issue_date);
+                        $due_date=Reportes::define_due_date($tp, $document->issue_date,"+");
                         $acumulado=Reportes::define_balance_amount($document,$acumulado);
                         $acumuladoPago=Reportes::define_total_pago($document,$acumuladoPago);
                         $acumuladoCobro =Reportes::define_total_cobro($document,$acumuladoCobro);
@@ -67,7 +67,7 @@
                              </table>";
                 return $tabla_SOA;
             }else{
-                return 'No hay data o algo fallo';
+                return 'No hay data, o por favor consulte en la distribucion comercial los carrier pertenecientes al grupo';
             }
         }
         

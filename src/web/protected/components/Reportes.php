@@ -30,23 +30,42 @@ class Reportes extends CApplicationComponent
      * @param type $grupoName
      * @return type
      */
-    public function balance($grupo,$fecha,$no_disp,$no_prov,$grupoName)
+    public function balance_report($grupo,$fecha,$no_disp,$no_prov,$grupoName)
     {
-        $var=balance::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
     }
     /**
-     * 
+     * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
+     * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
      * @param type $fecha_from
      * @param type $fecha_to
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$fecha)
+    public function refac($fecha_from,$fecha_to)
     {
-        $var=refac::reporte($fecha_from,$fecha_to,$fecha);
+        $var=refac::reporte($fecha_from,$fecha_to);
         return $var;
     }
-
+    /**
+     * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
+     * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @param type $fecha
+     * @return type
+     */
+    public function refi_prov($fecha_from,$fecha_to)
+    {
+        $var=refi_prov::reporte($fecha_from,$fecha_to);
+        return $var;
+    }
+    /**
+     * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 
+     * o en su caso especial, en cabinas peru, va a traer una serie de grupos pertenecientes a este...aun hay que meterle otras cosas a SOA para complementarlo
+     * @param type $grupo
+     * @return string
+     */
     public static function define_grupo($grupo)
     {    
            if($grupo=="CABINAS PERU")  
@@ -56,52 +75,67 @@ class Reportes extends CApplicationComponent
     }
     /**
      * define si la consulta traera las disputas o no
-     * si es diferente de null, el sql es standar, es decir, traera las disputas, sino, entonces el sql no traera las disputas, puesto que le esta indicando la condicion de "NOT IN (5,6)"
+     * si es diferente de null, el sql es standar, es decir, traera las disputas, sino, entonces el sql no traera las disputas, 
+     * puesto que le esta indicando la condicion de "NOT IN (5,6)"
      * @param type $no_disp
      * @return string
      */
     public static function define_disp($no_disp)
     {
-        if($no_disp=="0")
+        if($no_disp=="No")
            $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
         else  
            $disp_sql="";
         return $disp_sql;
     }
+    /**
+     * define si traera las disputas en los SOA
+     * @param type $no_prov
+     * @return string
+     */
     public static function define_prov($no_prov)
     {
-        if($no_prov=="0")
+        if($no_prov=="No")
            $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
         else  
            $prov_sql="";
         return $prov_sql;
     }
     /**
-     * fucnion encargada de determinar el due_date apartir de termino pago y issue_date
+     * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
+     * no obstante tambien es usado en refac y refi_prov, se usa en parte para determinar el from_date de estos 
+     * ultimos reportes, en el caso standar de due_date para soa, esta funcion suma un dia, pero para el caso de
+     *  refac y refi_prov, resta los dias dependiendo el num de dias que arroje el tp, ejecutado antes d ellegar a esta funcion
      * @param type $tp
      * @param type $fecha
      * @return type
      */
-    public static function define_due_date($tp, $fecha)
+    public static function define_due_date($tp, $fecha, $signo)
     {
-        $tpdia='+'.$tp.' day';
+        $tpdia=$signo.$tp.' day';
         $due_date=date('Y-m-d', strtotime($tpdia, strtotime ($fecha))) ;
-        
         return $due_date;
     }
     /**
-     * 
+     * define la descipcion en SOA
      * @param type $model
      * @return string
      */
     public static function define_description($model)
-    {
+    {   
+        $bf= substr($model->doc_number, 0, 2) ;  
         switch ($model->id_type_accounting_document){
             case "3":
-                $description="WT - Etelix to ".$model->group;
+                if($bf=="bf")
+                    $description="BF - Etelix to ".$model->group;
+                    else
+                    $description="WT - Etelix to ".$model->group;
                 break;
             case "4":
-                $description="WT - ".$model->group." to Etelix";
+                if($bf=="bf")
+                    $description="BF - ".$model->group." to Etelix";
+                    else
+                    $description="WT - ".$model->group." to Etelix";
                 break;
             case "9":
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
@@ -118,7 +152,8 @@ class Reportes extends CApplicationComponent
         return $description;
     }
     /**
-     * la regla es que para pagos y cobros, no hay due date, por lo que se coloca el mismo issue_date, y por defecto para los demas es el dua_date determinado por ...::define_dua_date
+     * la regla es que para pagos y cobros, no hay due date, por lo que se coloca el mismo issue_date, 
+     * y por defecto para los demas es el dua_date determinado por ...::define_dua_date
      * @param type $model
      * @param type $due_date
      * @return type
@@ -135,7 +170,8 @@ class Reportes extends CApplicationComponent
         return $to_date;
     }
     /**
-     * define el estilo de los tr dependiendo del tipo de documento contable, por los momentos solo define el estilo de pagos-cobros, disputas-notas de credito, donde el primer grupo es background:silver y el segundo grupo es fuente color: red...
+     * define el estilo de los tr dependiendo del tipo de documento contable, por los momentos solo define el estilo de pagos-cobros, 
+     * disputas-notas de credito, donde el primer grupo es background:silver y el segundo grupo es fuente color: red...
      * @param type $model
      * @return string
      */
@@ -149,7 +185,6 @@ class Reportes extends CApplicationComponent
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
                 break;
             case "7": case "8":
-//                $estilos=" style='background:white;color:blue;border:1px solid black;'";
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
                 break;
             default:
@@ -167,7 +202,7 @@ class Reportes extends CApplicationComponent
         return $estilos;
     }
     /**
-     * define el estilo de los tdÂ´s td donde se alojen totales en los reportes
+     * define el estilo de los td´s td donde se alojen totales en los reportes
      * @return string
      */
     public static function define_estilos_totals()
@@ -176,7 +211,8 @@ class Reportes extends CApplicationComponent
         return $estilos;
     }
     /**
-     * define a favor de quien esta el balance final en los SOA... la regla es que si el balance es negativo, esta a favor del operador, de lo contrario estara a favor de etelix
+     * define a favor de quien esta el balance final en los SOA... la regla es que si el balance es negativo, esta a favor del operador,
+     *  de lo contrario estara a favor de etelix
      * @param type $model
      * @param type $acumulado
      * @return string
@@ -187,13 +223,18 @@ class Reportes extends CApplicationComponent
         else $afavor="Balance in favor of Etelix";
         return $afavor;
     }
+    /**
+     * en este caso solo multiplica por -1 el acumulado de ser negativo para asi mostralo en el reporte, sino es negativo, normal, no hace nada
+     * @param type $acumulado
+     * @return type
+     */
     public static function define_a_favor_monto($acumulado)
     {
         if($acumulado < 0)$acumulado=$acumulado*-1;
         return $acumulado;
     }
     /**
-     * 
+     * define las facturas enviadas en reporte SOA
      * @param type $model
      * @return string
      */  
@@ -209,6 +250,11 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
+    /**
+     * define la moneda para facturas enviadas en SOA
+     * @param type $model
+     * @return string
+     */
     public static function define_currency_fe($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==1){
@@ -220,7 +266,7 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
-     * 
+     * define facturas recibidas en SOA
      * @param type $model
      * @return string
      */
@@ -236,6 +282,11 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
+    /**
+     * define la moneda para facturas recibidas en SOA
+     * @param type $model
+     * @return string
+     */
     public static function define_currency_fr($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
@@ -247,7 +298,7 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
-     * 
+     * define pagos en SOA
      * @param type $model
      * @return string
      */    
@@ -259,6 +310,11 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
+    /**
+     * define moneda en pagos para SOA
+     * @param type $model
+     * @return string
+     */
     public static function define_currency_p($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==3){
@@ -268,7 +324,7 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
-     * 
+     * define cobros en SOA
      * @param type $model
      * @return string
      */
@@ -280,6 +336,11 @@ class Reportes extends CApplicationComponent
             return "";
         }
     }
+    /**
+     * define la moneda para cobros en SOA
+     * @param type $model
+     * @return string
+     */
     public static function define_currency_c($model)/*deprecated*/
     {
         if ($model->id_type_accounting_document==4){
@@ -289,7 +350,7 @@ class Reportes extends CApplicationComponent
         }
     }
     /**
-     * 
+     * define monto del balance en SOA, en si es la ultima columna del reporte, pero esta para ser desarrollada, necesita de las demas
      * @param type $model
      * @param type $acumulado
      * @return type
@@ -375,6 +436,18 @@ class Reportes extends CApplicationComponent
             else{return $acumuladoFacEnv;} 
     }
     /**
+     * define la fecha de inicio del reporte para refac y refi_prov
+     * @param type $termino_pago
+     * @param type $fecha_to
+     * @return type
+     */
+    public static function define_fecha_from($termino_pago, $fecha_to)
+    {
+        $tp_name= TerminoPago::getName($termino_pago);
+        $tp= Reportes::define_dias_TP($tp_name);
+        return Reportes::define_due_date($tp, $fecha_to,"-");
+    }
+    /**
      * 
      * @param type $termino_pago
      * @return int
@@ -382,56 +455,91 @@ class Reportes extends CApplicationComponent
     public static function define_dias_TP($termino_pago)
     {
         switch ($termino_pago) {
-              case "P-Semanales": case "7/7": case "15/7": case "30/7":
+              case "P-Semanales": case "7/7": case "7/3":case "7/5":case "7/3":
                    $tp=7;
+//                   $tp=5;//es 7, pero aun falta validar
                   break;
-              case "P-Mensuales": case "30/30":
+              case "P-Mensuales": case "30/30": case "30/7":
                    $tp=30;
                   break;
-              case "7/3":
-                   $tp=3;
-                  break;
-              case "7/5": case "15/5":
-                   $tp=5;
-                  break;
-              case "15/15":
+              case "15/15":case "15/5":case "15/7":
                    $tp=15;
                   break;
         }return $tp;
     }
     /**
      * 
-     * @param type $etiquetas
-     * @param type $estilos
-     * @return string
+     * @param type $fecha
+     * @param type $id_termino_pago
+     * @return type
      */
-    public static function cabecera($etiquetas,$estilos)
-    {
-        $cabecera="<tr>";
-        if(count($etiquetas)>1)
-        {
-            if(count($estilos)>1)
-            {
-                foreach($etiquetas as $key => $value)
-                {
-                    $cabecera.="<th style='".$estilos[$key]."'>".$value."</th>";
-                }
-            }
-            else
-            {
-                foreach ($etiquetas as $key => $value)
-                {
-                    $cabecera.="<th style='".$estilos."'>".$value."</th>";
-                }
-            }
+    public static function define_fecha_to($fecha,$id_termino_pago)
+    {    
+        $dia= date('l', strtotime($fecha));     
+        switch ($id_termino_pago) {
+            case 1: case 3: case 4: case 5:                           //semanaal
+                 $fecha_to= Reportes::define_fecha_to_semana($fecha, $dia);
+                 return Reportes::define_fecha_definitiva($fecha_to,$fecha);
+                break;
+            case 6: case 7:                                           //quincenal
+                 return Reportes::define_fecha_to_semana($fecha, $dia);
+                break;
+            case 2: case 9: case 10:                                  //mensual
+                 return Reportes::define_fecha_to_semana($fecha, $dia);
+                break;
+            default:
+                 return $fecha;
+                break;
         }
-        else
-        {
-            $cabecera.="<th style='".$estilos."'>".$etiquetas[0]."</th>";
-        }
-        $cabecera.="</tr>";
-        return $cabecera;
     }
+    /**
+     * 
+     * @param type $fecha_calc
+     * @param type $fecha
+     * @return type
+     */
+    public static function define_fecha_definitiva($fecha_calc,$fecha)
+    {    
+         $fecha_calc_m= date('Y-m', strtotime($fecha_calc));
+         $fecha_m= date('Y-m', strtotime($fecha));
+         
+            if($fecha_calc_m != $fecha_m) return $fecha_m."-01";
+
+            else return $fecha_calc;
+    }
+    /**
+     * 
+     * @param type $fecha
+     * @param type $dia
+     * @return type
+     */
+    public static function define_fecha_to_semana($fecha,$dia)
+    {    
+        switch ($dia) {
+
+            case "Sunday":
+                  return $fecha;
+                  break;
+            case "Monday":
+                  return date('Y-m-d', strtotime('-1 day', strtotime ( $fecha ))) ;
+                  break;
+            case "Tuesday":
+                  return date('Y-m-d', strtotime('-2 day', strtotime ( $fecha ))) ;
+                  break;
+            case "Wednesday":
+                  return date('Y-m-d', strtotime('-3 day', strtotime ( $fecha ))) ;
+                  break;
+            case "Thursday":
+                  return date('Y-m-d', strtotime('-4 day', strtotime ( $fecha ))) ;
+                  break;
+            case "Friday":
+                  return date('Y-m-d', strtotime('-5 day', strtotime ( $fecha ))) ;
+                  break;
+            case "Saturday":
+                  return date('Y-m-d', strtotime('-6 day', strtotime ( $fecha ))) ;
+                  break;
+         }                                                             
+    }  
     /**
      * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
      * @param type $fecha_first
@@ -457,13 +565,15 @@ class Reportes extends CApplicationComponent
      {
          if($var<0) $var=$var*-1;
          
-         if($var=="1"||$var=="0")  return "DIARIO";
+         if($var=="7"||$var=="23")  return "SEMANAL";
          
-         if($var>="2"&&$var<="7")  return "SEMANAL";
+         if($var=="15"||$var=="14") return "QUINCENAL";
          
-         if($var>="8"&&$var<="19") return "QUINCENAL";
+         if($var=="30"||$var=="1"||$var=="0")return "MENSUAL"; 
          
-         if($var>="20"&&$var<="31")return "MENSUAL";  
+         if($var=="3"||$var=="27") return "3 DIAS";
+         
+         if($var=="5"||$var=="25") return "5 DIAS";
      }
      /**
       * 
@@ -492,9 +602,10 @@ class Reportes extends CApplicationComponent
      * @param type $acumulado_diference
      * @return type
      */
-    public static function define_total_diference($model,$acumulado_diference)
+    public static function define_total_diference($diferencia,$acumulado_diference)
     {
-        return $acumulado_diference + $model->amount;
+        return $acumulado_diference + $diferencia;
     }
+    
 }
 ?>

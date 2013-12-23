@@ -40,15 +40,15 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div>
 <form id="formulario">
-    <div  class="formulario">
-        <input id="tipo_report"type="hidden"value=""/>
+    <div name="formulario"  class="formulario">
+        <input name="tipo_report" id="tipo_report"type="hidden"value=""/>
         <div class="formInputs operador">
             <h3>Operador</h3>
-            <input type="text" id="operador"value=""/>
+            <input type="text" name="operador" id="operador"value=""/>
         </div>
         <div class="formInputs grupo">
             <h3>Grupo</h3>
-            <input type="text" id="grupo"value=""/>
+            <input type="text" name="grupo" id="grupo"value=""/>
         </div>
         <div id="chang_Oper_Grup" class='formInputs chang_Oper_Grup Oper_grupo'>
             <img src="/images/operador.png" class='ver'>
@@ -60,28 +60,42 @@ $this->pageTitle = Yii::app()->name;
         </div>
         <div class="formInputs fecha">
             <h3>Fecha</h3>
-            <input type="text" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
+            <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <div class="formInputs fecha_from">
-            <h3>Desde</h3>
-            <input type="text" id="datepicker_from" value=""/>
+        <div class="formInputs termino_pago">
+            <h3>Termino Pago</h3>
+
+            <select name="id_termino_pago" id="id_termino_pago">
+            <option value="">Seleccione</option>
+            <option value="1">P-Semanales</option>
+            <option value="2">P-Mensuales</option>
+            <option value="3">7/3</option>
+            <option value="4">7/5</option>
+            <option value="5">7/7</option>
+            <option value="6">15/5</option>
+            <option value="7">15/7</option>
+            <option value="8">15/15</option>
+            <option value="9">30/7</option>
+            <option value="10">30/30</option>
+            </select>
+               
         </div>
         <div class="formInputs fecha_to">
-            <h3>Hasta</h3>
-            <input type="text" id="datepicker_to" value=""/>
+            <h3>Hasta la fecha</h3>
+            <input type="text" name="datepicker_to" id="datepicker_to" value=""/>
         </div>
         <div class='formInputs provisiones'>
             <h3>Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <button name="Si_prov" id="Si_prov" type="button" value=""class="btn btn-primary">Si</button>
-                <button name="No_prov" id="No_prov" type="button" value=""class="btn btn-primary">No</button>
+                <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div> 
         <div class='formInputs disputas'>
             <h3>Disputas</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <button name="Si_disp" id="Si_disp" type="button" value=""class="btn btn-primary">Si</button>
-                <button name="No_disp" id="No_disp" type="button" value=""class="btn btn-primary">No</button>
+                <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
         <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
@@ -91,10 +105,6 @@ $this->pageTitle = Yii::app()->name;
 </form>
 </div>
 <div class="barra_tools_click">
-    <!--<h7>Opciones</h7>-->
-<!--    <div id="next_tool">
-        <img src="/images/next_tool.png" >
-    </div>-->
     <footer id="botones_exportar">
         <div id="excel" class="botones">
             <img src="/images/excel.png" class='ver'>
