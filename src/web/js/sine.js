@@ -79,7 +79,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
-                    var mostrar =['']; 
+                    var mostrar =['#datepicker_to,.termino_pago,.fecha_to']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -88,7 +88,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="refac")
+            if(nombre=="soa"||nombre=="refac"||nombre=="refi_prov")
                 {
                     $('.trabajando').hide('slow');
                     $('.barra_tools_click').show('fast');
@@ -180,7 +180,10 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
                 break               
             case 'refac':
-                var respuesta=$SINE.UI.validaCampos($('#datepicker_from,#datepicker_to').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
+                break               
+            case 'refi_prov':
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
                 break               
            }
            console.log(respuesta);

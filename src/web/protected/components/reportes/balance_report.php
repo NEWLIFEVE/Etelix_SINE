@@ -2,7 +2,7 @@
 /**
 * @package reportes
 */
-class balance extends Reportes
+class balance_report extends Reportes
 {//*esto es provisional, solo esta destinado a hacer funcionar el principio del codigo
 	 public static function reporte($grupo, $fecha, $no_disp,$no_prov,$grupoName) 
         {

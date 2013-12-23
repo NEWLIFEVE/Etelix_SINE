@@ -66,7 +66,7 @@ $this->pageTitle = Yii::app()->name;
             <h3>Termino Pago</h3>
 
             <select name="id_termino_pago" id="id_termino_pago">
-            <option value=""></option>
+            <option value="">Seleccione</option>
             <option value="1">P-Semanales</option>
             <option value="2">P-Mensuales</option>
             <option value="3">7/3</option>
@@ -87,14 +87,14 @@ $this->pageTitle = Yii::app()->name;
         <div class='formInputs provisiones'>
             <h3>Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value="Si"class="btn btn-primary">Si</input>
+                <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div> 
         <div class='formInputs disputas'>
             <h3>Disputas</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value="Si"class="btn btn-primary">Si</input>
+                <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
