@@ -55,9 +55,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$fecha)
+    public function refi_prov($fecha_from,$fecha_to)
     {
-        $var=refi_prov::reporte($fecha_from,$fecha_to,$fecha);
+        $var=refi_prov::reporte($fecha_from,$fecha_to);
         return $var;
     }
     /**
