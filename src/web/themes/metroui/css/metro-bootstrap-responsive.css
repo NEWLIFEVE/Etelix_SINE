@@ -14,33 +14,48 @@
 {
   
 }
+
+/*@media only screen and (max-width: 320px) {}*/
+
+/*resolucion para iphone "vertical"*/
 @media (max-width: 480px) 
 {
     .tile { width: 80px; height: 80px;}
-    .cuadro {height: 762px!important;width: 34%!important;margin-left: 168px!important;margin-top: -20px!important;}
+    .cuadro {height: 762px!important;width: 34%!important;margin-left: 157px!important;margin-top: -20px!important;}
     .titulo {display: none;}  
     input#LoginForm_username,input#LoginForm_password,.metro input[type="submit"].primary {width: 328px!important;margin-top:50px!important}
     #remember {position: static!important;width: 168px!important;margin-left: -160px!important;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;}
-    .formulario{padding-left: 74px!important;background: white;height: 600px!important;margin-top: -584px!important;width: 57%!important;position: absolute!important;margin-left: -3%!important;}
+    .formulario{padding-left: 0%!important;background: white;height: 600px!important;margin-top: -584px!important;width: 57%!important;position: absolute!important;margin-left: -3%!important;}
     #botones_exportar {margin-left: -23%!important;}
     .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -145px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;} 
     input{width: 328px!important;}
+    .disputas {margin-left: 0%!important;}
+    input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
+    
+    /*PROVISIONAL*/
+    .trabajando {width: 323px;padding: 11px;}
 }
-/*@media only screen and (max-width: 320px) {}*/
+
+/*resolucion para telefonos como smasung, LG, android en general "vertical"*/
 @media (max-width: 360px) 
 { 
-    .cuadro{margin-left: 143px!important;margin-top: -14px!important;height: 566px!important;}
+    .cuadro{margin-left: 98px!important;margin-top: -14px!important;height: 566px!important;}
     input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
-    .metro input[type="submit"].primary{width: 213px!important;}
+    .metro input[type="submit"].primary{width: 213px!important;margin-top: -6%!important;}
     #remember{display: run-in!important;}
     .subtitulos{width: 294px;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px;margin-top: -260px!important;}
-    .formulario{background: white;height: 600px!important;margin-top: -551px!important;width: 41%!important;position: absolute!important;margin-left: -3%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: -260px!important;}
+    .formulario{background: white;height: 600px!important;margin-top: -551px!important;width: 41%!important;position: absolute!important;margin-left: -1%!important;}
     input{width: 296px!important;}
+    .formInputs {margin-left: -46%!important;}
+    .disputas {margin-left: -47%!important;}
     #botones_exportar {margin-left: -15%!important;}
     .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -145px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
+    input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
+    /*PROVISIONAL*/
+    .trabajando {width: 323px!important;padding: 2px!important;}
 }
 
