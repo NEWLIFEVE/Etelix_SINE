@@ -42,9 +42,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$fecha)
+    public function refac($fecha_from,$fecha_to)
     {
-        $var=refac::reporte($fecha_from,$fecha_to,$fecha);
+        $var=refac::reporte($fecha_from,$fecha_to);
         return $var;
     }
     /**
@@ -202,7 +202,7 @@ class Reportes extends CApplicationComponent
         return $estilos;
     }
     /**
-     * define el estilo de los tdÂ´s td donde se alojen totales en los reportes
+     * define el estilo de los td´s td donde se alojen totales en los reportes
      * @return string
      */
     public static function define_estilos_totals()
@@ -445,9 +445,7 @@ class Reportes extends CApplicationComponent
     {
         $tp_name= TerminoPago::getName($termino_pago);
         $tp= Reportes::define_dias_TP($tp_name);
-        $fecha_from=Reportes::define_due_date($tp, $fecha_to,"-");
-        return Reportes::define_fecha_definitiva($fecha_from,$fecha_to);
-
+        return Reportes::define_due_date($tp, $fecha_to,"-");
     }
     /**
      * 
@@ -468,23 +466,6 @@ class Reportes extends CApplicationComponent
                    $tp=15;
                   break;
         }return $tp;
-//        switch ($termino_pago) {
-//              case "P-Semanales": case "7/7": case "15/7": case "30/7":
-//                   $tp=7;
-//                  break;
-//              case "P-Mensuales": case "30/30":
-//                   $tp=30;
-//                  break;
-//              case "7/3":
-//                   $tp=3;
-//                  break;
-//              case "7/5": case "15/5":
-//                   $tp=5;
-//                  break;
-//              case "15/15":
-//                   $tp=15;
-//                  break;
-//        }return $tp;
     }
     /**
      * 

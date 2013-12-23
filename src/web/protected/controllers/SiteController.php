@@ -213,7 +213,7 @@ class SiteController extends Controller
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - ".$this->letra."refac".self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to,$fecha);
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha_to);
                    break;
               case 'refi_prov':
                    $archivos['refi_prov']['nombre']="SINE - ".$this->letra."refi_prov".self::reportTitle($fecha)."-".date("g:i a");
