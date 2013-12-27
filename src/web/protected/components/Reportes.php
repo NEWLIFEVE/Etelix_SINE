@@ -6,7 +6,9 @@ class Reportes extends CApplicationComponent
 {
     public function init() 
     {
+       
     }
+
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -42,9 +44,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refac($fecha_from,$fecha_to)
+    public function refac($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac::reporte($fecha_from,$fecha_to);
+        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
@@ -52,12 +54,11 @@ class Reportes extends CApplicationComponent
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
      * @param type $fecha_from
      * @param type $fecha_to
-     * @param type $fecha
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to)
+    public function refi_prov($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refi_prov::reporte($fecha_from,$fecha_to);
+        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
@@ -202,7 +203,7 @@ class Reportes extends CApplicationComponent
         return $estilos;
     }
     /**
-     * define el estilo de los td´s td donde se alojen totales en los reportes
+     * define el estilo de los tdï¿½s td donde se alojen totales en los reportes
      * @return string
      */
     public static function define_estilos_totals()
@@ -444,102 +445,9 @@ class Reportes extends CApplicationComponent
     public static function define_fecha_from($termino_pago, $fecha_to)
     {
         $tp_name= TerminoPago::getName($termino_pago);
-        $tp= Reportes::define_dias_TP($tp_name);
+        $tp= self::define_tp($tp_name)["periodo"];
         return Reportes::define_due_date($tp, $fecha_to,"-");
     }
-    /**
-     * 
-     * @param type $termino_pago
-     * @return int
-     */
-    public static function define_dias_TP($termino_pago)
-    {
-        switch ($termino_pago) {
-              case "P-Semanales": case "7/7": case "7/3":case "7/5":case "7/3":
-                   $tp=7;
-//                   $tp=5;//es 7, pero aun falta validar
-                  break;
-              case "P-Mensuales": case "30/30": case "30/7":
-                   $tp=30;
-                  break;
-              case "15/15":case "15/5":case "15/7":
-                   $tp=15;
-                  break;
-        }return $tp;
-    }
-    /**
-     * 
-     * @param type $fecha
-     * @param type $id_termino_pago
-     * @return type
-     */
-    public static function define_fecha_to($fecha,$id_termino_pago)
-    {    
-        $dia= date('l', strtotime($fecha));     
-        switch ($id_termino_pago) {
-            case 1: case 3: case 4: case 5:                           //semanaal
-                 $fecha_to= Reportes::define_fecha_to_semana($fecha, $dia);
-                 return Reportes::define_fecha_definitiva($fecha_to,$fecha);
-                break;
-            case 6: case 7:                                           //quincenal
-                 return Reportes::define_fecha_to_semana($fecha, $dia);
-                break;
-            case 2: case 9: case 10:                                  //mensual
-                 return Reportes::define_fecha_to_semana($fecha, $dia);
-                break;
-            default:
-                 return $fecha;
-                break;
-        }
-    }
-    /**
-     * 
-     * @param type $fecha_calc
-     * @param type $fecha
-     * @return type
-     */
-    public static function define_fecha_definitiva($fecha_calc,$fecha)
-    {    
-         $fecha_calc_m= date('Y-m', strtotime($fecha_calc));
-         $fecha_m= date('Y-m', strtotime($fecha));
-         
-            if($fecha_calc_m != $fecha_m) return $fecha_m."-01";
-
-            else return $fecha_calc;
-    }
-    /**
-     * 
-     * @param type $fecha
-     * @param type $dia
-     * @return type
-     */
-    public static function define_fecha_to_semana($fecha,$dia)
-    {    
-        switch ($dia) {
-
-            case "Sunday":
-                  return $fecha;
-                  break;
-            case "Monday":
-                  return date('Y-m-d', strtotime('-1 day', strtotime ( $fecha ))) ;
-                  break;
-            case "Tuesday":
-                  return date('Y-m-d', strtotime('-2 day', strtotime ( $fecha ))) ;
-                  break;
-            case "Wednesday":
-                  return date('Y-m-d', strtotime('-3 day', strtotime ( $fecha ))) ;
-                  break;
-            case "Thursday":
-                  return date('Y-m-d', strtotime('-4 day', strtotime ( $fecha ))) ;
-                  break;
-            case "Friday":
-                  return date('Y-m-d', strtotime('-5 day', strtotime ( $fecha ))) ;
-                  break;
-            case "Saturday":
-                  return date('Y-m-d', strtotime('-6 day', strtotime ( $fecha ))) ;
-                  break;
-         }                                                             
-    }  
     /**
      * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
      * @param type $fecha_first
@@ -576,7 +484,7 @@ class Reportes extends CApplicationComponent
          if($var=="5"||$var=="25") return "5 DIAS";
      }
      /**
-      * 
+      * define acumulado de totales de sori en refac y refi prov
       * @param type $model
       * @param type $acumulado_sori
       * @return type
@@ -586,18 +494,17 @@ class Reportes extends CApplicationComponent
         return $acumulado_sori + $model->amount;
     }
     /**
-     * 
+     * define acumulado de totales de captura en refac y refi prov
      * @param type $model
      * @param type $acumulado_captura
      * @return type
      */
     public static function define_total_captura($model,$acumulado_captura)
     {
-//                return $acumulado_captura + $model->revenue;
-        return $acumulado_captura + $model->amount;
+                return $acumulado_captura + $model->revenue;
     }
     /**
-     * 
+     * define acumulado de totales de diferencias en refac y refi prov
      * @param type $model
      * @param type $acumulado_diference
      * @return type
@@ -607,5 +514,20 @@ class Reportes extends CApplicationComponent
         return $acumulado_diference + $diferencia;
     }
     
+    public static function define_tp($key)
+    {
+        $termino_pago=array("P-Semanales"=>array("periodo"=>7,"vencimiento"=>0),
+                               "P-Mensuales"=>array("periodo"=>30,"vencimiento"=>0),
+                               "7/3"=>array("periodo"=>7,"vencimiento"=>3),
+                               "7/5"=>array("periodo"=>7,"vencimiento"=>5),
+                               "7/7"=>array("periodo"=>7,"vencimiento"=>7),
+                               "15/7"=>array("periodo"=>15,"vencimiento"=>7),
+                               "15/15"=>array("periodo"=>15,"vencimiento"=>15),
+                               "30/7"=>array("periodo"=>30,"vencimiento"=>7),
+                               "30/30"=>array("periodo"=>30,"vencimiento"=>30),
+                               "Sin estatus"=>array("periodo"=>7,"vencimiento"=>7)//hay que consultar como seria el periodo y los dias para pagar en el paso de terminos de pago sin status
+                               );
+        return $termino_pago[$key];
+    }
 }
 ?>

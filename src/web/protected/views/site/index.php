@@ -13,30 +13,32 @@ $this->pageTitle = Yii::app()->name;
     
 <div class='subtitulos'><h1>Seleccione reporte</h1></div>
 
-<div class="listadeReportes">
-    <div class="Reportes SOA" id="soa">
-        <H1 class='h1_report h1SOA'>S O A</H1> 
-    </div><br>
-    
-    <div class="Reportes BALANCE" id="balance">
-        <h1 class='h1_report h1BALANCE'>Balance</h1>
-    </div><br>
-    
-    <div class="Reportes REFAC" id="refac">
-        <h1 class='h1_report h1REFAC'>REFAC</h1>
-    </div><br>
-    
-    <div class="Reportes WAIVER" id="waiver">
-        <h1 class='h1_report h1WAIVER'>WAIVER</h1>
-    </div><br>
-    
-    <div class="Reportes RECREDI" id="recredi">
-        <h1 class='h1_report h1RECREDI'>RECREDI</h1>
-    </div><br>
-    
-    <div class="Reportes REFI_PROV" id="refi_prov">
-        <h1 class='h1_report h1REFI_PROV'>REFI PROV</h1>
-    </div><br>
+<div class="listadeReportesscroll">
+    <div class="listadeReportes">
+        <div class="Reportes SOA" id="soa">
+            <H1 class='h1_report h1SOA'>S O A</H1> 
+        </div><br>
+
+        <div class="Reportes BALANCE" id="balance">
+            <h1 class='h1_report h1BALANCE'>Balance</h1>
+        </div><br>
+
+        <div class="Reportes REFAC" id="refac">
+            <h1 class='h1_report h1REFAC'>REFAC</h1>
+        </div><br>
+
+        <div class="Reportes WAIVER" id="waiver">
+            <h1 class='h1_report h1WAIVER'>WAIVER</h1>
+        </div><br>
+
+        <div class="Reportes RECREDI" id="recredi">
+            <h1 class='h1_report h1RECREDI'>RECREDI</h1>
+        </div><br>
+
+        <div class="Reportes REFI_PROV" id="refi_prov">
+            <h1 class='h1_report h1REFI_PROV'>REFI PROV</h1>
+        </div><br>
+    </div>
 </div>
 <div>
 <form id="formulario">
@@ -64,7 +66,6 @@ $this->pageTitle = Yii::app()->name;
         </div>
         <div class="formInputs termino_pago">
             <h3>Termino Pago</h3>
-
             <select name="id_termino_pago" id="id_termino_pago">
             <option value="">Seleccione</option>
             <option value="1">P-Semanales</option>
@@ -77,12 +78,7 @@ $this->pageTitle = Yii::app()->name;
             <option value="8">15/15</option>
             <option value="9">30/7</option>
             <option value="10">30/30</option>
-            </select>
-               
-        </div>
-        <div class="formInputs fecha_to">
-            <h3>Hasta la fecha</h3>
-            <input type="text" name="datepicker_to" id="datepicker_to" value=""/>
+            </select> 
         </div>
         <div class='formInputs provisiones'>
             <h3>Provisiones</h3>

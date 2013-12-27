@@ -32,7 +32,7 @@
                               </tr>";
                 foreach ($accounting_document as $key => $document) 
                     {
-                        $tp=Reportes::define_dias_TP($document->tp);
+                        $tp=self::define_tp($document->tp)["vencimiento"];
                         $due_date=Reportes::define_due_date($tp, $document->issue_date,"+");
                         $acumulado=Reportes::define_balance_amount($document,$acumulado);
                         $acumuladoPago=Reportes::define_total_pago($document,$acumuladoPago);

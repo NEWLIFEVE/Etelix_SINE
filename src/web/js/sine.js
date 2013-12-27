@@ -53,33 +53,33 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador, .grupo, .provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.fecha,.termino_pago,.fecha_to'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.termino_pago,.trabajando'],
             nombre=obj[0].id;
             switch (nombre) 
             {
                 case "soa":
-                  var mostrar =['.grupo, .provisiones,.disputas,.fecha']; 
+                  var mostrar =['.fecha,.grupo,.provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                   //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
-                  var mostrar =['']; 
+                  var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
-                    var mostrar =['#datepicker_to,.termino_pago,.fecha_to']; 
+                    var mostrar =['.termino_pago,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
-                    var mostrar =['']; 
+                    var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['']; 
+                    var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
-                    var mostrar =['#datepicker_to,.termino_pago,.fecha_to']; 
+                    var mostrar =['.termino_pago,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -90,11 +90,9 @@ $SINE.UI=(function()
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
             if(nombre=="soa"||nombre=="refac"||nombre=="refi_prov")
                 {
-                    $('.trabajando').hide('slow');
                     $('.barra_tools_click').show('fast');
                 }else{
                     $('.barra_tools_click').hide('fast');
-                    $('.trabajando').show('slow');
                 }
                 //.....
         }
@@ -180,10 +178,10 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
                 break               
             case 'refac':
-                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
                 break               
             case 'refi_prov':
-                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago,#datepicker_to').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
                 break               
            }
            console.log(respuesta);
