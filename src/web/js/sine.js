@@ -162,7 +162,9 @@ $SINE.UI=(function()
                         $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
                         $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
                      }else{  
-                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
+                         $SINE.AJAX.send("GET","/Site/Excel",$("#formulario").serialize());
+                         $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
+//                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
                           } 
                 }
         }
@@ -326,9 +328,11 @@ $SINE.AJAX=(function()
                  url: action,
                  data: formulario,
                  success: function(data)
-                 {
-                         $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");  
-                         console.log(data);
+                 {   
+                     console.log(data);
+//                     if(action=="/Site/Excel") 
+                         $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1000","33%");  
+//                        else $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
                  }
             });
         }
