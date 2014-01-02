@@ -62,7 +62,6 @@ class Carrier extends CActiveRecord
 			'carrierManagers'=>array(self::HAS_MANY,'CarrierManagers','id_carrier'),
 			'balances'=>array(self::HAS_MANY,'Balance','id_carrier_supplier'),
 			'balances1'=>array(self::HAS_MANY,'Balance','id_carrier_customer'),
-			'provisions'=>array(self::HAS_MANY,'Provision','id_carrier'),
 		);
 	}
 
