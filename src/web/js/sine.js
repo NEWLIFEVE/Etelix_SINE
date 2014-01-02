@@ -166,6 +166,7 @@ $SINE.UI=(function()
                           } 
                 }
         }
+
          /**
          * 
          * @param {type} tipo

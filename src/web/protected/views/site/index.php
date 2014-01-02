@@ -64,7 +64,7 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <div class="formInputs termino_pago">
+        <!--        <div class="formInputs termino_pago">
             <h3>Termino Pago</h3>
             <select name="id_termino_pago" id="id_termino_pago">
             <option value="">Seleccione</option>
@@ -78,6 +78,15 @@ $this->pageTitle = Yii::app()->name;
             <option value="8">15/15</option>
             <option value="9">30/7</option>
             <option value="10">30/30</option>
+            </select> 
+        </div>-->
+        <div class="formInputs termino_pago">
+            <h3>Periódo</h3>
+            <select name="id_termino_pago" id="id_termino_pago">
+            <option value="">Seleccione</option>
+            <option value="3">SEMANAL</option>
+            <option value="6">QUINCENAL</option>
+            <option value="10">MENSUAL</option>
             </select> 
         </div>
         <div class='formInputs provisiones'>
@@ -103,8 +112,10 @@ $this->pageTitle = Yii::app()->name;
 <div class="barra_tools_click">
     <footer id="botones_exportar">
         <div id="excel" class="botones">
-            <img src="/images/excel.png" class='ver'>
-            <img src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>
+            <a class="excel_a">
+               <img src="/images/excel.png" class='ver'>
+               <img id="excel_hover" src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>  
+            </a>
         </div>
 
         <div id="mail" class="botones">

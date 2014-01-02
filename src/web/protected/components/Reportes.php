@@ -8,7 +8,6 @@ class Reportes extends CApplicationComponent
     {
        
     }
-
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -69,10 +68,10 @@ class Reportes extends CApplicationComponent
      */
     public static function define_grupo($grupo)
     {    
-           if($grupo=="CABINAS PERU")  
-               return "id_carrier_groups=301 OR id_carrier_groups=443";
-           else   
-               return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
+        if($grupo=="CABINAS PERU")  
+            return "id_carrier_groups=301 OR id_carrier_groups=443";
+        else   
+            return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
     /**
      * define si la consulta traera las disputas o no
@@ -501,7 +500,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_captura($model,$acumulado_captura)
     {
-                return $acumulado_captura + $model->revenue;
+        return $acumulado_captura + $model->revenue;
     }
     /**
      * define acumulado de totales de diferencias en refac y refi prov
@@ -513,7 +512,11 @@ class Reportes extends CApplicationComponent
     {
         return $acumulado_diference + $diferencia;
     }
-    
+    /**
+     * determina el numero de dias dependiendo del termino de pago. aplica para soa, refac y refi_prov
+     * @param type $key
+     * @return array
+     */
     public static function define_tp($key)
     {
         $termino_pago=array("P-Semanales"=>array("periodo"=>7,"vencimiento"=>0),
@@ -522,6 +525,7 @@ class Reportes extends CApplicationComponent
                                "7/5"=>array("periodo"=>7,"vencimiento"=>5),
                                "7/7"=>array("periodo"=>7,"vencimiento"=>7),
                                "15/7"=>array("periodo"=>15,"vencimiento"=>7),
+                               "15/5"=>array("periodo"=>15,"vencimiento"=>5),
                                "15/15"=>array("periodo"=>15,"vencimiento"=>15),
                                "30/7"=>array("periodo"=>30,"vencimiento"=>7),
                                "30/30"=>array("periodo"=>30,"vencimiento"=>30),

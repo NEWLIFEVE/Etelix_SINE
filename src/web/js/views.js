@@ -25,7 +25,7 @@
   */
   $(function() 
   {
-        $( "#datepicker,#datepicker_from,#datepicker_to" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
   });
   /**
    * cambia operador por grupo  grupo por operador

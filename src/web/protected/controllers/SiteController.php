@@ -168,7 +168,7 @@ class SiteController extends Controller
                    $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                    break;
                case 'refi_prov':
-                   $correos['refi_prov']['asunto']="SINE - ".$this->letra."REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $correos['refi_prov']['asunto']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                    break;
@@ -214,7 +214,7 @@ class SiteController extends Controller
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
                    break;
               case 'refi_prov':
-                   $archivos['refi_prov']['nombre']="SINE - ".$this->letra."REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refi_prov']['nombre']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    break;
             }  
