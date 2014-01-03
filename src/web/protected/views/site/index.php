@@ -114,7 +114,7 @@ $this->pageTitle = Yii::app()->name;
         <div id="excel" class="botones">
             <a class="excel_a">
                <img src="/images/excel.png" class='ver'>
-               <img id="excel_hover" src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>  
+               <img src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>  
             </a>
         </div>
 

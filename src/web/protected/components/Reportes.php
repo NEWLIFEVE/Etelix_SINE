@@ -31,9 +31,9 @@ class Reportes extends CApplicationComponent
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_disp,$no_prov,$grupoName)
+    public function balance_report($grupo,$fecha,$no_prov,$grupoName)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_prov,$grupoName);
         return $var;
     }
     /**
@@ -80,26 +80,44 @@ class Reportes extends CApplicationComponent
      * @param type $no_disp
      * @return string
      */
-    public static function define_disp($no_disp)
+    public static function define_disp($no_disp,$grupo,$fecha)
     {
         if($no_disp=="No")
-           $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
+           $disp_sql=" ";
         else  
-           $disp_sql="";
+           $disp_sql="UNION
+                      select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
+                      from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                      where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+                      and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+                          
+                      and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
         return $disp_sql;
     }
     /**
      * define si traera las disputas en los SOA
      * @param type $no_prov
+     * @param type $tipo_report
      * @return string
      */
-    public static function define_prov($no_prov)
+    public static function define_prov($no_prov,$tipo_report)
     {
-        if($no_prov=="No")
-           $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
-        else  
-           $prov_sql="";
-        return $prov_sql;
+        switch ($tipo_report) 
+        {
+            case "soa":
+                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13)";//aqui debe ir el sql para filtrar las provisiones
+                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11)";
+                return $prov_sql;
+                break;
+            case "balance":
+                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (12,13)";//aqui debe ir el sql para filtrar las provisiones
+                else   $prov_sql="";
+                return $prov_sql;
+            default:
+                return "and a.id_type_accounting_document NOT IN (12,13)";
+                break;  
+        }
+        
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
@@ -187,6 +205,9 @@ class Reportes extends CApplicationComponent
             case "7": case "8":
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
                 break;
+            case "10": case "11":case "12": case "13":
+                $estilos=" style='background:green;color:white;border:1px solid black;'";
+                break;
             default:
                 $estilos = " style='background:white;color:black;border:1px solid black;'";
         }
@@ -240,11 +261,11 @@ class Reportes extends CApplicationComponent
      */  
     public static function define_fact_env($model)
     {
-        if ($model->id_type_accounting_document==1){
+        if ($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12){
             return Yii::app()->format->format_decimal($model->amount,3);
         }elseif($model->id_type_accounting_document==9 && $model->amount>=0){
             return Yii::app()->format->format_decimal($model->amount,3);
-        }elseif($model->id_type_accounting_document==7){
+        }elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7){
             return "-".Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
@@ -272,11 +293,11 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fact_rec($model)
     {
-        if ($model->id_type_accounting_document==2){
+        if ($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13){
             return Yii::app()->format->format_decimal($model->amount,3);
         }elseif($model->id_type_accounting_document==9 && $model->amount<0){
             return Yii::app()->format->format_decimal(($model->amount)*-1,3);
-        }elseif($model->id_type_accounting_document==8){
+        }elseif($model->id_type_accounting_document==6||$model->id_type_accounting_document==8){
             return Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
@@ -361,10 +382,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "8":
+            case "1":case "3":case "6":case "8":case "10":case "12":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "7":
+            case "2":case "4":case "5":case "7":case "11":case "13":
                 return $acumulado - $model->amount;
                 break;
         }

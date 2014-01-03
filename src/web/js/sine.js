@@ -63,7 +63,7 @@ $SINE.UI=(function()
                   break; 
                   //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
-                  var mostrar =['.trabajando']; 
+                  var mostrar =['.fecha,.grupo,.provisiones']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refac":
@@ -88,7 +88,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="refac"||nombre=="refi_prov")
+            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov")
                 {
                     $('.barra_tools_click').show('fast');
                 }else{
@@ -143,6 +143,12 @@ $SINE.UI=(function()
         {
             $(clase).css(attr,value);
         }
+        
+//        $("#excel").hover(function hover_link()
+//        {
+//            var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
+//            if(valid_input==1) $(".excel_a").attr("href","Site/Excel?" + $('#formulario').serialize()+ "");    
+//        });
        /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
         * @param {type} click
@@ -151,7 +157,6 @@ $SINE.UI=(function()
         function export_report(click)
         {
               var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
-              console.log(valid_input);
               if(valid_input==0)
                 {
                     $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
@@ -162,9 +167,10 @@ $SINE.UI=(function()
                         $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
                         $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
                      }else{  
-                         $SINE.AJAX.send("GET","/Site/Excel",$("#formulario").serialize());
-                         $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
-//                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
+//                          $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize());
+//                          $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
+//                          setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 3000);
+                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
                           } 
                 }
         }
@@ -330,9 +336,9 @@ $SINE.AJAX=(function()
                  success: function(data)
                  {   
                      console.log(data);
-//                     if(action=="/Site/Excel") 
-                         $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1000","33%");  
-//                        else $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
+//                     if(action=="/site/Excel")   $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1000","33%");  
+//                        else 
+                            $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
                  }
             });
         }

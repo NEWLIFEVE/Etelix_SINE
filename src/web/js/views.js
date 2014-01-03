@@ -26,7 +26,7 @@
   $(function() 
   {
         $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
-  });
+  }); 
   /**
    * cambia operador por grupo  grupo por operador
    */
