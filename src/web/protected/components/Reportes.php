@@ -92,6 +92,7 @@ class Reportes extends CApplicationComponent
                       and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
                           
                       and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
+       
         return $disp_sql;
     }
     /**
