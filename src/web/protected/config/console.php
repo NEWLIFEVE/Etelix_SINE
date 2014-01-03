@@ -11,11 +11,9 @@ return array(
 
 	// application components
 	'components'=>array(
-		/*'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),*/
-		// uncomment the following to use a MySQL database
-		
+		'provisions'=>array(
+            'class'=>"application.components.Provisions",
+        ),		
 		'db'=>array(
             'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=sori',
 			'emulatePrepare'=>true,
