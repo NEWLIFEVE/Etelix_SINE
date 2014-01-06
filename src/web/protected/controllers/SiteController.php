@@ -148,7 +148,7 @@ class SiteController extends Controller
              $fecha=(string)$_POST['datepicker'];
             if(($_POST['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_POST['id_termino_pago'],$fecha);   
             if(($_POST['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_POST['grupo']);   
-            if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov'],$_POST['tipo_report']);
+            if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov'],$_POST['tipo_report'],$grupo, $fecha);
             if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp'],$grupo,$fecha);
             
             switch ($_POST['tipo_report']) {
@@ -197,7 +197,7 @@ class SiteController extends Controller
             $fecha=(string)$_GET['datepicker'];
             if(($_GET['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_termino_pago'],$fecha);       
             if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
-            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$_GET['tipo_report']);     
+            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$_GET['tipo_report'],$grupo, $fecha);     
             if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
             
             switch ($_GET['tipo_report']) {
