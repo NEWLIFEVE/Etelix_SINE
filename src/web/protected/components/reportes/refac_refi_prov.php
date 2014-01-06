@@ -18,11 +18,11 @@
             $style_sori="style='border:1px solid black;background:#96B6E6;text-align:center;'";
             $style_diference="style='border:1px solid black;background:#18B469;text-align:center;'";
             $style_totals="style='border:1px solid black;background:silver;text-align:center;'";
-            $acumulado_provisiones=$acumulado_sori=$acumulado_diference=0;
-            //Traigo las facturas de base de datos      
-            $facturas=self::getFacturas($fecha_from, $fecha_to,$tipo_report);
-            //Aumento el tiempo de ejecucion dependiendo de la cantidad de facturas que trae de base de datos
-            $seg=count($facturas);
+            $acumulado_factura=$acumulado_provisiones=$acumulado_diference=0;
+            //Traigo las Provisiones de base de datos      
+            $provisiones=self::getProvisions($fecha_from, $fecha_to,$tipo_report);
+            //Aumento el tiempo de ejecucion dependiendo de la cantidad de Provisiones que trae de base de datos
+            $seg=count($provisiones);
             ini_set('max_execution_time', $seg);
    
            $reporte="<table>
@@ -71,34 +71,36 @@
                              <td " .$style_diference. "><b>MONTO</b></td>
                             </tr>";
            
-           foreach ($facturas as $key => $factura)
+           foreach ($provisiones as $key => $provision)
            {
-              $provisiones=self::getProvisions($factura,$tipo_report);
-              
-              if($provisiones!=null) $dif_amount=$factura->amount - $provisiones->amount;
-              else $dif_amount=$factura->amount;
-              if($provisiones!=null) $dif_minutes=$factura->minutes - $provisiones->minutes;
-              else $dif_minutes=$factura->minutes;
-              if($provisiones!=null)$prov_minutes=Yii::app()->format->format_decimal($provisiones->minutes,3);
-              else $prov_minutes=0;
-              if($provisiones!=null)$prov_amount=Yii::app()->format->format_decimal($provisiones->amount,3);
-              else $prov_amount=0;
-              if($provisiones!=null) $acumulado_provisiones=Reportes::define_total_provisiones($provisiones,$acumulado_provisiones);
-              else $acumulado_provisiones=0;
-              $acumulado_sori=Reportes::define_total_sori($factura,$acumulado_sori);
+              $facturas=self::getFacturas($provision,$tipo_report);
+              if($facturas!=null){
+                 $facturas_minutes=Yii::app()->format->format_decimal($facturas->minutes,3);
+                 $facturas_amount=Yii::app()->format->format_decimal($facturas->amount,3);
+                 $dif_amount=$provision->amount - $facturas->amount;
+                 $dif_minutes=$provision->minutes - $facturas->minutes;
+                 $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
+                }else{
+                     $facturas_minutes=0;
+                     $facturas_amount=0;
+                     $dif_amount=$provision->amount;
+                     $dif_minutes=$provision->minutes;
+                     $acumulado_factura=0;
+                }
+              $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
               $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
               
                 $reporte.="<tr>";
-                 $reporte.="<td $style_basic >" .$factura->carrier. "</td>
-                                  <td $style_basic_number >" .$prov_minutes. "</td>
-                                  <td $style_basic_number >" .$prov_amount. "</td>";
+                 $reporte.="<td $style_basic >" . $provision->carrier. "</td>
+                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->minutes,3). "</td>
+                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->amount,3). "</td>";
+                 
+                 $reporte.="<td $style_basic >" .$provision->carrier. "</td>
+                                  <td $style_basic_number >" .$facturas_minutes. "</td>
+                                  <td $style_basic_number >" .$facturas_amount. "</td>
+                                  <td $style_basic >" . $facturas->doc_number. "</td>";
 
-                 $reporte.="<td $style_basic >" . $factura->carrier. "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($factura->minutes,3). "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($factura->amount,3). "</td>
-                                  <td $style_basic >" . $factura->doc_number. "</td>";
-
-                 $reporte.="<td $style_basic >" . $factura->carrier. "</td>
+                 $reporte.="<td $style_basic >" . $provision->carrier. "</td>
                                   <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_minutes,3). "</td>
                                   <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_amount,3). "</td>";
                 $reporte.="</tr>";
@@ -110,7 +112,7 @@
            
             $reporte.="<td $style_sori ><b>TOTAL</b></td>
                              <td $style_sori ></td>
-                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_sori,3). "</b></td>
+                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_factura,3). "</b></td>
                              <td $style_sori ></td>";
            
             $reporte.="<td $style_diference ><b>TOTAL</b></td>
@@ -122,45 +124,46 @@
            
            return $reporte;
         }
+                /**
+         * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
+         * @param type $model
+         * @param type $tipo_report
+         * @return type
+         */
+        private static function getProvisions($fecha_from, $fecha_to,$tipo_report) 
+        {
+            if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
+            else $type_accounting_document="Provision Factura Recibida";
+            
+            $sql= "SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
+                   FROM accounting_document a, carrier c 
+                   WHERE a.id_carrier=c.id
+                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
+                    AND from_date>='{$fecha_from}'
+                    AND to_date<='{$fecha_to}'
+                  ORDER BY from_date";
+            return AccountingDocument::model()->findAllBySql($sql);           
+        }
         /** ejecuta la consulta a todos los datos de facturacion de sori, la unica particularidad es que dependiendo de la variable $tipo_report, cambia el id_type_accounting_document
          * trae el sql pricipal de sori
          * @param date $fecha_from
          * @param date $fecha_to
          * @return array
          */
-        private static function getFacturas($fecha_from, $fecha_to,$tipo_report) 
+        private static function getFacturas($model,$tipo_report) 
         {
             if($tipo_report=="REFAC") $type_accounting_document="Factura Enviada";
             else $type_accounting_document="Factura Recibida";
 
-            $sql="SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
-                  FROM accounting_document a, carrier c
-                  WHERE a.id_carrier=c.id
+            $sql="SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
+                  FROM accounting_document 
+                  WHERE id_carrier= {$model->id_carrier}
                     AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                    AND from_date>='{$fecha_from}'
-                    AND to_date<='{$fecha_to}'
+                    AND from_date>='{$model->from_date}'
+                    AND to_date<='{$model->to_date}'
                   ORDER BY from_date";
-            return AccountingDocument::model()->findAllBySql($sql);
-        }
-        /**
-         * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
-         * @param type $model
-         * @param type $tipo_report
-         * @return type
-         */
-        private static function getProvisions($model,$tipo_report) 
-        {
-            if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
-            else $type_accounting_document="Provision Factura Recibida";
-            
-            $sql= "SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
-                   FROM accounting_document 
-                   WHERE id_carrier= {$model->id_carrier}
-                     AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                     AND from_date>='{$model->from_date}'
-                     AND to_date<='{$model->to_date}'
-                   ORDER BY from_date";
-            return AccountingDocument::model()->findBySql($sql);      
+                    
+            return AccountingDocument::model()->findBySql($sql);
         }
     }
     ?>

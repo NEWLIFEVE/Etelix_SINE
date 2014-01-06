@@ -521,12 +521,12 @@ class Reportes extends CApplicationComponent
      /**
       * define acumulado de totales de sori en refac y refi prov
       * @param type $model
-      * @param type $acumulado_sori
+      * @param type $acumulado_facturas
       * @return type
       */
-    public static function define_total_sori($model,$acumulado_sori)
+    public static function define_total_facturas($model,$acumulado_facturas)
     {
-        return $acumulado_sori + $model->amount;
+        return $acumulado_facturas + $model->amount;
     }
     /**
      * define acumulado de totales de provisiones en refac y refi prov
