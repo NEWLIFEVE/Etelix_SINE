@@ -401,10 +401,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "8":case "10":case "12":
+            case "1":case "3":case "6":case "7":case "10":case "12":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "5":case "7":case "11":case "13":
+            case "2":case "4":case "5":case "8":case "11":case "13":
                 return $acumulado - $model->amount;
                 break;
         }
@@ -512,15 +512,11 @@ class Reportes extends CApplicationComponent
      {
          if($var<0) $var=$var*-1;
          
-         if($var=="7"||$var=="23")  return "SEMANAL";
+         if($var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
          
-         if($var=="15"||$var=="14") return "QUINCENAL";
+         if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
          
-         if($var=="30"||$var=="1"||$var=="0")return "MENSUAL"; 
-         
-         if($var=="3"||$var=="27") return "3 DIAS";
-         
-         if($var=="5"||$var=="25") return "5 DIAS";
+         if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
      }
      /**
       * define acumulado de totales de sori en refac y refi prov
@@ -533,14 +529,15 @@ class Reportes extends CApplicationComponent
         return $acumulado_sori + $model->amount;
     }
     /**
-     * define acumulado de totales de captura en refac y refi prov
+     * define acumulado de totales de provisiones en refac y refi prov
      * @param type $model
-     * @param type $acumulado_captura
+     * @param type $acumulado_provisiones
      * @return type
      */
-    public static function define_total_captura($model,$acumulado_captura)
+    public static function define_total_provisiones($model,$acumulado_provisiones)
     {
-        return $acumulado_captura + $model->revenue;
+//        return $acumulado_provisiones + $model->revenue;
+        return $acumulado_provisiones + $model->amount;
     }
     /**
      * define acumulado de totales de diferencias en refac y refi prov
@@ -561,6 +558,7 @@ class Reportes extends CApplicationComponent
     {
         $termino_pago=array("P-Semanales"=>array("periodo"=>7,"vencimiento"=>0),
                                "P-Mensuales"=>array("periodo"=>30,"vencimiento"=>0),
+                               "P-Quincenales"=>array("periodo"=>15,"vencimiento"=>0),
                                "7/3"=>array("periodo"=>7,"vencimiento"=>3),
                                "7/5"=>array("periodo"=>7,"vencimiento"=>5),
                                "7/7"=>array("periodo"=>7,"vencimiento"=>7),

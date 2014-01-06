@@ -64,22 +64,6 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <!--        <div class="formInputs termino_pago">
-            <h3>Termino Pago</h3>
-            <select name="id_termino_pago" id="id_termino_pago">
-            <option value="">Seleccione</option>
-            <option value="1">P-Semanales</option>
-            <option value="2">P-Mensuales</option>
-            <option value="3">7/3</option>
-            <option value="4">7/5</option>
-            <option value="5">7/7</option>
-            <option value="6">15/5</option>
-            <option value="7">15/7</option>
-            <option value="8">15/15</option>
-            <option value="9">30/7</option>
-            <option value="10">30/30</option>
-            </select> 
-        </div>-->
         <div class="formInputs termino_pago">
             <h3>Periódo</h3>
             <select name="id_termino_pago" id="id_termino_pago">
@@ -90,7 +74,7 @@ $this->pageTitle = Yii::app()->name;
             </select> 
         </div>
         <div class='formInputs provisiones'>
-            <h3>Provisiones</h3>
+            <h3 class="h_prov">Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">No</input>

@@ -60,11 +60,13 @@ $SINE.UI=(function()
                 case "soa":
                   var mostrar =['.fecha,.grupo,.provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                      $SINE.UI.changeHtml(".h_prov", "Provisiones"); 
                   break; 
                   //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
                   var mostrar =['.fecha,.grupo,.provisiones']; 
-                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar);
+                      $SINE.UI.changeHtml(".h_prov", "Provision Fact"); 
                   break; 
                 case "refac":
                     var mostrar =['.termino_pago,.fecha']; 
@@ -142,6 +144,16 @@ $SINE.UI=(function()
         function changeCss(clase,attr,value)
         {
             $(clase).css(attr,value);
+        }
+        /**
+         * 
+         * @param {type} clase
+         * @param {type} value
+         * @returns {undefined}
+         */
+        function changeHtml(clase,value)
+        {
+            $(clase).html(value);
         }
         
 //        $("#excel").hover(function hover_link()
@@ -267,7 +279,8 @@ $SINE.UI=(function()
                 msj_change:msj_change,
                 genExcel:genExcel,
                 validaCampos:validaCampos,
-                seleccionaCampos:seleccionaCampos
+                seleccionaCampos:seleccionaCampos,
+                changeHtml:changeHtml
 	};
 })();
 
