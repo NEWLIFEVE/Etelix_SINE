@@ -36,6 +36,7 @@ Class Utility
         }
         return $fechaFinal;
     }
+
     /**
      *
      */
@@ -152,42 +153,34 @@ Class Utility
 		}
 		return $horaMod;
 	}
+
     /**
     * @param $var time la hora a formatear
     * @return $horaAmPm string hora formateada para base de datos
     */	
-   public static function ChangeTimeAmPm($var)
+    public static function ChangeTimeAmPm($var)
 	{
-                $hora = strtotime($var);
-                //substr
-                $horaAmPm = date("h:i:s A",$hora); 
-                return $horaAmPm;
-        }
+        $hora = strtotime($var);
+        //substr
+        $horaAmPm = date("h:i:s A",$hora); 
+        return $horaAmPm;
+    }
         
-//         esta funcion no va aqui, pero por si acaso, la comento   
-//   public static function format_decimal($num,$decimales=3)
-//    {        
-//        $english_format_number2 = number_format($num, 10, ',', '.');
-//        $numtext=strval($english_format_number2);
-//        $position = strpos($numtext, ',');
-//        $numsub = substr($numtext,0,$position+$decimales); 
-//        return $numsub;
-//    }
 	/*
 	* Encargada de cambiar las comas recibidas por un punto.
 	*/
     public static function ComaPorPunto($monto) 
-     {
+    {
 //            for ($i = 0; $i < strlen($monto); $i++) {
 //                if ($monto{$i} == ',' || $monto{$i} == '%2C') {
 //                    $monto{$i} = '.';
 //                }
 //                return $monto;
 //            }
-            $monto = str_replace(",",".",$monto);
+        $monto = str_replace(",",".",$monto);
         return $monto;
-     }
-            /**
+    }
+    /**
      * resulve el formato especifico para repoprtes en sine, soporta cualquier formato, no obstante se le pasarian por ahora
      * "F j - Y": para issiu date y due date
      * "m-F-y": para la fecha que va en caracteristicas
@@ -196,10 +189,28 @@ Class Utility
      * @return type
      */
     public static function formatDateSINE($fecha,$formato)
-     {
-         $fecha_actual =strtotime($fecha);
-              $valid = date($formato,$fecha_actual );
-         return $valid;
-     }
+    {
+        $fecha_actual =strtotime($fecha);
+        $valid = date($formato,$fecha_actual );
+        return $valid;
+    }
+
+    /**
+     * Recibe una fecha y devuelve un array con el 'year', 'month', 'day'
+     * @access public
+     * @static
+     * @param date $date
+     * @return array
+     */
+    public static function separatesDate($date)
+    {
+        $array=explode("-", $date);
+        $complete=array(
+            'year'=>$array[0],
+            'month'=>$array[1],
+            'day'=>$array[2]
+            );
+        return $complete;
+    }
 }
 ?>
