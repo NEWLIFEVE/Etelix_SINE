@@ -73,6 +73,7 @@ $this->pageTitle = Yii::app()->name;
             <option value="10">MENSUAL</option>
             </select> 
         </div>
+        
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">

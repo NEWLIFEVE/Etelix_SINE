@@ -515,19 +515,28 @@ select
 {
     width: 207px!important;
 }
-input::-webkit-input-placeholder 
+#No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  ,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
 {
-    color:    #4A6DA3;
+    color:    #2E62B4;
 }
 #No_disp,#Si_disp ,#No_prov,#Si_prov
 {
-    width: 11%;
+    width: 12%;
     height: 1.88em!important;
     position: static;
+    font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: medium;
+    padding-bottom: 7px;
+    border:cyan;
+}
+.provisiones
+{
+    width: 392px;
 }
 .disputas 
 {
-    margin-left: -211px;
+    margin-left: -273px;
 }
 .termino_pago 
 {
