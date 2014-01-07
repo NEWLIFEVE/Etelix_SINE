@@ -1,7 +1,8 @@
 <?php
 /**
-* @package components
-*/
+ * @package components
+ * @version 1.0
+ */
 class Provisions extends CApplicationComponent
 {
 	/**
@@ -32,16 +33,16 @@ class Provisions extends CApplicationComponent
      * @access public
      * metodo encargado de correr las provisiones
      */
-    public function run()
+    public function run($dateSet=null)
     {
-    	$this->getDate();
+    	$this->getDate($dateSet);
     	//Obtengo la data de clientes
     	$this->getData(true);
     	//Obtengo la data de proveedores
     	$this->getData(false);
-    	//Genero las provisiones de facturas enviadas
+    	//Genero las provisiones de trafico y facturas enviadas
     	$this->generateTrafficProvision(true);
-    	//Genero las provisions de facturas recibidas
+    	//Genero las provisions de trafico y facturas recibidas
     	$this->generateTrafficProvision(false);
     }
 
@@ -49,9 +50,12 @@ class Provisions extends CApplicationComponent
 	 * @access public
 	 * genera la fecha para las consultas a base de datos
 	 */
-	public function getDate()
+	public function getDate($dateSet)
 	{
-		$this->date=DateManagement::calculateDate('-1',date('Y-m-d'));
+		if($dateSet===null) $date=date('Y-m-d');
+		else $date=$dateSet;
+
+		$this->date=DateManagement::calculateDate('-1',$date);
 	}
 
 	/**
@@ -172,18 +176,40 @@ class Provisions extends CApplicationComponent
 					switch ($num)
 					{
 						case 1:
-						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
-						if($tempdate===$this->date)
-						{
-							$firstDay=$this->date;
-							$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-						}
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+							if($tempdate===$this->date)
+							{
+								$firstDay=$this->date;
+								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							}
+							break;
 						case 2:
 						case 3:
 						case 4:
 						case 5:
 						case 6:
 						case 7:
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+							if($tempdate===$this->date)
+							{
+								$firstDay=DateManagement::calculateDate('-'.$num,date('Y-m-d'));
+								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							}
+							break;
+						case 7:
+							$firstDayMonth=DateManagement::getDayOne($this->date);
+							$cant=DateManagement::howManyDaysBetween($firstDayMonth,$this->date);
+							if($cant>=7)
+							{
+								$firstDay=DateManagement::calculateDate('-'.$num,date('Y-m-d'));
+								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							}
+							else
+							{
+								$firstDay=DateManagement::getDayOne($this->date);
+								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							}
+							break;
 					}
 					break;
 			}
