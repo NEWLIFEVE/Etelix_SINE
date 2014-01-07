@@ -224,6 +224,44 @@ class SiteController extends Controller
             $this->genExcel($archivo['nombre'],$archivo['cuerpo']);
         }
     }
+    public function actionPrevia()
+    {
+        $this->vaciarAdjuntos();
+        $this->letra=Log::preliminar($_GET['datepicker']);
+        $fecha=$grupo=$fecha_to=null;
+        $archivos=array();
+        if(isset($_GET['datepicker']))
+        {
+            $fecha=(string)$_GET['datepicker'];
+            if(($_GET['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_termino_pago'],$fecha);       
+            if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
+            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$_GET['tipo_report'],$grupo, $fecha);     
+            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
+            
+            switch ($_GET['tipo_report']) {
+              case 'soa':
+                   $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
+                   break;
+              case 'balance':
+                   $archivos['balance']['nombre']="SINE - ".$this->letra."BALANCE".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_prov,$_GET['grupo']);
+                   break;
+              case 'refac':
+                   $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
+                   break;
+              case 'refi_prov':
+                   $archivos['refi_prov']['nombre']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                   break;
+            }  
+        }
+        foreach($archivos as $key => $archivo)
+        {
+            echo $archivo['cuerpo'];
+        }
+    }
     /**
      * 
      * @param type $nombre

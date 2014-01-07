@@ -96,6 +96,11 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="barra_tools_click">
     <footer id="botones_exportar">
+        <div id="previa" class="botones">
+                <img src="/images/previa.png" class='ver'>
+                <img src="/images/previa_hover.png" title='Vista previa del reporte' class='oculta'>
+        </div>
+        
         <div id="excel" class="botones">
             <a class="excel_a">
                <img src="/images/excel.png" class='ver'>
