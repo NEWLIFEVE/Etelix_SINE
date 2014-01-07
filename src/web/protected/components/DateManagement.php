@@ -1,7 +1,7 @@
 <?php
 /**
  * clase con metodos estaticos para administrar las fechas
- * @version 0.5
+ * @version 0.6.1
  * @package components
  */
 class DateManagement
@@ -68,11 +68,11 @@ class DateManagement
      * @param date $fecha la fecha que se dira la cantidad de dias que tiene el mes
      * @return int 
      */
-    public static function howManyDays($fecha)
+    public static function howManyDays($date)
     {
-        if(strpos($fecha,'-'))
+        if(strpos($date,'-'))
         {
-            $arrayFecha=explode('-',$fecha);
+            $arrayFecha=explode('-',$date);
         }
         if(is_callable('cal_days_in_month'))
         {
@@ -82,6 +82,22 @@ class DateManagement
         {
             return date('d',mktime(0,0,0,$arrayFecha[1]+1,0,$arrayFecha[0]));
         }
+    }
+
+    /**
+     * Retorna la cantidad de dias que existe de una fecha a otra
+     * @access protected
+     * @static
+     * @param date $startDate la fecha menor a consultar
+     * @param date $endDate la fecha mayor del rango a consultar
+     * @return int con el numero de dias entre ambas fechas
+     */
+    protected static function howManyDaysBetween($startDate,$endDate)
+    {
+        $i=strtotime($startDate);
+        $f=strtotime($endDate);
+        $cant=$f-$i;
+        return $cant/(60*60*24);
     }
 }
 ?>
