@@ -70,55 +70,58 @@
                              <td " .$style_diference. "><b>MINUTOS</b></td>
                              <td " .$style_diference. "><b>MONTO</b></td>
                             </tr>";
-           
-           foreach ($provisiones as $key => $provision)
-           {
-              $facturas=self::getFacturas($provision,$tipo_report);
-              if($facturas!=null){
-                 $facturas_minutes=Yii::app()->format->format_decimal($facturas->minutes,3);
-                 $facturas_amount=Yii::app()->format->format_decimal($facturas->amount,3);
-                 $dif_amount=$provision->amount - $facturas->amount;
-                 $dif_minutes=$provision->minutes - $facturas->minutes;
-                 $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
-                }else{
-                     $facturas_minutes=0;
-                     $facturas_amount=0;
-                     $dif_amount=$provision->amount;
-                     $dif_minutes=$provision->minutes;
-                     $acumulado_factura=0;
-                }
-              $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
-              $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
-              
-                $reporte.="<tr>";
-                 $reporte.="<td $style_basic >" . $provision->carrier. "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->minutes,3). "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->amount,3). "</td>";
-                 
-                 $reporte.="<td $style_basic >" .$provision->carrier. "</td>
-                                  <td $style_basic_number >" .$facturas_minutes. "</td>
-                                  <td $style_basic_number >" .$facturas_amount. "</td>
-                                  <td $style_basic >" . $facturas->doc_number. "</td>";
+           if($provisiones!=null){
+                foreach ($provisiones as $key => $provision)
+                {
+                   $facturas=self::getFacturas($provision,$tipo_report);
+                   if($facturas!=null){
+                      $facturas_minutes=Yii::app()->format->format_decimal($facturas->minutes,3);
+                      $facturas_amount=Yii::app()->format->format_decimal($facturas->amount,3);
+                      $dif_amount=$provision->amount - $facturas->amount;
+                      $dif_minutes=$provision->minutes - $facturas->minutes;
+                      $doc_number=$facturas->doc_number;
+                      $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
+                     }else{
+                          $facturas_minutes="-";
+                          $facturas_amount="-";
+                          $dif_amount=$provision->amount;
+                          $dif_minutes=$provision->minutes;
+                          $acumulado_factura=0;
+                          $doc_number="-";
+                     }
+                     $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
+                     $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
+                     
+                     $reporte.="<tr>
+                                       <td $style_basic >" . $provision->carrier. "</td>
+                                       <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->minutes,3). "</td>
+                                       <td $style_basic_number >" .Yii::app()->format->format_decimal($provision->amount,3). "</td>
 
-                 $reporte.="<td $style_basic >" . $provision->carrier. "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_minutes,3). "</td>
-                                  <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_amount,3). "</td>";
-                $reporte.="</tr>";
+                                       <td $style_basic >" .$provision->carrier. "</td>
+                                       <td $style_basic_number >" .$facturas_minutes. "</td>
+                                       <td $style_basic_number >" .$facturas_amount. "</td>
+                                       <td $style_basic >" . $doc_number. "</td>
+
+                                       <td $style_basic >" . $provision->carrier. "</td>
+                                       <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_minutes,3). "</td>
+                                       <td $style_basic_number >" .Yii::app()->format->format_decimal($dif_amount,3). "</td>
+                                </tr>";
+                }
            }
-           $reporte.="<tr>";
-            $reporte.="<td $style_provisiones ><b>TOTAL</b></td>
+           $reporte.="<tr>
+                             <td $style_provisiones ><b>TOTAL</b></td>
                              <td $style_provisiones ></td>
-                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_provisiones,3). "</b></td>";
+                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_provisiones,3). "</b></td>
            
-            $reporte.="<td $style_sori ><b>TOTAL</b></td>
+                             <td $style_sori ><b>TOTAL</b></td>
                              <td $style_sori ></td>
                              <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_factura,3). "</b></td>
-                             <td $style_sori ></td>";
+                             <td $style_sori ></td>
            
-            $reporte.="<td $style_diference ><b>TOTAL</b></td>
+                             <td $style_diference ><b>TOTAL</b></td>
                              <td $style_diference ></td>
-                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_diference,3). "</b></td>";
-           $reporte.="</tr>";
+                             <td $style_totals ><b>" .Yii::app()->format->format_decimal($acumulado_diference,3). "</b></td>
+                      </tr>";
            
            $reporte.="</table>";
            

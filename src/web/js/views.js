@@ -15,7 +15,7 @@
   /**
    * responde al click de los botones para exportar reportes
    */
-  $('#mail, #excel').on('click',function()
+  $('#previa,#mail, #excel').on('click',function()
   {
         $SINE.UI.export_report($(this));
   });

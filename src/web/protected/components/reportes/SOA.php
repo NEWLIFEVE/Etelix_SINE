@@ -92,7 +92,7 @@
          * @param type $tipoSql
          * @return type
          */
-        private static function get_Model($grupo, $fecha, $no_disp,$no_prov,$tipoSql) 
+        public static function get_Model($grupo, $fecha, $no_disp,$no_prov,$tipoSql) 
         {
            $sql="select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
                   from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g

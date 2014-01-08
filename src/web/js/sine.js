@@ -77,7 +77,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
@@ -90,7 +90,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov")
+            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi")
                 {
                     $('.barra_tools_click').show('fast');
                 }else{
@@ -143,7 +143,7 @@ $SINE.UI=(function()
          */
         function changeCss(clase,attr,value)
         {
-            $(clase).css(attr,value);
+             $(clase).css(attr,value);
         }
         /**
          * 
@@ -153,14 +153,16 @@ $SINE.UI=(function()
          */
         function changeHtml(clase,value)
         {
-            $(clase).html(value);
+             $(clase).html(value);
         }
-        
-//        $("#excel").hover(function hover_link()
-//        {
-//            var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
-//            if(valid_input==1) $(".excel_a").attr("href","Site/Excel?" + $('#formulario').serialize()+ "");    
-//        });
+        /**
+         * 
+         */
+        $("#excel").hover(function hover_link()
+        {
+              var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
+              if(valid_input==1) $(".excel_a").attr("href","Site/Excel?" + $('#formulario').serialize()+ "");    
+        });
        /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
         * @param {type} click
@@ -173,20 +175,34 @@ $SINE.UI=(function()
                 {
                     $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
                 }else{
-                    id=$(click).attr('id');
-                    if(id=="mail")
-                     {    
+                    var id=$(click).attr('id');
+                    if(id=="mail"){    
                         $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
                         $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
+                     }
+                    else if(id=="previa"){    
+                        $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize());
+                        $SINE.UI.msj_cargando("<h2>Cargando Vista Previa</h2>","cargando.gif");
                      }else{  
-//                          $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize());
-//                          $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
-//                          setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 3000);
-                             $SINE.UI.genExcel("/Site/Excel",$("#formulario").serialize());
+                          $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
+                          $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize());
+                          setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 3000);
+                          $SINE.UI.ajax_stop($(".fondo_negro, .mensaje").fadeOut("slow"));
                           } 
                 }
         }
-
+        /**
+         * 
+         * @param {type} accion
+         * @returns {undefined}
+         */
+        function ajax_stop(accion)
+        {
+             $( document ).ajaxStop(function() 
+             {
+                  accion;
+             });
+        }
          /**
          * 
          * @param {type} tipo
@@ -198,8 +214,14 @@ $SINE.UI=(function()
             case 'soa':
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
                 break               
+            case 'balance':
+                var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
+                break               
             case 'refac':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                break               
+            case 'recredi':
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
@@ -263,6 +285,17 @@ $SINE.UI=(function()
             $(".mensaje").html(cuerpo_msj+"<p><img style='width: "+img_width+";' src='/images/"+imagen+"'>");
             setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, tiempo);
         }
+        /**
+         * 
+         * @param {type} cuerpo
+         * @returns {undefined}
+         */
+        function fancy_box(cuerpo)
+        {
+            $(".mensaje").css("width", "910").css("text-align", "left").css("margin", "-37% 18% auto").css("overflow", "scroll").css("height", "583px").css("display", "none");
+            $(".mensaje").fadeIn("slow").html(cuerpo);
+            $('.fondo_negro').on('click',function () { $(".fondo_negro, .mensaje").fadeOut('slow');});
+        }
 	/**
 	 * Retorna los mestodos publicos
 	 */
@@ -280,7 +313,9 @@ $SINE.UI=(function()
                 genExcel:genExcel,
                 validaCampos:validaCampos,
                 seleccionaCampos:seleccionaCampos,
-                changeHtml:changeHtml
+                changeHtml:changeHtml,
+                ajax_stop:ajax_stop,
+                fancy_box:fancy_box
 	};
 })();
 
@@ -350,11 +385,14 @@ $SINE.AJAX=(function()
                  {   
                      console.log(data);
 //                     if(action=="/site/Excel")   $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1000","33%");  
-//                        else 
+//                     if(action=="/site/Excel")   $SINE.UI.ajax_stop($(".fondo_negro, .mensaje").fadeOut("slow")); 
+                     if(action=="/site/previa")   $SINE.UI.fancy_box(data);  
+                        else  
                             $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
                  }
             });
         }
+        
 	return {init:init,
                 _getFormPost:_getFormPost,
                 send:send
