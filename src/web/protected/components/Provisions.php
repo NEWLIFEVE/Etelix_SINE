@@ -1,7 +1,7 @@
 <?php
 /**
  * @package components
- * @version 1.0
+ * @version 1.7
  */
 class Provisions extends CApplicationComponent
 {
@@ -44,6 +44,10 @@ class Provisions extends CApplicationComponent
     	$this->generateTrafficProvision(true);
     	//Genero las provisions de trafico y facturas recibidas
     	$this->generateTrafficProvision(false);
+    	//
+    	$this->runInvoiceProvision(true);
+    	//
+    	$this->runInvoiceProvision(false);
     }
 
 	/**
@@ -66,13 +70,13 @@ class Provisions extends CApplicationComponent
 	 */
 	public function getData($type=true)
 	{
-		$data=array('title'=>'proveedor','id'=>'b.id_carrier_supplier','margin'=>'b.revenue','variable'=>'invoicesReceived');
-		if($type) $data=array('title'=>'proveedor','id'=>'b.id_carrier_customer','margin'=>'b.cost','variable'=>'invoicesSent');
+		$data=array('title'=>'proveedor','id'=>'id_carrier_supplier','margin'=>'cost','variable'=>'invoicesReceived');
+		if($type) $data=array('title'=>'cliente','id'=>'id_carrier_customer','margin'=>'revenue','variable'=>'invoicesSent');
 
-		$sql="SELECT c.id AS id, b.date_balance AS date_balance, c.name AS {$data['title']}, SUM(b.minutes) AS minutes, SUM({$data['margin']}) AS margin
-			  FROM balance b, carrier c
-			  WHERE date_balance='{$this->date}' AND {$data['id']}=c.id AND b.id_destination IS NULL AND b.id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND b.id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination')
-			  GROUP BY c.id, c.name, b.date_balance
+		$sql="SELECT {$data['id']} AS id, date_balance, SUM(minutes) AS minutes, SUM({$data['margin']}) AS margin
+			  FROM balance
+			  WHERE date_balance='{$this->date}' AND id_destination IS NULL AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination')
+			  GROUP BY {$data['id']}, date_balance
 			  ORDER BY margin DESC";
 		$this->$data['variable']=Balance::model()->findAllBySql($sql);
 	}
@@ -96,31 +100,42 @@ class Provisions extends CApplicationComponent
 		$num=count($this->$data['variable']);
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
-			$this->generateInvoiceProvision($factura->id,$type);
-			$values.="(";
-			$values.="'".$factura->date_balance."',";
-			$values.="'".$factura->date_balance."',";
-			$values.=$factura->minutes.",";
-			$values.=$factura->margin.",";
-			$values.=$type_document.",";
-			$values.=$factura->id.",";
-			$values.=$currency.",";
-			$values.="1";
-			$values.=")";
-			if($key<$num-1) $values.=",";
+			if($factura->margin!=0)
+			{
+				if($key>0 && $key<$num) $values.=",";
+				$values.="(";
+				$values.="'".$factura->date_balance."',";
+				$values.="'".$factura->date_balance."',";
+				$values.=$factura->minutes.",";
+				$values.=$factura->margin.",";
+				$values.=$type_document.",";
+				$values.=$factura->id.",";
+				$values.=$currency.",";
+				$values.="1";
+				$values.=")";
+			}
 		}
-
 		$sql="INSERT INTO accounting_document(issue_date, from_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
 			  VALUES ".$values;
 		$command = Yii::app()->db->createCommand($sql);
         if($command->execute())
         {
-            return true;
+			return true;
         }
         else
         {
             return false;
         }
+		
+	}
+
+	public function runInvoiceProvision($type=true)
+	{
+		$model=Carrier::model()->findAll();
+		foreach ($model as $key => $carrier)
+		{
+			$this->generateInvoiceProvision($carrier->id,$type);
+		}
 	}
 
 	/**
@@ -129,17 +144,17 @@ class Provisions extends CApplicationComponent
 	 */
 	public function generateInvoiceProvision($idCarrier,$type)
 	{
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'");
-		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'invoice'=>"name='Provision Factura Enviada'");
+		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
+		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'invoice'=>"name='Provision Factura Enviada'",'real'=>"name='Factura Enviada'");
 
-		$typeProvisions=TypeAccountingDocument::model()->find($data['condition'])->id;
-		$typeInvoice=TypeAccountingDocument::model()->find($data['invoice'])->id;
-
-		$currency=Currency::model()->find("name='$'")->id;
+		$typeProvisions['traffic']=TypeAccountingDocument::model()->find($data['condition'])->id;
+		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
+		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
+		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
 
 		$sql="SELECT tp.*
 			  FROM termino_pago tp, contrato_termino_pago ctp, contrato con
-			  WHERE tp.id=ctp.id_termino_pago AND ctp.id_contrato=con.id AND con.id_carrier={$idCarrier} AND con.end_date IS NULL";
+			  WHERE tp.id=ctp.id_termino_pago AND ctp.id_contrato=con.id AND con.id_carrier={$idCarrier} AND con.end_date IS NULL AND ctp.end_date IS NULL";
 
 		$TerminoPago=TerminoPago::model()->findBySql($sql);
 		if($TerminoPago!==null)
@@ -172,46 +187,26 @@ class Provisions extends CApplicationComponent
 					break;
 
 				case 7:
-					$num=DateManagement::getDayNumberWeek($this->date);
-					switch ($num)
+					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+					if($tempdate===$this->date)
 					{
-						case 1:
-							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
-							if($tempdate===$this->date)
-							{
-								$firstDay=$this->date;
-								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-							}
-							break;
-						case 2:
-						case 3:
-						case 4:
-						case 5:
-						case 6:
-						case 7:
-							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
-							if($tempdate===$this->date)
-							{
-								$firstDay=DateManagement::calculateDate('-'.$num,date('Y-m-d'));
-								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-							}
-							break;
-						case 7:
-							$firstDayMonth=DateManagement::getDayOne($this->date);
-							$cant=DateManagement::howManyDaysBetween($firstDayMonth,$this->date);
-							if($cant>=7)
-							{
-								$firstDay=DateManagement::calculateDate('-'.$num,date('Y-m-d'));
-								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-							}
-							else
-							{
-								$firstDay=DateManagement::getDayOne($this->date);
-								$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-							}
-							break;
+						$firstDay=DateManagement::getMonday($this->date);
+						$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
 					}
-					break;
+					$num=DateManagement::getDayNumberWeek($this->date);
+					if($num==7)
+					{
+						$monday=DateManagement::getMonday($this->date);
+						if(DateManagement::separatesDate($monday)['month']==DateManagement::separatesDate($this->date)['month'])
+						{
+							$this->insertInvoiceProvision($monday,$this->date,$idCarrier,$typeProvisions);
+						}
+						else
+						{
+							$firstDay=DateManagement::getDayOne($this->date);
+							$this->insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+						}
+					}
 			}
 		}
 	}
@@ -227,8 +222,43 @@ class Provisions extends CApplicationComponent
 	 */
 	public function getTrafficProvision($startDate,$endDate,$idCarrier,$idDocument)
 	{
-		$sql="SELECT SUM(minutes) AS minutes, SUM(amount) AS amount FROM accounting_document WHERE from_date>='{$startDate}' AND from_date<='{$endDate}' AND id_type_accounting_document=$idDocument AND id_carrier=$idCarrier";
-		return AccountingDocument::model()->findBySql($sql);
+		$sql="SELECT SUM(minutes) AS minutes, SUM(amount) AS amount FROM accounting_document WHERE from_date>='{$startDate}' AND from_date<='{$endDate}' AND id_type_accounting_document={$idDocument} AND id_carrier={$idCarrier}";
+		return AccountingDocumentProvisions::model()->findBySql($sql);
+	}
+
+	/**
+	 *
+	 */
+	public function changeStatusProvision($startDate,$endDate,$idCarrier,$idDocument)
+	{
+		$model=AccountingDocumentProvisions::model()->find('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
+		if($model->id!=null)
+		{
+			$model->confirm=-1;
+			if($model->save())
+	        {
+	        	return true;
+	        }
+		}
+        return false;
+	}
+
+	/**
+	 *
+	 */
+	public function changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$data)
+	{
+		$invoice=AccountingDocumentProvisions::model()->find('from_date>=:start AND to_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$data['real']));
+		if(isset($invoice->id) && $invoice->id!=null)
+		{
+			$provision=AccountingDocumentProvisions::model()->find('from_date>=:start AND to_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$data['invoice']));
+			$provision->confirm=-1;
+			if($provision->save())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -236,17 +266,25 @@ class Provisions extends CApplicationComponent
 	 */
 	public function insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
 	{
-		$trafficProvisions=$this->getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions);
-		$sql="INSERT INTO accounting_document(issue_date, from_date, to_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
-			  VALUES ('{$endDate}','$startDate','$endDate',{$trafficProvisions->minutes}, {$trafficProvisions->amount},{$typeInvoice},$idCarrier,$currency, 1)";
-		$command = Yii::app()->db->createCommand($sql);
-		if($command->execute())
+		var_dump($startDate,$endDate);
+		$trafficProvisions=$this->getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
+		if($trafficProvisions->amount!=null)
 		{
-		    return true;
-		}
-		else
-		{
-		    return false;
+			$doccument=new AccountingDocumentProvisions;
+			$doccument->issue_date=$endDate;
+			$doccument->from_date=$startDate;
+			$doccument->to_date=$endDate;
+			$doccument->minutes=$trafficProvisions->minutes;
+			$doccument->amount=$trafficProvisions->amount;
+			$doccument->id_type_accounting_document=$typeProvisions['invoice'];
+			$doccument->id_carrier=$idCarrier;
+			$doccument->id_currency=$typeProvisions['currency'];
+			$doccument->confirm=1;
+			if($doccument->save())
+			{
+				$this->changeStatusProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
+				$this->changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions);
+			}
 		}
 	}
 }
