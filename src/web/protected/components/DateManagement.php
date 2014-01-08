@@ -43,6 +43,12 @@ class DateManagement
         return date('N',$date);
     }
 
+    public static function getMonday($date)
+    {
+        $num=self::getDayNumberWeek($date);
+        $num=$num-1;
+        return self::calculateDate('-'.$num,$date);
+    }
     /**
      * Recibe una fecha y devuelve un array con el 'year', 'month', 'day'
      * @access public
@@ -92,7 +98,7 @@ class DateManagement
      * @param date $endDate la fecha mayor del rango a consultar
      * @return int con el numero de dias entre ambas fechas
      */
-    protected static function howManyDaysBetween($startDate,$endDate)
+    public static function howManyDaysBetween($startDate,$endDate)
     {
         $i=strtotime($startDate);
         $f=strtotime($endDate);
