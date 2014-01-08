@@ -18,7 +18,7 @@ return array(
             'class'=>"application.components.Provisions",
         ),		
 		'db'=>array(
-            'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=sori',
+            'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=test_sori',
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
             'password'=>'123',
