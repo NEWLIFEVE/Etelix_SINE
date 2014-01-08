@@ -556,19 +556,21 @@ class Reportes extends CApplicationComponent
      */
     public static function define_tp($key)
     {
-        $termino_pago=array("P-Semanales"=>array("periodo"=>7,"vencimiento"=>0),
-                               "P-Mensuales"=>array("periodo"=>30,"vencimiento"=>0),
-                               "P-Quincenales"=>array("periodo"=>15,"vencimiento"=>0),
-                               "7/3"=>array("periodo"=>7,"vencimiento"=>3),
-                               "7/5"=>array("periodo"=>7,"vencimiento"=>5),
-                               "7/7"=>array("periodo"=>7,"vencimiento"=>7),
-                               "15/7"=>array("periodo"=>15,"vencimiento"=>7),
-                               "15/5"=>array("periodo"=>15,"vencimiento"=>5),
-                               "15/15"=>array("periodo"=>15,"vencimiento"=>15),
-                               "30/7"=>array("periodo"=>30,"vencimiento"=>7),
-                               "30/30"=>array("periodo"=>30,"vencimiento"=>30),
-                               "Sin estatus"=>array("periodo"=>7,"vencimiento"=>7)//hay que consultar como seria el periodo y los dias para pagar en el paso de terminos de pago sin status
-                               );
+        $termino_pago=array(
+            "P-Semanales"=>array("periodo"=>7,"vencimiento"=>0),
+            "P-Quincenales"=>array("periodo"=>15,"vencimiento"=>0),
+            "P-Mensuales"=>array("periodo"=>30,"vencimiento"=>0),
+            "7/3"=>array("periodo"=>7,"vencimiento"=>3),
+            "7/5"=>array("periodo"=>7,"vencimiento"=>5),
+            "7/7"=>array("periodo"=>7,"vencimiento"=>7),
+            "15/7"=>array("periodo"=>15,"vencimiento"=>7),
+            "15/15"=>array("periodo"=>15,"vencimiento"=>15),
+            "15/5"=>array("periodo"=>15,"vencimiento"=>5),
+            "30/7"=>array("periodo"=>30,"vencimiento"=>7),
+            "30/15"=>array("periodo"=>30,"vencimiento"=>15),
+            "30/30"=>array("periodo"=>30,"vencimiento"=>30),
+            "Sin estatus"=>array("periodo"=>7,"vencimiento"=>7)//hay que consultar como seria el periodo y los dias para pagar en el paso de terminos de pago sin status
+            );
         return $termino_pago[$key];
     }
 }
