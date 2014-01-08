@@ -65,23 +65,17 @@ $this->pageTitle = Yii::app()->name;
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
         <div class="formInputs termino_pago">
-            <h3>Termino Pago</h3>
+            <h3>Periódo</h3>
             <select name="id_termino_pago" id="id_termino_pago">
             <option value="">Seleccione</option>
-            <option value="1">P-Semanales</option>
-            <option value="2">P-Mensuales</option>
-            <option value="3">7/3</option>
-            <option value="4">7/5</option>
-            <option value="5">7/7</option>
-            <option value="6">15/5</option>
-            <option value="7">15/7</option>
-            <option value="8">15/15</option>
-            <option value="9">30/7</option>
-            <option value="10">30/30</option>
+            <option value="3">SEMANAL</option>
+            <option value="6">QUINCENAL</option>
+            <option value="10">MENSUAL</option>
             </select> 
         </div>
+        
         <div class='formInputs provisiones'>
-            <h3>Provisiones</h3>
+            <h3 class="h_prov">Provisiones</h3>
             <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
@@ -102,9 +96,16 @@ $this->pageTitle = Yii::app()->name;
 </div>
 <div class="barra_tools_click">
     <footer id="botones_exportar">
+        <div id="previa" class="botones">
+                <img src="/images/previa.png" class='ver'>
+                <img src="/images/previa_hover.png" title='Vista previa del reporte' class='oculta'>
+        </div>
+        
         <div id="excel" class="botones">
-            <img src="/images/excel.png" class='ver'>
-            <img src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>
+            <a class="excel_a">
+               <img src="/images/excel.png" class='ver'>
+               <img src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>  
+            </a>
         </div>
 
         <div id="mail" class="botones">

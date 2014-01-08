@@ -67,7 +67,7 @@ return array(
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
             'password'=>'123',
-			'charset'=>'utf8',
+            'charset'=>'utf8',
             ),
         'errorHandler'=>array(
             // use 'site/error' action to display errors

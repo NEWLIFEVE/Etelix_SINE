@@ -15,7 +15,7 @@
   /**
    * responde al click de los botones para exportar reportes
    */
-  $('#mail, #excel').on('click',function()
+  $('#previa,#mail, #excel').on('click',function()
   {
         $SINE.UI.export_report($(this));
   });
@@ -25,8 +25,8 @@
   */
   $(function() 
   {
-        $( "#datepicker,#datepicker_from,#datepicker_to" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
-  });
+        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+  }); 
   /**
    * cambia operador por grupo  grupo por operador
    */

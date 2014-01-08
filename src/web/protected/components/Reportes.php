@@ -8,7 +8,6 @@ class Reportes extends CApplicationComponent
     {
        
     }
-
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -32,9 +31,9 @@ class Reportes extends CApplicationComponent
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_disp,$no_prov,$grupoName)
+    public function balance_report($grupo,$fecha,$no_prov,$grupoName)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_prov,$grupoName);
         return $var;
     }
     /**
@@ -69,10 +68,10 @@ class Reportes extends CApplicationComponent
      */
     public static function define_grupo($grupo)
     {    
-           if($grupo=="CABINAS PERU")  
-               return "id_carrier_groups=301 OR id_carrier_groups=443";
-           else   
-               return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
+        if($grupo=="CABINAS PERU")  
+            return "id_carrier_groups=301 OR id_carrier_groups=443";
+        else   
+            return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
     /**
      * define si la consulta traera las disputas o no
@@ -81,26 +80,50 @@ class Reportes extends CApplicationComponent
      * @param type $no_disp
      * @return string
      */
-    public static function define_disp($no_disp)
+    public static function define_disp($no_disp,$grupo,$fecha)
     {
         if($no_disp=="No")
-           $disp_sql="and a.id_type_accounting_document NOT IN (5,6)";
+           $disp_sql=" ";
         else  
-           $disp_sql="";
+           $disp_sql="UNION
+                      select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
+                      from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                      where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+                      and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+                          
+                      and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
         return $disp_sql;
     }
     /**
      * define si traera las disputas en los SOA
      * @param type $no_prov
+     * @param type $tipo_report
      * @return string
      */
-    public static function define_prov($no_prov)
+    public static function define_prov($no_prov,$tipo_report,$grupo, $fecha)
     {
-        if($no_prov=="No")
-           $prov_sql="";//aqui debe ir el sql para filtrar las provisiones
-        else  
-           $prov_sql="";
-        return $prov_sql;
+        switch ($tipo_report) 
+        {
+            case "soa":
+                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13)";
+                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11)";
+                return $prov_sql;
+                break;
+            case "balance":
+                if($no_prov=="No") $prov_sql=" ";
+                else   $prov_sql="UNION 
+                                  select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
+                                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+                                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+		                  and a.id_type_accounting_document IN (12,13) and a.confirm = -1
+		                  group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name";
+                return $prov_sql;
+            default:
+                return "and a.id_type_accounting_document NOT IN (12,13)";
+                break;  
+        }
+        
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
@@ -145,7 +168,16 @@ class Reportes extends CApplicationComponent
                 $description =" #". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "1":
-                $description =$model->carrier ." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier ." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                break;
+            case "7":case "8":   //hay que mejoprarlo, tengo la idea, pero mejor discutirlo antes
+                $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                break;
+            case "10":case "11":
+                $description = "P-T ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                break;
+            case "12":case "13":
+                $description = "P-F ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -187,6 +219,13 @@ class Reportes extends CApplicationComponent
                 break;
             case "7": case "8":
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
+                break;
+            
+            case "10":case "12": 
+                $estilos=" style='background:#5CC468;color:black;border:1px solid black;'";
+                break;
+            case "11": case "13":
+                $estilos=" style='background:#F8B679;color:black;border:1px solid black;'";
                 break;
             default:
                 $estilos = " style='background:white;color:black;border:1px solid black;'";
@@ -241,11 +280,11 @@ class Reportes extends CApplicationComponent
      */  
     public static function define_fact_env($model)
     {
-        if ($model->id_type_accounting_document==1){
+        if ($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12){
             return Yii::app()->format->format_decimal($model->amount,3);
         }elseif($model->id_type_accounting_document==9 && $model->amount>=0){
             return Yii::app()->format->format_decimal($model->amount,3);
-        }elseif($model->id_type_accounting_document==7){
+        }elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7){
             return "-".Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
@@ -273,11 +312,11 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fact_rec($model)
     {
-        if ($model->id_type_accounting_document==2){
+        if ($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13){
             return Yii::app()->format->format_decimal($model->amount,3);
         }elseif($model->id_type_accounting_document==9 && $model->amount<0){
             return Yii::app()->format->format_decimal(($model->amount)*-1,3);
-        }elseif($model->id_type_accounting_document==8){
+        }elseif($model->id_type_accounting_document==6||$model->id_type_accounting_document==8){
             return Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
@@ -362,10 +401,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "8":
+            case "1":case "3":case "6":case "7":case "10":case "12":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "7":
+            case "2":case "4":case "5":case "8":case "11":case "13":
                 return $acumulado - $model->amount;
                 break;
         }
@@ -473,35 +512,32 @@ class Reportes extends CApplicationComponent
      {
          if($var<0) $var=$var*-1;
          
-         if($var=="7"||$var=="23")  return "SEMANAL";
+         if($var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
          
-         if($var=="15"||$var=="14") return "QUINCENAL";
+         if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
          
-         if($var=="30"||$var=="1"||$var=="0")return "MENSUAL"; 
-         
-         if($var=="3"||$var=="27") return "3 DIAS";
-         
-         if($var=="5"||$var=="25") return "5 DIAS";
+         if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
      }
      /**
       * define acumulado de totales de sori en refac y refi prov
       * @param type $model
-      * @param type $acumulado_sori
+      * @param type $acumulado_facturas
       * @return type
       */
-    public static function define_total_sori($model,$acumulado_sori)
+    public static function define_total_facturas($model,$acumulado_facturas)
     {
-        return $acumulado_sori + $model->amount;
+        return $acumulado_facturas + $model->amount;
     }
     /**
-     * define acumulado de totales de captura en refac y refi prov
+     * define acumulado de totales de provisiones en refac y refi prov
      * @param type $model
-     * @param type $acumulado_captura
+     * @param type $acumulado_provisiones
      * @return type
      */
-    public static function define_total_captura($model,$acumulado_captura)
+    public static function define_total_provisiones($model,$acumulado_provisiones)
     {
-                return $acumulado_captura + $model->revenue;
+//        return $acumulado_provisiones + $model->revenue;
+        return $acumulado_provisiones + $model->amount;
     }
     /**
      * define acumulado de totales de diferencias en refac y refi prov
@@ -513,7 +549,11 @@ class Reportes extends CApplicationComponent
     {
         return $acumulado_diference + $diferencia;
     }
-    
+    /**
+     * determina el numero de dias dependiendo del termino de pago. aplica para soa, refac y refi_prov
+     * @param type $key
+     * @return array
+     */
     public static function define_tp($key)
     {
         $termino_pago=array(
