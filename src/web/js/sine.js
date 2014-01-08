@@ -77,7 +77,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.trabajando']; 
+                    var mostrar =['']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
@@ -90,7 +90,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov")
+            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi")
                 {
                     $('.barra_tools_click').show('fast');
                 }else{
@@ -155,7 +155,9 @@ $SINE.UI=(function()
         {
              $(clase).html(value);
         }
-        
+        /**
+         * 
+         */
         $("#excel").hover(function hover_link()
         {
               var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
@@ -212,8 +214,14 @@ $SINE.UI=(function()
             case 'soa':
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
                 break               
+            case 'balance':
+                var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
+                break               
             case 'refac':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                break               
+            case 'recredi':
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());

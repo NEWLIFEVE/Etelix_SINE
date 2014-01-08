@@ -169,7 +169,7 @@ class SiteController extends Controller
                    break;
                case 'recredi':
                    $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['recredi']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"RECREDI");
+                   $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                    break;
                case 'refi_prov':
@@ -219,8 +219,8 @@ class SiteController extends Controller
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
                    break;
               case 'recredi':
-                   $archivos['recredi']['nombre']="SINE - RECREDI ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"RECREDI");
+                   $archivos['recredi']['nombre']="SINE - RECREDI ".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'refi_prov':
                    $archivos['refi_prov']['nombre']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
@@ -258,7 +258,7 @@ class SiteController extends Controller
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
                    break;
               case 'recredi':
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"RECREDI");
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'refi_prov':
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");

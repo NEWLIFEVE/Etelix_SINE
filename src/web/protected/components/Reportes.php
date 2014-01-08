@@ -49,6 +49,18 @@ class Reportes extends CApplicationComponent
         return $var;
     }
     /**
+     * 
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @param type $tipo_report
+     * @return type
+     */
+    public function recredi($fecha)
+    {
+        $var=recredi::reporte($fecha);
+        return $var;
+    }
+    /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
      * @param type $fecha_from
@@ -105,8 +117,8 @@ class Reportes extends CApplicationComponent
         switch ($tipo_report) 
         {
             case "soa":
-                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13)";
-                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11)";
+                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13) and a.confirm != -1";
+                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11) and a.confirm != -1";
                 return $prov_sql;
                 break;
             case "balance":
@@ -116,7 +128,7 @@ class Reportes extends CApplicationComponent
                                   from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                                   where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                                   and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		                  and a.id_type_accounting_document IN (12,13) and a.confirm = -1
+		                  and a.id_type_accounting_document IN (12,13) and a.confirm != -1
 		                  group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name";
                 return $prov_sql;
             default:
@@ -571,6 +583,7 @@ class Reportes extends CApplicationComponent
             "30/30"=>array("periodo"=>30,"vencimiento"=>30),
             "Sin estatus"=>array("periodo"=>7,"vencimiento"=>7)//hay que consultar como seria el periodo y los dias para pagar en el paso de terminos de pago sin status
             );
+
         return $termino_pago[$key];
     }
 }
