@@ -68,9 +68,9 @@ $this->pageTitle = Yii::app()->name;
             <h3>Periódo</h3>
             <select name="id_termino_pago" id="id_termino_pago">
             <option value="">Seleccione</option>
-            <option value="3">SEMANAL</option>
-            <option value="6">QUINCENAL</option>
-            <option value="10">MENSUAL</option>
+            <option value="7">SEMANAL</option>
+            <option value="15">QUINCENAL</option>
+            <option value="30">MENSUAL</option>
             </select> 
         </div>
         

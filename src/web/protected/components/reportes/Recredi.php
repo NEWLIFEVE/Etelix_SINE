@@ -8,39 +8,44 @@
         public static function reporte($fecha) 
         {
             $style_basic="style='border:1px solid black;text-align:center;'";
-            $style_basic_head="style='border:1px solid black;background:#38BEE9;text-align:center;'";
+            $style_carrier_head="style='border:0px solid black;background:silver;text-align:center;color:white;'";
+            $style_soa_head="style='border:0px solid black;background:#3466B4;text-align:center;color:white;'";
+            $style_prov_fact_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
+            $style_prov_traf_head="style='border:1px solid black;background:#248CB4;text-align:center;color:white;'";
+            $style_prov_disp_head="style='border:1px solid black;background:#C37881;text-align:center;color:white;'";
+            $style_balance_head="style='border:0px solid black;background:#2E62B4;text-align:center;color:white;'";
             
             $carrierGroups=self::getAllGroups();
             $seg=count($carrierGroups);
             ini_set('max_execution_time', $seg);
             
-            $reporte="<table>";
+            $reporte="<table $style_basic >";
             $reporte.="<tr>
                            <td colspan='2'><h1>RECREDI</h1></td>
-                           <td colspan='8'>  AL  $fecha </td>
-                       </tr>";
+                           <td colspan='7'>  AL  $fecha </td>
+                       <tr>
+                           <td colspan='9'></td>
+                       </tr></tr>";
             
-            $reporte.="<tr $style_basic_head >
-                           <td $style_basic_head >  </td>
-                           <td $style_basic_head >  </td>
-                           <td $style_basic_head > FECHA </td>
-                           <td $style_basic_head colspan='2'> PROVISION FACT </td>
-                           <td $style_basic_head colspan='2'> PROVISION TRAFICO </td>
-                           <td $style_basic_head colspan='2'> DISPUTAS </td>
-                           <td $style_basic_head >  </td>
+            $reporte.="<tr>
+                           <td $style_carrier_head >  </td>
+                           <td $style_soa_head >  </td>
+                           <td $style_prov_fact_head colspan='2'> PROVISION FACT </td>
+                           <td $style_prov_traf_head colspan='2'> PROVISION TRAFICO </td>
+                           <td $style_prov_disp_head colspan='2'> DISPUTAS </td>
+                           <td $style_balance_head >  </td>
                        </tr>";
   
-            $reporte.="<tr $style_basic_head >
-                           <td $style_basic_head > CARRIER </td>
-                           <td $style_basic_head > SOA </td>
-                           <td $style_basic_head > ULTIMO REGISTRO SOA </td>
-                           <td $style_basic_head > CLIENTES REVENUE </td>
-                           <td $style_basic_head > PROVEEDORES COST </td>
-                           <td $style_basic_head > CLIENTES REVENUE </td>
-                           <td $style_basic_head > PROVEEDORES COST </td>
-                           <td $style_basic_head > CLIENTES RECIBIDAS </td>
-                           <td $style_basic_head > PROVEEDORES ENVIADAS </td>
-                           <td $style_basic_head > BALANCE </td>
+            $reporte.="<tr>
+                           <td $style_carrier_head > CARRIER </td>
+                           <td $style_soa_head > SOA </td>
+                           <td $style_prov_fact_head > CLIENTES REVENUE </td>
+                           <td $style_prov_fact_head > PROVEEDORES COST </td>
+                           <td $style_prov_traf_head > CLIENTES REVENUE </td>
+                           <td $style_prov_traf_head > PROVEEDORES COST </td>
+                           <td $style_prov_disp_head > CLIENTES RECIBIDAS </td>
+                           <td $style_prov_disp_head > PROVEEDORES ENVIADAS </td>
+                           <td $style_balance_head > BALANCE </td>
                        </tr>";
             foreach ($carrierGroups as $key => $group)
             {
@@ -55,7 +60,6 @@
                     $reporte.="<tr $style_basic >
                                     <td $style_basic > $group->name </td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($SOA->amount). "</td>
-                                    <td $style_basic > ULTIMO REGISTRO SOA </td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_env->amount). "</td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_rec->amount). "</td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_env->amount). "</td>
@@ -83,16 +87,20 @@
          */
         public static function getSoaCarrier($id,$date)
         {
-            $sql="SELECT (p.amount-n.amount) AS amount
-                  FROM(SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3) AND id_carrier ={$id} AND issue_date<='{$date}') p,
-                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4) AND id_carrier ={$id} AND issue_date<='{$date}') n";
+            $sql="SELECT (i.amount+(p.amount-n.amount)) AS amount
+                  FROM
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document where id_type_accounting_document=9 and id_carrier IN(Select id from carrier where id_carrier_groups = {$id})) i,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') p,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') n";
             return AccountingDocument::model()->findBySql($sql);
         }
         public static function getBalanceCarrier($id,$date)
         {
-            $sql="SELECT (p.amount-n.amount) AS amount
-                  FROM(SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,6,7,10,12) AND id_carrier ={$id} AND issue_date<='{$date}') p,
-                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,5,8,11,13) AND id_carrier ={$id} AND issue_date<='{$date}') n";
+            $sql="SELECT (i.amount+(p.amount-n.amount)) AS amount
+                  FROM
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document where id_type_accounting_document=9 and id_carrier IN(Select id from carrier where id_carrier_groups = {$id})) i,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,6,7,10,12) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}' AND confirm != -1) p,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,5,8,11,13) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}' AND confirm != -1) n";
             return AccountingDocument::model()->findBySql($sql);
         }
         /**
@@ -107,7 +115,9 @@
             if($type) $type_id="12";
             else      $type_id="13";
             
-            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document ={$type_id} AND id_carrier={$id} AND issue_date<='{$date}'";
+            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
+                  FROM accounting_document 
+                  WHERE id_type_accounting_document ={$type_id} AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}' AND confirm != -1";
             return AccountingDocument::model()->findBySql($sql);
         }
         /**
@@ -119,16 +129,21 @@
          */
         public static function getProvisionsTraf($id,$date,$type=TRUE)
         {
-            if($type) $type_id="12";
-            else      $type_id="13";
-            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document ={$type_id} AND id_carrier={$id} AND issue_date<='{$date}'";
+            if($type) $type_id="10";
+            else      $type_id="11";
+            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
+                  FROM accounting_document 
+                  WHERE id_type_accounting_document ={$type_id} AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}' AND confirm != -1";
             return AccountingDocument::model()->findBySql($sql);
         }
+        
         public static function getDisp($id,$date,$type=TRUE)
         {
             if($type) $type_id="5";
             else      $type_id="6";
-            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document ={$type_id} AND id_carrier={$id} AND issue_date<='{$date}'";
+            $sql="SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
+                  FROM accounting_document 
+                  WHERE id_type_accounting_document ={$type_id} AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}'";
             return AccountingDocument::model()->findBySql($sql);
         }
             
