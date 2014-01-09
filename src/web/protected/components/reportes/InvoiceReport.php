@@ -99,7 +99,7 @@ class InvoiceReport extends Reportes
                 $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
                 $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
                 $reporte.="<tr>
-                            <td {$style_basic} >".$provision->carrier."</td>
+                            <td {$style_basic} >".$provision->carrier.Reportes::define_description($provision)."</td>
                             <td {$style_basic_number} >".Yii::app()->format->format_decimal($provision->minutes,3)."</td>
                             <td {$style_basic_number} >".Yii::app()->format->format_decimal($provision->amount,3)."</td>
                             <td {$style_basic} >".$provision->carrier."</td>
@@ -140,14 +140,19 @@ class InvoiceReport extends Reportes
     {
         if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
         else $type_accounting_document="Provision Factura Recibida";
+
+        $num=DateManagement::howManyDaysBetween($fecha_from,$fecha_to);
+        $from=">=";
+        $to="<=";
+        if($num>7) $from=$to="=";
             
         $sql="SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
               FROM accounting_document a, carrier c 
               WHERE a.id_carrier=c.id
                 AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                AND from_date>='{$fecha_from}'
-                AND to_date<='{$fecha_to}'
-              ORDER BY from_date";
+                AND from_date{$from}'{$fecha_from}'
+                AND to_date{$to}'{$fecha_to}'
+              ORDER BY  c.name ASC, a.from_date ASC";
         return AccountingDocument::model()->findAllBySql($sql);           
     }
 
