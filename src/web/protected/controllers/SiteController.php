@@ -148,7 +148,7 @@ class SiteController extends Controller
              $fecha=(string)$_POST['datepicker'];
             if(($_POST['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_POST['id_termino_pago'],$fecha);   
             if(($_POST['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_POST['grupo']);   
-            if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov'],$_POST['tipo_report'],$grupo, $fecha);
+            if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov']);
             if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp'],$grupo,$fecha);
             
             switch ($_POST['tipo_report']) {
@@ -159,7 +159,7 @@ class SiteController extends Controller
                    break;
               case 'balance':
                    $correos['balance']['asunto']="SINE - ".$this->letra." BALANCE".self::reportTitle($fecha);
-                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_prov,$_POST['grupo']);
+                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$_POST['grupo']);
                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                    break;
                case 'refac':
@@ -173,7 +173,7 @@ class SiteController extends Controller
                    $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                    break;
                case 'refi_prov':
-                   $correos['refi_prov']['asunto']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                    break;
@@ -202,7 +202,7 @@ class SiteController extends Controller
             $fecha=(string)$_GET['datepicker'];
             if(($_GET['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_termino_pago'],$fecha);       
             if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
-            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$_GET['tipo_report'],$grupo, $fecha);     
+            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov']);     
             if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
             
             switch ($_GET['tipo_report']) {
@@ -212,7 +212,7 @@ class SiteController extends Controller
                    break;
               case 'balance':
                    $archivos['balance']['nombre']="SINE - ".$this->letra."BALANCE".self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_prov,$_GET['grupo']);
+                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$_GET['grupo']);
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
@@ -223,7 +223,7 @@ class SiteController extends Controller
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'refi_prov':
-                   $archivos['refi_prov']['nombre']="SINE - REFI PROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    break;
             }  
@@ -244,15 +244,15 @@ class SiteController extends Controller
             $fecha=(string)$_GET['datepicker'];
             if(($_GET['id_termino_pago'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_termino_pago'],$fecha);       
             if(($_GET['grupo'])!=NULL)  $grupo=Reportes::define_grupo($_GET['grupo']);       
-            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$_GET['tipo_report'],$grupo, $fecha);     
-            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
+            if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov']);     
+            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$grupo,$fecha);
             
             switch ($_GET['tipo_report']) {
               case 'soa':
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
                    break;
               case 'balance':
-                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_prov,$_GET['grupo']);
+                   $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$_GET['grupo']);
                    break;
               case 'refac':
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");

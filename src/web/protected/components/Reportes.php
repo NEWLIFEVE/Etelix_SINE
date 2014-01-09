@@ -27,13 +27,12 @@ class Reportes extends CApplicationComponent
      * @param type $grupo
      * @param type $fecha
      * @param type $no_disp
-     * @param type $no_prov
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_prov,$grupoName)
+    public function balance_report($grupo,$fecha,$no_disp,$grupoName)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_prov,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_disp,$grupoName);
         return $var;
     }
     /**
@@ -92,19 +91,35 @@ class Reportes extends CApplicationComponent
      * @param type $no_disp
      * @return string
      */
-    public static function define_disp($no_disp,$grupo,$fecha)
+    public static function define_disp($no_disp,$tipo_report,$grupo,$fecha)
     {
-        if($no_disp=="No")
-           $disp_sql=" ";
-        else  
-           $disp_sql="UNION
-                      select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
-                      from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                      where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                      and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                          
-                      and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
-        return $disp_sql;
+        $body="UNION
+               select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
+               from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+               where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+               and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
+        switch ($tipo_report) 
+        {
+            case "soa":
+                    if($no_disp=="No")
+                       $disp_sql=" ";
+                    else  
+                       $disp_sql="$body
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
+                return $disp_sql;
+                break;
+            case "balance":
+                    if($no_disp=="No")
+                       $disp_sql=" ";
+                    else
+                       $disp_sql="$body
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8)) ";
+                return $disp_sql;
+                break;
+            default:
+                return " ";
+                break;
+        }
     }
     /**
      * define si traera las disputas en los SOA
@@ -112,30 +127,11 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return string
      */
-    public static function define_prov($no_prov,$tipo_report,$grupo, $fecha)
+    public static function define_prov($no_prov)
     {
-        switch ($tipo_report) 
-        {
-            case "soa":
-                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13) and a.confirm != -1";
-                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11) and a.confirm != -1";
-                return $prov_sql;
-                break;
-            case "balance":
-                if($no_prov=="No") $prov_sql=" ";
-                else   $prov_sql="UNION 
-                                  select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
-                                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		                  and a.id_type_accounting_document IN (12,13) and a.confirm != -1
-		                  group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name";
-                return $prov_sql;
-            default:
-                return "and a.id_type_accounting_document NOT IN (12,13)";
-                break;  
-        }
-        
+        if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13) and a.confirm != -1";
+        else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11) and a.confirm != -1";
+        return $prov_sql; 
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
@@ -186,10 +182,10 @@ class Reportes extends CApplicationComponent
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "10":case "11":
-                $description = "P-T ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PT  ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "12":case "13":
-                $description = "P-F ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PF  ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -262,6 +258,31 @@ class Reportes extends CApplicationComponent
         $estilos = " style='background:white;color:black;border:1px solid black;'";
         return $estilos;
     }
+    /**
+     * 
+     * @param type $val
+     * @param type $background
+     * @return type
+     */
+    public static function estilos_basic($val,$background)
+    {
+        if($val>=1||$val<=-1){
+            $style_basic="style='border:1px solid black;text-align:left;$background'";
+           }else{
+            $style_basic="style='border:1px solid black;text-align:left;'";
+           }
+        return $style_basic;
+    }
+    public static function estilos_num($val,$background)
+    {
+        if($val>=1||$val<=-1){
+            $style_basic_number="style='border:1px solid black;text-align:right;$background'";
+           }else{
+            $style_basic_number="style='border:1px solid black;text-align:right;'";
+           }
+        return $style_basic_number;
+    }
+    
     /**
      * define a favor de quien esta el balance final en los SOA... la regla es que si el balance es negativo, esta a favor del operador,
      *  de lo contrario estara a favor de etelix

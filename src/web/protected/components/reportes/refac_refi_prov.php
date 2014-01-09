@@ -12,9 +12,7 @@
             //Estilos
             $style_title="style='background:#96B6E6;text-align:center;'";
             $style_description="style='background:silver;text-align:center;'";
-            $style_basic="style='border:1px solid black;text-align:left;'";
-            $style_basic_number="style='border:1px solid black;text-align:right;'";
-            $style_provisiones="style='border:1px solid black;background:rgb(231, 148, 59);text-align:center;'";
+            $style_provisiones="style='border:1px solid black;background:#E99241;text-align:center;'";
             $style_sori="style='border:1px solid black;background:#96B6E6;text-align:center;'";
             $style_diference="style='border:1px solid black;background:#18B469;text-align:center;'";
             $style_totals="style='border:1px solid black;background:silver;text-align:center;'";
@@ -81,13 +79,18 @@
                       $dif_minutes=$provision->minutes - $facturas->minutes;
                       $doc_number=$facturas->doc_number;
                       $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
+                      $style_basic_number=  Reportes::estilos_num($dif_amount,"background:#F8CB3C;");
+                      $style_basic=  Reportes::estilos_basic($dif_amount,"background:#F8CB3C;");
                      }else{
                           $facturas_minutes="-";
                           $facturas_amount="-";
                           $dif_amount=$provision->amount;
                           $dif_minutes=$provision->minutes;
-                          $acumulado_factura=0;
+                          $acumulado_factura=$acumulado_factura;
                           $doc_number="-";
+                          $style_basic=  Reportes::estilos_basic($dif_amount,"background:#E99241;");
+                          $style_basic_number=  Reportes::estilos_num($dif_amount,"background:#E99241;");
+                          
                      }
                      $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
                      $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
