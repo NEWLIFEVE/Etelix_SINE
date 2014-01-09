@@ -44,19 +44,7 @@ class Reportes extends CApplicationComponent
      */
     public function refac($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
-        return $var;
-    }
-    /**
-     * 
-     * @param type $fecha_from
-     * @param type $fecha_to
-     * @param type $tipo_report
-     * @return type
-     */
-    public function recredi($fecha)
-    {
-        $var=recredi::reporte($fecha);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
@@ -68,7 +56,19 @@ class Reportes extends CApplicationComponent
      */
     public function refi_prov($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        return $var;
+    }
+        /**
+     * 
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @param type $tipo_report
+     * @return type
+     */
+    public function recredi($fecha)
+    {
+        $var=recredi::reporte($fecha);
         return $var;
     }
     /**

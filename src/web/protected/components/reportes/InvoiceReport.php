@@ -1,12 +1,18 @@
- <?php
-
+<?php
+/**
+ * @package reportes
+ */
+class InvoiceReport extends Reportes
+{
     /**
-     * @package reportes
+     * @access public
+     * @static
+     * @param date $fecha_from
+     * @param date $fecha_to
+     * @param string $tipo_report
      */
-    class refac_refi_prov extends Reportes 
+    public static function reporte($fecha_from,$fecha_to,$tipo_report)
     {
-        public static function reporte($fecha_from,$fecha_to,$tipo_report) 
-        {
             //Fecha que va en el reporte
             $fecha=date('Y-m-d');
             //Estilos
@@ -130,46 +136,56 @@
            
            return $reporte;
         }
-                /**
-         * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
-         * @param type $model
-         * @param type $tipo_report
-         * @return type
-         */
-        private static function getProvisions($fecha_from, $fecha_to,$tipo_report) 
-        {
-            if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
-            else $type_accounting_document="Provision Factura Recibida";
-            
-            $sql= "SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
-                   FROM accounting_document a, carrier c 
-                   WHERE a.id_carrier=c.id
-                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                    AND from_date>='{$fecha_from}'
-                    AND to_date<='{$fecha_to}'
-                  ORDER BY from_date";
-            return AccountingDocument::model()->findAllBySql($sql);           
-        }
-        /** ejecuta la consulta a todos los datos de facturacion de sori, la unica particularidad es que dependiendo de la variable $tipo_report, cambia el id_type_accounting_document
-         * trae el sql pricipal de sori
-         * @param date $fecha_from
-         * @param date $fecha_to
-         * @return array
-         */
-        private static function getFacturas($model,$tipo_report) 
-        {
-            if($tipo_report=="REFAC") $type_accounting_document="Factura Enviada";
-            else $type_accounting_document="Factura Recibida";
+    /**
+     * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
+     * @access public
+     * @static
+     * @param type $model
+     * @param type $tipo_report
+     * @return type
+     */
+    private static function getProvisions($fecha_from, $fecha_to,$tipo_report) 
+    {
+        if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
+        else $type_accounting_document="Provision Factura Recibida";
 
-            $sql="SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
-                  FROM accounting_document 
-                  WHERE id_carrier= {$model->id_carrier}
-                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                    AND from_date>='{$model->from_date}'
-                    AND to_date<='{$model->to_date}'
-                  ORDER BY from_date";
-                    
+        $num=DateManagement::howManyDaysBetween($fecha_from,$fecha_to);
+        $from=">=";
+        $to="<=";
+        if($num>7) $from=$to="=";
+            
+        $sql="SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
+              FROM accounting_document a, carrier c 
+              WHERE a.id_carrier=c.id
+                AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
+                AND from_date{$from}'{$fecha_from}'
+                AND to_date{$to}'{$fecha_to}'
+              ORDER BY  c.name ASC, a.from_date ASC";
+        return AccountingDocument::model()->findAllBySql($sql);           
+    }
+
+    /**
+     * ejecuta la consulta a todos los datos de facturacion de sori, la unica particularidad es que dependiendo de la variable $tipo_report, cambia el id_type_accounting_document
+     * trae el sql pricipal de sori
+     * @access public
+     * @static
+     * @param date $fecha_from
+     * @param date $fecha_to
+     * @return array
+     */
+    private static function getFacturas($model,$tipo_report) 
+    {
+        if($tipo_report=="REFAC") $type_accounting_document="Factura Enviada";
+        else $type_accounting_document="Factura Recibida";
+        $sql="SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
+              FROM accounting_document 
+              WHERE id_carrier= {$model->id_carrier}
+                AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
+                AND from_date>='{$model->from_date}'
+                AND to_date<='{$model->to_date}'
+              ORDER BY from_date";
+                  
             return AccountingDocument::model()->findBySql($sql);
         }
     }
-    ?>
+?>
