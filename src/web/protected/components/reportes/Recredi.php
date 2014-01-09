@@ -19,15 +19,17 @@
             $seg=count($carrierGroups);
             ini_set('max_execution_time', $seg);
             
-            $reporte="<table $style_basic >";
+            $reporte="<table>";
             $reporte.="<tr>
                            <td colspan='2'><h1>RECREDI</h1></td>
                            <td colspan='7'>  AL  $fecha </td>
                        <tr>
                            <td colspan='9'></td>
-                       </tr></tr>";
+                       </tr>
+                     </table>";
             
-            $reporte.="<tr>
+            $reporte.="<table $style_basic >
+                       <tr>
                            <td $style_carrier_head >  </td>
                            <td $style_soa_head >  </td>
                            <td $style_prov_fact_head colspan='2'> PROVISION FACT </td>
