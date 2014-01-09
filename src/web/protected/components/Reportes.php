@@ -45,7 +45,7 @@ class Reportes extends CApplicationComponent
      */
     public function refac($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
@@ -69,7 +69,7 @@ class Reportes extends CApplicationComponent
      */
     public function refi_prov($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
