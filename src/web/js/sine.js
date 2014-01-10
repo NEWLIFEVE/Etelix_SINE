@@ -61,7 +61,6 @@ $SINE.UI=(function()
                   var mostrar =['.fecha,.grupo,.provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
-                  //POR AHORA SOLO FUNCIONA SOA...
                 case "balance":
                   var mostrar =['.fecha,.grupo,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
@@ -156,11 +155,11 @@ $SINE.UI=(function()
         /**
          * 
          */
-//        $("#excel").hover(function hover_link()
-//        {
-//              var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
-//              if(valid_input==1) $(".excel_a").attr("href","Site/Excel?" + $('#formulario').serialize()+ "");    
-//        });
+        $("#excel").hover(function hover_link()
+        {
+              var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
+              if(valid_input==1) $(".excel_a").attr("href","Site/Excel?" + $('#formulario').serialize()+ "");    
+        });
        /**
         * responde al click del boton de email y excel para pasar la data a la funcion send de ajax...
         * @param {type} click
@@ -181,34 +180,15 @@ $SINE.UI=(function()
                     else if(id=="previa"){    
                         $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize());
                         $SINE.UI.msj_cargando("<h2>Cargando Vista Previa</h2>","cargando.gif");
-                     }else{  
-                           $SINE.UI.genExcel("/site/Excel",$("#formulario").serialize());
-                                              
-////                          $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize());
-////                          $SINE.UI.ajax_stop();
-//                          $SINE.UI.msj_cargando("<h2>Exportando archivo Excel </h2>","cargando.gif");
-// 
-////                          setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 1000);
-////                            setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 100);
-//                            
-//                            setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 1000);
-//                            
-////                            setTimeout(function() {
-////                            if($(".fondo_negro").css("display")=="block") $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
-////                            }, 200);
+                     }else{                                            //                           $SINE.UI.genExcel("/site/Excel",$("#formulario").serialize());
+                          $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
+                          $( document ).ajaxError(function() {
+                              $SINE.UI.msj_cargando("<h2>Exportando Archivo Excel </h2>","cargando.gif");
+                               $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
+                               setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 2000);
+                          });
                           } 
                 }
-        }
-        /**
-         * 
-         * @returns {undefined}
-         */
-        function ajax_stop()
-        {
-             $( document ).ajaxStop(function() 
-             {
-                  $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
-             });
         }
          /**
          * 
@@ -275,7 +255,7 @@ $SINE.UI=(function()
         function msj_cargando(cuerpo_msj,imagen)
         {
             $(".fondo_negro, .mensaje").remove();
-            var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"' ></div>").hide(); 
+            var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"'></div>").hide(); 
             $("body").append(msj); 
             msj.fadeIn('slow');
         }
@@ -289,7 +269,7 @@ $SINE.UI=(function()
          */
         function msj_change(cuerpo_msj,imagen,tiempo,img_width)
         {
-            $(".mensaje").html(cuerpo_msj+"<p><img style='width: "+img_width+";' src='/images/"+imagen+"'>");
+            $(".mensaje").html(""+cuerpo_msj+"<p><img style='width:"+img_width+";' src='/images/"+imagen+"'>");
             setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, tiempo);
         }
         /**
@@ -321,7 +301,6 @@ $SINE.UI=(function()
                 validaCampos:validaCampos,
                 seleccionaCampos:seleccionaCampos,
                 changeHtml:changeHtml,
-                ajax_stop:ajax_stop,
                 fancy_box:fancy_box
 	};
 })();
@@ -391,11 +370,9 @@ $SINE.AJAX=(function()
                  success: function(data)
                  {   
                      console.log(data);
-//                     if(action=="/site/Excel")   $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1000","33%");  
-                     if(action=="/site/Excel")   $(".fondo_negro, .mensaje").fadeOut("slow"); 
+                     if(action=="/site/Excel")         $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                      else if(action=="/site/previa")   $SINE.UI.fancy_box(data);  
-                        else  
-                            $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
+                     else                              $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
                  }
             });
         }
