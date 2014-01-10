@@ -81,12 +81,12 @@ footer {
 }
 ::-webkit-scrollbar-button
 {       
-    background: #3F3C3C;
+    background: white;
     height: 23px;  
 }
 ::-webkit-scrollbar-button:hover
 {
-    background-color: rgb(9, 163, 9);   
+    background-color: #2E62B4;   
 }    
 ::-webkit-scrollbar-track 
 {
@@ -94,11 +94,11 @@ footer {
 }
  ::-webkit-scrollbar-track-piece 
 {
-    background-color: #D8D8D8;
+    background-color: white;
 }   
 ::-webkit-scrollbar-thumb 
 {       
-    background:  #3F3C3C;
+    background:  #2E62B4;
     height: 50px;
 }
 ::-webkit-scrollbar-thumb:hover 
@@ -259,7 +259,14 @@ div.login.error input#LoginForm_password
     margin-top: -25%;
     background: white; 
     position: relative;
-}  
+} 
+.listadeReportesscroll 
+{
+    height: 485px;
+    width: 358px;
+    margin-top: -27%;
+    position: relative;
+} 
 .Reportes
 {
     background: white;
@@ -306,7 +313,7 @@ div.login.error input#LoginForm_password
     width: 0%;
     position: static;
     margin-left: 19%;
-    padding-left: 22px;
+    padding-left: 49px;
     padding-right: 164px;
     display:none;
 }
@@ -415,7 +422,7 @@ img.oculta
     position: fixed;
     right: 0px;
     height: 112%;
-    margin-top: -588px;
+    margin-top: -570px;
     opacity: 0.5;
     padding-top: 4%;
     width: 12%;
@@ -503,3 +510,40 @@ li.ui-menu-item a
     width: 490px;
     z-index: 1031;
 }
+
+select 
+{
+    width: 207px!important;
+}
+#No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  ,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
+{
+    color:    #2E62B4;
+}
+#No_disp,#Si_disp ,#No_prov,#Si_prov
+{
+    width: 12%;
+    height: 1.88em!important;
+    position: static;
+    font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: medium;
+    padding-bottom: 7px;
+    border:cyan;
+}
+.provisiones
+{
+    width: 392px;
+}
+.termino_pago 
+{
+    /*margin-right: 16%;*/
+    position: absolute!important;
+}
+/*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
+.trabajando 
+{
+    width: 417px;
+    padding: 110px;
+    display: none;
+}
+/*....*/

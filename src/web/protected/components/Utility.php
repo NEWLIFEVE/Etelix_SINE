@@ -1,5 +1,6 @@
 <?php
 /**
+ * @version 1.3
  * @package components
  */
 Class Utility
@@ -36,6 +37,7 @@ Class Utility
         }
         return $fechaFinal;
     }
+
     /**
      *
      */
@@ -45,53 +47,6 @@ Class Utility
             $valor="0.00";
 
         return $valor;
-    }
-    
-    /**
-    * Retorna el numero de dias entre una fecha y otra
-    */
-    public static function dias($fechainicio,$fechafin)
-    {
-        if(!empty($fechainicio))
-        {
-            if(strpos($fechainicio,"-"))
-            {
-                $arrayFechaInicio=explode("-", $fechainicio);
-            }
-            elseif(strpos($fechainicio,"/"))
-            {
-                $arrayFechaInicio=explode("/", $fechainicio);
-            }
-        }
-        if(!empty($fechafin))
-        {
-            if(strpos($fechafin,"-"))
-            {
-                $arrayFechaFin=explode("-", $fechafin);
-            }
-            elseif(strpos($fechafin,"/"))
-            {
-                $arrayFechaFin=explode("/", $fechafin);
-            }
-        }
-        if(!empty($arrayFechaInicio))
-        {
-            $unixInicio=mktime(0, 0, 0, $arrayFechaInicio[1], $arrayFechaInicio[2], $arrayFechaInicio[0]);
-        }
-        if(!empty($arrayFechaFin))
-        {
-            $unixFin=mktime(0, 0, 0, $arrayFechaFin[1], $arrayFechaFin[2], $arrayFechaFin[0]);
-        }
-        if($unixFin>=$unixInicio)
-        {
-            $segundos_diferencia=$unixFin-$unixInicio;
-            $dias_diferencia=$segundos_diferencia / (60 * 60 * 24);
-            return $dias_diferencia;
-        }
-        else
-        {
-            return false;
-        }
     }
     
     /**
@@ -152,42 +107,34 @@ Class Utility
 		}
 		return $horaMod;
 	}
+
     /**
     * @param $var time la hora a formatear
     * @return $horaAmPm string hora formateada para base de datos
     */	
-   public static function ChangeTimeAmPm($var)
+    public static function ChangeTimeAmPm($var)
 	{
-                $hora = strtotime($var);
-                //substr
-                $horaAmPm = date("h:i:s A",$hora); 
-                return $horaAmPm;
-        }
+        $hora = strtotime($var);
+        //substr
+        $horaAmPm = date("h:i:s A",$hora); 
+        return $horaAmPm;
+    }
         
-//         esta funcion no va aqui, pero por si acaso, la comento   
-//   public static function format_decimal($num,$decimales=3)
-//    {        
-//        $english_format_number2 = number_format($num, 10, ',', '.');
-//        $numtext=strval($english_format_number2);
-//        $position = strpos($numtext, ',');
-//        $numsub = substr($numtext,0,$position+$decimales); 
-//        return $numsub;
-//    }
 	/*
 	* Encargada de cambiar las comas recibidas por un punto.
 	*/
     public static function ComaPorPunto($monto) 
-     {
+    {
 //            for ($i = 0; $i < strlen($monto); $i++) {
 //                if ($monto{$i} == ',' || $monto{$i} == '%2C') {
 //                    $monto{$i} = '.';
 //                }
 //                return $monto;
 //            }
-            $monto = str_replace(",",".",$monto);
+        $monto = str_replace(",",".",$monto);
         return $monto;
-     }
-            /**
+    }
+    /**
      * resulve el formato especifico para repoprtes en sine, soporta cualquier formato, no obstante se le pasarian por ahora
      * "F j - Y": para issiu date y due date
      * "m-F-y": para la fecha que va en caracteristicas
@@ -196,10 +143,10 @@ Class Utility
      * @return type
      */
     public static function formatDateSINE($fecha,$formato)
-     {
-         $fecha_actual =strtotime($fecha);
-              $valid = date($formato,$fecha_actual );
-         return $valid;
-     }
+    {
+        $fecha_actual =strtotime($fecha);
+        $valid = date($formato,$fecha_actual );
+        return $valid;
+    }
 }
 ?>

@@ -12,6 +12,7 @@ class LoginForm extends CFormModel
 	public $rememberMe;
 
 	private $_identity;
+        public $id_termino_pago;
 
 	/**
 	 * Declares the validation rules.
@@ -37,6 +38,7 @@ class LoginForm extends CFormModel
 	{
 		return array(
 			'rememberMe'=>'Recuerdame',
+			'id_termino_pago'=>'termino pago',
 		);
 	}
 
