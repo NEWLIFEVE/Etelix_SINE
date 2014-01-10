@@ -103,24 +103,24 @@ class Reportes extends CApplicationComponent
             case "soa":
                     if($no_disp=="No")
                     {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                       $disp_sql="";
                     }
                     else
                     {
                        $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
+                                  and a.id_type_accounting_document IN (5,6) ";
                     }
                 return $disp_sql;
                 break;
             case "balance":
                     if($no_disp=="No")
                     {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                       $disp_sql="";
                     }
                     else
                     {
                        $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8)) ";
+                                  and a.id_type_accounting_document IN (5,6)  ";
                     }
                 return $disp_sql;
                 break;
@@ -146,7 +146,7 @@ class Reportes extends CApplicationComponent
        
         if($no_prov=="No")
         {
-            $prov_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+            $prov_sql="";
         }
         else
         {
