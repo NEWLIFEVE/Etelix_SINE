@@ -108,7 +108,7 @@ class Reportes extends CApplicationComponent
                     else
                     {
                        $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) ";
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
                     }
                 return $disp_sql;
                 break;
@@ -120,7 +120,7 @@ class Reportes extends CApplicationComponent
                     else
                     {
                        $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6)  ";
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
                     }
                 return $disp_sql;
                 break;
