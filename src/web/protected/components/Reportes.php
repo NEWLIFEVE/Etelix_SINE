@@ -68,7 +68,7 @@ class Reportes extends CApplicationComponent
      */
     public function recredi($fecha)
     {
-        $var=recredi::reporte($fecha);
+        $var=Recredi::reporte($fecha);
         return $var;
     }
     /**
