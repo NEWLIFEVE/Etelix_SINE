@@ -99,6 +99,7 @@
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+                 and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)
                  $no_disp                
                  UNION
                  select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 

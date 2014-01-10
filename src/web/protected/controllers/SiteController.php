@@ -153,12 +153,12 @@ class SiteController extends Controller
             
             switch ($_POST['tipo_report']) {
               case 'soa':
-                   $correos['soa']['asunto']="SINE - ".$this->letra." SOA".self::reportTitle($fecha);
+                   $correos['soa']['asunto']="SINE -  SOA".self::reportTitle($fecha);
                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov,$_POST['grupo']);
                    $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                    break;
               case 'balance':
-                   $correos['balance']['asunto']="SINE - ".$this->letra." BALANCE".self::reportTitle($fecha);
+                   $correos['balance']['asunto']="SINE -  BALANCE".self::reportTitle($fecha);
                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$_POST['grupo']);
                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                    break;
@@ -207,11 +207,11 @@ class SiteController extends Controller
             
             switch ($_GET['tipo_report']) {
               case 'soa':
-                   $archivos['soa']['nombre']="SINE - ".$this->letra."SOA".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['soa']['nombre']="SINE - SOA".self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov,$_GET['grupo']);
                    break;
               case 'balance':
-                   $archivos['balance']['nombre']="SINE - ".$this->letra."BALANCE".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['balance']['nombre']="SINE - BALANCE".self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp,$_GET['grupo']);
                    break;
               case 'refac':

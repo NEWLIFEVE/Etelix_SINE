@@ -589,7 +589,7 @@ class Reportes extends CApplicationComponent
      {
          if($var<0) $var=$var*-1;
          
-         if($var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
+         if($var=="6"||$var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
          
          if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
          
