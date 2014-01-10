@@ -79,7 +79,7 @@
             </div>
     
         <div id="footer">
-            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.0.1
+            Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.2
         </div>
             
     <div class="clear"></div>
