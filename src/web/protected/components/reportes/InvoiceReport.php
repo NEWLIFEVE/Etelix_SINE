@@ -1,20 +1,24 @@
- <?php
-
+<?php
+/**
+ * @package reportes
+ */
+class InvoiceReport extends Reportes
+{
     /**
-     * @package reportes
+     * @access public
+     * @static
+     * @param date $fecha_from
+     * @param date $fecha_to
+     * @param string $tipo_report
      */
-    class refac_refi_prov extends Reportes 
+    public static function reporte($fecha_from,$fecha_to,$tipo_report)
     {
-        public static function reporte($fecha_from,$fecha_to,$tipo_report) 
-        {
             //Fecha que va en el reporte
             $fecha=date('Y-m-d');
             //Estilos
             $style_title="style='background:#96B6E6;text-align:center;'";
             $style_description="style='background:silver;text-align:center;'";
-            $style_basic="style='border:1px solid black;text-align:left;'";
-            $style_basic_number="style='border:1px solid black;text-align:right;'";
-            $style_provisiones="style='border:1px solid black;background:rgb(231, 148, 59);text-align:center;'";
+            $style_provisiones="style='border:1px solid black;background:#E99241;text-align:center;'";
             $style_sori="style='border:1px solid black;background:#96B6E6;text-align:center;'";
             $style_diference="style='border:1px solid black;background:#18B469;text-align:center;'";
             $style_totals="style='border:1px solid black;background:silver;text-align:center;'";
@@ -81,13 +85,18 @@
                       $dif_minutes=$provision->minutes - $facturas->minutes;
                       $doc_number=$facturas->doc_number;
                       $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
+                      $style_basic_number=  Reportes::estilos_num($dif_amount,"background:#F8CB3C;");
+                      $style_basic=  Reportes::estilos_basic($dif_amount,"background:#F8CB3C;");
                      }else{
                           $facturas_minutes="-";
                           $facturas_amount="-";
                           $dif_amount=$provision->amount;
                           $dif_minutes=$provision->minutes;
-                          $acumulado_factura=0;
+                          $acumulado_factura=$acumulado_factura;
                           $doc_number="-";
+                          $style_basic=  Reportes::estilos_basic($dif_amount,"background:#E99241;");
+                          $style_basic_number=  Reportes::estilos_num($dif_amount,"background:#E99241;");
+                          
                      }
                      $acumulado_provisiones=Reportes::define_total_provisiones($provision,$acumulado_provisiones);
                      $acumulado_diference=Reportes::define_total_diference($dif_amount,$acumulado_diference);
@@ -127,46 +136,56 @@
            
            return $reporte;
         }
-                /**
-         * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
-         * @param type $model
-         * @param type $tipo_report
-         * @return type
-         */
-        private static function getProvisions($fecha_from, $fecha_to,$tipo_report) 
-        {
-            if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
-            else $type_accounting_document="Provision Factura Recibida";
-            
-            $sql= "SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
-                   FROM accounting_document a, carrier c 
-                   WHERE a.id_carrier=c.id
-                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                    AND from_date>='{$fecha_from}'
-                    AND to_date<='{$fecha_to}'
-                  ORDER BY from_date";
-            return AccountingDocument::model()->findAllBySql($sql);           
-        }
-        /** ejecuta la consulta a todos los datos de facturacion de sori, la unica particularidad es que dependiendo de la variable $tipo_report, cambia el id_type_accounting_document
-         * trae el sql pricipal de sori
-         * @param date $fecha_from
-         * @param date $fecha_to
-         * @return array
-         */
-        private static function getFacturas($model,$tipo_report) 
-        {
-            if($tipo_report=="REFAC") $type_accounting_document="Factura Enviada";
-            else $type_accounting_document="Factura Recibida";
+    /**
+     * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
+     * @access public
+     * @static
+     * @param type $model
+     * @param type $tipo_report
+     * @return type
+     */
+    private static function getProvisions($fecha_from, $fecha_to,$tipo_report) 
+    {
+        if($tipo_report=="REFAC") $type_accounting_document="Provision Factura Enviada";
+        else $type_accounting_document="Provision Factura Recibida";
 
-            $sql="SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
-                  FROM accounting_document 
-                  WHERE id_carrier= {$model->id_carrier}
-                    AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
-                    AND from_date>='{$model->from_date}'
-                    AND to_date<='{$model->to_date}'
-                  ORDER BY from_date";
-                    
+        $num=DateManagement::howManyDaysBetween($fecha_from,$fecha_to);
+        $from=">=";
+        $to="<=";
+        if($num>7) $from=$to="=";
+            
+        $sql="SELECT a.id, a.doc_number, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier
+              FROM accounting_document a, carrier c 
+              WHERE a.id_carrier=c.id
+                AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
+                AND from_date{$from}'{$fecha_from}'
+                AND to_date{$to}'{$fecha_to}'
+              ORDER BY  c.name ASC, a.from_date ASC";
+        return AccountingDocument::model()->findAllBySql($sql);           
+    }
+
+    /**
+     * ejecuta la consulta a todos los datos de facturacion de sori, la unica particularidad es que dependiendo de la variable $tipo_report, cambia el id_type_accounting_document
+     * trae el sql pricipal de sori
+     * @access public
+     * @static
+     * @param date $fecha_from
+     * @param date $fecha_to
+     * @return array
+     */
+    private static function getFacturas($model,$tipo_report) 
+    {
+        if($tipo_report=="REFAC") $type_accounting_document="Factura Enviada";
+        else $type_accounting_document="Factura Recibida";
+        $sql="SELECT id, doc_number, from_date, to_date, amount, minutes, id_carrier
+              FROM accounting_document 
+              WHERE id_carrier= {$model->id_carrier}
+                AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$type_accounting_document}')
+                AND from_date>='{$model->from_date}'
+                AND to_date<='{$model->to_date}'
+              ORDER BY from_date";
+                  
             return AccountingDocument::model()->findBySql($sql);
         }
     }
-    ?>
+?>

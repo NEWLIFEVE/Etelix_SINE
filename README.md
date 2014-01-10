@@ -3,6 +3,8 @@ Etelix_SINE
 
 Sistema de Reportes para Billing
 
+- Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
+
 Realese 1.0.1
 -Cambios en SOA:
        -Color para las filas en gris cuando son Pagos o Cobros

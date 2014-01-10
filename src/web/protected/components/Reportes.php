@@ -27,13 +27,12 @@ class Reportes extends CApplicationComponent
      * @param type $grupo
      * @param type $fecha
      * @param type $no_disp
-     * @param type $no_prov
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_prov,$grupoName)
+    public function balance_report($grupo,$fecha,$no_disp,$grupoName)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_prov,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_disp,$grupoName);
         return $var;
     }
     /**
@@ -45,19 +44,7 @@ class Reportes extends CApplicationComponent
      */
     public function refac($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
-        return $var;
-    }
-    /**
-     * 
-     * @param type $fecha_from
-     * @param type $fecha_to
-     * @param type $tipo_report
-     * @return type
-     */
-    public function recredi($fecha)
-    {
-        $var=recredi::reporte($fecha);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
     /**
@@ -69,7 +56,19 @@ class Reportes extends CApplicationComponent
      */
     public function refi_prov($fecha_from,$fecha_to,$tipo_report)
     {
-        $var=refac_refi_prov::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        return $var;
+    }
+        /**
+     * 
+     * @param type $fecha_from
+     * @param type $fecha_to
+     * @param type $tipo_report
+     * @return type
+     */
+    public function recredi($fecha)
+    {
+        $var=Recredi::reporte($fecha);
         return $var;
     }
     /**
@@ -92,50 +91,69 @@ class Reportes extends CApplicationComponent
      * @param type $no_disp
      * @return string
      */
-    public static function define_disp($no_disp,$grupo,$fecha)
+    public static function define_disp($no_disp,$tipo_report,$grupo,$fecha)
     {
-        if($no_disp=="No")
-           $disp_sql=" ";
-        else  
-           $disp_sql="UNION
-                      select a.id,a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
-                      from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                      where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                      and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                          
-                      and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
-        return $disp_sql;
-    }
-    /**
-     * define si traera las disputas en los SOA
-     * @param type $no_prov
-     * @param type $tipo_report
-     * @return string
-     */
-    public static function define_prov($no_prov,$tipo_report,$grupo, $fecha)
-    {
+        $body="UNION
+               select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
+               from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+               where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+               and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
         switch ($tipo_report) 
         {
             case "soa":
-                if($no_prov=="No") $prov_sql=" and a.id_type_accounting_document NOT IN (10,11,12,13) and a.confirm != -1";
-                else   $prov_sql=" and a.id_type_accounting_document NOT IN (10,11) and a.confirm != -1";
-                return $prov_sql;
+                    if($no_disp=="No")
+                    {
+                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                    }
+                    else
+                    {
+                       $disp_sql="$body
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
+                    }
+                return $disp_sql;
                 break;
             case "balance":
-                if($no_prov=="No") $prov_sql=" ";
-                else   $prov_sql="UNION 
-                                  select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
-                                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		                  and a.id_type_accounting_document IN (12,13) and a.confirm != -1
-		                  group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name";
-                return $prov_sql;
+                    if($no_disp=="No")
+                    {
+                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                    }
+                    else
+                    {
+                       $disp_sql="$body
+                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8)) ";
+                    }
+                return $disp_sql;
+                break;
             default:
-                return "and a.id_type_accounting_document NOT IN (12,13)";
-                break;  
+                return " ";
+                break;
         }
-        
+    }
+    /**
+     * 
+     * @param type $no_prov
+     * @param type $grupo
+     * @param type $fecha
+     * @return type
+     */
+    public static function define_prov($no_prov,$grupo,$fecha)
+    {
+        $body="UNION
+               select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
+               from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+               where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+               and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
+       
+        if($no_prov=="No")
+        {
+            $prov_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+        }
+        else
+        {
+            $prov_sql="$body 
+                       and a.id_type_accounting_document NOT IN (5,6,10,11) and a.confirm != -1";
+        }
+        return $prov_sql; 
     }
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
@@ -177,7 +195,7 @@ class Reportes extends CApplicationComponent
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
             case "2":
-                $description =" #". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." #". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "1":
                 $description = $model->carrier ." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -186,10 +204,13 @@ class Reportes extends CApplicationComponent
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "10":case "11":
-                $description = "P-T ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PT  ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "12":case "13":
-                $description = "P-F ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PF  ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                break;
+            case "5":case "6":
+                $description = "DISPUTE (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -262,6 +283,37 @@ class Reportes extends CApplicationComponent
         $estilos = " style='background:white;color:black;border:1px solid black;'";
         return $estilos;
     }
+    /**
+     * 
+     * @param type $val
+     * @param type $background
+     * @return type
+     */
+    public static function estilos_basic($val,$background)
+    {
+        if($val>=1||$val<=-1){
+            $style_basic="style='border:1px solid black;text-align:left;$background'";
+           }else{
+            $style_basic="style='border:1px solid black;text-align:left;'";
+           }
+        return $style_basic;
+    }
+    /**
+     * 
+     * @param type $val
+     * @param type $background
+     * @return string
+     */
+    public static function estilos_num($val,$background)
+    {
+        if($val>=1||$val<=-1){
+            $style_basic_number="style='border:1px solid black;text-align:right;$background'";
+           }else{
+            $style_basic_number="style='border:1px solid black;text-align:right;'";
+           }
+        return $style_basic_number;
+    }
+    
     /**
      * define a favor de quien esta el balance final en los SOA... la regla es que si el balance es negativo, esta a favor del operador,
      *  de lo contrario estara a favor de etelix
@@ -463,7 +515,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_rec($model,$acumuladoFacRec)
     {
-        if ($model->id_type_accounting_document==2){
+        if ($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13){
                 return $acumuladoFacRec + $model->amount; }
             elseif($model->id_type_accounting_document==9 && $model->amount<0){
                 return $acumuladoFacRec - ($model->amount*-1); }
@@ -479,7 +531,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_env($model,$acumuladoFacEnv)
     {
-        if ($model->id_type_accounting_document==1){
+        if ($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12){
                 return $acumuladoFacEnv + $model->amount; }
             elseif($model->id_type_accounting_document==9 && $model->amount>0){
                 return $acumuladoFacEnv + $model->amount; }
@@ -493,11 +545,24 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public static function define_fecha_from($termino_pago, $fecha_to)
+    public static function define_fecha_from($tp, $fecha_to)
     {
-        $tp_name= TerminoPago::getName($termino_pago);
-        $tp= self::define_tp($tp_name)["periodo"];
-        return Reportes::define_due_date($tp, $fecha_to,"-");
+        switch ($tp) {
+            case 7:
+                return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
+                break;
+            case 15:
+                if (date("d", strtotime($fecha_to)) <= 15)
+                    return DateManagement::getDayOne($fecha_to);
+                else
+                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                break;
+            case 30:
+                return DateManagement::getDayOne($fecha_to);
+                break;
+            default:
+                break;
+        }
     }
     /**
      * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
