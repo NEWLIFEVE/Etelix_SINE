@@ -235,7 +235,6 @@ $SINE.UI=(function()
                 };
                 return respuesta;
         }
-        
         /**
          * 
          * @param {type} action

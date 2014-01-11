@@ -100,27 +100,15 @@ class Reportes extends CApplicationComponent
                and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
         switch ($tipo_report) 
         {
-            case "soa":
+            case "soa":case "balance":
                     if($no_disp=="No")
                     {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                       $disp_sql=" ";
                     }
                     else
                     {
                        $disp_sql="$body
                                   and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
-                    }
-                return $disp_sql;
-                break;
-            case "balance":
-                    if($no_disp=="No")
-                    {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
-                    }
-                    else
-                    {
-                       $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8)) ";
                     }
                 return $disp_sql;
                 break;
@@ -146,12 +134,12 @@ class Reportes extends CApplicationComponent
        
         if($no_prov=="No")
         {
-            $prov_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+            $prov_sql="";
         }
         else
         {
             $prov_sql="$body 
-                       and a.id_type_accounting_document NOT IN (5,6,10,11) and a.confirm != -1";
+                       and a.id_type_accounting_document IN (12,13) and a.confirm != -1";
         }
         return $prov_sql; 
     }
