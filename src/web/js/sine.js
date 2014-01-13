@@ -294,6 +294,7 @@ $SINE.UI=(function()
             contenido=$(div).clone().html();                    //seleccionamos el objeto
             imp = window.open(" SINE ","Formato de Impresion"); //damos un titulo
             imp.document.open();                                //abrimos
+            //imp.document.write('style: ...');                   //css
             imp.document.write(contenido);                      //agregamos el objeto
             imp.document.close();
             imp.print();                                        //Abrimos la opcion de imprimir
