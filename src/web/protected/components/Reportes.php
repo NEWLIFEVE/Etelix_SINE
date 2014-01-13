@@ -151,7 +151,7 @@ class Reportes extends CApplicationComponent
         else
         {
             $prov_sql="$body 
-                       and a.id_type_accounting_document NOT IN (5,6,10,11) and a.confirm != -1";
+                       and a.id_type_accounting_document  IN (12,13) and a.confirm != -1";
         }
         return $prov_sql; 
     }
