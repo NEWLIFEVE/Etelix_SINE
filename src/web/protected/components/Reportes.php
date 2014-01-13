@@ -215,7 +215,7 @@ class Reportes extends CApplicationComponent
     public static function define_to_date($model,$due_date)
     {
         switch ($model->id_type_accounting_document){
-            case "3": case "4":case "9":
+            case "3": case "4":case "9":case "10":case"11":case"12":case"13":
                 $to_date="";
                 break;
             default:

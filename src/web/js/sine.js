@@ -279,9 +279,26 @@ $SINE.UI=(function()
         function fancy_box(cuerpo)
         {
             $(".mensaje").css("width", "960").css("text-align", "left").css("margin", "-37% 16% auto").css("overflow", "scroll").css("height", "583px").css("display", "none");
-            $(".mensaje").fadeIn("slow").html(cuerpo);
+            $(".mensaje").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'><img src='/images/print_hover.png'class='oculta'></div><div class='a_imprimir'>"+cuerpo+"</div>");
+            $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
             $('.fondo_negro').on('click',function () { $(".fondo_negro, .mensaje").fadeOut('slow');});
         }
+        /**
+         * 
+         * @param {type} div
+         * @returns {undefined}
+         */
+        function imprimir(div)
+        {
+            var imp,
+            contenido=$(div).clone().html();                    //seleccionamos el objeto
+            imp = window.open(" SINE ","Formato de Impresion"); //damos un titulo
+            imp.document.open();                                //abrimos
+            imp.document.write(contenido);                      //agregamos el objeto
+            imp.document.close();
+            imp.print();                                        //Abrimos la opcion de imprimir
+            imp.close();                                        //cerramos la ventana nueva
+        };
 	/**
 	 * Retorna los mestodos publicos
 	 */
@@ -300,7 +317,8 @@ $SINE.UI=(function()
                 validaCampos:validaCampos,
                 seleccionaCampos:seleccionaCampos,
                 changeHtml:changeHtml,
-                fancy_box:fancy_box
+                fancy_box:fancy_box,
+                imprimir:imprimir
 	};
 })();
 
