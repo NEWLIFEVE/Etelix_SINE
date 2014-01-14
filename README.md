@@ -1,4 +1,4 @@
-Etelix_SINE
+﻿Etelix_SINE
 ============
 
 Sistema de Reportes para Billing
@@ -22,3 +22,14 @@ Release 1.0
 
 Release 0.0.1
 - Reporte SOA
+
+
+
+relase 1.2.1
+-Cambios en SOA y BALANCE:
+       -consultas modificadas para traer provisiones y disputas de forma correctas
+       -las provisiones no tienen due date.
+
+-Cambios generales:
+       -nuevo boton para imprimir la vista previa de los reportes.
+

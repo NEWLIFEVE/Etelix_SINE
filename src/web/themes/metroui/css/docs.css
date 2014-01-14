@@ -542,13 +542,13 @@ select
 }
 .imprimir
 {
-    color:white;
-    background: black;
+    color: white;
+    background: #2E62B4;
     position: fixed;
-    width: 50px;
-    opacity: 0.8;
-    margin-left: 944px;
-    margin-top: 510px;
+    width: 83px;
+    opacity: 0.5;
+    margin-left: 955px;
+    margin-top: 473px;
 }
 .imprimir:hover
 {

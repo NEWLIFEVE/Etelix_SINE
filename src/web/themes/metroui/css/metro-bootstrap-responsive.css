@@ -55,9 +55,12 @@
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;} 
     input{width: 328px!important;}
     .disputas {margin-left: 0%!important;}
+    .provisiones{width: 277px!important}
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
     #id_termino_pago {width: 328px!important;}
     #ui-datepicker-div {width: 70%!important;}
+    .metro .page .page-region .page-region-content { position: absolute!important;}
+    #previa{display:none!important;}
     /*PROVISIONAL*/
     .trabajando {width: 455px!important;padding: 92px!important;margin-left:-21%!important;margin-top: 7%!important;}
 }
@@ -76,6 +79,7 @@
     input{width: 296px!important;}
     .formInputs {margin-left: -46%!important;}
     .disputas {margin-left: -47%!important;}
+    .provisiones{width: 192px!important}
     #botones_exportar {margin-left: -15%!important;margin-top: -2%!important;}
     .barra_tools_click {left: -29px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}

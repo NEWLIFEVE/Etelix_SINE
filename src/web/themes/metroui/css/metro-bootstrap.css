@@ -2219,7 +2219,7 @@ a {
   text-decoration: none !important;
 }
 .metro .page .page-region .page-region-content {
-  min-height: 530px;
+  min-height: 530px; /*content*/
   position: fixed;
 }
 .metro .page .page-region .page-region-content:before,
