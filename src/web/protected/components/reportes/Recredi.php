@@ -27,7 +27,6 @@
                            <td colspan='9'></td>
                        </tr>
                      </table>";
-            
             $reporte.="<table $style_basic >
                        <tr>
                            <td $style_carrier_head >  </td>
@@ -37,7 +36,6 @@
                            <td $style_prov_disp_head colspan='2'> DISPUTAS </td>
                            <td $style_balance_head >  </td>
                        </tr>";
-  
             $reporte.="<tr>
                            <td $style_carrier_head > CARRIER </td>
                            <td $style_soa_head > SOA </td>
@@ -138,7 +136,13 @@
                   WHERE id_type_accounting_document ={$type_id} AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}' AND confirm != -1";
             return AccountingDocument::model()->findBySql($sql);
         }
-        
+        /**
+         * 
+         * @param type $id
+         * @param type $date
+         * @param type $type
+         * @return type
+         */
         public static function getDisp($id,$date,$type=TRUE)
         {
             if($type) $type_id="5";
@@ -147,7 +151,6 @@
                   FROM accounting_document 
                   WHERE id_type_accounting_document ={$type_id} AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}'";
             return AccountingDocument::model()->findBySql($sql);
-        }
-            
+        }      
     }
     ?>

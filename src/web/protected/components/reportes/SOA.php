@@ -61,7 +61,7 @@
                 $tabla_SOA.="</table>";
                 $tabla_SOA.="<br><table align='right'>
                              <tr><td></td><td></td><td></td><td></td><td></td>
-                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>".Reportes::define_a_favor($acc_doc_detal,$acumulado)."</font></h3></td>
+                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$acumulado). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</font></h3></td>
                              </tr>
                              </table>";
@@ -78,10 +78,10 @@
          */
         public static function define_grupo($grupo)
         {    
-               if($grupo=="CABINAS PERU")  
-                   return "id_carrier_groups=301 OR id_carrier_groups=443";
-               else   
-                   return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
+            if($grupo=="CABINAS PERU")  
+                return "id_carrier_groups=301 OR id_carrier_groups=443";
+            else   
+                return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
         }
         /**
          * sql para el reporte soa
@@ -105,17 +105,6 @@
                 
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
-        }
-        
-        private static function get_amount_totals($grupo, $fecha, $no_disp,$tipo_doc) 
-        {
-            $sql = "select SUM(a.amount) AS totals
-                from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                where a.id_carrier IN(Select id from carrier where id_carrier_groups=$grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                and id_type_accounting_document=$tipo_doc   $no_disp ";
-                
-                return AccountingDocument::model()->findBySql($sql);
         }
     }
 
