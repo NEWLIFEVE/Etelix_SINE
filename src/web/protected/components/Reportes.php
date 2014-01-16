@@ -151,7 +151,7 @@ class Reportes extends CApplicationComponent
         else
         {
             $prov_sql="$body 
-                       and a.id_type_accounting_document NOT IN (5,6,10,11) and a.confirm != -1";
+                       and a.id_type_accounting_document  IN (12,13) and a.confirm != -1";
         }
         return $prov_sql; 
     }
@@ -465,10 +465,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "7":case "10":case "12":
+            case "1":case "3":case "6":case "10":case "12":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "5":case "8":case "11":case "13":
+            case "2":case "4":case "5":case "7":case "8":case "11":case "13":
                 return $acumulado - $model->amount;
                 break;
         }

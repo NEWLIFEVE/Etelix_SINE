@@ -497,6 +497,7 @@ li.ui-menu-item a
     top: 0px;
     width: 100%;
     z-index: 1030;
+    display:none;
 }
 .mensaje
 {
