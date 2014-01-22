@@ -25,7 +25,7 @@ $SINE.UI=(function()
          */
         function resolve_reports_menu(selec)
 	{
-            var params = $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov');
+            var params = $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis');
             params.children().removeClass('h1_reportClick').addClass('h1_report');
             params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
             params.removeAttr('style');
@@ -79,6 +79,10 @@ $SINE.UI=(function()
                   break; 
                 case "refi_prov": 
                     var mostrar =['.termino_pago,.fecha']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  break;
+                case "redis": 
+                    var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -213,6 +217,9 @@ $SINE.UI=(function()
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
                 break               
+            case 'redis':
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                break               
            }
            console.log(respuesta);
            return respuesta;
@@ -235,7 +242,6 @@ $SINE.UI=(function()
                 };
                 return respuesta;
         }
-        
         /**
          * 
          * @param {type} action
@@ -280,9 +286,27 @@ $SINE.UI=(function()
         function fancy_box(cuerpo)
         {
             $(".mensaje").css("width", "960").css("text-align", "left").css("margin", "-37% 16% auto").css("overflow", "scroll").css("height", "583px").css("display", "none");
-            $(".mensaje").fadeIn("slow").html(cuerpo);
+            $(".mensaje").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'><img src='/images/print_hover.png'class='oculta'></div><div class='a_imprimir'>"+cuerpo+"</div>");
+            $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
             $('.fondo_negro').on('click',function () { $(".fondo_negro, .mensaje").fadeOut('slow');});
         }
+        /**
+         * 
+         * @param {type} div
+         * @returns {undefined}
+         */
+        function imprimir(div)
+        {
+            var imp,
+            contenido=$(div).clone().html();                    //selecciona el objeto
+            imp = window.open(" SINE ","Formato de Impresion"); // titulo
+            imp.document.open();                                //abre la ventana
+            //imp.document.write('style: ...');                 //css
+            imp.document.write(contenido);                      //agrega el objeto
+            imp.document.close();
+            imp.print();                                        //Abre la opcion de imprimir
+            imp.close();                                        //cierra la ventana nueva
+        };
 	/**
 	 * Retorna los mestodos publicos
 	 */
@@ -301,7 +325,8 @@ $SINE.UI=(function()
                 validaCampos:validaCampos,
                 seleccionaCampos:seleccionaCampos,
                 changeHtml:changeHtml,
-                fancy_box:fancy_box
+                fancy_box:fancy_box,
+                imprimir:imprimir
 	};
 })();
 

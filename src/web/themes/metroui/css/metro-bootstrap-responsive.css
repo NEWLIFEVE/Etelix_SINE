@@ -1,18 +1,21 @@
+
 @media (max-width:1360px)
 {
     .tile {width: 80px;height: 80px;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 25%!important;}
-    .listadeReportesscroll {overflow:scroll;height: 402px!important;width: 408px!important;margin-left: -5%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;margin-top: -4%!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
 }
+
 @media (min-width: 980px)  and (max-width: 1200px)
 {
     .tile {width: 80px;height: 80px;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 25%!important;}
-    .listadeReportesscroll {overflow:scroll;height: 402px!important;width: 408px!important;margin-left: -5%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;}
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
+    #ui-datepicker-div {width: 26%!important;}
 }
 
 @media (min-width: 980px) 
@@ -21,20 +24,22 @@
 }
 @media (min-width: 768px) and (max-width: 979px) 
 {
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 25%!important;}
-    .listadeReportesscroll {overflow:scroll;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
     .formulario{margin-top: -402px!important;margin-left: 342px!important;width: 70%!important;}
     .barra_tools_click {width: 20%!important;}
-     .disputas {margin-left: -1px!important;}
+    .disputas {margin-left: -1px!important;}
+    #ui-datepicker-div {width: 32%!important;}
 }
 @media (max-width: 767px) 
 {
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 25%!important;}
-    .listadeReportesscroll {overflow:scroll;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
     .formulario {background: white; margin-top: -427px!important;margin-left: -33px!important;width: 70%!important;position: absolute!important;}
     .barra_tools_click {width: 29%!important;}
      .disputas {margin-left: -1px!important;}
      #botones_exportar { margin-top: 188px!important;}
+     #ui-datepicker-div {width: 55%!important;}
 }
 
 /*@media only screen and (max-width: 320px) {}*/
@@ -47,17 +52,20 @@
     .titulo {display: none;}  
     input#LoginForm_username,input#LoginForm_password,.metro input[type="submit"].primary {width: 328px!important;margin-top:30px!important}
     #remember {position: static!important;width: 168px!important;margin-left: -160px!important;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 25%!important;}
-    .listadeReportesscroll {overflow:scroll;height: 402px!important;width: 444px!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 444px!important;}
     .formulario{padding-left: 8%!important;background: white;height: 600px!important;margin-top: -489px!important;width: 57%!important;position: absolute!important;margin-left: -3%!important;}
     #botones_exportar {margin-left: -23%!important;margin-top: -2%!important;}
     .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;} 
     input{width: 328px!important;}
     .disputas {margin-left: 0%!important;}
+    .provisiones{width: 277px!important}
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
     #id_termino_pago {width: 328px!important;}
     #ui-datepicker-div {width: 70%!important;}
+    .metro .page .page-region .page-region-content { position: absolute!important;}
+    #previa{display:none!important;}
     /*PROVISIONAL*/
     .trabajando {width: 455px!important;padding: 92px!important;margin-left:-21%!important;margin-top: 7%!important;}
 }
@@ -70,12 +78,13 @@
     .metro input[type="submit"].primary{width: 213px!important;margin-top: -6%!important;}
     #remember{display: run-in!important;}
     .subtitulos{width: 294px;}
-    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: -96px!important;}
-    .listadeReportesscroll {overflow:scroll;height: 407px!important;width: 322px!important;margin-left: 0%!important;}
-    .formulario{background: white;height: 600px!important;margin-top: -489px!important;width: 41%!important;position: absolute!important;margin-left: -2%!important;}
+    .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: -11px!important;}
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 407px!important;width: 322px!important;margin-left: 0%!important;}
+    .formulario{background: white;height: 600px!important;margin-top: -473px!important;width: 41%!important;position: absolute!important;margin-left: -2%!important;}
     input{width: 296px!important;}
     .formInputs {margin-left: -46%!important;}
     .disputas {margin-left: -47%!important;}
+    .provisiones{width: 192px!important}
     #botones_exportar {margin-left: -15%!important;margin-top: -2%!important;}
     .barra_tools_click {left: -29px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}

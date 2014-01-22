@@ -61,8 +61,8 @@
                 $tabla.="</table>";
                 $tabla.="<br><table align='right'>
                              <tr><td></td><td></td><td></td><td></td><td></td>
-                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;color:white'><h3>".Reportes::define_a_favor($acc_doc_detal,$acumulado)."</h3></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;color:white;width:90px;'><h3>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</h3></td>
+                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$acumulado). "</font></h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</font></h3></td>
                              </tr>
                              </table>";
                 return $tabla;
@@ -78,10 +78,10 @@
          */
         public static function define_grupo($grupo)
         {    
-               if($grupo=="CABINAS PERU")  
-                   return "id_carrier_groups=301 OR id_carrier_groups=443";
-               else   
-                   return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
+            if($grupo=="CABINAS PERU")  
+                return "id_carrier_groups=301 OR id_carrier_groups=443";
+            else   
+                return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
         }
         /**
          * sql para el reporte soa
@@ -99,13 +99,21 @@
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+                 and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)
                  $no_disp                
                  UNION
                  select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		 and a.id_type_accounting_document IN (10,11) and a.confirm != -1
+		 and a.id_type_accounting_document IN (10) and a.confirm != -1
+		 group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
+                 UNION
+                 select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
+                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                 where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
+                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
+		 and a.id_type_accounting_document IN (11) and a.confirm != -1
 		 group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
                  UNION 
                  select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 

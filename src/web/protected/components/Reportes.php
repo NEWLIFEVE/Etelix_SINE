@@ -100,27 +100,15 @@ class Reportes extends CApplicationComponent
                and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
         switch ($tipo_report) 
         {
-            case "soa":
+            case "soa":case "balance":
                     if($no_disp=="No")
                     {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+                       $disp_sql=" ";
                     }
                     else
                     {
                        $disp_sql="$body
                                   and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
-                    }
-                return $disp_sql;
-                break;
-            case "balance":
-                    if($no_disp=="No")
-                    {
-                       $disp_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
-                    }
-                    else
-                    {
-                       $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8)) ";
                     }
                 return $disp_sql;
                 break;
@@ -146,12 +134,12 @@ class Reportes extends CApplicationComponent
        
         if($no_prov=="No")
         {
-            $prov_sql="and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)";
+            $prov_sql="";
         }
         else
         {
             $prov_sql="$body 
-                       and a.id_type_accounting_document NOT IN (5,6,10,11) and a.confirm != -1";
+                       and a.id_type_accounting_document  IN (12,13) and a.confirm != -1";
         }
         return $prov_sql; 
     }
@@ -180,16 +168,13 @@ class Reportes extends CApplicationComponent
         $bf= substr($model->doc_number, 0, 2) ;  
         switch ($model->id_type_accounting_document){
             case "3":
-                if($bf=="bf")
-                    $description="BF - Etelix to ".$model->group;
-                    else
                     $description="WT - Etelix to ".$model->group;
                 break;
             case "4":
-                if($bf=="bf")
-                    $description="BF - ".$model->group." to Etelix";
-                    else
                     $description="WT - ".$model->group." to Etelix";
+                break;
+            case "14":
+                    $description="BF - ".$model->group." to Etelix";
                 break;
             case "9":
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
@@ -227,7 +212,7 @@ class Reportes extends CApplicationComponent
     public static function define_to_date($model,$due_date)
     {
         switch ($model->id_type_accounting_document){
-            case "3": case "4":case "9":
+            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":
                 $to_date="";
                 break;
             default:
@@ -246,6 +231,9 @@ class Reportes extends CApplicationComponent
         switch ($model->id_type_accounting_document){
             case "3": case "4":
                 $estilos=" style='background:silver;color:black;border:1px solid black;'";
+                break;
+            case "14":
+                $estilos=" style='background:#E5EAF5;color:black;border:1px solid black;'";
                 break;
             case "5": case "6":
                 $estilos=" style='background:white;color:red;border:1px solid black;'";
@@ -434,7 +422,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_cobros($model)
     {
-        if ($model->id_type_accounting_document==4){
+        if ($model->id_type_accounting_document==4||$model->id_type_accounting_document==14){
             return Yii::app()->format->format_decimal($model->amount,3);
         }else{
             return "";
@@ -468,7 +456,7 @@ class Reportes extends CApplicationComponent
             case "1":case "3":case "6":case "7":case "10":case "12":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "5":case "8":case "11":case "13":
+            case "2":case "4":case "5":case "8":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
                 break;
         }
@@ -499,7 +487,7 @@ class Reportes extends CApplicationComponent
     public static function define_total_cobro($model,$acumuladoCobro)
     {
         switch ($model->id_type_accounting_document){        
-            case "4":
+            case "4":case "14":
                 return $acumuladoCobro + $model->amount;
                 break;
             default:

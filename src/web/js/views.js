@@ -7,7 +7,7 @@
    * funcion encargada de cambiar estilos y comportamiento de menu principal de reportes
    * @access public
    */
-  $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov').on('click',function()
+  $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis').on('click',function()
   {
         $SINE.UI.resolve_reports_menu($(this));
         $SINE.UI.elijeOpciones($(this));
