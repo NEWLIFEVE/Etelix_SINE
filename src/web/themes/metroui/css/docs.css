@@ -98,7 +98,7 @@ footer {
 }   
  ::-webkit-scrollbar-track-piece:hover
 {
-    background-color: white;
+    background-color: #D8D8D8;
 }   
 ::-webkit-scrollbar-thumb 
 {       
@@ -107,7 +107,8 @@ footer {
 }
 ::-webkit-scrollbar-thumb:hover 
 {       
-    background: #16499a;    
+    /*background: #16499a;*/
+    background: #12408A;
 }
 
 ::selection {

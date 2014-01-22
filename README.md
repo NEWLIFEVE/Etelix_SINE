@@ -5,6 +5,19 @@ Sistema de Reportes para Billing
 
 - Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
 
+Relase 1.2.2
+-Cambios en SOA y BALANCE:
+se muestra en los reportes el bank fee derivado de los cobros
+(se acordo que los cobros se guardan como salen reflejados en el banco, y los bank fee se guardan como resultado del valor mostrado en el banco - el monto de la factura o el deposito, asi que en el soa y balance, el bank fee actuara tal cual como los cobros).
+
+Relase 1.2.1
+-Cambios en SOA y BALANCE:
+       -consultas modificadas para traer provisiones y disputas de forma correctas
+       -las provisiones no tienen due date.
+
+-Cambios generales:
+       -nuevo boton para imprimir la vista previa de los reportes.
+
 Realese 1.0.1
 -Cambios en SOA:
        -Color para las filas en gris cuando son Pagos o Cobros
@@ -25,11 +38,5 @@ Release 0.0.1
 
 
 
-relase 1.2.1
--Cambios en SOA y BALANCE:
-       -consultas modificadas para traer provisiones y disputas de forma correctas
-       -las provisiones no tienen due date.
 
--Cambios generales:
-       -nuevo boton para imprimir la vista previa de los reportes.
 
