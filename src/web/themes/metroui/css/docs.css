@@ -77,11 +77,11 @@ footer {
 }
 ::-webkit-scrollbar 
 {
-    width: 12px;    
+    width: 8px;    
 }
 ::-webkit-scrollbar-button
 {       
-    background: white;
+    background: #2E62B4;
     height: 23px;  
 }
 ::-webkit-scrollbar-button:hover
@@ -94,7 +94,11 @@ footer {
 }
  ::-webkit-scrollbar-track-piece 
 {
-    background-color: white;
+    background-color: #2E62B4;
+}   
+ ::-webkit-scrollbar-track-piece:hover
+{
+    background-color: #D8D8D8;
 }   
 ::-webkit-scrollbar-thumb 
 {       
@@ -103,7 +107,8 @@ footer {
 }
 ::-webkit-scrollbar-thumb:hover 
 {       
-    background: #16499a;    
+    /*background: #16499a;*/
+    background: #12408A;
 }
 
 ::selection {
@@ -250,13 +255,14 @@ div.login.error input#LoginForm_password
     transform: rotate(-90deg);
     width: 10%;
     margin-left: -20%;
+    font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
 }
 .listadeReportes
 {
     border-right: 7px solid #2E62B4;
-    height: 485px;
+    height: 539px;
     width: 358px;
-    margin-top: -25%;
+    margin-top: -34%;
     background: white; 
     position: relative;
 } 
@@ -264,7 +270,7 @@ div.login.error input#LoginForm_password
 {
     height: 485px;
     width: 358px;
-    margin-top: -27%;
+    margin-top: -29%;
     position: relative;
 } 
 .Reportes
@@ -542,12 +548,13 @@ select
 }
 .imprimir
 {
-    color:white;
-    background: black;
+    color: white;
+    background: #2E62B4;
     position: fixed;
-    width: 50px;
-    opacity: 0.8;
-    margin-left: 867px;
+    width: 83px;
+    opacity: 0.5;
+    margin-left: 955px;
+    margin-top: 473px;
 }
 .imprimir:hover
 {

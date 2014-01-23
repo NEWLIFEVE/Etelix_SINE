@@ -25,7 +25,7 @@ $SINE.UI=(function()
          */
         function resolve_reports_menu(selec)
 	{
-            var params = $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov');
+            var params = $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis');
             params.children().removeClass('h1_reportClick').addClass('h1_report');
             params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
             params.removeAttr('style');
@@ -79,6 +79,10 @@ $SINE.UI=(function()
                   break; 
                 case "refi_prov": 
                     var mostrar =['.termino_pago,.fecha']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  break;
+                case "redis": 
+                    var mostrar =['.trabajando']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
             }
@@ -213,6 +217,9 @@ $SINE.UI=(function()
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
                 break               
+            case 'redis':
+                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                break               
            }
            console.log(respuesta);
            return respuesta;
@@ -291,13 +298,14 @@ $SINE.UI=(function()
         function imprimir(div)
         {
             var imp,
-            contenido=$(div).clone().html();                    //seleccionamos el objeto
-            imp = window.open(" SINE ","Formato de Impresion"); //damos un titulo
-            imp.document.open();                                //abrimos
-            imp.document.write(contenido);                      //agregamos el objeto
+            contenido=$(div).clone().html();                    //selecciona el objeto
+            imp = window.open(" SINE ","Formato de Impresion"); // titulo
+            imp.document.open();                                //abre la ventana
+            //imp.document.write('style: ...');                 //css
+            imp.document.write(contenido);                      //agrega el objeto
             imp.document.close();
-            imp.print();                                        //Abrimos la opcion de imprimir
-            imp.close();                                        //cerramos la ventana nueva
+            imp.print();                                        //Abre la opcion de imprimir
+            imp.close();                                        //cierra la ventana nueva
         };
 	/**
 	 * Retorna los mestodos publicos

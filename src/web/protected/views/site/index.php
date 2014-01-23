@@ -8,10 +8,10 @@ $this->pageTitle = Yii::app()->name;
 ?>
 
 <article class='titulo90'>
-            SINE
+            SINE 
 </article>
     
-<div class='subtitulos'><h1>Seleccione reporte</h1></div>
+<div class='subtitulos'><h2>Seleccione reporte</h2></div>
 
 <div class="listadeReportesscroll">
     <div class="listadeReportes">
@@ -37,6 +37,9 @@ $this->pageTitle = Yii::app()->name;
         
         <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
+        </div><br>
+        <div class="Reportes REDIS" id="redis">
+            <h1 class='h1_report h1REDIS'>REDIS</h1>
         </div><br>
     </div>
 </div>
