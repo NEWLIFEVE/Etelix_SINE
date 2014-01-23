@@ -63,11 +63,9 @@ return array(
 			),
 		),
         'db'=>array(
-              'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
-//            'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=test_sori',
+            'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
-//            'password'=>'123
             'password'=>'Nsusfd8263',
             'charset'=>'utf8',
             ),
@@ -95,6 +93,6 @@ return array(
     // using Yii::app()->params['paramName']
     'params'=>array(
         // this is used in contact page
-        'adminEmail'=>'manuel@newlifeve.com',
+        'adminEmail'=>'manuelz@sacet.biz',
         ),
     );
