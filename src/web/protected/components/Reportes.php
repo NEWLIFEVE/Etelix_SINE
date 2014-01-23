@@ -639,5 +639,18 @@ class Reportes extends CApplicationComponent
 
         return $termino_pago[$key];
     }
+    /**
+     * este metodo es usado para obtener la diferencia en minutos y montos en los reportes refac y reprov, para que no las muestre vacias cuando sean exactamente iguales
+     * @param type $varA
+     * @param type $varB
+     * @return string
+     */
+    public static function diferenceInvoiceReport($varA,$varB)
+    {
+        if($varA!=$varB)
+            return $varA-$varB;
+        else
+            return "0.00";
+    }
 }
 ?>
