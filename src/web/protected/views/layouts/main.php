@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="<?php echo Yii::app()->language;?>">
     <head>
-        <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+       <!-- <title><?php echo CHtml::encode($this->pageTitle); ?></title>
         <meta charset="<?php echo Yii::app()->charset;?>">
         <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/metro-bootstrap.css" rel="stylesheet" type="text/css">
         <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/metro-bootstrap-responsive.css" rel="stylesheet" type="text/css">
         <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/docs.css" rel="stylesheet" type="text/css">
         <link href="<?php echo Yii::app()->theme->baseUrl; ?>/js/prettify/prettify.css" rel="stylesheet">
-        
-        <?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
-        <?php Yii::app()->clientScript->registerCoreScript('jquery.ui'); ?>
         <?php Yii::app()->clientScript->registerCssFile(Yii::app()->clientScript->getCoreScriptUrl().'/jui/css/base/jquery-ui.css'); ?>
-        <?php // Yii::app()->clientScript->registerCssFile(Yii::app()->assetManager->publish(Yii::app()->basePath . '/vendors/jquery.ui/redmond/').'/jquery-ui-1.8.11.custom.css', 'screen'); ?>
         
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery.widget.min.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery.mousewheel.js"></script>
@@ -21,12 +17,12 @@
         <!--<script src="<?php // echo Yii::app()->theme->baseUrl; ?>/js/metro/metro-loader.js"></script>-->
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/metro/metro-dropdown.js"></script>
         <!-- Local JavaScript -->
-        <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/docs.js"></script>
+        <!--<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/docs.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/github.info.js"></script>
         
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery.ui.datepicker-es.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery-ui-timepicker-addon.js"></script>
-        <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/favicon.ico" type="image/x-icon"/> 
+        <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/favicon.ico" type="image/x-icon"/> -->
     </head>
     <body class="metro">
         <header class="bg-dark">
