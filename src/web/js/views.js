@@ -48,3 +48,7 @@
   {   
         $SINE.UI.agrega_Val_radio($(this),$('#No_disp, #Si_disp'));
   });
+  $('.views_not').on('click',function()
+  {
+       $(this).remove();
+  });

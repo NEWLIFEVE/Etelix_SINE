@@ -428,7 +428,7 @@ img.oculta
     position: fixed;
     right: 0px;
     height: 112%;
-    margin-top: -570px;
+    margin-top: -552px;
     opacity: 0.5;
     padding-top: 4%;
     width: 12%;
@@ -505,6 +505,27 @@ li.ui-menu-item a
     z-index: 1030;
     display:none;
 }
+.views_not
+{
+    background-color: rgba(0,0,0,0.4);
+    content: "";
+    height: 11%;
+    position: fixed;
+    text-align: center;
+    top: 48px;
+    left: 2%;
+    width: 96%;
+    z-index: 1030;
+    display:none;
+}
+.views_not:hover
+{
+    background-color: rgba(0,0,0,0.7);
+}
+.h1_views_not
+{
+    color:white!important;
+}
 .mensaje
 {
     background-color: white;
@@ -516,6 +537,19 @@ li.ui-menu-item a
     text-align: center;
     width: 490px;
     z-index: 1031;
+}
+.fancybox
+{
+    background-color: white;
+    color: #6E6E6E;
+    margin: -37% 16% auto;
+    padding: 23px 30px 43px 28px;
+    position: fixed;
+    text-align: left;
+    width: 960px;
+    z-index: 1031;
+    height: 583px;
+    overflow-y: scroll;
 }
 
 select 

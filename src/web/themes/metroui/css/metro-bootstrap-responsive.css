@@ -16,11 +16,12 @@
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
     #ui-datepicker-div {width: 26%!important;}
+    .fancybox {left: -6%!important;top: 70%;}
 }
-
-@media (min-width: 980px) 
+@media (min-width: 800px) and (max-width: 1100px) 
 {
-  
+    .fancybox {left: -12%;top: 64%;width: 871px!important;}
+    .imprimir{margin-left: 817px!important;margin-top: 432px!important;}
 }
 @media (min-width: 768px) and (max-width: 979px) 
 {
@@ -30,6 +31,9 @@
     .barra_tools_click {width: 20%!important;}
     .disputas {margin-left: -1px!important;}
     #ui-datepicker-div {width: 32%!important;}
+    .fancybox {left: -15%!important;top: 64%;width: 844px!important;}
+    .imprimir{margin-left: 731px!important;margin-top: 390px!important;}
+    .mensaje{margin: -49% 22% auto!important;}
 }
 @media (max-width: 767px) 
 {
@@ -40,6 +44,9 @@
      .disputas {margin-left: -1px!important;}
      #botones_exportar { margin-top: 188px!important;}
      #ui-datepicker-div {width: 55%!important;}
+     .mensaje{margin: -61% 9% auto!important;}
+     #previa{display:none!important;}
+     .views_not{display:block!important;}
 }
 
 /*@media only screen and (max-width: 320px) {}*/
@@ -56,8 +63,8 @@
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 444px!important;}
     .formulario{padding-left: 8%!important;background: white;height: 600px!important;margin-top: -489px!important;width: 57%!important;position: absolute!important;margin-left: -3%!important;}
     #botones_exportar {margin-left: -23%!important;margin-top: -2%!important;}
-    .barra_tools_click {left: -41px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
-    .mensaje {margin: -107% -13% auto!important;width: 421px!important;} 
+    .barra_tools_click {left: -11px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
+    .mensaje {margin: -88% 5% auto!important;width: 421px!important;} 
     input{width: 328px!important;}
     .disputas {margin-left: 0%!important;}
     .provisiones{width: 277px!important}
@@ -86,7 +93,7 @@
     .disputas {margin-left: -47%!important;}
     .provisiones{width: 192px!important}
     #botones_exportar {margin-left: -15%!important;margin-top: -2%!important;}
-    .barra_tools_click {left: -29px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
+    .barra_tools_click {left: -20px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
     #id_termino_pago {width: 298px!important;}

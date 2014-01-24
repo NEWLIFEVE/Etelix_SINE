@@ -285,10 +285,11 @@ $SINE.UI=(function()
          */
         function fancy_box(cuerpo)
         {
-            $(".mensaje").css("width", "960").css("text-align", "left").css("margin", "-37% 16% auto").css("overflow", "scroll").css("height", "583px").css("display", "none");
-            $(".mensaje").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'><img src='/images/print_hover.png'class='oculta'></div><div class='a_imprimir'>"+cuerpo+"</div>");
+            $(".mensaje").addClass("fancybox").removeClass("mensaje");
+            $(".fancybox").css("display", "none");
+            $(".fancybox").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'></div><div class='a_imprimir'>"+cuerpo+"</div>");
             $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
-            $('.fondo_negro').on('click',function () { $(".fondo_negro, .mensaje").fadeOut('slow');});
+            $('.fondo_negro').on('click',function () { $(".fondo_negro, .fancybox").fadeOut('slow');});
         }
         /**
          * 

@@ -117,3 +117,4 @@ $this->pageTitle = Yii::app()->name;
         </div>
     </footer>
 </div>
+<div class="views_not"><h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4></div>
