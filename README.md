@@ -9,6 +9,7 @@ Relase 1.2.2
 -Cambios en SOA y BALANCE:
 se muestra en los reportes el bank fee derivado de los cobros
 (se acordo que los cobros se guardan como salen reflejados en el banco, y los bank fee se guardan como resultado del valor mostrado en el banco - el monto de la factura o el deposito, asi que en el soa y balance, el bank fee actuara tal cual como los cobros).
+- Mejoras en refac y repov, cuando las diferencias son 0, ya no se muestra el espacio en blanco, se arreglo para que en caso de ser exactamente iguales, muestre 0,00.
 
 Relase 1.2.1
 -Cambios en SOA y BALANCE:

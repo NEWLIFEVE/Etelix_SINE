@@ -63,17 +63,12 @@ return array(
 			),
 		),
         'db'=>array(
-<<<<<<< HEAD
-//            'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
-=======
 //              'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
->>>>>>> 4e6006347788529736bfea0f7d88d8815725cc1f
             'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=test_sori',
-			'emulatePrepare'=>true,
-			'username'=>'postgres',
+            'emulatePrepare'=>true,
+            'username'=>'postgres',
 //            'password'=>'Nsusfd8263',
             'password'=>'123',
-//            'password'=>'Nsusfd8263',
             'charset'=>'utf8',
             ),
         'errorHandler'=>array(
