@@ -8,6 +8,7 @@ class Reportes extends CApplicationComponent
     {
        
     }
+
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -22,6 +23,7 @@ class Reportes extends CApplicationComponent
         $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
         return $var;
     }
+
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -35,6 +37,7 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp,$grupoName);
         return $var;
     }
+
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
@@ -47,6 +50,7 @@ class Reportes extends CApplicationComponent
         $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
+
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
@@ -59,8 +63,8 @@ class Reportes extends CApplicationComponent
         $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
         return $var;
     }
-        /**
-     * 
+
+    /**
      * @param type $fecha_from
      * @param type $fecha_to
      * @param type $tipo_report
@@ -71,6 +75,7 @@ class Reportes extends CApplicationComponent
         $var=Recredi::reporte($fecha);
         return $var;
     }
+
     /**
      * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 
      * o en su caso especial, en cabinas peru, va a traer una serie de grupos pertenecientes a este...aun hay que meterle otras cosas a SOA para complementarlo
@@ -84,6 +89,7 @@ class Reportes extends CApplicationComponent
         else   
             return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
+
     /**
      * define si la consulta traera las disputas o no
      * si es diferente de null, el sql es standar, es decir, traera las disputas, sino, entonces el sql no traera las disputas, 
@@ -94,10 +100,9 @@ class Reportes extends CApplicationComponent
     public static function define_disp($no_disp,$tipo_report,$grupo,$fecha)
     {
         $body="UNION
-               select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
-               from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-               where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-               and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
+               SELECT a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+               FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+               WHERE a.id_carrier IN(Select id from carrier where $grupo) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$fecha}'";
         switch ($tipo_report) 
         {
             case "soa":case "balance":
@@ -108,7 +113,7 @@ class Reportes extends CApplicationComponent
                     else
                     {
                        $disp_sql="$body
-                                  and a.id_type_accounting_document IN (5,6) and a.id_accounting_document NOT IN (select id_accounting_document from accounting_document where id_type_accounting_document IN (7,8))";
+                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8))";
                     }
                 return $disp_sql;
                 break;
@@ -117,6 +122,7 @@ class Reportes extends CApplicationComponent
                 break;
         }
     }
+
     /**
      * 
      * @param type $no_prov
@@ -127,10 +133,9 @@ class Reportes extends CApplicationComponent
     public static function define_prov($no_prov,$grupo,$fecha)
     {
         $body="UNION
-               select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name as currency 
-               from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-               where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-               and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'";
+               SELECT a.issue_date, a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, a.from_date, a.to_date, a.doc_number, a.amount, s.name AS currency
+               FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+               WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$fecha}'";
        
         if($no_prov=="No")
         {
@@ -143,6 +148,7 @@ class Reportes extends CApplicationComponent
         }
         return $prov_sql; 
     }
+
     /**
      * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
      * no obstante tambien es usado en refac y refi_prov, se usa en parte para determinar el from_date de estos 
@@ -202,6 +208,7 @@ class Reportes extends CApplicationComponent
         }
         return $description;
     }
+
     /**
      * la regla es que para pagos y cobros, no hay due date, por lo que se coloca el mismo issue_date, 
      * y por defecto para los demas es el dua_date determinado por ...::define_dua_date
@@ -220,6 +227,7 @@ class Reportes extends CApplicationComponent
         }
         return $to_date;
     }
+
     /**
      * define el estilo de los tr dependiendo del tipo de documento contable, por los momentos solo define el estilo de pagos-cobros, 
      * disputas-notas de credito, donde el primer grupo es background:silver y el segundo grupo es fuente color: red...
@@ -253,6 +261,7 @@ class Reportes extends CApplicationComponent
         }
         return $estilos;
     }
+
     /**
      * deja los bordes en cero y el fonde en blaco para los tr  de las tabla, por ejemplo en el tr de totales, para que solo resalten los td donde hay informacion
      * @return string
@@ -262,6 +271,7 @@ class Reportes extends CApplicationComponent
         $estilos = " style='background:white;color:black;border:1px solid white;'";
         return $estilos;
     }
+
     /**
      * define el estilo de los td�s td donde se alojen totales en los reportes
      * @return string
@@ -271,6 +281,7 @@ class Reportes extends CApplicationComponent
         $estilos = " style='background:white;color:black;border:1px solid black;'";
         return $estilos;
     }
+
     /**
      * 
      * @param type $val
@@ -286,6 +297,7 @@ class Reportes extends CApplicationComponent
            }
         return $style_basic;
     }
+
     /**
      * 
      * @param type $val
@@ -315,6 +327,7 @@ class Reportes extends CApplicationComponent
         else $afavor="Balance in favor of Etelix";
         return $afavor;
     }
+
     /**
      * en este caso solo multiplica por -1 el acumulado de ser negativo para asi mostralo en el reporte, sino es negativo, normal, no hace nada
      * @param type $acumulado
@@ -325,6 +338,7 @@ class Reportes extends CApplicationComponent
         if($acumulado < 0)$acumulado=$acumulado*-1;
         return $acumulado;
     }
+
     /**
      * define las facturas enviadas en reporte SOA
      * @param type $model
@@ -332,16 +346,24 @@ class Reportes extends CApplicationComponent
      */  
     public static function define_fact_env($model)
     {
-        if ($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12){
+        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }elseif($model->id_type_accounting_document==9 && $model->amount>=0){
+        }
+        elseif($model->id_type_accounting_document==9 && $model->amount>=0)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7){
+        }
+        elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7)
+        {
             return "-".Yii::app()->format->format_decimal($model->amount,3);
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define la moneda para facturas enviadas en SOA
      * @param type $model
@@ -349,14 +371,20 @@ class Reportes extends CApplicationComponent
      */
     public static function define_currency_fe($model)/*deprecated*/
     {
-        if ($model->id_type_accounting_document==1){
+        if($model->id_type_accounting_document==1)
+        {
             return $model->currency;
-        }elseif($model->id_type_accounting_document==7){
+        }
+        elseif($model->id_type_accounting_document==7)
+        {
             return "-".$model->currency;
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define facturas recibidas en SOA
      * @param type $model
@@ -364,16 +392,24 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fact_rec($model)
     {
-        if ($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13){
+        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }elseif($model->id_type_accounting_document==9 && $model->amount<0){
+        }
+        elseif($model->id_type_accounting_document==9 && $model->amount<0)
+        {
             return Yii::app()->format->format_decimal(($model->amount)*-1,3);
-        }elseif($model->id_type_accounting_document==6||$model->id_type_accounting_document==8){
+        }
+        elseif($model->id_type_accounting_document==6||$model->id_type_accounting_document==8)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define la moneda para facturas recibidas en SOA
      * @param type $model
@@ -381,14 +417,20 @@ class Reportes extends CApplicationComponent
      */
     public static function define_currency_fr($model)/*deprecated*/
     {
-        if ($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9){
+        if($model->id_type_accounting_document==2 || $model->id_type_accounting_document==9)
+        {
             return $model->currency;
-        }elseif($model->id_type_accounting_document==8){
+        }
+        elseif($model->id_type_accounting_document==8)
+        {
             return $model->currency."-";
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define pagos en SOA
      * @param type $model
@@ -396,12 +438,16 @@ class Reportes extends CApplicationComponent
      */    
     public static function define_pagos($model)
     {
-        if ($model->id_type_accounting_document==3){
+        if($model->id_type_accounting_document==3)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define moneda en pagos para SOA
      * @param type $model
@@ -409,12 +455,16 @@ class Reportes extends CApplicationComponent
      */
     public static function define_currency_p($model)/*deprecated*/
     {
-        if ($model->id_type_accounting_document==3){
+        if($model->id_type_accounting_document==3)
+        {
             return $model->currency;
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define cobros en SOA
      * @param type $model
@@ -422,12 +472,16 @@ class Reportes extends CApplicationComponent
      */
     public static function define_cobros($model)
     {
-        if ($model->id_type_accounting_document==4||$model->id_type_accounting_document==14){
+        if($model->id_type_accounting_document==4||$model->id_type_accounting_document==14)
+        {
             return Yii::app()->format->format_decimal($model->amount,3);
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define la moneda para cobros en SOA
      * @param type $model
@@ -435,12 +489,16 @@ class Reportes extends CApplicationComponent
      */
     public static function define_currency_c($model)/*deprecated*/
     {
-        if ($model->id_type_accounting_document==4){
+        if($model->id_type_accounting_document==4)
+        {
             return $model->currency;
-        }else{
+        }
+        else
+        {
             return "";
         }
     }
+
     /**
      * define monto del balance en SOA, en si es la ultima columna del reporte, pero esta para ser desarrollada, necesita de las demas
      * @param type $model
@@ -449,7 +507,8 @@ class Reportes extends CApplicationComponent
      */
     public static function define_balance_amount($model,$acumulado)
     {
-        switch ($model->id_type_accounting_document){
+        switch ($model->id_type_accounting_document)
+        {
             case "9":
                 return $model->amount;
                 break;
@@ -461,6 +520,7 @@ class Reportes extends CApplicationComponent
                 break;
         }
     }
+
     /**
      * determina el total de pagos, por ahora solo tiene esa funcion 
      * @param type $model
@@ -469,7 +529,8 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_pago($model,$acumuladoPago)
     {
-        switch ($model->id_type_accounting_document){        
+        switch($model->id_type_accounting_document)
+        {        
             case "3":
                 return $acumuladoPago + $model->amount;
                 break;
@@ -478,6 +539,7 @@ class Reportes extends CApplicationComponent
                 break;
         }
     }
+
     /**
      * determina el total de cobros, por ahora solo tiene esa funcion
      * @param type $model
@@ -495,6 +557,7 @@ class Reportes extends CApplicationComponent
                 break;
         }
     }
+
     /**
      * Calcula total de facturas recibidas, para incluir en el total el saldo final, este debe ser negativo, y entonces el mismo seria restado para ello se multiplica por -1 antes de hacer la operacion, en si, el saldo se le descuenta al total. en el caso de las notas de credito, estas se le sumaran al total
      * @param type $model
@@ -503,14 +566,24 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_rec($model,$acumuladoFacRec)
     {
-        if ($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13){
-                return $acumuladoFacRec + $model->amount; }
-            elseif($model->id_type_accounting_document==9 && $model->amount<0){
-                return $acumuladoFacRec - ($model->amount*-1); }
-            elseif($model->id_type_accounting_document==8) {
-                return $acumuladoFacRec + $model->amount;}
-            else{return $acumuladoFacRec;} 
+        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13)
+        {
+            return $acumuladoFacRec + $model->amount;
+        }
+        elseif($model->id_type_accounting_document==9 && $model->amount<0)
+        {
+            return $acumuladoFacRec - ($model->amount*-1);
+        }
+        elseif($model->id_type_accounting_document==8)
+        {
+            return $acumuladoFacRec + $model->amount;
+        }
+        else
+        {
+            return $acumuladoFacRec;
+        } 
     }
+
     /**
      * Calcula total de facturas enviadas, para incluir en el total el saldo final, este debe ser positivo, y entonces el mismo seria sumado al total. en el caso de las notas de credito, estas se le restarian al total
      * @param type $model
@@ -519,14 +592,24 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_env($model,$acumuladoFacEnv)
     {
-        if ($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12){
-                return $acumuladoFacEnv + $model->amount; }
-            elseif($model->id_type_accounting_document==9 && $model->amount>0){
-                return $acumuladoFacEnv + $model->amount; }
-            elseif($model->id_type_accounting_document==7) {
-                return $acumuladoFacEnv - $model->amount;}
-            else{return $acumuladoFacEnv;} 
+        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12)
+        {
+            return $acumuladoFacEnv + $model->amount;
+        }
+        elseif($model->id_type_accounting_document==9 && $model->amount>0)
+        {
+            return $acumuladoFacEnv + $model->amount;
+        }
+        elseif($model->id_type_accounting_document==7)
+        {
+            return $acumuladoFacEnv - $model->amount;
+        }
+        else
+        {
+            return $acumuladoFacEnv;
+        } 
     }
+
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
@@ -535,7 +618,8 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fecha_from($tp, $fecha_to)
     {
-        switch ($tp) {
+        switch($tp)
+        {
             case 7:
                 return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
                 break;
@@ -552,47 +636,51 @@ class Reportes extends CApplicationComponent
                 break;
         }
     }
+
     /**
      * determina el numero de dias entre fechas, para asi definir si el periodo es diario, semanal,quincenal y mensual con el uso de define_periodo, por ahora solo para REFAC
      * @param type $fecha_first
      * @param type $fecha_last
      * @return type
      */
-     public static function define_num_dias($fecha_first,$fecha_last)
-     {
-         $from_date =strtotime($fecha_first);
-         $to_date =strtotime($fecha_last);
-              $from = date("d",$from_date );
-              $to = date("d",$to_date );
-          $result_dias= $from - $to;
-          $resultadoPeriodo=Reportes::define_periodo($result_dias);
+    public static function define_num_dias($fecha_first,$fecha_last)
+    {
+        $from_date=strtotime($fecha_first);
+        $to_date=strtotime($fecha_last);
+        $from=date("d",$from_date);
+        $to=date("d",$to_date);
+        $result_dias=$from-$to;
+        $resultadoPeriodo=Reportes::define_periodo($result_dias);
         return $resultadoPeriodo;
-     }
-     /**
-      * complementa a define_num_dias, primero pasa por esa para determinar el numero de dias, y en base a eso esta funcion determina el tipo de periodo
-      * @param type $var
-      * @return string
-      */
-     public static function define_periodo($var)
-     {
-         if($var<0) $var=$var*-1;
+    }
+
+    /**
+     * complementa a define_num_dias, primero pasa por esa para determinar el numero de dias, y en base a eso esta funcion determina el tipo de periodo
+     * @param type $var
+     * @return string
+     */
+    public static function define_periodo($var)
+    {
+        if($var<0) $var=$var*-1;
          
-         if($var=="6"||$var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
+        if($var=="6"||$var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
          
-         if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
+        if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
          
-         if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
-     }
-     /**
-      * define acumulado de totales de sori en refac y refi prov
-      * @param type $model
-      * @param type $acumulado_facturas
-      * @return type
-      */
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
+    }
+
+    /**
+     * define acumulado de totales de sori en refac y refi prov
+     * @param type $model
+     * @param type $acumulado_facturas
+     * @return type
+     */
     public static function define_total_facturas($model,$acumulado_facturas)
     {
         return $acumulado_facturas + $model->amount;
     }
+
     /**
      * define acumulado de totales de provisiones en refac y refi prov
      * @param type $model
@@ -601,9 +689,9 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_provisiones($model,$acumulado_provisiones)
     {
-//        return $acumulado_provisiones + $model->revenue;
         return $acumulado_provisiones + $model->amount;
     }
+
     /**
      * define acumulado de totales de diferencias en refac y refi prov
      * @param type $model
@@ -614,6 +702,7 @@ class Reportes extends CApplicationComponent
     {
         return $acumulado_diference + $diferencia;
     }
+
     /**
      * determina el numero de dias dependiendo del termino de pago. aplica para soa, refac y refi_prov
      * @param type $key
@@ -639,6 +728,7 @@ class Reportes extends CApplicationComponent
 
         return $termino_pago[$key];
     }
+    
     /**
      * este metodo es usado para obtener la diferencia en minutos y montos en los reportes refac y reprov, para que no las muestre vacias cuando sean exactamente iguales
      * @param type $varA
