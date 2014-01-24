@@ -13,6 +13,16 @@
 class TerminoPago extends CActiveRecord
 {
 	/**
+	 * Atributos utilizados para calculo de provisiones de proveedor
+	 */
+	public $month_break;
+
+	public $first_day;
+
+	public $payment_term;
+
+	public $billing_period;
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
