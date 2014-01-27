@@ -337,6 +337,7 @@ select, input
     width: 142px;
     float: right;
     margin-right: 10px;
+    margin-bottom: 2px;
 }
 
 img.ver
@@ -371,6 +372,33 @@ img.oculta
     position: absolute;
     margin-left: 0%;
 }
+
+#previa
+{
+    background-image:-webkit-linear-gradient(180deg, #06ACFA 87px, #10469B 50px);   
+} 
+#previa:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #35C7F5 87px, #166EB4 50px);    
+}
+#excel
+{
+    background-image:-webkit-linear-gradient(180deg, #049C47 87px, #10469B 50px);   
+} 
+#excel:hover 
+{
+    background-image:-webkit-linear-gradient(180deg, #0AB857 87px, #166EB4 50px);    
+}
+#mail
+{
+    background-image:-webkit-linear-gradient(180deg, #F0950C 87px, #10469B  50px);   
+} 
+#mail:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #ECA02D 87px, #166EB4 50px);    
+}
+
+
     /* < ESTILOS DE DATEPICKER UI*/
 .ui-state-default 
 {

@@ -100,20 +100,15 @@ $this->pageTitle = Yii::app()->name;
 <div class="barra_tools_click">
     <footer id="botones_exportar">
         <div id="previa" class="botones">
-                <img src="/images/previa.png" class='ver'>
-                <img src="/images/previa_hover.png" title='Vista previa del reporte' class='oculta'>
+                <img src="/images/previa.png" title='Vista previa del reporte'>
         </div>
-        
         <div id="excel" class="botones">
             <a class="excel_a">
-               <img src="/images/excel.png" class='ver'>
-               <img src="/images/excel_hover.png" title='Exportar Reportes en Excel' class='oculta'>  
+               <img src="/images/excel.png" title='Exportar Reportes en Excel'>
             </a>
         </div>
-
         <div id="mail" class="botones">
-            <img src="/images/mail.png" class='ver'>
-            <img src="/images/mail_hover.png" title='Enviar Reportes a su Correo Electronico' class='oculta'>
+            <img src="/images/mail.png" title='Enviar Reportes a su Correo Electronico'>
         </div>
     </footer>
 </div>
