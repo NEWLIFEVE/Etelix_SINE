@@ -105,5 +105,22 @@ class DateManagement
         $cant=$f-$i;
         return $cant/(60*60*24);
     }
+
+    /**
+     * Recibe como parametros una fecha y la cantidad de dias atras que debe para calcular una fecha
+     * @access public
+     * @static
+     * @param date $date
+     * @param int $num
+     * @return date
+     */
+    public static function getFirstDayPeriod($date,$num)
+    {
+        while (self::getDayNumberWeek($date)>$num)
+        {
+            $date=self::calculateDate('-1',$date);
+        }
+        return $date;
+    }
 }
 ?>
