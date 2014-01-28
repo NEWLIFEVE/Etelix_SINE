@@ -80,8 +80,8 @@ class InvoiceReport extends Reportes
                 {
                     $facturas_minutes=Yii::app()->format->format_decimal($facturas->minutes,3);
                     $facturas_amount=Yii::app()->format->format_decimal($facturas->amount,3);
-                    $dif_amount=Reportes::diferenceInvoiceReport($provision->amount,$facturas->amount);
-                    $dif_minutes=Reportes::diferenceInvoiceReport($provision->minutes,$facturas->minutes);
+                    $dif_amount=Reportes::diferenceInvoiceReport($facturas->amount,$provision->amount);
+                    $dif_minutes=Reportes::diferenceInvoiceReport($facturas->minutes,$provision->minutes);
                     $doc_number=$facturas->doc_number;
                     $acumulado_factura=Reportes::define_total_facturas($facturas,$acumulado_factura);
                     $style_basic_number=Reportes::estilos_num($dif_amount,"background:#F8CB3C;");
