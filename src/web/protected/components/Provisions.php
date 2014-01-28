@@ -48,6 +48,8 @@ class Provisions extends CApplicationComponent
     	$this->runInvoiceProvision(true);
     	//
     	$this->runInvoiceProvision(false);
+
+    	$this->sendNotification();
     }
 
 	/**
@@ -132,7 +134,8 @@ class Provisions extends CApplicationComponent
 	}
 
 	/**
-	 *
+	 * Se encargad de generar las provisiones de facturas
+	 * @param boolean $type true=clientes, false=proveedores
 	 */
 	public function runInvoiceProvision($type=true)
 	{
@@ -491,6 +494,24 @@ class Provisions extends CApplicationComponent
 			}
 		}
 		return $day;
+	}
+
+	public function sendNotification()
+	{
+		$body="<!DOCTYPE html>
+				<html lang='es'>
+					<head>
+						<title>Notificación</title>
+						<meta charset='utf-8'>
+					</head>
+					<body style='font-family:Segoe UI;'>
+						<header style='font-size:3em;'>Provisiones Generadas</header>
+						<section>Ya estan disponibles las provisiones hasta el día ".$this->date."</section>
+						<footer style='font-size:0.8em;'>Correo enviado automaticamente a las ".date("H:i:s A")."</footer>
+					</body>
+				</html>";
+		$user="mmzmm3z@gmail.com";
+		Yii::app()->mail->enviar($body, $user, "Provisiones Generadas");
 	}
 }
 ?>
