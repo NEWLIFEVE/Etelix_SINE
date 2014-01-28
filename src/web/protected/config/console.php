@@ -16,6 +16,9 @@ return array(
 	'components'=>array(
 		'provisions'=>array(
             'class'=>"application.components.Provisions",
+        ),
+        'mail'=>array(
+            'class'=>"application.components.EnviarEmail",
         ),		
 		'db'=>array(
             'connectionString'=>'pgsql:host=172.16.17.190;port=5432;dbname=sori',
