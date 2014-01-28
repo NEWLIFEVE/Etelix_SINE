@@ -67,7 +67,7 @@
                              </table>";
                 return $tabla;
             }else{
-                return 'No hay data, o por favor consulte en la distribucion comercial los carrier pertenecientes al grupo';
+                return 'No hay data, o puede que falte datos  en las condiciones comerciales de carrier pertenecientes al grupo';
             }
         }
         
