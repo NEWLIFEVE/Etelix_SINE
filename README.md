@@ -2,7 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
-
+- Corregida resta en REFAC y REPROV.
+- Creado boton de impresion de la vista previa del reporte
 - Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
 
 Relase 1.2.2
