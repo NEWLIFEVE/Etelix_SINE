@@ -11,13 +11,6 @@ $SINE.UI=(function()
  	function init()
  	{
  	}
-	/**
-	 * Metodo encargado de ejecutar las repectivas llamadas
-	 * @access public
-	 */
-	function accion()
-	{	
-	}
         /**
          * 
          * @param {type} selec
