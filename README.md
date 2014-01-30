@@ -2,6 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
+- Agregado Bank Fee
+- Mejorado responsive, al abrir desde un telefono, la aplicacion notifica que no estará disponible el vista previa
 - Corregida resta en REFAC y REPROV.
 - Creado boton de impresion de la vista previa del reporte
 - Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
