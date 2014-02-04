@@ -37,17 +37,20 @@
   /**
    * da valor a los radios de provisiones en reportes
    */
-  $('#No_prov, #Si_prov').on('click',function()
+  $('#No_prov, #Si_prov,#No_disp, #Si_disp').on('click',function()
   {   
-        $SINE.UI.agrega_Val_radio($(this),$('#No_prov, #Si_prov'));
+      switch ($(this).attr("id")){
+            case "No_prov": case "Si_prov": 
+                $SINE.UI.agrega_Val_radio($(this),$('#No_prov, #Si_prov'));
+                break;
+            case "No_disp": case "Si_disp": 
+                $SINE.UI.agrega_Val_radio($(this),$('#No_disp, #Si_disp'));
+                break;
+        }   
   });
   /**
    * da valor a los radios de disputas en reportes
    */
-  $('#No_disp, #Si_disp').on('click',function()
-  {   
-        $SINE.UI.agrega_Val_radio($(this),$('#No_disp, #Si_disp'));
-  });
   $('.views_not').on('click',function()
   {
        $(this).remove();
