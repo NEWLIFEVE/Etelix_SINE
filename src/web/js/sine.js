@@ -1,3 +1,7 @@
+$(document).on('ready',function()
+{
+     $SINE.AJAX.init();
+});
 /**
  * Objeto Global
  */
@@ -10,6 +14,31 @@ $SINE.UI=(function()
 {
  	function init()
  	{
+           $(function() 
+           {
+                 $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+           }); 
+           $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#previa,#mail,#excel,#views_not').on('click',function()
+           {   
+               switch ($(this).attr("id")){
+                     case "soa":case"balance":case"refac":case "refi_prov":case "waiver":case"recredi":case"redis": 
+                         $SINE.UI.resolve_reports_menu($(this));
+                         $SINE.UI.elijeOpciones($(this));
+                         break;
+                     case "No_prov": case "Si_prov": 
+                         $SINE.UI.agrega_Val_radio($(this),$('#No_prov, #Si_prov'));
+                         break;
+                     case "No_disp": case "Si_disp": 
+                         $SINE.UI.agrega_Val_radio($(this),$('#No_disp, #Si_disp'));
+                         break;
+                     case "previa": case "mail": case "excel": 
+                         $SINE.UI.export_report($(this));
+                         break;
+                     case "views_not":
+                         $(this).remove();
+                         break;
+                 }   
+           });
  	}
         /**
          * 
@@ -408,3 +437,11 @@ $SINE.constructor=(function()
  {
     $SINE.UI.init();
  })();
+ 
+//            /** se usaria en caso de ser necesario cambiar carrier-groups
+//            * cambia operador por grupo  grupo por operador
+//            */
+//           $('#chang_Oper_Grup,#chang_Grup_Oper').on('click',function()
+//           {   
+//                 $SINE.UI.resolvedButton($(this));
+//           });
