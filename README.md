@@ -6,6 +6,9 @@ Sistema de Reportes para Billing
 - Creado boton de impresion de la vista previa del reporte
 - Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
 
+Relase 1.2.3
+-cambio en reportes para que genere bank fee de pagos.
+
 Relase 1.2.2
 -Cambios en SOA y BALANCE:
 se muestra en los reportes el bank fee derivado de los cobros
