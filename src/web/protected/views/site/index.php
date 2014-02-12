@@ -67,16 +67,16 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <div class="formInputs termino_pago">
-            <h3>Periódo</h3>
-            <select name="id_termino_pago" id="id_termino_pago">
+        <div class="formInputs periodo">
+            <h3>Período</h3>
+            <select name="id_periodo" id="id_periodo">
             <option value="">Seleccione</option>
             <option value="7">SEMANAL</option>
             <option value="15">QUINCENAL</option>
             <option value="30">MENSUAL</option>
             </select> 
         </div>
-        
+
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provision Fact</h3>
             <div class="btn-group" data-toggle="buttons-radio">

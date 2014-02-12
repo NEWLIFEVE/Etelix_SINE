@@ -89,7 +89,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.termino_pago,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.trabajando'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -101,7 +101,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   break; 
                 case "refac":
-                    var mostrar =['.termino_pago,.fecha']; 
+                    var mostrar =['.periodo,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "waiver":
@@ -113,7 +113,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
-                    var mostrar =['.termino_pago,.fecha']; 
+                    var mostrar =['.periodo,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break;
                 case "redis": 
@@ -235,16 +235,16 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
                 break               
             case 'refac':
-                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
             case 'recredi':
                 var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'refi_prov':
-                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
             case 'redis':
-                var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
            }
            console.log(respuesta);
@@ -405,6 +405,8 @@ $SINE.AJAX=(function()
 	function init()
 	{
 		_getNamesCarriers();
+//                _updateFactPeriod();
+//                _updateTerminoPago();
 	}
         /**
         * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
@@ -428,6 +430,24 @@ $SINE.AJAX=(function()
                  }
             });
         }
+//        function _updateFactPeriod()
+//        {
+//            $.ajax({url:"/site/updateFactPeriod",success:function(data)
+//                {
+//                    console.log(data);
+//                    $("#id_periodo_Supp").append(data);
+//                }
+//            });
+//        }
+//        function _updateTerminoPago()
+//        {
+//            $.ajax({url:"/site/updateTerminoPago",success:function(data)
+//                {
+//                    console.log(data);
+//                    $("#id_termino_pago").append(data);
+//                }
+//            });
+//        }
         
 	return {init:init,
                 _getFormPost:_getFormPost,

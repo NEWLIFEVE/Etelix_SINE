@@ -521,6 +521,9 @@ class Reportes extends CApplicationComponent
             case "2":case "4":case "5":case "8":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
                 break;
+            default:
+                return $acumulado;
+                break;
         }
     }
 
@@ -627,16 +630,31 @@ class Reportes extends CApplicationComponent
                 return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
                 break;
             case 15:
-                if (date("d", strtotime($fecha_to)) <= 15)
+                if (date("d", strtotime($fecha_to)) == 15)
                     return DateManagement::getDayOne($fecha_to);
-                else
+                
+                if ($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to))
                     return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                
+                if ($fecha_to == self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
+                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-14';
+                
+                if (date("d", strtotime($fecha_to)) == 14)
+                    return self::define_due_date("15", $fecha_to, "-");
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);
                 break;
             default:
                 break;
+            
+            
+            
+//            "Dia Mes(1-7/8-14/15-21/22-ULT)"
+//            "Dia Semana(L/M/M/J/V/S/D)"
+//            "Regular(1-15/16-ULT)"
+//            "Dia Antes (ULT-14/15-PEN)"
+
         }
     }
 
@@ -666,9 +684,9 @@ class Reportes extends CApplicationComponent
     {
         if($var<0) $var=$var*-1;
          
-        if($var=="4"||$var=="6"||$var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
+        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25")  return "SEMANAL";
          
-        if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
+        if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
         if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
     }

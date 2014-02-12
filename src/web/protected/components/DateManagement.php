@@ -33,7 +33,12 @@ class DateManagement
 		$arrayDate=explode("-",$date);
 		return $arrayDate[0]."-".$arrayDate[1]."-01";
 	}
-
+        public static function getDayLast($date) 
+        {
+            $dateSeparates=  DateManagement::separatesDate($date);  
+            return strftime("%d", mktime(0, 0, 0, $dateSeparates['month']+1, 0, $dateSeparates['year']));
+            
+        } 
 	/**
      * Retorna el dia de la semana de una fecha
      */
