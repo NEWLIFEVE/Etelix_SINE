@@ -75,6 +75,11 @@ class Reportes extends CApplicationComponent
         $var=Recredi::reporte($fecha);
         return $var;
     }
+    public function recopa($fecha)
+    {
+        $var=Recopa::reporte($fecha);
+        return $var;
+    }
 
     /**
      * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 

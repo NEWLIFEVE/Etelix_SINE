@@ -24,10 +24,10 @@ $SINE.UI=(function()
         };
         function _clickElement() 
         {
-            $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#previa,#mail,#excel,#views_not').on('click',function()
+            $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#previa,#mail,#excel,#views_not').on('click',function()
             {   
                 switch ($(this).attr("id")){
-                    case "soa":case"balance":case"refac":case "refi_prov":case "waiver":case"recredi":case"redis": 
+                    case "soa":case"balance":case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": 
                         $SINE.UI.resolve_reports_menu($(this));
                         $SINE.UI.elijeOpciones($(this));
                         break;
@@ -61,13 +61,13 @@ $SINE.UI=(function()
          */
         function resolve_reports_menu(selec)
 	{
-            var params = $('#soa,#balance,#refac,#waiver,#recredi,#refi_prov,#redis');
+            var params = $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis');
             params.children().removeClass('h1_reportClick').addClass('h1_report');
             params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
             params.removeAttr('style');
 
             selec.children().removeClass('h1_report').addClass('h1_reportClick');
-            selec.css('background', '#2E62B4').css('border-bottom', '1px solid white').css('width', '96%');
+            selec.css('background', '#2E62B4').css('border-bottom', '1px solid white').css('width', '96%').css('height', '77px');
         }
         /**
          * 
@@ -112,6 +112,10 @@ $SINE.UI=(function()
                     var mostrar =['.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
+                case "recopa":
+                    var mostrar =['.fecha']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  break; 
                 case "refi_prov": 
                     var mostrar =['.periodo,.fecha']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
@@ -126,7 +130,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi")
+            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi"||nombre=="recopa")
                 {
                     $('.barra_tools_click').show('fast');
                 }else{
@@ -238,6 +242,9 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
             case 'recredi':
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
+                break               
+            case 'recopa':
                 var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'refi_prov':

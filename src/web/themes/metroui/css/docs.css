@@ -277,7 +277,7 @@ div.login.error input#LoginForm_password
 {
     background: white;
     width: 92%;
-    height: 77px;
+    height: 65px;
     margin-top: 0%;
     margin-left: 4%;
     float: left;
@@ -633,7 +633,7 @@ select
     display: none;
 }
 /*....*/
-/*.h1_report 
+.h1_report 
 {
     font-size: 31pt!important;
-}*/
+}

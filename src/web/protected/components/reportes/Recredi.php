@@ -76,32 +76,6 @@
             $reporte.="</table>";
             return $reporte;
         }
-            
-//                $SOA=self::getSoaCarrier("41",$fecha);
-//                $SOA_date_top=self::getSoaDateCarrier("41");
-//                $prov_fac_env=self::getProvisionsFact("41",$fecha,TRUE);
-//                $prov_fac_rec=self::getProvisionsFact("41",$fecha,FALSE);
-//                $prov_traf_env=self::getProvisionsTraf("41",$fecha,TRUE);
-//                $prov_traf_rec=self::getProvisionsTraf("41",$fecha,FALSE);
-//                $prov_disp_rec=self::getDisp("41",$fecha,TRUE);
-//                $prov_disp_env=self::getDisp("41",$fecha,FALSE);
-//                $balance=self::getBalanceCarrier("41",$fecha);
-//                    $reporte.="<tr $style_basic >
-//                                    <td $style_basic > otro grupo </td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($SOA->amount). "</td>
-//                                    <td $style_basic >". $SOA_date_top ."</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_env->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_rec->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_env->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_rec->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_disp_rec->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_disp_env->amount). "</td>
-//                                    <td $style_basic >". Yii::app()->format->format_decimal($balance->amount). "</td>
-//                               </tr>";
-//                
-//            $reporte.="</table>";
-//            return $reporte;
-//    }
         /**
          * @return type
          */
