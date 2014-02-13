@@ -16,20 +16,21 @@
             $style_balance_head="style='border:0px solid black;background:#2E62B4;text-align:center;color:white;'";
             
             $carrierGroups=self::getAllGroups();
-            $seg=count($carrierGroups);
+            $seg=count($carrierGroups)*2;
             ini_set('max_execution_time', $seg);
             
             $reporte="<table>";
             $reporte.="<tr>
                            <td colspan='2'><h1>RECREDI</h1></td>
-                           <td colspan='7'>  AL  $fecha </td>
+                           <td colspan='8'>  AL  $fecha </td>
                        <tr>
-                           <td colspan='9'></td>
+                           <td colspan='10'></td>
                        </tr>
                      </table>";
             $reporte.="<table $style_basic >
                        <tr>
                            <td $style_carrier_head >  </td>
+                           <td $style_soa_head >  </td>
                            <td $style_soa_head >  </td>
                            <td $style_prov_fact_head colspan='2'> PROVISION FACT </td>
                            <td $style_prov_traf_head colspan='2'> PROVISION TRAFICO </td>
@@ -39,6 +40,7 @@
             $reporte.="<tr>
                            <td $style_carrier_head > CARRIER </td>
                            <td $style_soa_head > SOA </td>
+                           <td $style_soa_head > DUE DATE </td>
                            <td $style_prov_fact_head > CLIENTES REVENUE </td>
                            <td $style_prov_fact_head > PROVEEDORES COST </td>
                            <td $style_prov_traf_head > CLIENTES REVENUE </td>
@@ -50,6 +52,7 @@
             foreach ($carrierGroups as $key => $group)
             {
                 $SOA=self::getSoaCarrier($group->id,$fecha);
+                $SOA_date_top=self::getSoaDateCarrier($group->id);
                 $prov_fac_env=self::getProvisionsFact($group->id,$fecha,TRUE);
                 $prov_fac_rec=self::getProvisionsFact($group->id,$fecha,FALSE);
                 $prov_traf_env=self::getProvisionsTraf($group->id,$fecha,TRUE);
@@ -60,6 +63,7 @@
                     $reporte.="<tr $style_basic >
                                     <td $style_basic > $group->name </td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($SOA->amount). "</td>
+                                    <td $style_basic >". $SOA_date_top ."</td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_env->amount). "</td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_rec->amount). "</td>
                                     <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_env->amount). "</td>
@@ -72,6 +76,32 @@
             $reporte.="</table>";
             return $reporte;
         }
+            
+//                $SOA=self::getSoaCarrier("41",$fecha);
+//                $SOA_date_top=self::getSoaDateCarrier("41");
+//                $prov_fac_env=self::getProvisionsFact("41",$fecha,TRUE);
+//                $prov_fac_rec=self::getProvisionsFact("41",$fecha,FALSE);
+//                $prov_traf_env=self::getProvisionsTraf("41",$fecha,TRUE);
+//                $prov_traf_rec=self::getProvisionsTraf("41",$fecha,FALSE);
+//                $prov_disp_rec=self::getDisp("41",$fecha,TRUE);
+//                $prov_disp_env=self::getDisp("41",$fecha,FALSE);
+//                $balance=self::getBalanceCarrier("41",$fecha);
+//                    $reporte.="<tr $style_basic >
+//                                    <td $style_basic > otro grupo </td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($SOA->amount). "</td>
+//                                    <td $style_basic >". $SOA_date_top ."</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_env->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_fac_rec->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_env->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_traf_rec->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_disp_rec->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($prov_disp_env->amount). "</td>
+//                                    <td $style_basic >". Yii::app()->format->format_decimal($balance->amount). "</td>
+//                               </tr>";
+//                
+//            $reporte.="</table>";
+//            return $reporte;
+//    }
         /**
          * @return type
          */
@@ -93,6 +123,41 @@
                     (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') p,
                     (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') n";
             return AccountingDocument::model()->findBySql($sql);
+        }
+        /**
+         * 
+         * @param type $id
+         * @return type
+         */
+        public static function getSoaDateCarrier($id)
+        {
+            $sql_issue="SELECT  MAX (issue_date) AS issue_date  FROM accounting_document  WHERE id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND id_type_accounting_document IN(1,2)";
+            $date_issue= AccountingDocument::model()->findBySql($sql_issue);
+            
+            $sql_valid="SELECT  MAX (valid_received_date) AS valid_received_date FROM accounting_document  WHERE id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND id_type_accounting_document IN(1,2)";
+            $date_valid= AccountingDocument::model()->findBySql($sql_valid);
+//            var_dump("issue es = ".$date_issue->issue_date."valid es = ".$date_valid->valid_received_date);
+            return self::getDueDateSoa($date_issue, $date_valid,$id);
+        }
+        /**
+         * 
+         * @param type $date_issue
+         * @param type $date_valid
+         * @return type
+         */
+        public static function getDueDateSoa($date_issue,$date_valid,$id_group)
+        {
+             if($date_issue->issue_date !=null || $date_valid->valid_received_date!=null){
+                if($date_issue->issue_date >= $date_valid->valid_received_date){
+                    return Reportes::define_due_date( Reportes::define_tp(Contrato::getContratoTP($id_group,"1"))["vencimiento"],$date_issue->issue_date,"+");
+                }else{
+                     if($date_valid->valid_received_date!=null){
+                        return Reportes::define_due_date( Reportes::define_tp(Contrato::getContratoTP($id_group,"2"))["vencimiento"],$date_valid->valid_received_date,"+");
+                     }else{
+                         return null;
+                     }
+                }
+             }
         }
         public static function getBalanceCarrier($id,$date)
         {
