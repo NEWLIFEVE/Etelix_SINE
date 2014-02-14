@@ -264,7 +264,7 @@ class SiteController extends Controller
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'recopa':
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha);
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->Recopa($fecha);
                    break;
             }  
         }
