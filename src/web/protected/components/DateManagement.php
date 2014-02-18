@@ -35,13 +35,23 @@ class DateManagement
 	}
 
 	/**
-     * Retorna el dia de la semana de una fecha
+     * Retorna el numero del dia de la semana de una fecha
      * @return int
      */
     public static function getDayNumberWeek($date)
     {
         $date=strtotime($date);
         return (int)date('N',$date);
+    }
+
+    /**
+     * Retorna el nombre del dia de la semana de una fecha
+     * @return string
+     */
+    public static function getNameDayOfWeek($date)
+    {
+        $date=strtotime($date);
+        return date('D',$date);
     }
 
     public static function getMonday($date)
@@ -118,9 +128,17 @@ class DateManagement
      */
     public static function getFirstDayPeriod($date,$num)
     {
-        while (self::getDayNumberWeek($date)>$num)
-        {
-            $date=self::calculateDate('-1',$date);
+        for ($i=1; $i<=7 ; $i++) 
+        { 
+            if($num==1)
+            {
+                $num=7;
+            }
+            else
+            {
+                $date=self::calculateDate('-1',$date);
+                $num-=1;
+            }
         }
         return $date;
     }
