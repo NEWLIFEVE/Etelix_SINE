@@ -620,7 +620,6 @@ class Reportes extends CApplicationComponent
             return $acumuladoFacEnv;
         } 
     }
-
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
@@ -646,20 +645,15 @@ class Reportes extends CApplicationComponent
                 
                 if (date("d", strtotime($fecha_to)) == 14)
                     return self::define_due_date("15", $fecha_to, "-");
+                
+                if (date("d", strtotime($fecha_to)) != 14 && date("d", strtotime($fecha_to)) != 15 && $fecha_to != self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
+                    return self::define_due_date("15", $fecha_to, "-");
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);
                 break;
             default:
                 break;
-            
-            
-            
-//            "Dia Mes(1-7/8-14/15-21/22-ULT)"
-//            "Dia Semana(L/M/M/J/V/S/D)"
-//            "Regular(1-15/16-ULT)"
-//            "Dia Antes (ULT-14/15-PEN)"
-
         }
     }
 

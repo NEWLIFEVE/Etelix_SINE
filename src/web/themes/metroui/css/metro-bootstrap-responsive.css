@@ -12,11 +12,13 @@
 {
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 43px!important;top: 0%!important;}
-    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;}
+    /*.listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;}*/
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 489px!important;width: 408px!important;margin-left: -5%!important;}/*esto hay que quitarlo al tener todos los reportes*/
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
     #ui-datepicker-div {width: 26%!important;}
     .fancybox {left: -6%!important;top: 70%;}
+   .Reportes {padding-bottom: 22%!important;}/* quitar al tener todos los reportes*/
 }
 @media (min-width: 800px) and (max-width: 1100px) 
 {
@@ -103,3 +105,4 @@
     .trabajando {width: 242px!important;padding: 2px!important;margin-top: 76%!important;margin-left: -17%!important;}
 }
 
+  /*se agrego esta clase aca .Reportes (padding-bottom: 22%!important;) y se modifico comentando .listadeReportesscroll (height: 489px!important;})*/

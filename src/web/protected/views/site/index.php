@@ -38,12 +38,12 @@ $this->pageTitle = Yii::app()->name;
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
         </div><br>-->
         
-        <div class="Reportes WAIVER" id="waiver">
+<!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
         </div><br>
         <div class="Reportes REDIS" id="redis">
             <h1 class='h1_report h1REDIS'>REDIS</h1>
-        </div><br>
+        </div><br>-->
     </div>
 </div>
 <div>
