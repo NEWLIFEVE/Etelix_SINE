@@ -34,13 +34,16 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
+        <!-- <div class="Reportes RECOPA" id="recopa">
+            <h1 class='h1_report h1RECOPA'>RECOPA</h1>
+        </div><br>-->
         
-        <div class="Reportes WAIVER" id="waiver">
+<!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
         </div><br>
         <div class="Reportes REDIS" id="redis">
             <h1 class='h1_report h1REDIS'>REDIS</h1>
-        </div><br>
+        </div><br> -->
     </div>
 </div>
 <div>
@@ -67,16 +70,25 @@ $this->pageTitle = Yii::app()->name;
             <h3>Fecha</h3>
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
-        <div class="formInputs termino_pago">
-            <h3>Periódo</h3>
-            <select name="id_termino_pago" id="id_termino_pago">
+        <div class="formInputs filter_oper">
+            <h3>Mostrar Operadores</h3>
+            <select name="id_filter_oper" id="id_filter_oper">
+            <option value="">Seleccione</option>
+            <option value="0">TODOS</option>
+            <option value="1">+2000$</option>
+            <option value="2">-2000$</option>
+            </select> 
+        </div>
+        <div class="formInputs periodo">
+            <h3>Período</h3>
+            <select name="id_periodo" id="id_periodo">
             <option value="">Seleccione</option>
             <option value="7">SEMANAL</option>
             <option value="15">QUINCENAL</option>
             <option value="30">MENSUAL</option>
             </select> 
         </div>
-        
+
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provision Fact</h3>
             <div class="btn-group" data-toggle="buttons-radio">
@@ -91,6 +103,13 @@ $this->pageTitle = Yii::app()->name;
                 <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
+<!--        <div class='formInputs pronostico'>
+            <h3>Pronostico</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_pron" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_pron" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>-->
         <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
         <div class="trabajando"><img src="/images/trabajando.png" class='ver'><h2>Estamos trabajando...</h2></div><!--este div es para indicar que la interfaz no esta lista-->
         <!--.................-->
@@ -112,4 +131,4 @@ $this->pageTitle = Yii::app()->name;
         </div>
     </footer>
 </div>
-<div class="views_not"><h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4></div>
+<div class="views_not" id="views_not"><h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4></div>

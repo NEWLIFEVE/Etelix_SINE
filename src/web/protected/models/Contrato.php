@@ -117,4 +117,30 @@ class Contrato extends CActiveRecord
             'criteria'=>$criteria,
         ));
     }
+    /**
+     * en si, retorna el name del termino de pago, normal o supplier, dependiendo del id_carrier_groups y el id_contrato
+     */
+    public static function getContratoTP($id_group,$type_tp)
+    {
+        $contrato= self::model()->find("id_carrier IN(Select id from carrier where id_carrier_groups =:id_group) AND end_date IS NULL",array(":id_group"=>$id_group));
+        if($contrato!=NULL){
+            switch ($type_tp) {
+                case "1":
+                    $tp=ContratoTerminoPago::model()->find("id_contrato=:id_contrato ",array(":id_contrato"=>$contrato->id));
+                    return TerminoPago::getName($tp->id_termino_pago);
+                    break;
+                case "2":
+                    $tp=ContratoTerminoPagoSupplier::model()->find("id_contrato=:id_contrato ",array(":id_contrato"=>$contrato->id));
+                     if($tp!=null) return TerminoPago::getName($tp->id_termino_pago_supplier);
+                       else return "Sin estatus";
+                    break;
+                default:
+                    $tp= ContratoTerminoPago::model()->find("id_contrato=:id_contrato ",array(":id_contrato"=>$contrato->id));
+                    return TerminoPago::getName($tp->id_termino_pago);
+                    break;      
+            }
+        }else{
+            return "Sin estatus";
+        }
+    }
 }

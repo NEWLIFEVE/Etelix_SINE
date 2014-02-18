@@ -1,33 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "termino_pago".
+ * This is the model class for table "fact_period".
  *
- * The followings are the available columns in table 'termino_pago':
+ * The followings are the available columns in table 'fact_period':
  * @property integer $id
  * @property string $name
  *
  * The followings are the available model relations:
- * @property ContratoTerminoPago[] $contratoTerminoPagos
+ * @property ContratoTerminoPagoSupplier[] $contratoTerminoPagoSuppliers
  */
-class TerminoPago extends CActiveRecord
+class FactPeriod extends CActiveRecord
 {
-	/**
-	 * Atributos utilizados para calculo de provisiones de proveedor
-	 */
-	public $month_break;
-
-	public $first_day;
-
-	public $payment_term;
-
-	public $billing_period;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'termino_pago';
+		return 'fact_period';
 	}
 
 	/**
@@ -54,7 +44,7 @@ class TerminoPago extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'contratoTerminoPagos' => array(self::HAS_MANY, 'ContratoTerminoPago', 'id_termino_pago'),
+			'contratoTerminoPagoSuppliers' => array(self::HAS_MANY, 'ContratoTerminoPagoSupplier', 'id_fact_period'),
 		);
 	}
 
@@ -99,15 +89,12 @@ class TerminoPago extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return TerminoPago the static model class
+	 * @return FactPeriod the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-        public static function getName($termino_pago){           
-            return self::model()->find("id=:id", array(':id'=>$termino_pago))->name;
-        }
         public static function getModel(){           
             return self::model()->findAll();
         }
