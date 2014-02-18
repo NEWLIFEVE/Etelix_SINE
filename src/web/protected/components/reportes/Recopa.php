@@ -5,7 +5,7 @@
      */
     class recopa extends Reportes 
     {
-        public static function reporte($date) 
+        public static function reporte($date,$id_filter_oper) 
         {
             $acum_beforeCC=$acum_nowCC=$acum_next1CC=$acum_next2CC=$acum_next3CC=$acum_next4CC=$acum_next5CC=$acum_next6CC=$acum_next7CC=$acum_next8CC=$acum_next9CC=$acum_next10CC=$acum_beforeCP=$acum_nowCP=$acum_next1CP=$acum_next2CP=$acum_next3CP=$acum_next4CP=$acum_next5CP=$acum_next6CP=$acum_next7CP=$acum_next8CP=$acum_next9CP=$acum_next10CP=0;
             $carrierGroups=Recredi::getAllGroups();
@@ -33,54 +33,57 @@
                                  </tr>";
                 foreach ($carrierGroups as $key => $group)
                 {
-                    $SOA=Recredi::getSoaCarrier($group->id,$date);
+                    $SOA=self::getSoaCarrier($group->id,$date,self::defineFilter($id_filter_oper));
                     $SOA_date_top=Recredi::getSoaDateCarrier($group->id);
+                    if($SOA_date_top!=null)
+                    {
+                        if($SOA->amount != null )
+                        {
+                            $tabla_recopa.=" <tr>
+                                              <td ". self::defineColorTD(null, "white") ."> $group->name </td>
+                                              <td ". self::defineColorTD(null, "white" ) .">". Yii::app()->format->format_decimal($SOA->amount). "</td>
+                                              <td ". self::defineColorTD(null, "white" ) .">". $SOA_date_top ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,$date,$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                              <td ". self::defineTD($date,Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
+                                             </tr>";
 
-                    $tabla_recopa.=" <tr>
-                                      <td ". self::defineColorTD(null, "white") ."> $group->name </td>
-                                      <td ". self::defineColorTD(null, "white" ) .">". Yii::app()->format->format_decimal($SOA->amount). "</td>
-                                      <td ". self::defineColorTD(null, "white" ) .">". $SOA_date_top ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD($date,$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                      <td ". self::defineTD(Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount) ."</td>
-                                     </tr>";
-                    
-                    $acum_beforeCC=self::defineAcumCC(Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount,$acum_beforeCC);
-                    var_dump("acum before cc: ".$acum_beforeCC);
-                    $acum_nowCC   =self::defineAcumCC($date,$SOA_date_top,$SOA->amount,$acum_nowCC);
-                    $acum_next1CC =self::defineAcumCC(Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next1CC);
-                    $acum_next2CC =self::defineAcumCC(Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next2CC);
-                    $acum_next3CC =self::defineAcumCC(Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next3CC);
-                    $acum_next4CC =self::defineAcumCC(Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next4CC);
-                    $acum_next5CC =self::defineAcumCC(Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next5CC);
-                    $acum_next6CC =self::defineAcumCC(Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next6CC);
-                    $acum_next7CC =self::defineAcumCC(Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next7CC);
-                    $acum_next8CC =self::defineAcumCC(Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next8CC);
-                    $acum_next9CC =self::defineAcumCC(Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next9CC);
-                    $acum_next10CC=self::defineAcumCC(Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next10CC);
+                            $acum_beforeCC=self::defineAcumCC(Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount,$acum_beforeCC);
+                            $acum_nowCC   =self::defineAcumCC($date,$SOA_date_top,$SOA->amount,$acum_nowCC);
+                            $acum_next1CC =self::defineAcumCC(Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next1CC);
+                            $acum_next2CC =self::defineAcumCC(Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next2CC);
+                            $acum_next3CC =self::defineAcumCC(Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next3CC);
+                            $acum_next4CC =self::defineAcumCC(Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next4CC);
+                            $acum_next5CC =self::defineAcumCC(Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next5CC);
+                            $acum_next6CC =self::defineAcumCC(Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next6CC);
+                            $acum_next7CC =self::defineAcumCC(Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next7CC);
+                            $acum_next8CC =self::defineAcumCC(Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next8CC);
+                            $acum_next9CC =self::defineAcumCC(Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next9CC);
+                            $acum_next10CC=self::defineAcumCC(Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next10CC);
 
-                    $acum_beforeCP=self::defineAcumCP(Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount,$acum_beforeCP);
-                    var_dump("acum before cp: ".$acum_beforeCP);
-                    $acum_nowCP   =self::defineAcumCP($date,$SOA_date_top,$SOA->amount,$acum_nowCP);
-                    $acum_next1CP =self::defineAcumCP(Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next1CP);
-                    $acum_next2CP =self::defineAcumCP(Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next2CP);
-                    $acum_next3CP =self::defineAcumCP(Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next3CP);
-                    $acum_next4CP =self::defineAcumCP(Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next4CP);
-                    $acum_next5CP =self::defineAcumCP(Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next5CP);
-                    $acum_next6CP =self::defineAcumCP(Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next6CP);
-                    $acum_next7CP =self::defineAcumCP(Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next7CP);
-                    $acum_next8CP =self::defineAcumCP(Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next8CP);
-                    $acum_next9CP =self::defineAcumCP(Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next9CP);
-                    $acum_next10CP=self::defineAcumCP(Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next10CP);
+                            $acum_beforeCP=self::defineAcumCP(Reportes::define_due_date("7", $date,"-"),$SOA_date_top,$SOA->amount,$acum_beforeCP);
+                            $acum_nowCP   =self::defineAcumCP($date,$SOA_date_top,$SOA->amount,$acum_nowCP);
+                            $acum_next1CP =self::defineAcumCP(Reportes::define_due_date("7", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next1CP);
+                            $acum_next2CP =self::defineAcumCP(Reportes::define_due_date("14", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next2CP);
+                            $acum_next3CP =self::defineAcumCP(Reportes::define_due_date("21", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next3CP);
+                            $acum_next4CP =self::defineAcumCP(Reportes::define_due_date("28", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next4CP);
+                            $acum_next5CP =self::defineAcumCP(Reportes::define_due_date("35", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next5CP);
+                            $acum_next6CP =self::defineAcumCP(Reportes::define_due_date("42", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next6CP);
+                            $acum_next7CP =self::defineAcumCP(Reportes::define_due_date("49", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next7CP);
+                            $acum_next8CP =self::defineAcumCP(Reportes::define_due_date("56", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next8CP);
+                            $acum_next9CP =self::defineAcumCP(Reportes::define_due_date("63", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next9CP);
+                            $acum_next10CP=self::defineAcumCP(Reportes::define_due_date("70", $date,"+"),$SOA_date_top,$SOA->amount,$acum_next10CP);
+                       }
+                   }
                }
                $tabla_recopa.="<tr>
                                 <td colspan='3'></dt>
@@ -131,16 +134,9 @@
                                 <td >".Yii::app()->format->format_decimal($acum_next10CC + $acum_next10CP)."</td>
                                </tr>";
                 $tabla_recopa.="</table>";
-            echo $tabla_recopa;
+           echo $tabla_recopa;
         }
-        public static function defineTD($dateActual,$SOA_date_top,$amount)
-        {
-            if($SOA_date_top >= $dateActual && $SOA_date_top <= Reportes::define_due_date("6", $dateActual,"+")){
-                return  self::defineColorTD($amount,null) .">".Yii::app()->format->format_decimal($amount);
-            }else{
-                return  self::defineColorTD(null, "white") .">";
-            }
-        }
+        
         public static function defineAcumCC($dateActual,$SOA_date_top,$amount,$acumulado)
         {
             if($SOA_date_top >= $dateActual && $SOA_date_top <= Reportes::define_due_date("6", $dateActual,"+")){
@@ -173,18 +169,55 @@
                 return $acumulado;
             }
         }
+        public static function defineTD($date,$dateNow,$SOA_date_top,$amount)
+        {
+            if($SOA_date_top >= $dateNow && $SOA_date_top <= Reportes::define_due_date("6", $dateNow,"+")){
+                return  self::defineColorTD($amount,null) .">".Yii::app()->format->format_decimal($amount);
+            }
+            elseif($SOA_date_top < Reportes::define_due_date("7", $date,"-")){
+                return  self::defineColorTD($amount,null);
+            }
+            else{
+                return  self::defineColorTD(null, "white") .">";
+            }
+        }
         public static function defineColorTD($amount, $backColor)
         {
-            if($amount>0){
-                return "style='border:1px solid black;color:white;text-align:left;background:#3466B4;'";
-            }elseif($amount<0){
-                return "style='border:1px solid black;color:white;text-align:left;background:#E99241;'"; 
-            }
-            elseif($amount==null){
+            if($amount!=null){  
+                if($amount>2000){
+                    return "style='border:1px solid black;color:white;text-align:left;background:#3466B4;'";
+                }
+                elseif($amount<-2000){
+                    return "style='border:1px solid black;color:white;text-align:left;background:#E99241;'"; 
+                }
+                elseif($amount<0 && $amount>-2000 || $amount>0 && $amount<2000){
+                    return "style='border:1px solid black;color:white;text-align:left;background:#FCD746;'"; 
+                }
+            }elseif($amount==null){
                 $colorText="white";
                 if($backColor=="white")$colorText="black";
                 return "style='border:1px solid black;color:$colorText;text-align:left;background:$backColor;'";
             }
+        }
+        public static function defineFilter($val)
+        {
+            if($val=="0") return null;
+            if($val=="1") return TRUE;
+            if($val=="2") return FALSE;
+        }
+
+        public static function getSoaCarrier($id,$date,$filter_oper=null)
+        {
+            if($filter_oper==null) $filter="(i.amount+(p.amount-n.amount)) AS amount";
+            if($filter_oper==TRUE)       $filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) > ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
+            if($filter_oper==FALSE)$filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) < ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
+  
+            $sql="SELECT {$filter}
+                  FROM
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document where id_type_accounting_document=9 and id_carrier IN(Select id from carrier where id_carrier_groups = {$id})) i,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') p,
+                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(Select id from carrier where id_carrier_groups = {$id}) AND issue_date<='{$date}') n";
+            return AccountingDocument::model()->findBySql($sql);
         }
     }
     ?>

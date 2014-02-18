@@ -2,14 +2,19 @@
 ============
 
 Sistema de Reportes para Billing
-- Agregado Bank Fee
-- Mejorado responsive, al abrir desde un telefono, la aplicacion notifica que no estará disponible el vista previa
-- Corregida resta en REFAC y REPROV.
-- Creado boton de impresion de la vista previa del reporte
-- Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
+
+
+
+- Corregida calculo de dias en REPROV
+- Nueva version de generacion de provisiones, con soporte para termino de pagos de carriers suppliers 
 
 Relase 1.2.3
--cambio en reportes para que genere bank fee de pagos.
+- Agregado Bank Fee
+- Cambio en reportes para que genere bank fee de pagos.
+- Creado boton de impresion de la vista previa del reporte
+- Mejorado responsive, al abrir desde un telefono, la aplicacion notifica que no estará disponible el vista previa
+- Corregida resta en REFAC y REPROV.
+- Creada aplicacion de consola con el comando "provisions" que generará las provisiones del dia anterior y el comando "loop" que generará las provisiones en un periodo de tiempo seteado
 
 Relase 1.2.2
 -Cambios en SOA y BALANCE:

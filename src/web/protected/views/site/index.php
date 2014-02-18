@@ -36,9 +36,9 @@ $this->pageTitle = Yii::app()->name;
         </div><br>
         <!-- <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br>
+        </div><br>-->
         
-        <div class="Reportes WAIVER" id="waiver">
+<!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
         </div><br>
         <div class="Reportes REDIS" id="redis">
@@ -69,6 +69,15 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs fecha">
             <h3>Fecha</h3>
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
+        </div>
+        <div class="formInputs filter_oper">
+            <h3>Mostrar Operadores</h3>
+            <select name="id_filter_oper" id="id_filter_oper">
+            <option value="">Seleccione</option>
+            <option value="0">TODOS</option>
+            <option value="1">+2000$</option>
+            <option value="2">-2000$</option>
+            </select> 
         </div>
         <div class="formInputs periodo">
             <h3>Período</h3>
