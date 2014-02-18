@@ -34,7 +34,7 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
-        <div class="Reportes RECOPA" id="recopa">
+        <!-- <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
         </div><br>
         
@@ -43,7 +43,7 @@ $this->pageTitle = Yii::app()->name;
         </div><br>
         <div class="Reportes REDIS" id="redis">
             <h1 class='h1_report h1REDIS'>REDIS</h1>
-        </div><br>
+        </div><br> -->
     </div>
 </div>
 <div>
