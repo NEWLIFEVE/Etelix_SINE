@@ -152,7 +152,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
-			//printf("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
+			printf("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
@@ -161,7 +161,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
-			//printf("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+			printf("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 	}
@@ -279,15 +279,15 @@ class Provisions extends CApplicationComponent
 			if($tempdate===$this->date)
 			{
 				$firstDay=DateManagement::getDayOne($this->date);
-				//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-				var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
+				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
 			}
 			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 			if($tempdate===$this->date)
 			{
 				$firstDay=$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-26";
-				//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-				var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
+				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
 			}
 		}
 		else
@@ -297,31 +297,31 @@ class Provisions extends CApplicationComponent
 				$tempdate=$firstDay=$trafficProvisions=null;
 				switch (Reportes::define_tp($TerminoPago->payment_term)['periodo'])
 				{
-					/*case 30:
+					case 30:
 						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 						if($tempdate===$this->date)
 						{
 							$firstDay=DateManagement::getDayOne($this->date);
-							//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-							var_dump("Generando factura mensual del ".$firstDay." al ".$this->date);
+							$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							//var_dump("Generando factura mensual del ".$firstDay." al ".$this->date);
 						}
-						break;*/
-					/*case 15:
+						break;
+					case 15:
 						if($TerminoPago->billing_period=="Regular(1-15/16-ULT)")
 						{
 							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-15";
 							if($tempdate===$this->date)
 							{
 								$firstDay=DateManagement::getDayOne($this->date);
-								//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
 							}
 							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 							if($tempdate===$this->date)
 							{
 								$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-16";
-								//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
 							}
 						}
 						elseif($TerminoPago->billing_period=="Dia Antes (ULT-14/15-PEN)")
@@ -330,22 +330,22 @@ class Provisions extends CApplicationComponent
 							if($tempdate===$this->date)
 							{
 								$firstDay=DateManagement::leastOneMonth($this->date)['lastday'];
-								//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
 							}
 							$ultimo=DateManagement::howManyDays($this->date)-1;
 							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".$ultimo;
 							if($tempdate===$this->date)
 							{
 								$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-15";
-								//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
 							}
 						}
-						break;*/
+						break;
 					case 7:
 						//si es por dia del mes
-						/*if($TerminoPago->billing_period=="Dia Mes(1-7/8-14/15-21/22-ULT)")
+						if($TerminoPago->billing_period=="Dia Mes(1-7/8-14/15-21/22-ULT)")
 						{
 							$last=DateManagement::howManyDays($this->date);
 							switch (DateManagement::separatesDate($this->date)['day'])
@@ -354,16 +354,16 @@ class Provisions extends CApplicationComponent
 								case 14:
 								case 21:
 									$firstDay=DateManagement::calculateDate('-6',$this->date);
-									//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-									var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
 									break;
 								case $last:
 									$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-22";
-									//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-									var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
 									break;
 							}
-						}*/
+						}
 						if($TerminoPago->billing_period=="Dia Semana(L/M/M/J/V/S/D)")
 						{
 							//Obtengo el numero del dia que seria el fin del periodo
@@ -376,8 +376,8 @@ class Provisions extends CApplicationComponent
 								if($tempdate==$this->date)
 								{
 									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
-									//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-									printf("Factura desde el: ".$firstDay." hasta: ".$this->date."\n");
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de semana que pican mes(fin de mes) del ".$firstDay." al ".$this->date);
 									break;
 								}
 								//cuando esta en el fin del periodo de facturacion
@@ -386,26 +386,28 @@ class Provisions extends CApplicationComponent
 									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
 									if(DateManagement::separatesDate($firstDay)['month']==DateManagement::separatesDate($this->date)['month'])
 									{
-										//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-										var_dump("Generando factura de 7/7 dia de semana que pican mes del ".$firstDay." al ".$this->date);
+										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+										//var_dump("Generando factura de 7/7 dia de semana que pican mes(durante el mes) del ".$firstDay." al ".$this->date);
 										break;
 									}
 									else
 									{
 										$firstDay=DateManagement::getDayOne($this->date);
-										//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-										var_dump("Generando factura de 7/7 dia de semana que pican mes del ".$firstDay." al ".$this->date);
+										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+										//var_dump("Generando factura de 7/7 dia de semana que pican mes(inicio de mes) del ".$firstDay." al ".$this->date);
 										break;
 									}
 								}
 							}
-							if($end===DateManagement::getDayNumberWeek($this->date))
+							else
 							{
-								var_dump($end,$TerminoPago->first_day);
-								/*$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
-								//$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								var_dump("Generando factura de 7/7 dia de semana que no pican mes del ".$firstDay." al ".$this->date.);
-								break;*/
+								if($end===DateManagement::getDayNumberWeek($this->date))
+								{
+									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de semana que no pican mes del ".$firstDay." al ".$this->date);
+									break;
+								}
 							}
 						}
 						break;
