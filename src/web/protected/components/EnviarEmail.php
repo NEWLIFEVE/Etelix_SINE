@@ -22,7 +22,7 @@ class EnviarEmail extends CApplicationComponent
      * @param string $ruta es la ruta donde esta el archivo adjunto
      * @param array $copia direcciones que seran copiadas al envio del correo
      */
-    public function enviar($html, $user, $asunto, $ruta, $copia=null)
+    public function enviar($html, $user, $asunto, $ruta=null, $copia=null)
     {
         if(isset($html) && isset($user))
         {
@@ -50,7 +50,7 @@ class EnviarEmail extends CApplicationComponent
             $mailer->FromName='SINE';
             $mailer->CharSet='UTF-8';
             $mailer->Subject=Yii::t('', $asunto);
-            $mailer->AddAttachment($ruta); //Archivo adjunto
+            if($ruta!=null) $mailer->AddAttachment($ruta); //Archivo adjunto
             $message=$html;
             $mailer->Body=$message;
             if($mailer->Send())
