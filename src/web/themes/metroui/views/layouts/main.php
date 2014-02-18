@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div id="footer">
-                Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.2.3
+                Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.2.4
             </div>
             <div class="clear"></div>
         </div>
@@ -65,7 +65,7 @@
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery-ui-timepicker-addon.js"></script>
         <script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/bootstrap.min.js"></script>
         <script src="<?php echo Yii::app()->baseUrl; ?>/js/sine.js"></script>
-        <script src="<?php echo Yii::app()->baseUrl; ?>/js/views.js"></script>
+        <!--<script src="<?php // echo Yii::app()->baseUrl; ?>/js/views.js"></script>-->
         <script>
                 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
                 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

@@ -75,6 +75,11 @@ class Reportes extends CApplicationComponent
         $var=Recredi::reporte($fecha);
         return $var;
     }
+    public function recopa($fecha,$filter_oper)
+    {
+        $var=Recopa::reporte($fecha,$filter_oper);
+        return $var;
+    }
 
     /**
      * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 
@@ -176,6 +181,9 @@ class Reportes extends CApplicationComponent
             case "3":
                     $description="WT - Etelix to ".$model->group;
                 break;
+            case "15":
+                    $description="BF - Etelix to ".$model->group;
+                break;
             case "4":
                     $description="WT - ".$model->group." to Etelix";
                 break;
@@ -219,7 +227,7 @@ class Reportes extends CApplicationComponent
     public static function define_to_date($model,$due_date)
     {
         switch ($model->id_type_accounting_document){
-            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":
+            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":
                 $to_date="";
                 break;
             default:
@@ -240,7 +248,7 @@ class Reportes extends CApplicationComponent
             case "3": case "4":
                 $estilos=" style='background:silver;color:black;border:1px solid black;'";
                 break;
-            case "14":
+            case "14":case "15":
                 $estilos=" style='background:#E5EAF5;color:black;border:1px solid black;'";
                 break;
             case "5": case "6":
@@ -438,7 +446,7 @@ class Reportes extends CApplicationComponent
      */    
     public static function define_pagos($model)
     {
-        if($model->id_type_accounting_document==3)
+        if($model->id_type_accounting_document==3||$model->id_type_accounting_document==15)
         {
             return Yii::app()->format->format_decimal($model->amount,3);
         }
@@ -512,11 +520,14 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "10":case "12":
+            case "1":case "3":case "6":case "7":case "10":case "12":case "15":
                 return $acumulado + $model->amount;
                 break;
             case "2":case "4":case "5":case "8":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
+                break;
+            default:
+                return $acumulado;
                 break;
         }
     }
@@ -531,7 +542,7 @@ class Reportes extends CApplicationComponent
     {
         switch($model->id_type_accounting_document)
         {        
-            case "3":
+            case "3":case "15":
                 return $acumuladoPago + $model->amount;
                 break;
             default:
@@ -609,7 +620,6 @@ class Reportes extends CApplicationComponent
             return $acumuladoFacEnv;
         } 
     }
-
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
@@ -624,10 +634,20 @@ class Reportes extends CApplicationComponent
                 return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
                 break;
             case 15:
-                if (date("d", strtotime($fecha_to)) <= 15)
+                if (date("d", strtotime($fecha_to)) == 15)
                     return DateManagement::getDayOne($fecha_to);
-                else
+                
+                if ($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to))
                     return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                
+                if ($fecha_to == self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
+                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-14';
+                
+                if (date("d", strtotime($fecha_to)) == 14)
+                    return self::define_due_date("15", $fecha_to, "-");
+                
+                if (date("d", strtotime($fecha_to)) != 14 && date("d", strtotime($fecha_to)) != 15 && $fecha_to != self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
+                    return self::define_due_date("15", $fecha_to, "-");
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);
@@ -663,9 +683,9 @@ class Reportes extends CApplicationComponent
     {
         if($var<0) $var=$var*-1;
          
-        if($var=="6"||$var=="7"||$var=="23"||$var=="24")  return "SEMANAL";
+        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25")  return "SEMANAL";
          
-        if($var=="15"||$var=="14"||$var=="15") return "QUINCENAL";
+        if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
         if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
     }

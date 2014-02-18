@@ -12,11 +12,13 @@
 {
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 43px!important;top: 0%!important;}
-    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;}
+    /*.listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;}*/
+    .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 489px!important;width: 408px!important;margin-left: -5%!important;}/*esto hay que quitarlo al tener todos los reportes*/
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
     #ui-datepicker-div {width: 26%!important;}
     .fancybox {left: -6%!important;top: 70%;}
+   .Reportes {padding-bottom: 22%!important;}/* quitar al tener todos los reportes*/
 }
 @media (min-width: 800px) and (max-width: 1100px) 
 {
@@ -69,7 +71,7 @@
     .disputas {margin-left: 0%!important;}
     .provisiones{width: 277px!important}
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
-    #id_termino_pago {width: 328px!important;}
+    #id_periodo {width: 328px!important;}
     #ui-datepicker-div {width: 70%!important;}
     .metro .page .page-region .page-region-content { position: absolute!important;}
     #previa{display:none!important;}
@@ -96,10 +98,11 @@
     .barra_tools_click {left: -20px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
     .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
-    #id_termino_pago {width: 298px!important;}
-    .termino_pago{margin-left: -17%!important;}
+    #id_periodo {width: 298px!important;}
+    .periodo{margin-left: -17%!important;}
     #ui-datepicker-div {width: 85%!important;}
     /*PROVISIONAL*/
     .trabajando {width: 242px!important;padding: 2px!important;margin-top: 76%!important;margin-left: -17%!important;}
 }
 
+  /*se agrego esta clase aca .Reportes (padding-bottom: 22%!important;) y se modifico comentando .listadeReportesscroll (height: 489px!important;})*/

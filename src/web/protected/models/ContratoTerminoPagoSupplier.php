@@ -1,33 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "termino_pago".
+ * This is the model class for table "contrato_termino_pago_supplier".
  *
- * The followings are the available columns in table 'termino_pago':
+ * The followings are the available columns in table 'contrato_termino_pago_supplier':
  * @property integer $id
- * @property string $name
+ * @property string $start_date
+ * @property string $end_date
+ * @property integer $id_contrato
+ * @property integer $id_termino_pago_supplier
+ * @property integer $month_break
+ * @property integer $first_day
+ * @property integer $id_fact_period
  *
  * The followings are the available model relations:
- * @property ContratoTerminoPago[] $contratoTerminoPagos
+ * @property Contrato $idContrato
+ * @property FactPeriod $idFactPeriod
+ * @property TerminoPago $idTerminoPagoSupplier
  */
-class TerminoPago extends CActiveRecord
+class ContratoTerminoPagoSupplier extends CActiveRecord
 {
-	/**
-	 * Atributos utilizados para calculo de provisiones de proveedor
-	 */
-	public $month_break;
-
-	public $first_day;
-
-	public $payment_term;
-
-	public $billing_period;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'termino_pago';
+		return 'contrato_termino_pago_supplier';
 	}
 
 	/**
@@ -38,11 +36,12 @@ class TerminoPago extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
-			array('name', 'length', 'max'=>50),
+			array('start_date, id_contrato, id_termino_pago_supplier', 'required'),
+			array('id_contrato, id_termino_pago_supplier, month_break, first_day, id_fact_period', 'numerical', 'integerOnly'=>true),
+			array('end_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, start_date, end_date, id_contrato, id_termino_pago_supplier, month_break, first_day, id_fact_period', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +53,9 @@ class TerminoPago extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'contratoTerminoPagos' => array(self::HAS_MANY, 'ContratoTerminoPago', 'id_termino_pago'),
+			'idContrato' => array(self::BELONGS_TO, 'Contrato', 'id_contrato'),
+			'idFactPeriod' => array(self::BELONGS_TO, 'FactPeriod', 'id_fact_period'),
+			'idTerminoPagoSupplier' => array(self::BELONGS_TO, 'TerminoPago', 'id_termino_pago_supplier'),
 		);
 	}
 
@@ -65,7 +66,13 @@ class TerminoPago extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
+			'start_date' => 'Start Date',
+			'end_date' => 'End Date',
+			'id_contrato' => 'Id Contrato',
+			'id_termino_pago_supplier' => 'Id Termino Pago Supplier',
+			'month_break' => 'Month Break',
+			'first_day' => 'First Day',
+			'id_fact_period' => 'Id Fact Period',
 		);
 	}
 
@@ -88,7 +95,13 @@ class TerminoPago extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('start_date',$this->start_date,true);
+		$criteria->compare('end_date',$this->end_date,true);
+		$criteria->compare('id_contrato',$this->id_contrato);
+		$criteria->compare('id_termino_pago_supplier',$this->id_termino_pago_supplier);
+		$criteria->compare('month_break',$this->month_break);
+		$criteria->compare('first_day',$this->first_day);
+		$criteria->compare('id_fact_period',$this->id_fact_period);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -99,16 +112,10 @@ class TerminoPago extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return TerminoPago the static model class
+	 * @return ContratoTerminoPagoSupplier the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-        public static function getName($termino_pago){           
-            return self::model()->find("id=:id", array(':id'=>$termino_pago))->name;
-        }
-        public static function getModel(){           
-            return self::model()->findAll();
-        }
 }

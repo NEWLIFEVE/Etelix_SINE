@@ -260,7 +260,8 @@ div.login.error input#LoginForm_password
 .listadeReportes
 {
     border-right: 7px solid #2E62B4;
-    height: 539px;
+    /*height: 539px;*/
+    height: 477px;
     width: 358px;
     margin-top: -34%;
     background: white; 
@@ -277,7 +278,7 @@ div.login.error input#LoginForm_password
 {
     background: white;
     width: 92%;
-    height: 77px;
+    height: 65px;
     margin-top: 0%;
     margin-left: 4%;
     float: left;
@@ -285,6 +286,7 @@ div.login.error input#LoginForm_password
     border-bottom: 1px solid silver;
     transition:width 0.3s;
     -webkit-transition:width 0.3s;
+    padding-bottom: 25%;
 }
 .Reportes:hover 
 {
@@ -309,6 +311,7 @@ div.login.error input#LoginForm_password
 .h1_report
 {
     color:#2E62B4!important;
+    /*font-size: 31pt!important;*/
 }
 .h1_reportClick
 {
@@ -606,7 +609,7 @@ select
 {
     width: 392px;
 }
-.termino_pago 
+.periodo, .filter_oper
 {
     /*margin-right: 16%;*/
     position: absolute!important;
@@ -633,3 +636,5 @@ select
     display: none;
 }
 /*....*/
+
+/*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/
