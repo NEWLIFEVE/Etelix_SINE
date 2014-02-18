@@ -40,12 +40,23 @@ class DateManagement
             
         } 
 	/**
-     * Retorna el dia de la semana de una fecha
+     * Retorna el numero del dia de la semana de una fecha
+     * @return int
      */
     public static function getDayNumberWeek($date)
     {
         $date=strtotime($date);
-        return date('N',$date);
+        return (int)date('N',$date);
+    }
+
+    /**
+     * Retorna el nombre del dia de la semana de una fecha
+     * @return string
+     */
+    public static function getNameDayOfWeek($date)
+    {
+        $date=strtotime($date);
+        return date('D',$date);
     }
 
     public static function getMonday($date)
@@ -87,12 +98,13 @@ class DateManagement
         }
         if(is_callable('cal_days_in_month'))
         {
-            return cal_days_in_month(CAL_GREGORIAN, $arrayFecha[1], $arrayFecha[0]);
+            $num=cal_days_in_month(CAL_GREGORIAN, $arrayFecha[1], $arrayFecha[0]);
         }
         else
         {
-            return date('d',mktime(0,0,0,$arrayFecha[1]+1,0,$arrayFecha[0]));
+            $num=date('d',mktime(0,0,0,$arrayFecha[1]+1,0,$arrayFecha[0]));
         }
+        return (int)$num;
     }
 
     /**
@@ -109,6 +121,49 @@ class DateManagement
         $f=strtotime($endDate);
         $cant=$f-$i;
         return $cant/(60*60*24);
+    }
+
+    /**
+     * Recibe como parametros una fecha y la cantidad de dias atras que debe para calcular una fecha
+     * @access public
+     * @static
+     * @param date $date
+     * @param int $num
+     * @return date
+     */
+    public static function getFirstDayPeriod($date,$num)
+    {
+        for ($i=1; $i<=7 ; $i++) 
+        { 
+            if($num==1)
+            {
+                $num=7;
+            }
+            else
+            {
+                $date=self::calculateDate('-1',$date);
+                $num-=1;
+            }
+        }
+        return $date;
+    }
+
+    /**
+     * Recibe una fecha y retorna un array con la fecha inicio y fin de un mes menos, esta funcion trabaja con strtotime
+     * recibe un segundo parametro que seria el numero de meses a restar o sumar, incluyendo el + ó -
+     * @access public
+     * @param date $date
+     * @param string $month
+     * @return array
+     */
+    public static function leastOneMonth($date,$month=null)
+    {
+        if($date==null) $date=date('Y-m-d');
+        if($month===null) $month="-1";
+        $arrayDate['firstday']=date('Y-m-d',strtotime($month.' month',strtotime(self::getDayOne($date))));
+        $array=explode('-',$arrayDate['firstday']);
+        $arrayDate['lastday']=$array[0]."-".$array[1]."-".self::howManyDays($arrayDate['firstday']);
+        return $arrayDate;
     }
 }
 ?>
