@@ -7,7 +7,7 @@ class LoopCommand extends CConsoleCommand
 	public function run($args)
 	{
 		$date='2013-10-02';
-		$final='2014-01-07';
+		$final='2014-01-09';
 		while ($date <= $final)
 		{
 			Yii::app()->provisions->run($date);
