@@ -33,7 +33,7 @@
                                  </tr>";
                 foreach ($carrierGroups as $key => $group)
                 {
-                    $SOA=self::getSoaCarrier($group->id,$date,self::defineFilter($id_filter_oper));
+                    $SOA=self::getSoaCarrier($group->id,$date,$id_filter_oper);
                     $SOA_date_top=Recredi::getSoaDateCarrier($group->id);
                     if($SOA_date_top!=null)
                     {
@@ -199,18 +199,13 @@
                 return "style='border:1px solid black;color:$colorText;text-align:left;background:$backColor;'";
             }
         }
-        public static function defineFilter($val)
-        {
-            if($val=="0") return null;
-            if($val=="1") return TRUE;
-            if($val=="2") return FALSE;
-        }
+        
 
-        public static function getSoaCarrier($id,$date,$filter_oper=null)
+        public static function getSoaCarrier($id,$date,$filter_oper)
         {
-            if($filter_oper==null) $filter="(i.amount+(p.amount-n.amount)) AS amount";
-            if($filter_oper==TRUE)       $filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) > ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
-            if($filter_oper==FALSE)$filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) < ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
+            if($filter_oper=="0") $filter="(i.amount+(p.amount-n.amount)) AS amount";
+            if($filter_oper=="1") $filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) > ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
+            if($filter_oper=="2")$filter="CASE WHEN ABS(i.amount+(p.amount-n.amount)) < ABS(2000) THEN (i.amount+(p.amount-n.amount)) END AS amount";
   
             $sql="SELECT {$filter}
                   FROM

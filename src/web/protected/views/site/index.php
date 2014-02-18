@@ -18,15 +18,12 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes SOA" id="soa">
             <H1 class='h1_report h1SOA'>S O A</H1> 
         </div><br>
-
         <div class="Reportes BALANCE" id="balance">
             <h1 class='h1_report h1BALANCE'>Balance</h1>
         </div><br>
-
         <div class="Reportes REFAC" id="refac">
             <h1 class='h1_report h1REFAC'>REFAC</h1>
         </div><br>
-        
         <div class="Reportes REFI_PROV" id="refi_prov">
             <h1 class='h1_report h1REFI_PROV'>REPROV</h1>
         </div><br>
@@ -34,10 +31,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
-<!--        <div class="Reportes RECOPA" id="recopa">
+        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br>-->
-        
+        </div><br>
         <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
         </div><br>
