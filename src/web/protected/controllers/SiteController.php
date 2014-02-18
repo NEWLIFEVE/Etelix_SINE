@@ -177,6 +177,11 @@ class SiteController extends Controller
                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                    break;
+               case 'recopa':
+                   $correos['recopa']['asunto']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
+                   $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha, Utility::snull($_GET['id_filter_oper']));
+                   $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
+                   break;
             }  
         }
         $tiempo=30*count($correos);
@@ -226,6 +231,11 @@ class SiteController extends Controller
                    $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    break;
+              case 'recopa':
+                  var_dump($_GET['tipo_report']);
+                   $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,'1');
+                   break;
             }  
         }
         foreach($archivos as $key => $archivo)
@@ -264,7 +274,7 @@ class SiteController extends Controller
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'recopa':
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->Recopa($fecha);
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha, Utility::snull($_GET['id_filter_oper']));
                    break;
             }  
         }

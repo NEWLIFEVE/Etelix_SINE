@@ -89,7 +89,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.trabajando'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -113,7 +113,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recopa":
-                    var mostrar =['.fecha']; 
+                    var mostrar =['.fecha,.filter_oper']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
@@ -245,7 +245,7 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'recopa':
-                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_filter_oper').serializeArray());
                 break               
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());

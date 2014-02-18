@@ -75,9 +75,9 @@ class Reportes extends CApplicationComponent
         $var=Recredi::reporte($fecha);
         return $var;
     }
-    public function Recopa($fecha)
+    public function recopa($fecha,$filter_oper)
     {
-        $var=Recopa::reporte($fecha);
+        $var=Recopa::reporte($fecha,$filter_oper);
         return $var;
     }
 

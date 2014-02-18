@@ -606,7 +606,7 @@ select
 {
     width: 392px;
 }
-.periodo 
+.periodo, .filter_oper
 {
     /*margin-right: 16%;*/
     position: absolute!important;
