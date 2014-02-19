@@ -285,6 +285,7 @@ div.login.error input#LoginForm_password
     border-bottom: 1px solid silver;
     transition:width 0.3s;
     -webkit-transition:width 0.3s;
+    padding-bottom: 25%;/*quitar al tener todos los reportes*/
 }
 .Reportes:hover 
 {
@@ -309,6 +310,7 @@ div.login.error input#LoginForm_password
 .h1_report
 {
     color:#2E62B4!important;
+    /*font-size: 31pt!important;*/
 }
 .h1_reportClick
 {
@@ -587,11 +589,11 @@ select
 {
     width: 207px!important;
 }
-#No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  ,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
+#No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  ,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder ,#No_venc::-webkit-input-placeholder  ,#Si_venc::-webkit-input-placeholder 
 {
     color:    #2E62B4;
 }
-#No_disp,#Si_disp ,#No_prov,#Si_prov
+#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc
 {
     width: 12%;
     height: 1.88em!important;
@@ -605,6 +607,10 @@ select
 .provisiones
 {
     width: 392px;
+}
+.vencidas
+{
+    margin-top: 20%;
 }
 .periodo, .filter_oper
 {
@@ -633,7 +639,5 @@ select
     display: none;
 }
 /*....*/
-.h1_report 
-{
-    font-size: 31pt!important;
-}
+
+/*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/

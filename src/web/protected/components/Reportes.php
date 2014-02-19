@@ -75,9 +75,9 @@ class Reportes extends CApplicationComponent
         $var=Recredi::reporte($fecha);
         return $var;
     }
-    public function recopa($fecha,$filter_oper)
+    public function recopa($fecha,$filter_oper,$expired)
     {
-        $var=Recopa::reporte($fecha,$filter_oper);
+        $var=Recopa::reporte($fecha,$filter_oper,$expired);
         return $var;
     }
 
@@ -520,10 +520,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "7":case "10":case "12":case "15":
+            case "1":case "3":case "6":case "8":case "10":case "12":case "15":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "5":case "8":case "11":case "13":case "14":
+            case "2":case "4":case "5":case "7":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
                 break;
             default:

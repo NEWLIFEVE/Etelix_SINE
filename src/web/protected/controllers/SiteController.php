@@ -179,7 +179,7 @@ class SiteController extends Controller
                    break;
                case 'recopa':
                    $correos['recopa']['asunto']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha, Utility::snull($_GET['id_filter_oper']));
+                   $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
                    $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
                    break;
             }  
@@ -232,9 +232,8 @@ class SiteController extends Controller
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    break;
               case 'recopa':
-                  var_dump($_GET['tipo_report']);
                    $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,'1');
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
                    break;
             }  
         }
@@ -274,7 +273,7 @@ class SiteController extends Controller
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
                    break;
               case 'recopa':
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper']);
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
                    break;
             }  
         }
