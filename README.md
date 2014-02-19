@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+- cambio en formula donde se utiliza notas de credito para calcular balance acumulado
 - Agregado Bank Fee
 - Mejorado responsive, al abrir desde un telefono, la aplicacion notifica que no estará disponible el vista previa
 - Corregida resta en REFAC y REPROV.
