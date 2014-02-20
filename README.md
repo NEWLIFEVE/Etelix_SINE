@@ -3,6 +3,8 @@
 
 Sistema de Reportes para Billing
 
+Release 1.2.4.1
+- Cambio de suma en documentos contables de reprov
 Release 1.2.4
 - Corregida calculo de dias en REPROV
 - Nueva version de generacion de provisiones, con soporte para termino de pagos de carriers suppliers 
