@@ -54,7 +54,7 @@ class Provisions extends CApplicationComponent
     	//
     	$this->runInvoiceProvision(false);
 
-    	//$this->sendNotification();
+    	$this->sendNotification();
     }
 
 	/**
