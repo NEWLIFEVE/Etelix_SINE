@@ -4,6 +4,7 @@
 Sistema de Reportes para Billing
 
 Release 1.2.4.1
+- Corregido problema en comando de provisiones
 - Cambio de suma en documentos contables de reprov
 Release 1.2.4
 - Corregida calculo de dias en REPROV
