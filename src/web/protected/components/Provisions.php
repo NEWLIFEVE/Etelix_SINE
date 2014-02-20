@@ -130,7 +130,7 @@ class Provisions extends CApplicationComponent
 			$command = Yii::app()->db->createCommand($sql);
 	        if($command->execute())
 	        {
-				printf("Se generaron ".$this->$data['num']." ".$data['condition']."s para el dia ".$this->date."\n");
+				var_dump("Se generaron ".$this->$data['num']." ".$data['condition']."s para el dia ".$this->date);
 	        }
 	        else
 	        {
@@ -152,7 +152,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
-			printf("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
+			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
@@ -161,7 +161,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
-			printf("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 	}
