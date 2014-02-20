@@ -5,6 +5,7 @@ Sistema de Reportes para Billing
 
 Release 1.2.4.1
     - cambio en formula donde se utiliza notas de credito para calcular balance acumulado
+    - Corregido problema en comando de provisiones
 Release 1.2.4
     - Corregida calculo de dias en REPROV
     - Nueva version de generacion de provisiones, con soporte para termino de pagos de carriers suppliers 
