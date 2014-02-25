@@ -509,6 +509,21 @@ class Reportes extends CApplicationComponent
 
     /**
      * define monto del balance en SOA, en si es la ultima columna del reporte, pero esta para ser desarrollada, necesita de las demas
+     * 1 - Factura Enviada: + SOA
+     * 2 - Factura Recibida: - SOA
+     * 3 - Pago: + SOA
+     * 4 - Cobro: - SOA
+     * 5 - Disputa Recibida: - SOA
+     * 6 - Disputa Enviada: + SOA
+     * 7 - Nota de Credito Enviada: - SOA
+     * 8 - Nota de Credito Recibida: + SOA
+     * 9 - Saldo Inicial.
+     * 10 - Provision de Trafico Enviada: + SOA
+     * 11 - Provision de Trafico Recibida: - SOA
+     * 12 - Provision de Factura Enviada: + SOA
+     * 13 - Provision de Factura Recibida: - SOA
+     * 14 - Bank Fee Cobro: - SOA
+     * 15 - Bank Fee Pago: + SOA
      * @param type $model
      * @param type $acumulado
      * @return type
@@ -521,6 +536,7 @@ class Reportes extends CApplicationComponent
                 return $model->amount;
                 break;
             case "1":case "3":case "6":case "8":case"10":case "12":case "15":
+
                 return $acumulado + $model->amount;
                 break;
             case "2":case "4":case "5":case "7":case "11":case "13":case "14":
@@ -620,7 +636,6 @@ class Reportes extends CApplicationComponent
             return $acumuladoFacEnv;
         } 
     }
-
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
@@ -645,7 +660,11 @@ class Reportes extends CApplicationComponent
                     return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-14';
                 
                 if (date("d", strtotime($fecha_to)) == 14)
-                    return self::sumRestDate("15", $fecha_to, "-");
+
+                    return self::define_due_date("15", $fecha_to, "-");
+                
+                if (date("d", strtotime($fecha_to)) != 14 && date("d", strtotime($fecha_to)) != 15 && $fecha_to != self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
+                    return self::define_due_date("15", $fecha_to, "-");
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);
