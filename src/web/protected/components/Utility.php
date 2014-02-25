@@ -148,5 +148,31 @@ Class Utility
         $valid = date($formato,$fecha_actual );
         return $valid;
     }
+    /**
+     * ordena arrays con el metodo de burbuja
+     * @param type $A
+     * @param type $n
+     * @return type
+     */
+    public static function burbuja($A,$n)
+    {
+        for($i=1;$i<$n;$i++)
+        {
+            for($j=0;$j<$n-$i;$j++)
+            {
+                    if($A[$j]>$A[$j+1])
+                    {$k=$A[$j+1]; $A[$j+1]=$A[$j]; $A[$j]=$k;}
+            }
+        }
+
+      return $A;
+    }
+    public static function changePositive($var)
+    {
+        if ($var<0)
+            return $var*-1;
+        else
+            return $var;
+    }
 }
 ?>

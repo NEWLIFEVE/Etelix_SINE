@@ -575,11 +575,11 @@ li.ui-menu-item a
 {
     background-color: white;
     color: #6E6E6E;
-    margin: -37% 16% auto;
+    margin: -37% 14% auto;
     padding: 23px 30px 43px 28px;
     position: fixed;
     text-align: left;
-    width: 960px;
+    width: 990px;
     z-index: 1031;
     height: 583px;
     overflow-y: scroll;

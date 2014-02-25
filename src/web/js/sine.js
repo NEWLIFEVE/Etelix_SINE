@@ -222,7 +222,6 @@ $SINE.UI=(function()
                           $( document ).ajaxError(function() {
                               $SINE.UI.msj_cargando("<h2>Exportando Archivo Excel </h2>","cargando.gif");
                               $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
-                              setTimeout(function() {  $(".excel_a").removeAttr("href"); }, 2000);
                           });
                           } 
                 }
@@ -434,9 +433,14 @@ $SINE.AJAX=(function()
                  success: function(data)
                  {   
                      console.log(data);
-                     if(action=="/site/Excel")         $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
-                     else if(action=="/site/previa")   $SINE.UI.fancy_box(data);  
-                     else                              $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%");     
+                     if(action=="/site/Excel"){         
+                         $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
+                         $(".excel_a").removeAttr("href");
+                     }else if(action=="/site/previa"){ 
+                         $SINE.UI.fancy_box(data);  
+                     }else{                              
+                         $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                     }    
                  }
             });
         }
