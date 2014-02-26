@@ -54,6 +54,12 @@ class AccountingDocument extends CActiveRecord
         public $minutos_balance;
         public $min_diference;
         public $monto_diference;
+        public $fac_amount;
+        public $fac_minutes;
+        public $fac_doc_number;
+        public $due_date;
+        public $soa;
+        public $name;
 	/**
 	 * @return string the associated database table name
 	 */

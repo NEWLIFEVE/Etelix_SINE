@@ -290,12 +290,6 @@ class SiteController extends Controller
      */
     public function genExcel($nombre,$html,$salida=true)
     {
-        if(stripos($nombre,"Evolucion") || stripos($nombre,"Comercial"))
-        {
-            header("Location: /adjuntos/{$nombre}.xlsx");
-        }
-        else
-        {
             if($salida)
             {
                 header("Content-type: application/vnd.ms-excel; charset=utf-8"); 
@@ -321,7 +315,6 @@ class SiteController extends Controller
                 </html>";
                 fwrite($fp,$cuerpo);
             }
-        }
     }
         /**
      * @access public

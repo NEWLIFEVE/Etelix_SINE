@@ -715,7 +715,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_facturas($model,$acumulado_facturas)
     {
-        return $acumulado_facturas + $model->amount;
+        return $acumulado_facturas + $model->fac_amount;
     }
 
     /**
