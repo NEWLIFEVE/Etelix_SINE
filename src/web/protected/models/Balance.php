@@ -35,182 +35,147 @@
  * @property integer $id_carrier_customer
  *
  * The followings are the available model relations:
+ * @property Carrier $idCarrierCustomer
+ * @property Carrier $idCarrierSupplier
  * @property Destination $idDestination
  * @property DestinationInt $idDestinationInt
- * @property Carrier $idCarrierSupplier
- * @property Carrier $idCarrierCustomer
  * @property Rrhistory[] $rrhistories
  */
 class Balance extends CActiveRecord
 {
-	//Alto Impacto
-	public $cliente;
-	public $proveedor;
-	public $destino;
-	public $total_calls;
-	public $costmin;
-	public $ratemin;
-	public $marginmin;
-	public $id_vendedor;
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return Balance the static model class
+     */
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
 
-	//para posicion neta
-	public $operador;
-	public $vendedor;
-	public $vminutes;
-	public $vrevenue;
-	public $vmargin;
-	public $cminutes;
-	public $ccost;
-	public $cmargin;
-	public $posicion_neta;
-	public $margen_total;
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return 'balance';
+    }
 
-	//RankingCompraVenta
-	public $nombre;
-	public $apellido;
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('date_balance, minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin', 'required'),
+            array('id_carrier_supplier, id_destination, id_destination_int, status, id_carrier_customer', 'numerical', 'integerOnly'=>true),
+            array('minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin', 'numerical'),
+            array('date_change', 'safe'),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, date_balance, minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin, date_change, id_carrier_supplier, id_destination, id_destination_int, status, id_carrier_customer', 'safe', 'on'=>'search'),
+        );
+    }
 
-	public $complete_calls_exc;
-	public $incomplete_calls_inc;
-	public $incomplete_calls_exc;
-	public $asr_inc;
-	public $asr_exc;
-	public $delta;
-	public $pdd_inc;
-	public $pdd_exc;
-	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Balance the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'idCarrierCustomer' => array(self::BELONGS_TO, 'Carrier', 'id_carrier_customer'),
+            'idCarrierSupplier' => array(self::BELONGS_TO, 'Carrier', 'id_carrier_supplier'),
+            'idDestination' => array(self::BELONGS_TO, 'Destination', 'id_destination'),
+            'idDestinationInt' => array(self::BELONGS_TO, 'DestinationInt', 'id_destination_int'),
+            'rrhistories' => array(self::HAS_MANY, 'Rrhistory', 'id_balance'),
+        );
+    }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'balance';
-	}
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'date_balance' => 'Date Balance',
+            'minutes' => 'Minutes',
+            'acd' => 'Acd',
+            'asr' => 'Asr',
+            'margin_percentage' => 'Margin Percentage',
+            'margin_per_minute' => 'Margin Per Minute',
+            'cost_per_minute' => 'Cost Per Minute',
+            'revenue_per_minute' => 'Revenue Per Minute',
+            'pdd' => 'Pdd',
+            'incomplete_calls' => 'Incomplete Calls',
+            'incomplete_calls_ner' => 'Incomplete Calls Ner',
+            'complete_calls' => 'Complete Calls',
+            'complete_calls_ner' => 'Complete Calls Ner',
+            'calls_attempts' => 'Calls Attempts',
+            'duration_real' => 'Duration Real',
+            'duration_cost' => 'Duration Cost',
+            'ner02_efficient' => 'Ner02 Efficient',
+            'ner02_seizure' => 'Ner02 Seizure',
+            'pdd_calls' => 'Pdd Calls',
+            'revenue' => 'Revenue',
+            'cost' => 'Cost',
+            'margin' => 'Margin',
+            'date_change' => 'Date Change',
+            'id_carrier_supplier' => 'Id Carrier Supplier',
+            'id_destination' => 'Id Destination',
+            'id_destination_int' => 'Id Destination Int',
+            'status' => 'Status',
+            'id_carrier_customer' => 'Id Carrier Customer',
+        );
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('date_balance, minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin', 'required'),
-			array('id_carrier_supplier, id_destination, id_destination_int, status, id_carrier_customer', 'numerical', 'integerOnly'=>true),
-			array('minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin', 'numerical'),
-			array('date_change', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, date_balance, minutes, acd, asr, margin_percentage, margin_per_minute, cost_per_minute, revenue_per_minute, pdd, incomplete_calls, incomplete_calls_ner, complete_calls, complete_calls_ner, calls_attempts, duration_real, duration_cost, ner02_efficient, ner02_seizure, pdd_calls, revenue, cost, margin, date_change, id_carrier_supplier, id_destination, id_destination_int, status, id_carrier_customer', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search()
+    {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'idDestination'=>array(self::BELONGS_TO,'Destination','id_destination'),
-			'idDestinationInt'=>array(self::BELONGS_TO,'DestinationInt','id_destination_int'),
-			'idCarrierSupplier'=>array(self::BELONGS_TO,'Carrier','id_carrier_supplier'),
-			'idCarrierCustomer'=>array(self::BELONGS_TO,'Carrier','id_carrier_customer'),
-			'rrhistories'=>array(self::HAS_MANY,'Rrhistory','id_balance'),
-		);
-	}
+        $criteria=new CDbCriteria;
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id'=>'ID',
-			'date_balance'=>'Date Balance',
-			'minutes'=>'Minutes',
-			'acd'=>'Acd',
-			'asr'=>'Asr',
-			'margin_percentage'=>'Margin Percentage',
-			'margin_per_minute'=>'Margin Per Minute',
-			'cost_per_minute'=>'Cost Per Minute',
-			'revenue_per_minute'=>'Revenue Per Minute',
-			'pdd'=>'Pdd',
-			'incomplete_calls'=>'Incomplete Calls',
-			'incomplete_calls_ner'=>'Incomplete Calls Ner',
-			'complete_calls'=>'Complete Calls',
-			'complete_calls_ner'=>'Complete Calls Ner',
-			'calls_attempts'=>'Calls Attempts',
-			'duration_real'=>'Duration Real',
-			'duration_cost'=>'Duration Cost',
-			'ner02_efficient'=>'Ner02 Efficient',
-			'ner02_seizure'=>'Ner02 Seizure',
-			'pdd_calls'=>'Pdd Calls',
-			'revenue'=>'Revenue',
-			'cost'=>'Cost',
-			'margin'=>'Margin',
-			'date_change'=>'Date Change',
-			'id_carrier_supplier'=>'Id Carrier Supplier',
-			'id_destination'=>'Id Destination',
-			'id_destination_int'=>'Id Destination Int',
-			'status'=>'Status',
-			'id_carrier_customer'=>'Id Carrier Customer',
-		);
-	}
+        $criteria->compare('id',$this->id);
+        $criteria->compare('date_balance',$this->date_balance,true);
+        $criteria->compare('minutes',$this->minutes);
+        $criteria->compare('acd',$this->acd);
+        $criteria->compare('asr',$this->asr);
+        $criteria->compare('margin_percentage',$this->margin_percentage);
+        $criteria->compare('margin_per_minute',$this->margin_per_minute);
+        $criteria->compare('cost_per_minute',$this->cost_per_minute);
+        $criteria->compare('revenue_per_minute',$this->revenue_per_minute);
+        $criteria->compare('pdd',$this->pdd);
+        $criteria->compare('incomplete_calls',$this->incomplete_calls);
+        $criteria->compare('incomplete_calls_ner',$this->incomplete_calls_ner);
+        $criteria->compare('complete_calls',$this->complete_calls);
+        $criteria->compare('complete_calls_ner',$this->complete_calls_ner);
+        $criteria->compare('calls_attempts',$this->calls_attempts);
+        $criteria->compare('duration_real',$this->duration_real);
+        $criteria->compare('duration_cost',$this->duration_cost);
+        $criteria->compare('ner02_efficient',$this->ner02_efficient);
+        $criteria->compare('ner02_seizure',$this->ner02_seizure);
+        $criteria->compare('pdd_calls',$this->pdd_calls);
+        $criteria->compare('revenue',$this->revenue);
+        $criteria->compare('cost',$this->cost);
+        $criteria->compare('margin',$this->margin);
+        $criteria->compare('date_change',$this->date_change,true);
+        $criteria->compare('id_carrier_supplier',$this->id_carrier_supplier);
+        $criteria->compare('id_destination',$this->id_destination);
+        $criteria->compare('id_destination_int',$this->id_destination_int);
+        $criteria->compare('status',$this->status);
+        $criteria->compare('id_carrier_customer',$this->id_carrier_customer);
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('date_balance',$this->date_balance,true);
-		$criteria->compare('minutes',$this->minutes);
-		$criteria->compare('acd',$this->acd);
-		$criteria->compare('asr',$this->asr);
-		$criteria->compare('margin_percentage',$this->margin_percentage);
-		$criteria->compare('margin_per_minute',$this->margin_per_minute);
-		$criteria->compare('cost_per_minute',$this->cost_per_minute);
-		$criteria->compare('revenue_per_minute',$this->revenue_per_minute);
-		$criteria->compare('pdd',$this->pdd);
-		$criteria->compare('incomplete_calls',$this->incomplete_calls);
-		$criteria->compare('incomplete_calls_ner',$this->incomplete_calls_ner);
-		$criteria->compare('complete_calls',$this->complete_calls);
-		$criteria->compare('complete_calls_ner',$this->complete_calls_ner);
-		$criteria->compare('calls_attempts',$this->calls_attempts);
-		$criteria->compare('duration_real',$this->duration_real);
-		$criteria->compare('duration_cost',$this->duration_cost);
-		$criteria->compare('ner02_efficient',$this->ner02_efficient);
-		$criteria->compare('ner02_seizure',$this->ner02_seizure);
-		$criteria->compare('pdd_calls',$this->pdd_calls);
-		$criteria->compare('revenue',$this->revenue);
-		$criteria->compare('cost',$this->cost);
-		$criteria->compare('margin',$this->margin);
-		$criteria->compare('date_change',$this->date_change,true);
-		$criteria->compare('id_carrier_supplier',$this->id_carrier_supplier);
-		$criteria->compare('id_destination',$this->id_destination);
-		$criteria->compare('id_destination_int',$this->id_destination_int);
-		$criteria->compare('status',$this->status);
-		$criteria->compare('id_carrier_customer',$this->id_carrier_customer);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
 }
