@@ -190,7 +190,7 @@ class SiteController extends Controller
         foreach($correos as $key => $correo)
         { 
             $this->genExcel($correo['asunto'],$correo['cuerpo'],false);
-            Yii::app()->mail->enviar($correo['cuerpo'], $user, $correo['asunto'],$correo['ruta']);*/
+            Yii::app()->mail->enviar($correo['cuerpo'], $user, $correo['asunto'],$correo['ruta']);
         }
         echo "Mensaje Enviado";
     }
@@ -346,7 +346,7 @@ class SiteController extends Controller
                 }
             }
     }
-    
+
     /**
      * 
      * @param type $start
