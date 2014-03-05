@@ -70,11 +70,12 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type
      */
-    public function recredi($fecha)
+    public function recredi($date)
     {
-        $var=Recredi::reporte($fecha);
-        return $var;
+        $var=new Recredi;
+        return $var->report($date);
     }
+
     public function recopa($fecha,$filter_oper,$expired)
     {
         $var=Recopa::reporte($fecha,$filter_oper,$expired);

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 1.3
+ * @version 1.4
  * @package components
  */
 Class Utility
@@ -63,6 +63,21 @@ Class Utility
         }else{
             return $var;
         }
+    }
+
+    /**
+     * Retorna el segundo parametro si el primero es nulo, de lo contrario el primero
+     * @since 1.4
+     * @access public
+     * @static
+     * @param $first
+     * @param string $second
+     * @return 
+     */
+    public static function ifNull($first,$second)
+    {
+        if($first==null) return $second;
+        return $first;
     }
     
     /**
@@ -134,6 +149,7 @@ Class Utility
         $monto = str_replace(",",".",$monto);
         return $monto;
     }
+
     /**
      * resulve el formato especifico para repoprtes en sine, soporta cualquier formato, no obstante se le pasarian por ahora
      * "F j - Y": para issiu date y due date
@@ -148,6 +164,7 @@ Class Utility
         $valid = date($formato,$fecha_actual );
         return $valid;
     }
+
     /**
      * ordena arrays con el metodo de burbuja
      * @param type $A
@@ -167,6 +184,10 @@ Class Utility
 
       return $A;
     }
+
+    /**
+     *
+     */
     public static function changePositive($var)
     {
         if ($var<0)

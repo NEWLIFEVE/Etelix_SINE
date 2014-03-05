@@ -4,7 +4,6 @@
 */
 class SiteController extends Controller
 {
-    protected $letra;
     /**
      * Declares class-based actions.
      * @access public
@@ -133,73 +132,75 @@ class SiteController extends Controller
         Yii::app()->user->logout();
         $this->redirect(Yii::app()->homeUrl);
     }
+
     /**
      * funcion encargada de enviar reportes por correo
      */
     public function actionMail()
     {
         $this->vaciarAdjuntos();
-        $this->letra=Log::preliminar($_POST['datepicker']);
         $fecha=$grupo=$fecha_from=$fecha_to=null;
-        $correos=null;
+        $correos=array();
         $user=UserIdentity::getEmail();
         if(isset($_POST['datepicker']))
         {
-             $fecha=(string)$_POST['datepicker'];
-            if(($_POST['id_periodo'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_POST['id_periodo'],$fecha);   
-            if(($_POST['grupo'])!=NULL)  $grupo=$_POST['grupo'];   
+            $fecha=(string)$_POST['datepicker'];
+
+            if(($_POST['id_periodo'])!=NULL) $fecha_from=Reportes::define_fecha_from($_POST['id_periodo'],$fecha);
+
+            if(($_POST['grupo'])!=NULL) $grupo=$_POST['grupo'];
+
             if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov'],$grupo,$fecha);
+
             if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$grupo,$fecha);
             
-            switch ($_POST['tipo_report']) {
-              case 'soa':
-                   $correos['soa']['asunto']="SINE -  SOA".self::reportTitle($fecha);
-                   $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov);
-                   $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
-                   break;
-              case 'balance':
-                   $correos['balance']['asunto']="SINE -  BALANCE".self::reportTitle($fecha);
-                   $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp);
-                   $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
-                   break;
-               case 'refac':
-                   $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
-                   $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
-                   break;
-               case 'recredi':
-                   $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
-                   $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
-                   break;
-               case 'refi_prov':
-                   $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
-                   $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
-                   break;
-               case 'recopa':
-                   $correos['recopa']['asunto']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
-                   $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc']);
-                   $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
-                   break;
+            switch ($_POST['tipo_report'])
+            {
+                case 'soa':
+                    $correos['soa']['asunto']="SINE - SOA".self::reportTitle($fecha);
+                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($grupo,$fecha,$no_disp,$no_prov);
+                    $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
+                    break;
+                case 'balance':
+                    $correos['balance']['asunto']="SINE - BALANCE".self::reportTitle($fecha);
+                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp);
+                    $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
+                    break;
+                case 'refac':
+                    $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
+                    $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
+                    break;
+                case 'recredi':
+                    $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                    $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
+                    $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
+                    break;
+                case 'refi_prov':
+                    $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
+                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                    $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
+                    break;
+                case 'recopa':
+                    $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc']);
+                    $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
+                    break;
             }  
         }
-        $tiempo=30*count($correos);
-        ini_set('max_execution_time', $tiempo);
         foreach($correos as $key => $correo)
         { 
             $this->genExcel($correo['asunto'],$correo['cuerpo'],false);
             Yii::app()->mail->enviar($correo['cuerpo'], $user, $correo['asunto'],$correo['ruta']);
         }
-        echo "Mensaje Enviado"; 
-    } 
+        echo "Mensaje Enviado";
+    }
+
     /**
      * funcion encargada de exportar reportes por excel
      */
     public function actionExcel()
     {
         $this->vaciarAdjuntos();
-        $this->letra=Log::preliminar($_GET['datepicker']);
         $fecha=$grupo=$fecha_to=null;
         $archivos=array();
         if(isset($_GET['datepicker']))
@@ -242,10 +243,13 @@ class SiteController extends Controller
             $this->genExcel($archivo['nombre'],$archivo['cuerpo']);
         }
     }
+
+    /**
+     *
+     */
     public function actionPrevia()
     {
         $this->vaciarAdjuntos();
-        $this->letra=Log::preliminar($_GET['datepicker']);
         $fecha=$grupo=$fecha_to=null;
         $archivos=array();
         if(isset($_GET['datepicker']))
@@ -282,6 +286,7 @@ class SiteController extends Controller
             echo $archivo['cuerpo'];
         }
     }
+
     /**
      * 
      * @param type $nombre
@@ -290,33 +295,34 @@ class SiteController extends Controller
      */
     public function genExcel($nombre,$html,$salida=true)
     {
-            if($salida)
-            {
-                header("Content-type: application/vnd.ms-excel; charset=utf-8"); 
-                header("Content-Disposition: attachment; filename={$nombre}.xls");
-                header("Pragma: no-cache");
-                header("Expires: 0");
-                echo $html;
-            }
-            else
-            {
-                $ruta=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR;
-                $fp=fopen($ruta."$nombre.xls","w+");
-                $cuerpo="
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <meta charset='utf-8'>
-                        <meta http-equiv='Content-Type' content='application/vnd.ms-excel charset=utf-8'>
-                    </head>
-                    <body>";
-                $cuerpo.=$html;
-                $cuerpo.="</body>
-                </html>";
-                fwrite($fp,$cuerpo);
-            }
+        if($salida)
+        {
+            header("Content-type: application/vnd.ms-excel; charset=utf-8"); 
+            header("Content-Disposition: attachment; filename={$nombre}.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            echo $html;
+        }
+        else
+        {
+            $ruta=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR;
+            $fp=fopen($ruta."$nombre.xls","w+");
+            $cuerpo="
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset='utf-8'>
+                    <meta http-equiv='Content-Type' content='application/vnd.ms-excel charset=utf-8'>
+                </head>
+                <body>";
+            $cuerpo.=$html;
+            $cuerpo.="</body>
+            </html>";
+            fwrite($fp,$cuerpo);
+        }
     }
-        /**
+
+    /**
      * @access public
      */
     public function vaciarAdjuntos()
@@ -340,6 +346,7 @@ class SiteController extends Controller
                 }
             }
     }
+
     /**
      * 
      * @param type $start
