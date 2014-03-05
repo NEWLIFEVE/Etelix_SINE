@@ -260,8 +260,8 @@ div.login.error input#LoginForm_password
 .listadeReportes
 {
     border-right: 7px solid #2E62B4;
-    /*height: 539px;*/
-    height: 477px;
+    height: 539px;
+    /*height: 477px;*/
     width: 358px;
     margin-top: -34%;
     background: white; 
