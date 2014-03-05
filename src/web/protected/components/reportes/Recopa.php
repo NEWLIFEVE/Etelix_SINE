@@ -6,7 +6,7 @@
     {
         public static function reporte($date,$id_filter_oper,$expired) 
         {
-            $carrierGroups=self::getAllGroups();
+            $carrierGroups=CarrierGroups::getAllGroups();
             $seg=count($carrierGroups)*3;
             ini_set('max_execution_time', $seg);
             $acum_beforeCC=$acum_nowCC=$acum_next1CC=$acum_next2CC=$acum_next3CC=$acum_next4CC=$acum_next5CC=$acum_next6CC=$acum_next7CC=$acum_next8CC=$acum_next9CC=$acum_next10CC=$acum_beforeCP=$acum_nowCP=$acum_next1CP=$acum_next2CP=$acum_next3CP=$acum_next4CP=$acum_next5CP=$acum_next6CP=$acum_next7CP=$acum_next8CP=$acum_next9CP=$acum_next10CP=0;
@@ -289,10 +289,6 @@
                     return $due_date!=null;
                     break;
             }
-        }
-        public static function getAllGroups()
-        {
-            return CarrierGroups::model()->findAll();
         }
     }
     ?>

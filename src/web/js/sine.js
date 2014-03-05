@@ -24,7 +24,7 @@ $SINE.UI=(function()
         };
         function _clickElement() 
         {
-            $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#previa,#mail,#excel,#views_not').on('click',function()
+            $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#previa,#mail,#excel,#views_not').on('click',function()
             {   
                 switch ($(this).attr("id")){
                     case "soa":case"balance":case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": 
@@ -39,6 +39,12 @@ $SINE.UI=(function()
                         break;
                     case "No_venc": case "Si_venc": 
                         $SINE.UI.agrega_Val_radio($(this),$('#No_venc, #Si_venc'));
+                        break;
+                    case "No_inter": case "Si_inter": 
+                        $SINE.UI.agrega_Val_radio($(this),$('#No_inter, #Si_inter'));
+                        break;
+                    case "No_act": case "Si_act": 
+                        $SINE.UI.agrega_Val_radio($(this),$('#No_act, #Si_act'));
                         break;
                     case "previa": case "mail": case "excel": 
                         $SINE.UI.export_report($(this));
@@ -82,7 +88,7 @@ $SINE.UI=(function()
 	{
             var dio_click=click[0].id;
             $(no_Click).val(''); 
-            if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'){$(click).val('Si');$(click).blur();}
+            if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_inter'){$(click).val('Si');$(click).blur();}
             else {$(click).val('No');$(click).blur();}
         }
         /**
@@ -92,7 +98,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.trabajando'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -112,7 +118,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.fecha']; 
+                    var mostrar =['.fecha,.intercompany,.no_activity']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recopa":

@@ -182,6 +182,7 @@ class SiteController extends Controller
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                 case 'recopa':
+                    $correos['recopa']['asunto']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
                     $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc']);
                     $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
                     break;
@@ -274,7 +275,7 @@ class SiteController extends Controller
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                    break;
               case 'recredi':
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
                    break;
               case 'recopa':
                    $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
@@ -363,6 +364,11 @@ class SiteController extends Controller
         {
             return Reportes::reportTitle($start,$end);
         }
+    }
+    public static function trueFalse($var)
+    {
+        if($var=="")return FALSE;
+            else return TRUE;
     }
 }
 ?>
