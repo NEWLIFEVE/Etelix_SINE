@@ -171,18 +171,18 @@ class SiteController extends Controller
                     $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
                     $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                     break;
-                case 'recredi':
-                    $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                    $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
-                    $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
-                    break;
                 case 'refi_prov':
                     $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                     $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
-                case 'recopa':
-                    $correos['recopa']['asunto']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
+               case 'recredi':
+                    $correos['recredi']['asunto']="SINE - RECREDI".self::reportTitle($fecha);
+                    $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']));
+                    $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
+                    break;
+               case 'recopa':
+                    $correos['recopa']['asunto']="SINE - RECOPA".self::reportTitle($fecha);
                     $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc']);
                     $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
                     break;
@@ -225,13 +225,13 @@ class SiteController extends Controller
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
                    break;
-              case 'recredi':
-                   $archivos['recredi']['nombre']="SINE - RECREDI ".self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha);
-                   break;
               case 'refi_prov':
                    $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                   break;
+              case 'recredi':
+                   $archivos['recredi']['nombre']="SINE - RECREDI ".self::reportTitle($fecha)."-".date("g:i a");
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
                    break;
               case 'recopa':
                    $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");

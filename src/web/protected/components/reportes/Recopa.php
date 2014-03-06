@@ -128,7 +128,7 @@
                                 <td >".Yii::app()->format->format_decimal($acum_next10CC + $acum_next10CP)."</td>
                                </tr>";
               $recopa.="</table>";
-           echo $recopa;
+           return $recopa;
         }
         
         public static function defineAcumCC($dateActual,$due_date,$amount,$acumulado)
