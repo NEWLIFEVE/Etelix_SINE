@@ -107,6 +107,20 @@ $this->pageTitle = Yii::app()->name;
                 <input name="No_venc" id="No_venc" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
+        <div class='formInputs no_activity'>
+            <h3>Sin actividad</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_act" id="Si_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_act" id="No_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>
+        <div class='formInputs intercompany'>
+            <h3>Intercompañia</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_inter" id="Si_inter" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>
 <!--        <div class='formInputs pronostico'>
             <h3>Pronostico</h3>
             <div class="btn-group" data-toggle="buttons-radio">

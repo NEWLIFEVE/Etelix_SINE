@@ -70,10 +70,10 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type
      */
-    public function recredi($date)
+    public function recredi($date,$intercompany,$no_activity)
     {
         $var=new Recredi;
-        return $var->report($date);
+        return $var->report($date,$intercompany,$no_activity);
     }
 
     public function recopa($fecha,$filter_oper,$expired)
@@ -716,7 +716,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_facturas($model,$acumulado_facturas)
     {
-        return $acumulado_facturas + $model->amount;
+        return $acumulado_facturas + $model->fac_amount;
     }
 
     /**
