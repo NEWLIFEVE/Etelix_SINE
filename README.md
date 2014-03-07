@@ -2,7 +2,9 @@
 ============
 
 Sistema de Reportes para Billing
-
+    - Nueva version de provisiones
+    - Agregados revenue, margin y cost de los ultimos tres dias por carrier
+    - Mejora en REPROV y REFAC
 Release 1.2.4.1
     - cambio en formula donde se utiliza notas de credito para calcular balance acumulado
     - Corregido problema en comando de provisiones
