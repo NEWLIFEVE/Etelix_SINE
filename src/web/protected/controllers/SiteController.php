@@ -168,12 +168,12 @@ class SiteController extends Controller
                     break;
                 case 'refac':
                     $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
+                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC",$_POST['id_periodo']);
                     $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                     break;
                 case 'refi_prov':
                     $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV",$_POST['id_periodo']);
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                case 'recredi':
@@ -223,11 +223,11 @@ class SiteController extends Controller
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC",$_GET['id_periodo']);
                    break;
               case 'refi_prov':
                    $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fecha_from, $fecha)." ".str_replace("-","",$fecha_from).self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV",$_GET['id_periodo']);
                    break;
               case 'recredi':
                    $archivos['recredi']['nombre']="SINE - RECREDI ".self::reportTitle($fecha)."-".date("g:i a");
@@ -269,10 +269,10 @@ class SiteController extends Controller
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($grupo,$fecha,$no_disp);
                    break;
               case 'refac':
-                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fecha_from,$fecha,"REFAC",$_GET['id_periodo']);
                    break;
               case 'refi_prov':
-                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fecha_from,$fecha,"REFI PROV",$_GET['id_periodo']);
                    break;
               case 'recredi':
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
