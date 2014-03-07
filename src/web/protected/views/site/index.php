@@ -18,15 +18,12 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes SOA" id="soa">
             <H1 class='h1_report h1SOA'>S O A</H1> 
         </div><br>
-
         <div class="Reportes BALANCE" id="balance">
             <h1 class='h1_report h1BALANCE'>Balance</h1>
         </div><br>
-
         <div class="Reportes REFAC" id="refac">
             <h1 class='h1_report h1REFAC'>REFAC</h1>
         </div><br>
-        
         <div class="Reportes REFI_PROV" id="refi_prov">
             <h1 class='h1_report h1REFI_PROV'>REPROV</h1>
         </div><br>
@@ -36,14 +33,14 @@ $this->pageTitle = Yii::app()->name;
         </div><br>
         <!-- <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br>-->
-        
+        </div><br> -->
+
 <!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
         </div><br>
         <div class="Reportes REDIS" id="redis">
             <h1 class='h1_report h1REDIS'>REDIS</h1>
-        </div><br> -->
+        </div><br>-->
     </div>
 </div>
 <div>
@@ -101,6 +98,27 @@ $this->pageTitle = Yii::app()->name;
             <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>
+        <div class='formInputs vencidas'>
+            <h3>Venc +2sem</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_venc" id="Si_venc" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_venc" id="No_venc" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>
+        <div class='formInputs no_activity'>
+            <h3>Sin actividad</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_act" id="Si_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_act" id="No_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+            </div>  
+        </div>
+        <div class='formInputs intercompany'>
+            <h3>Intercompañia</h3>
+            <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_inter" id="Si_inter" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
+                <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
 <!--        <div class='formInputs pronostico'>

@@ -18,9 +18,9 @@ class Reportes extends CApplicationComponent
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$no_prov,$grupoName)
+    public function SOA($grupo,$fecha,$no_disp,$no_prov)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov,$grupoName);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
         return $var;
     }
 
@@ -32,9 +32,9 @@ class Reportes extends CApplicationComponent
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_disp,$grupoName)
+    public function balance_report($grupo,$fecha,$no_disp)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_disp,$grupoName);
+        $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
 
@@ -45,9 +45,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report)
+    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
         return $var;
     }
 
@@ -58,9 +58,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report)
+    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
         return $var;
     }
 
@@ -70,14 +70,15 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type
      */
-    public function recredi($fecha)
+    public function recredi($date,$intercompany,$no_activity)
     {
-        $var=Recredi::reporte($fecha);
-        return $var;
+        $var=new Recredi;
+        return $var->report($date,$intercompany,$no_activity);
     }
-    public function recopa($fecha,$filter_oper)
+
+    public function recopa($fecha,$filter_oper,$expired)
     {
-        $var=Recopa::reporte($fecha,$filter_oper);
+        $var=Recopa::reporte($fecha,$filter_oper,$expired);
         return $var;
     }
 
@@ -103,9 +104,10 @@ class Reportes extends CApplicationComponent
      * @return string
      */
     public static function define_disp($no_disp,$tipo_report,$grupo,$fecha)
-    {
+    {   
+        if($grupo!=null)$grupo=Reportes::define_grupo($grupo);
         $body="UNION
-               SELECT a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+               SELECT a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
                FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                WHERE a.id_carrier IN(Select id from carrier where $grupo) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$fecha}'";
         switch ($tipo_report) 
@@ -137,8 +139,9 @@ class Reportes extends CApplicationComponent
      */
     public static function define_prov($no_prov,$grupo,$fecha)
     {
+        if($grupo!=null)$grupo=Reportes::define_grupo($grupo);
         $body="UNION
-               SELECT a.issue_date, a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, a.from_date, a.to_date, a.doc_number, a.amount, s.name AS currency
+               SELECT a.issue_date,a.valid_received_date, a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, a.from_date, a.to_date, a.doc_number, a.amount, s.name AS currency
                FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$fecha}'";
        
@@ -155,19 +158,17 @@ class Reportes extends CApplicationComponent
     }
 
     /**
-     * fucnion encargada de determinar el due_date apartir de termino pago y issue_date para ser usado en SOA, 
-     * no obstante tambien es usado en refac y refi_prov, se usa en parte para determinar el from_date de estos 
-     * ultimos reportes, en el caso standar de due_date para soa, esta funcion suma un dia, pero para el caso de
-     *  refac y refi_prov, resta los dias dependiendo el num de dias que arroje el tp, ejecutado antes d ellegar a esta funcion
-     * @param type $tp
+     * 
+     * @param type $day: la cantidad de dias para sumar o restar
      * @param type $fecha
+     * @param type $signo
      * @return type
      */
-    public static function define_due_date($tp, $fecha, $signo)
+    public static function sumRestDate($day, $date, $symbol)
     {
-        $tpdia=$signo.$tp.' day';
-        $due_date=date('Y-m-d', strtotime($tpdia, strtotime ($fecha))) ;
-        return $due_date;
+        $oper=$symbol.$day.' day';
+        $result=date('Y-m-d', strtotime($oper, strtotime ($date))) ;
+        return $result;
     }
     /**
      * define la descipcion en SOA
@@ -535,7 +536,8 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "8":case "10":case "12":case "15":
+            case "1":case "3":case "6":case "8":case"10":case "12":case "15":
+
                 return $acumulado + $model->amount;
                 break;
             case "2":case "4":case "5":case "7":case "11":case "13":case "14":
@@ -646,23 +648,21 @@ class Reportes extends CApplicationComponent
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
                 break;
             case 15:
-                if (date("d", strtotime($fecha_to)) == 15)
+                if(date("d", strtotime($fecha_to)) == 15)
+                {
                     return DateManagement::getDayOne($fecha_to);
-                
-                if ($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to))
+                }
+                elseif($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::howManyDays($fecha_to))
+                {
                     return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
-                
-                if ($fecha_to == self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
-                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-14';
-                
-                if (date("d", strtotime($fecha_to)) == 14)
-                    return self::define_due_date("15", $fecha_to, "-");
-                
-                if (date("d", strtotime($fecha_to)) != 14 && date("d", strtotime($fecha_to)) != 15 && $fecha_to != self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
-                    return self::define_due_date("15", $fecha_to, "-");
+                }
+                else
+                {
+                    return DateManagement::calculateDate('-15',$fecha_to);
+                }
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);
@@ -713,7 +713,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_facturas($model,$acumulado_facturas)
     {
-        return $acumulado_facturas + $model->amount;
+        return $acumulado_facturas + $model->fac_amount;
     }
 
     /**
@@ -777,5 +777,43 @@ class Reportes extends CApplicationComponent
         else
             return "0.00";
     }
+    public static function defineMayor($model)
+    { 
+        if($model->valid_received_date!=null){
+                if($model->issue_date >= $model->valid_received_date){
+                   return $model->issue_date;
+                }else{
+                   return $model->valid_received_date;
+                }
+        }else{
+            return $model->issue_date;
+        }
+    }
+          /**
+         * 
+         * @param type $id
+         * @return type
+         */
+        public static function getDueDate($id_group)
+        {
+            $sql="SELECT MAX(issue_date)as issue_date,MAX(valid_received_date)as valid_received_date FROM accounting_document  WHERE id_carrier IN(Select id from carrier where id_carrier_groups = {$id_group}) AND id_type_accounting_document IN(1,2)";
+            $date= AccountingDocument::model()->findBySql($sql);
+            return self::DueDate($date, $id_group);
+        }
+        public static function DueDate($date,$id_group)
+        {
+            
+            if($date->issue_date !=null || $date->valid_received_date!=null){
+               if($date->issue_date >= $date->valid_received_date){
+                   return Reportes::sumRestDate( Reportes::define_tp(Contrato::getContratoTP($id_group,"1"))["vencimiento"],$date->issue_date,"+");
+               }else{
+                    if($date->valid_received_date!=null){
+                       return Reportes::sumRestDate( Reportes::define_tp(Contrato::getContratoTP($id_group,"2"))["vencimiento"],$date->valid_received_date,"+");
+                    }else{
+                        return null;
+                    }
+               }
+            }
+        }
 }
 ?>

@@ -5,7 +5,7 @@
      */
     class balance_report extends Reportes 
     {
-        public static function reporte($grupo, $fecha, $no_disp,$grupoName) 
+        public static function reporte($grupo, $fecha, $no_disp) 
         {
             $acumulado = 0;
             $acumuladoPago = 0;
@@ -15,25 +15,27 @@
             $accounting_document = balance_report::get_Model($grupo, $fecha,$no_disp,"1"); //trae el sql pricipal
             $acc_doc_detal=balance_report::get_Model($grupo, $fecha ,$no_disp,"2");//trae el sql para consultas de elementos o atributos puntuales
             
+            $seg=count($accounting_document)*2;
+            ini_set('max_execution_time', $seg);
+            
             $tabla="";
             if ($accounting_document != null) {
-                $tabla.= "<h1>BALANCE $grupoName-Etelix <h3>(".$fecha." - ".date("g:i a").")</h3></h1>";
+                $tabla.= "<h1>BALANCE $grupo-Etelix <h3>(".$fecha." - ".date("g:i a").")</h3></h1>";
                 $tabla.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
                               <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
                               <td style='width:100px;'>Due Date</td>
-                              <td style='width:100px;'>Payments on account <br>(Etelix to $grupoName)</td>
+                              <td style='width:100px;'>Payments on account <br>(Etelix to $grupo)</td>
                               <td style='width:100px;'>Received invoices</td>
-                              <td style='width:100px;'>Payments on account <br>($grupoName to Etelix)</td>
+                              <td style='width:100px;'>Payments on account <br>($grupo to Etelix)</td>
                               <td style='width:100px;'>Invoices to collect</td>
                               <td style='width:100px;'>Due Balance</td>
                               </tr>";
                 foreach ($accounting_document as $key => $document) 
                     {
-                        $tp=self::define_tp($document->tp)["vencimiento"];
-                        $due_date=Reportes::define_due_date($tp, $document->issue_date,"+");
+                        $due_date=Reportes::DueDate($document,CarrierGroups::getID($grupo));
                         $acumulado=Reportes::define_balance_amount($document,$acumulado);
                         $acumuladoPago=Reportes::define_total_pago($document,$acumuladoPago);
                         $acumuladoCobro =Reportes::define_total_cobro($document,$acumuladoCobro);
@@ -70,19 +72,7 @@
                 return 'No hay data, o puede que falte datos  en las condiciones comerciales de carrier pertenecientes al grupo';
             }
         }
-        
-        /**
-         * 
-         * @param type $grupo
-         * @return string
-         */
-        public static function define_grupo($grupo)
-        {    
-            if($grupo=="CABINAS PERU")  
-                return "id_carrier_groups=301 OR id_carrier_groups=443";
-            else   
-                return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
-        }
+
         /**
          * sql para el reporte soa
          * @param type $grupo
@@ -94,29 +84,29 @@
          */
         private static function get_Model($grupo, $fecha, $no_disp,$tipoSql) 
         {
-
-           $sql="select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
+           $grupo=Reportes::define_grupo($grupo);
+           $sql="select a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
                  and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)
                  $no_disp                
                  UNION
-                 select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
+                 select max(a.issue_date),max(a.valid_received_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
 		 and a.id_type_accounting_document IN (10) and a.confirm != -1
 		 group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
                  UNION
-                 select max(a.issue_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
+                 select max(a.issue_date),max(a.valid_received_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
 		 and a.id_type_accounting_document IN (11) and a.confirm != -1
 		 group by a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
                  UNION 
-                 select a.issue_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
+                 select a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
                  from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                  where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
                  and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
