@@ -183,7 +183,7 @@ class SiteController extends Controller
                     break;
                case 'recopa':
                     $correos['recopa']['asunto']="SINE - RECOPA".self::reportTitle($fecha);
-                    $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc']);
+                    $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_POST['id_filter_oper'],$_POST['No_venc'],$this->trueFalse($_POST['order_recopa']));
                     $correos['recopa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recopa']['asunto'].".xls";
                     break;
             }  
@@ -235,7 +235,7 @@ class SiteController extends Controller
                    break;
               case 'recopa':
                    $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($fecha)."-".date("g:i a");
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
                    break;
             }  
         }
@@ -278,7 +278,7 @@ class SiteController extends Controller
                    $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($fecha,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
                    break;
               case 'recopa':
-                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc']);
+                   $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($fecha,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
                    break;
             }  
         }
@@ -367,7 +367,7 @@ class SiteController extends Controller
     }
     public static function trueFalse($var)
     {
-        if($var=="")return FALSE;
+        if($var==""||$var=="0")return FALSE;
             else return TRUE;
     }
 }

@@ -76,6 +76,14 @@ $this->pageTitle = Yii::app()->name;
             <option value="2">-2000$</option>
             </select> 
         </div>
+        <div class="formInputs order_recopa">
+            <h3>Ordenar</h3>
+            <select name="order_recopa" id="order_recopa">
+            <option value="">Seleccione</option>
+            <option value="0">Alfabéticamente</option>
+            <option value="1">Mayor a menor</option>
+            </select> 
+        </div>
         <div class="formInputs periodo">
             <h3>Período</h3>
             <select name="id_periodo" id="id_periodo">

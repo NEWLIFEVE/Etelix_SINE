@@ -76,9 +76,9 @@ class Reportes extends CApplicationComponent
         return $var->report($date,$intercompany,$no_activity);
     }
 
-    public function recopa($fecha,$filter_oper,$expired)
+    public function recopa($fecha,$filter_oper,$expired,$order)
     {
-        $var=Recopa::reporte($fecha,$filter_oper,$expired);
+        $var=Recopa::reporte($fecha,$filter_oper,$expired,$order);
         return $var;
     }
 
