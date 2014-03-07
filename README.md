@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+Release 1.2.5
     - Nueva version de provisiones
     - Agregados revenue, margin y cost de los ultimos tres dias por carrier
     - Mejora en REPROV y REFAC
