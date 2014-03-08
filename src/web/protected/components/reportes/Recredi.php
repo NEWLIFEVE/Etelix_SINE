@@ -11,13 +11,20 @@ class Recredi extends Reportes
      * @return string
      * @access public
      */
-    public function report($date)
+    public function report($date,$intercompany,$no_activity)
     {
+        $carrierGroups=CarrierGroups::getAllGroups();
+            $seg=count($carrierGroups)*3;
+            ini_set('max_execution_time', $seg);
+            
         if($date==null) $date=date('Y-m-d');
-        $documents=$this->_getData($date);
-        $balances=$this->_getBalances($date);
-        $soa=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue=$cost=$margin=0;
-
+        $documents=$this->_getData($date,$intercompany,$no_activity);
+        $balances_3=$this->_getBalances(DateManagement::calculateDate('-3',$date));
+        $balances_2=$this->_getBalances(DateManagement::calculateDate('-2',$date));
+        $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
+        
+        $soa=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
+        $style_number_row="style='border:0px solid black;text-align:center;background:#83898F;color:white;'";
         $style_basic="style='border:1px solid black;text-align:center;'";
         $style_carrier_head="style='border:0px solid black;background:silver;text-align:center;color:white;'";
         $style_soa_head="style='border:0px solid black;background:#3466B4;text-align:center;color:white;'";
@@ -25,6 +32,9 @@ class Recredi extends Reportes
         $style_prov_traf_head="style='border:1px solid black;background:#248CB4;text-align:center;color:white;'";
         $style_prov_disp_head="style='border:1px solid black;background:#C37881;text-align:center;color:white;'";
         $style_balance_head="style='border:0px solid black;background:#2E62B4;text-align:center;color:white;'";
+        $style_cost_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
+        $style_revenue_head="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
+        $style_margin_head="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
 
         $body="<table>
                 <tr>
@@ -38,6 +48,7 @@ class Recredi extends Reportes
                </table>
                <table {$style_basic} >
                 <tr>
+                    <td {$style_number_row} ></td>
                     <td {$style_carrier_head} ></td>
                     <td {$style_soa_head} ></td>
                     <td {$style_soa_head} ></td>
@@ -45,9 +56,13 @@ class Recredi extends Reportes
                     <td {$style_prov_traf_head} colspan='2'> PROVISION TRAFICO </td>
                     <td {$style_prov_disp_head} colspan='2'> DISPUTAS </td>
                     <td {$style_balance_head} ></td>
-                    <td {$style_balance_head} colspan='3'> CAPTURA</td>
+                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-3',$date)."</td>
+                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-2',$date)."</td>
+                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-1',$date)."</td>
+                    <td {$style_number_row} ></td>
                 </tr>
                 <tr>
+                    <td {$style_number_row} >N°</td>
                     <td {$style_carrier_head} > CARRIER </td>
                     <td {$style_soa_head} > SOA </td>
                     <td {$style_soa_head} > DUE DATE </td>
@@ -58,13 +73,24 @@ class Recredi extends Reportes
                     <td {$style_prov_disp_head} > CLIENTES RECIBIDAS </td>
                     <td {$style_prov_disp_head} > PROVEEDORES ENVIADAS </td>
                     <td {$style_balance_head} > BALANCE </td>
-                    <td {$style_balance_head} > REVENUE </td>
-                    <td {$style_balance_head} > COST </td>
-                    <td {$style_balance_head} > MARGEN </td>
+                        
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} > MARGEN </td>
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} > MARGEN </td>
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} > MARGEN </td>
+                    <td {$style_number_row} >N°</td>
                 </tr>";
         foreach($documents as $key => $document)
         {
+            $pos=$key+1;
+            
             $body.="<tr {$style_basic} >";
+            $body.="<td {$style_number_row} >{$pos}</td>";
             $body.="<td {$style_basic} >".$document->name."</td>";
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa)."</td>";
             $soa+=$document->soa;
@@ -83,18 +109,32 @@ class Recredi extends Reportes
             $sentDispute+=$document->sent_dispute;
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->balance)."</td>";
             $balance+=$document->balance;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances,$document->id,"revenue"))."</td>";
-            $revenue+=self::_getBalance($balances,$document->id,"revenue");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances,$document->id,"cost"))."</td>";
-            $cost+=self::_getBalance($balances,$document->id,"cost");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances,$document->id,"margin"))."</td>";
-            $margin+=self::_getBalance($balances,$document->id,"margin");
+            
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"revenue"))."</td>";
+            $revenue_3+=self::_getBalance($balances_3,$document->id,"revenue");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"cost"))."</td>";
+            $cost_3+=self::_getBalance($balances_3,$document->id,"cost");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"margin"))."</td>";
+            $margin_3+=self::_getBalance($balances_3,$document->id,"margin");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"revenue"))."</td>";
+            $revenue_2+=self::_getBalance($balances_2,$document->id,"revenue");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"cost"))."</td>";
+            $cost_2+=self::_getBalance($balances_2,$document->id,"cost");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"margin"))."</td>";
+            $margin_2+=self::_getBalance($balances_2,$document->id,"margin");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"revenue"))."</td>";
+            $revenue_1+=self::_getBalance($balances_1,$document->id,"revenue");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"cost"))."</td>";
+            $cost_1+=self::_getBalance($balances_1,$document->id,"cost");
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"margin"))."</td>";
+            $margin_1+=self::_getBalance($balances_1,$document->id,"margin");
+            
+            $body.="<td {$style_number_row} >{$pos}</td>";
             $body.="</tr>";
         }
         $body.="<tr>
-                    <td {$style_carrier_head} > CARRIER </td>
-                    <td {$style_soa_head} > SOA </td>
-                    <td {$style_soa_head} > DUE DATE </td>
+                    <td {$style_carrier_head} colspan='2' > CARRIER </td>
+                    <td {$style_soa_head} colspan='2'> SOA </td>
                     <td {$style_prov_fact_head} > CLIENTES REVENUE </td>
                     <td {$style_prov_fact_head} > PROVEEDORES COST </td>
                     <td {$style_prov_traf_head} > CLIENTES REVENUE </td>
@@ -102,29 +142,42 @@ class Recredi extends Reportes
                     <td {$style_prov_disp_head} > CLIENTES RECIBIDAS </td>
                     <td {$style_prov_disp_head} > PROVEEDORES ENVIADAS </td>
                     <td {$style_balance_head} > BALANCE </td>
-                    <td {$style_balance_head} > REVENUE </td>
-                    <td {$style_balance_head} > COST </td>
-                    <td {$style_balance_head} > MARGEN </td>
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} > MARGEN </td>
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} > MARGEN </td>
+                    <td {$style_revenue_head} > REVENUE </td>
+                    <td {$style_cost_head} > COST </td>
+                    <td {$style_margin_head} colspan='2'> MARGEN </td>
                 </tr>
                 <tr>
-                    <td {$style_basic}>Total</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($soa)."</td>
-                    <td {$style_basic}></td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($provisionInvoiceSent)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($provisionInvoiceReceived)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($provisionTrafficSent)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($provisionTrafficReceived)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($receivedDispute)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($sentDispute)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($balance)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($revenue)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($cost)."</td>
-                    <td {$style_basic}>".Yii::app()->format->format_decimal($margin)."</td>
+                    <td {$style_basic} colspan='2' >Total</td>
+                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($soa)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceSent)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceReceived)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionTrafficSent)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionTrafficReceived)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($receivedDispute)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($balance)."</td>
+                        
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_1)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_1)."</td>
+                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
                 </tr>";
-
+                    if($no_activity==TRUE) $body."Nota 1: No presenta movimiento a la fecha, esto deberá ser agregado al final del documento";
+                      else $body."";
         return $body;
     }
-
+    
     /**
      * Encargada de traer la data
      * @param date $date
@@ -132,8 +185,15 @@ class Recredi extends Reportes
      * @since 2.0
      * @access private
      */
-    private function _getData($date)
-    {//El id del grupo
+    private function _getData($date,$intercompany=TRUE,$no_activity=TRUE)
+    {
+     if($intercompany)           $intercompany="";
+     elseif($intercompany==FALSE) $intercompany="WHERE id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+    
+     if($no_activity)           $no_activity="";
+     elseif($no_activity==FALSE) $no_activity=" WHERE due_date IS NOT NULL";
+     
+    //El id del grupo
         $sqlExpirationCustomer="SELECT tp.expiration
                                 FROM carrier c, 
                                      (SELECT id, sign_date, production_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_carrier, id_company, up, bank_fee
@@ -156,7 +216,9 @@ class Recredi extends Reportes
                                      termino_pago tp
                                 WHERE con.id_carrier=c.id AND ctps.id_contrato=con.id AND ctps.id_termino_pago_supplier=tp.id AND con.end_date>='{$date}' AND con.sign_date IS NOT NULL AND ctps.end_date>='{$date}' AND c.id IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)
                                 LIMIT 1";
-        $sql="SELECT cg.id AS id,
+        $sql="/*filtro el due_date null*/ 
+              SELECT * FROM 
+                 (SELECT cg.id AS id,
                      /*El Nombre del grupo*/ 
                      cg.name AS name,
                      /*El monto del soa*/ 
@@ -185,6 +247,7 @@ class Recredi extends Reportes
                                         WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(MAX(valid_received_date) + interval '7 days' AS date) END AS date
                             FROM accounting_document
                             WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=2) d) AS due_date,
+                   
                     /*Traigo provisiones de facturas enviadas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
@@ -214,8 +277,8 @@ class Recredi extends Reportes
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,6,8,10,12,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,5,7,11,13,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) n) AS balance
-              FROM carrier_groups cg
-              ORDER BY cg.name ASC";
+              FROM carrier_groups cg $intercompany  
+              ORDER BY cg.name ASC)activity $no_activity";
         return AccountingDocument::model()->findAllBySql($sql);
     }
 
@@ -227,17 +290,15 @@ class Recredi extends Reportes
      */
     private function _getBalances($date)
     {
-        $start=DateManagement::calculateDate('-3',$date);
-
         $sql="SELECT c.id_carrier_groups AS id, SUM(b.revenue) as revenue, SUM(b.cost) AS cost, SUM(b.revenue-b.cost) AS margin
-              FROM (SELECT id_carrier_customer AS id, SUM(revenue) AS revenue, CAST(0 AS double precision) AS cost
+              FROM (SELECT id_carrier_customer AS id, CASE WHEN ABS(SUM(revenue))>ABS(SUM(cost+margin)) THEN SUM(cost+margin) ELSE SUM(revenue) END AS revenue, CAST(0 AS double precision) AS cost
                     FROM balance
-                    WHERE date_balance>='{$start}' AND date_balance<='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
+                    WHERE date_balance='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
                     GROUP BY id_carrier_customer
                     UNION
-                    SELECT id_carrier_supplier AS id, CAST(0 AS double precision) AS revenue, SUM(cost) AS cost
+                    SELECT id_carrier_supplier AS id, CAST(0 AS double precision) AS revenue, CASE WHEN ABS(SUM(cost))>ABS(SUM(revenue-margin)) THEN SUM(revenue-margin) ELSE SUM(cost) END AS cost
                     FROM balance
-                    WHERE date_balance>='{$start}' AND date_balance<='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
+                    WHERE date_balance='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
                     GROUP BY id_carrier_supplier)b, carrier c
               WHERE c.id=b.id
               GROUP BY c.id_carrier_groups";
