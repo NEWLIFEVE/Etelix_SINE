@@ -35,10 +35,9 @@
                                  </tr>";
                 foreach ($models as $key => $model)
                 {
-                    
+                    $pos=$key+1;
                     if(self::defineFilterExpired($model->due_date,$date,$expired) && $model->due_date!=null && $model->soa != null)
                     {
-                        $pos=$key+1;
                         $recopa.="<tr>
                                          <td ". self::defineColorTD(null, "#83898F") ."> $pos </td>
                                          <td ". self::defineColorTD(null, "white") ."> $model->name </td>

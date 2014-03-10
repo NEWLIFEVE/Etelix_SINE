@@ -152,7 +152,7 @@ class SiteController extends Controller
 
             if(isset($_POST['No_prov'])) $no_prov=Reportes::define_prov($_POST['No_prov'],$grupo,$fecha);
 
-            if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$grupo,$fecha);
+            if(isset($_POST['No_disp'])) $no_disp=Reportes::define_disp($_POST['No_disp'],$grupo,$fecha);
             
             switch ($_POST['tipo_report'])
             {
@@ -210,7 +210,7 @@ class SiteController extends Controller
             if(($_GET['id_periodo'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_periodo'],$fecha);       
             if(($_GET['grupo'])!=NULL)  $grupo=$_GET['grupo'];       
             if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$grupo,$fecha);     
-            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$grupo,$fecha);
+            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
             
             switch ($_GET['tipo_report']) {
               case 'soa':
@@ -259,7 +259,7 @@ class SiteController extends Controller
             if(($_GET['id_periodo'])!=NULL)  $fecha_from=Reportes::define_fecha_from($_GET['id_periodo'],$fecha);
             if(($_GET['grupo'])!=NULL)  $grupo=$_GET['grupo'];       
             if(isset($_GET['No_prov'])) $no_prov=SOA::define_prov($_GET['No_prov'],$grupo,$fecha);     
-            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$grupo,$fecha);
+            if(isset($_GET['No_disp'])) $no_disp=Reportes::define_disp($_GET['No_disp'],$grupo,$fecha);
             
             switch ($_GET['tipo_report']) {
               case 'soa':

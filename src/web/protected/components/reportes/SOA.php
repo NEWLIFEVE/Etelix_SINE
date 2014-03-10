@@ -7,11 +7,9 @@
     {
         public static function reporte($grupo, $fecha, $no_disp,$no_prov) 
         {
-            $acumulado = 0;
-            $acumuladoPago = 0;
-            $acumuladoCobro = 0;
-            $acumuladoFacEnv = 0;
-            $acumuladoFacRec = 0;
+            $acumulado=$acumuladoPago=$acumuladoCobro=$acumuladoFacEnv=$acumuladoFacRec = 0;
+            $acumuladoPagoNext=$acumuladoCobroNext=$acumuladoFacEnvNext=$acumuladoFacRecNext = 0;
+            
             $accounting_document = SOA::get_Model($grupo, $fecha, $no_disp,$no_prov,"1"); //trae el sql pricipal
             $acc_doc_detal=SOA::get_Model($grupo, $fecha, $no_disp,$no_prov,"2");//trae el sql para consultas de elementos o atributos puntuales
 
@@ -36,6 +34,7 @@
                 foreach ($accounting_document as $key => $document) 
                     {
                         $due_date=Reportes::DueDate($document,CarrierGroups::getID($grupo));
+                        if($due_date<=$fecha){
                         $acumulado=Reportes::define_balance_amount($document,$acumulado);
                         $acumuladoPago=Reportes::define_total_pago($document,$acumuladoPago);
                         $acumuladoCobro =Reportes::define_total_cobro($document,$acumuladoCobro);
@@ -51,7 +50,8 @@
                         $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
                         $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                         $tabla_SOA.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($acumulado,3)."</td>";
-                        $tabla_SOA.="</tr>";            
+                        $tabla_SOA.="</tr>"; 
+                        }
                     }
                 $tabla_SOA.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoPago,3). "</td>
@@ -62,7 +62,54 @@
                              </tr>";
                 $tabla_SOA.="</table>";
                 $tabla_SOA.="<br><table align='right'>
-                             <tr><td></td><td></td><td></td><td></td><td></td>
+                             <tr><td colspan='5'></td>
+                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$acumulado). "</font></h3></td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</font></h3></td>
+                             </tr>
+                             </table>";
+                
+                $tabla_SOA.= "<br><br><table style='background:#3466B4;text-align:center;color:white'>
+                              <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
+                              <td style='width:250px;'>Description</td>
+                              <td style='width:100px;'>Issue Date</td>
+                              <td style='width:100px;'>Due Date</td>
+                              <td style='width:100px;'>Payments on account <br>(Etelix to $grupo)</td>
+                              <td style='width:100px;'>Received invoices</td>
+                              <td style='width:100px;'>Payments on account <br>($grupo to Etelix)</td>
+                              <td style='width:100px;'>Invoices to collect</td>
+                              <td style='width:100px;'>Due Balance</td>
+                              </tr>";
+                foreach ($accounting_document as $key => $document) 
+                    {
+                        $due_date=Reportes::DueDate($document,CarrierGroups::getID($grupo));
+                        if($due_date>$fecha){
+                        $acumulado=Reportes::define_balance_amount($document,$acumulado);
+                        $acumuladoPagoNext=Reportes::define_total_pago($document,$acumuladoPagoNext);
+                        $acumuladoCobroNext =Reportes::define_total_cobro($document,$acumuladoCobroNext);
+                        $acumuladoFacEnvNext =Reportes::define_total_fac_env($document,$acumuladoFacEnvNext);
+                        $acumuladoFacRecNext =Reportes::define_total_fac_rec($document,$acumuladoFacRecNext);
+                        
+                        $tabla_SOA.="<tr " . Reportes::define_estilos($document) . ">";
+                        $tabla_SOA.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                        $tabla_SOA.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
+                        $tabla_SOA.="<td style='text-align: center;'>" . Reportes::define_to_date($document,$due_date) . "</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
+                        $tabla_SOA.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($acumulado,3)."</td>";
+                        $tabla_SOA.="</tr>";   }         
+                    }
+                    $tabla_SOA.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoPagoNext,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoFacRecNext,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoCobroNext,3). "</td>
+                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($acumuladoFacEnvNext,3). "</td>
+                             <td></td>
+                             </tr>";
+                    $tabla_SOA.="<br><br>
+                             <table align='right'>
+                             <tr><td colspan='5'></td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$acumulado). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</font></h3></td>
                              </tr>

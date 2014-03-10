@@ -103,30 +103,21 @@ class Reportes extends CApplicationComponent
      * @param type $no_disp
      * @return string
      */
-    public static function define_disp($no_disp,$tipo_report,$grupo,$fecha)
+    public static function define_disp($no_disp,$grupo,$fecha)
     {   
         if($grupo!=null)$grupo=Reportes::define_grupo($grupo);
         $body="UNION
                SELECT a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
                FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                WHERE a.id_carrier IN(Select id from carrier where $grupo) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$fecha}'";
-        switch ($tipo_report) 
+        if($no_disp=="No")
         {
-            case "soa":case "balance":
-                    if($no_disp=="No")
-                    {
-                       $disp_sql=" ";
-                    }
-                    else
-                    {
-                       $disp_sql="$body
-                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8))";
-                    }
-                return $disp_sql;
-                break;
-            default:
-                return " ";
-                break;
+           $disp_sql=" ";
+        }
+        else
+        {
+           $disp_sql="$body
+                      AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8))";
         }
     }
 
