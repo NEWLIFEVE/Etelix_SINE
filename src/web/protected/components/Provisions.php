@@ -187,7 +187,7 @@ class Provisions extends CApplicationComponent
 			  	   	WHERE start_date<='{$this->date}') ctp,
 				   (SELECT id, sign_date, production_date, id_carrier, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date
 				   	FROM contrato
-				   	WHERE sign_date<='{$this->date}') con
+				   	WHERE sign_date<='{$this->date}' OR sign_date IS NULL) con
 			  WHERE tp.id=ctp.id_termino_pago AND ctp.id_contrato=con.id AND con.id_carrier={$idCarrier} AND con.end_date>'{$this->date}' AND ctp.end_date>'{$this->date}'";
 
 		$TerminoPago=TerminoPago::model()->findBySql($sql);
