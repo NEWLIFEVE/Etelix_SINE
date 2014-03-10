@@ -31,9 +31,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
-        <!-- <div class="Reportes RECOPA" id="recopa">
+        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br> -->
+        </div><br> 
 
 <!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
