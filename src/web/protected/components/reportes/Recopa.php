@@ -174,7 +174,8 @@
                 return  self::defineColorTD($amount,null) .">".Yii::app()->format->format_decimal($amount);
             }
             elseif($due_date >=  DateManagement::calculateDate("-14", $date) && $dateNow >=  DateManagement::calculateDate("+7", $due_date) && $dateNow >=  $date){
-                return  self::defineColorTD(null, "white") .">".Yii::app()->format->format_decimal($balance);
+//                return  self::defineColorTD(null, "white") .">".Yii::app()->format->format_decimal($balance);
+                return  self::defineColorTD(null, "white") .">";
             }
             elseif($due_date < DateManagement::calculateDate("-14", $date)){
                 return  self::defineColorTD($amount,null);

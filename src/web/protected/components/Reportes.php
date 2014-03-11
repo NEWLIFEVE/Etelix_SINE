@@ -710,11 +710,11 @@ class Reportes extends CApplicationComponent
     {
         if($var<0) $var=$var*-1;
          
-        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25")  return "SEMANAL";
+        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25"||$var=="21")  return "SEMANAL";
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
     }
 
     /**

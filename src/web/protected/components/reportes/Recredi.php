@@ -38,7 +38,7 @@ class Recredi extends Reportes
 
         $body="<table>
                 <tr>
-                    <td colspan='2'>
+                    <td colspan='3'>
                         <h1>RECREDI</h1>
                     </td>
                     <td colspan='8'>  AL {$date} </td>
@@ -50,6 +50,7 @@ class Recredi extends Reportes
                 <tr>
                     <td {$style_number_row} ></td>
                     <td {$style_carrier_head} ></td>
+                    <td {$style_soa_head} ></td>
                     <td {$style_soa_head} ></td>
                     <td {$style_soa_head} ></td>
                     <td {$style_prov_fact_head} colspan='2'> PROVISION FACT </td>
@@ -64,7 +65,8 @@ class Recredi extends Reportes
                 <tr>
                     <td {$style_number_row} >N°</td>
                     <td {$style_carrier_head} > CARRIER </td>
-                    <td {$style_soa_head} > SOA </td>
+                    <td {$style_soa_head} > SOA(DUE)</td>
+                    <td {$style_soa_head} > SOA(NEXT)</td>
                     <td {$style_soa_head} > DUE DATE </td>
                     <td {$style_prov_fact_head} > CLIENTES REVENUE </td>
                     <td {$style_prov_fact_head} > PROVEEDORES COST </td>
@@ -93,6 +95,7 @@ class Recredi extends Reportes
             $body.="<td {$style_number_row} >{$pos}</td>";
             $body.="<td {$style_basic} >".$document->name."</td>";
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa)."</td>";
+            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa_next)."</td>";
             $soa+=$document->soa;
             $body.="<td {$style_basic} >".Utility::ifNull($document->due_date, "Nota 1") ."</td>";
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_invoice_sent)."</td>";
@@ -135,6 +138,7 @@ class Recredi extends Reportes
         $body.="<tr>
                     <td {$style_carrier_head} colspan='2' > CARRIER </td>
                     <td {$style_soa_head} colspan='2'> SOA </td>
+                    <td {$style_soa_head} > SOA </td>
                     <td {$style_prov_fact_head} > CLIENTES REVENUE </td>
                     <td {$style_prov_fact_head} > PROVEEDORES COST </td>
                     <td {$style_prov_traf_head} > CLIENTES REVENUE </td>
@@ -154,7 +158,9 @@ class Recredi extends Reportes
                 </tr>
                 <tr>
                     <td {$style_basic} colspan='2' >Total</td>
-                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($soa)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($soa)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($soa)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($soa)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceSent)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceReceived)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($provisionTrafficSent)."</td>
@@ -226,6 +232,12 @@ class Recredi extends Reportes
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,8,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,7,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
+                    
+                (SELECT (p.amount-n.amount) AS amount
+                FROM 
+                (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,8,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'{$date}') p,
+                (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,7,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'{$date}') n) AS soa_next,
+              
                      /*el due date del soa*/
                      (SELECT MAX(date)
                       FROM (SELECT CASE WHEN ({$sqlExpirationCustomer})=0 THEN MAX(issue_date)
