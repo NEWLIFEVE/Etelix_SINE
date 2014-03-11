@@ -3,9 +3,13 @@
 
 Sistema de Reportes para Billing
 
--nuevo soa terminado.
--algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
+    -nuevo soa terminado.
+    -algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
 
+
+    - Nueva version de provisiones
+    - Agregados revenue, margin y cost de los ultimos tres dias por carrier
+    - Mejora en REPROV y REFAC
 Release 1.2.4.1
     - cambio en formula donde se utiliza notas de credito para calcular balance acumulado
     - Corregido problema en comando de provisiones

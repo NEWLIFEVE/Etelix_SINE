@@ -392,16 +392,16 @@ $SINE.AJAX=(function()
 	 */
 	function _getNamesCarriers()
 	{
-            $.ajax({url:"../Carrier/Nombres",success:function(datos)
-            {
-                    $SINE.DATA.carriers=JSON.parse(datos);
-                    $SINE.DATA.nombresCarriers=Array();
-                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
-                    {
-                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
-                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
-            }
-            });
+//            $.ajax({url:"../Carrier/Nombres",success:function(datos)
+//            {
+//                    $SINE.DATA.carriers=JSON.parse(datos);
+//                    $SINE.DATA.nombresCarriers=Array();
+//                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
+//                    {
+//                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
+//                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
+//            }
+//            });
             $.ajax({url:"../Grupos/Nombres",success:function(datos)
             {
                     $SINE.DATA.groups=JSON.parse(datos);

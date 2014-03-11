@@ -194,7 +194,7 @@ class Provisions extends CApplicationComponent
 		if($TerminoPago!==null)
 		{
 			$tempdate=$firstDay=$trafficProvisions=$sql=null;
-			switch (Reportes::define_tp($TerminoPago->name)['periodo'])
+			switch ($TerminoPago->period)
 			{
 				case 30:
 					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
@@ -260,7 +260,7 @@ class Provisions extends CApplicationComponent
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
 		$typeProvisions['num']="numInvoicesReceived";
 
-		$sql="SELECT ctps.id, ctps.start_date, ctps.end_date, ctps.id_contrato, ctps.month_break, ctps.first_day, tp.name AS payment_term, fp.name AS billing_period
+		$sql="SELECT ctps.id, ctps.start_date, ctps.end_date, ctps.id_contrato, ctps.month_break, ctps.first_day, tp.period AS payment_term, fp.name AS billing_period
 			  FROM (SELECT id, sign_date, production_date, id_carrier, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date
 			  		FROM contrato
 			  		WHERE sign_date<='{$this->date}') con,
@@ -275,7 +275,7 @@ class Provisions extends CApplicationComponent
 		$carrier=Carrier::getName($idCarrier);
 		if($carrier=="BSG-SHARE")
 		{
-			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-25";
+			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-27";
 			if($tempdate===$this->date)
 			{
 				$firstDay=DateManagement::getDayOne($this->date);
@@ -285,7 +285,7 @@ class Provisions extends CApplicationComponent
 			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 			if($tempdate===$this->date)
 			{
-				$firstDay=$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-26";
+				$firstDay=$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-28";
 				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
 				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
 			}
@@ -295,7 +295,7 @@ class Provisions extends CApplicationComponent
 			if($TerminoPago!==null)
 			{
 				$tempdate=$firstDay=$trafficProvisions=null;
-				switch (Reportes::define_tp($TerminoPago->payment_term)['periodo'])
+				switch ($TerminoPago->payment_term)
 				{
 					case 30:
 						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);

@@ -12,7 +12,7 @@ class InvoiceReport extends Reportes
      * @param date $fecha_to
      * @param string $tipo_report
      */
-    public static function reporte($fecha_from,$fecha_to,$tipo_report)
+    public static function reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm=null)
     {
         //Fecha que va en el reporte
         $fecha=date('Y-m-d');
@@ -25,7 +25,7 @@ class InvoiceReport extends Reportes
         $style_totals="style='border:1px solid black;background:silver;text-align:center;'";
         $acumulado_factura=$acumulado_provisiones=$acumulado_diference=0;
         //Traigo las Provisiones de base de datos
-        $models=self::getModel($fecha_from, $fecha_to,$tipo_report);
+        $documents=self::getModel($fecha_from, $fecha_to,$tipo_report,$paymentTerm);
         
         $reporte="<table>
                     <tr rowspan='2'>
@@ -70,36 +70,26 @@ class InvoiceReport extends Reportes
                         <td ".$style_diference."><b>MINUTOS</b></td>
                         <td ".$style_diference."><b>MONTO</b></td>
                     </tr>";
-        if($models!=null)
+        if($documents!=null)
         {
-            foreach($models as $key => $model)
+            foreach($documents as $key => $document)
             {
-                if($model->fac_doc_number==null){
-                   $style_basic=Reportes::estilos_basic(Reportes::diferenceInvoiceReport($model->fac_amount,$model->amount),"background:#E99241;");
-                   $style_basic_number=Reportes::estilos_num(Reportes::diferenceInvoiceReport($model->fac_amount,$model->amount),"background:#E99241;");
-                   $diference_amount=$model->amount;
-                   $diference_minutes=$model->minutes;
-                }else{
-                   $style_basic=Reportes::estilos_basic(Reportes::diferenceInvoiceReport($model->fac_amount,$model->amount),"background:#F8CB3C;");
-                   $style_basic_number=Reportes::estilos_num(Reportes::diferenceInvoiceReport($model->fac_amount,$model->amount),"background:#F8CB3C;"); 
-                   $diference_amount=Reportes::diferenceInvoiceReport($model->fac_amount,$model->amount);
-                   $diference_minutes=Reportes::diferenceInvoiceReport($model->fac_minutes,$model->minutes);
-                }
-                
-                $acumulado_factura=Reportes::define_total_facturas($model,$acumulado_factura);
-                $acumulado_provisiones=Reportes::define_total_provisiones($model,$acumulado_provisiones);
-                $acumulado_diference=Reportes::define_total_diference($diference_amount,$acumulado_diference);
+                $style=self::style($document);
+
+                $acumulado_factura+=$document->fac_amount;
+                $acumulado_provisiones+=$document->amount;
+                $acumulado_diference+=$document->monto_diference;
                 $reporte.="<tr>
-                            <td $style_basic >".$model->carrier."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($model->minutes,3)."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($model->amount,3)."</td>
-                            <td $style_basic >".$model->carrier."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($model->fac_minutes,3)."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($model->fac_amount,3)."</td>
-                            <td $style_basic >".$model->fac_doc_number."</td>
-                            <td $style_basic >".$model->carrier."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($diference_minutes,3)."</td>
-                            <td $style_basic_number >".Yii::app()->format->format_decimal($diference_amount,3)."</td>
+                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->minutes,3)."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->amount,3)."</td>
+                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_minutes,3)."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_amount,3)."</td>
+                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->doc_number."</td>
+                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->min_diference,3)."</td>
+                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->monto_diference,3)."</td>
                            </tr>";
             }
         }
@@ -127,37 +117,53 @@ class InvoiceReport extends Reportes
      * @param type $tipo_report
      * @return type
      */
-    private static function getModel($fecha_from, $fecha_to,$tipo_report) 
+    private static function getModel($startDate, $endDate,$tipo_report,$paymentTerm=null) 
     {
-        if($tipo_report=="REFAC"){ 
+        if($paymentTerm==null) $paymentTerm=7;
+        if($tipo_report=="REFAC")
+        { 
             $provision="Provision Factura Enviada";
             $factura="Factura Enviada";
-        }else {
+            $carriers="SELECT c.id
+                       FROM carrier c, contrato con, contrato_termino_pago ctp, termino_pago tp
+                       WHERE con.id_carrier=c.id AND con.end_date IS NULL AND ctp.id_contrato=con.id AND ctp.id_termino_pago=tp.id AND ctp.end_date IS NULL AND tp.period={$paymentTerm}";
+        }
+        else
+        {
             $provision="Provision Factura Recibida";
             $factura="Factura Recibida";
+            $carriers="SELECT c.id
+                       FROM carrier c, contrato con, contrato_termino_pago_supplier ctps, termino_pago tp
+                       WHERE con.id_carrier=c.id AND con.end_date IS NULL AND ctps.id_contrato=con.id AND ctps.id_termino_pago_supplier=tp.id AND ctps.end_date IS NULL AND tp.period={$paymentTerm}";
         }
-        $num=DateManagement::howManyDaysBetween($fecha_from,$fecha_to);
-        $from=">=";
-        $to="<=";
-        if($num>7) $from=$to="=";
+        
 
-        $sql="SELECT a.id, a.from_date, a.to_date,a.amount, a.minutes, a.id_carrier, c.name AS carrier , 
-                    (SELECT amount
-                          FROM accounting_document 
-                          WHERE id_carrier=c.id AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$factura}') AND from_date{$from}a.from_date AND to_date{$to}a.to_date
-                          ORDER BY from_date) AS fac_amount,
-                    (SELECT minutes
-                          FROM accounting_document 
-                          WHERE id_carrier=c.id AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$factura}') AND from_date{$from}a.from_date AND to_date{$to}a.to_date
-                          ORDER BY from_date) AS fac_minutes,
-                    (SELECT doc_number
-                          FROM accounting_document 
-                          WHERE id_carrier=c.id AND id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='{$factura}') AND from_date{$from}a.from_date AND to_date{$to}a.to_date
-                          ORDER BY from_date) AS fac_doc_number
-                FROM accounting_document a, carrier c
-                WHERE a.id_carrier=c.id AND a.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}') AND from_date{$from}'{$fecha_from}' AND to_date{$to}'{$fecha_to}'
-                ORDER BY  c.name ASC, a.from_date ASC";
-       
+        
+
+        $sql="SELECT b.*, (b.fac_minutes-b.minutes) AS min_diference, (b.fac_amount-b.amount) AS monto_diference
+              FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
+                           (SELECT minutes
+                            FROM accounting_document
+                            WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_minutes,
+                           (SELECT amount
+                            FROM accounting_document
+                            WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_amount,
+                           (SELECT doc_number
+                            FROM accounting_document
+                            WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS doc_number
+                    FROM carrier c, accounting_document ad
+                    WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date>='{$startDate}' AND ad.to_date<='{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')
+                    ORDER BY c.name ASC) b";
         return AccountingDocument::model()->findAllBySql($sql);
+    }
+
+    /**
+     *
+     */
+    private static function style($document)
+    {
+        if($document->fac_amount==null) return '#E99241';
+        if($document->monto_diference>=1||$document->monto_diference<=-1) return '#F8CB3C';
+        return '#ffffff';
     }
 }

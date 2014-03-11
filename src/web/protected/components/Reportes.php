@@ -45,9 +45,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report)
+    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
         return $var;
     }
 
@@ -58,9 +58,9 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_to
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report)
+    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report);
+        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
         return $var;
     }
 
@@ -663,21 +663,18 @@ class Reportes extends CApplicationComponent
                 return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
                 break;
             case 15:
-                if (date("d", strtotime($fecha_to)) == 15)
+                if(date("d", strtotime($fecha_to)) == 15)
+                {
                     return DateManagement::getDayOne($fecha_to);
-                
-                if ($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to))
+                }
+                elseif($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::howManyDays($fecha_to))
+                {
                     return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
-                
-                if ($fecha_to == self::sumRestDate("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
-                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-14';
-                
-                if (date("d", strtotime($fecha_to)) == 14)
-
-                    return self::define_due_date("15", $fecha_to, "-");
-                
-                if (date("d", strtotime($fecha_to)) != 14 && date("d", strtotime($fecha_to)) != 15 && $fecha_to != self::define_due_date("1",DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::getDayLast($fecha_to) ,"-"))
-                    return self::define_due_date("15", $fecha_to, "-");
+                }
+                else
+                {
+                    return DateManagement::calculateDate('-15',$fecha_to);
+                }
                 break;
             case 30:
                 return DateManagement::getDayOne($fecha_to);

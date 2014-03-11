@@ -291,12 +291,12 @@ class Recredi extends Reportes
     private function _getBalances($date)
     {
         $sql="SELECT c.id_carrier_groups AS id, SUM(b.revenue) as revenue, SUM(b.cost) AS cost, SUM(b.revenue-b.cost) AS margin
-              FROM (SELECT id_carrier_customer AS id, SUM(revenue) AS revenue, CAST(0 AS double precision) AS cost
+              FROM (SELECT id_carrier_customer AS id, CASE WHEN ABS(SUM(revenue))>ABS(SUM(cost+margin)) THEN SUM(cost+margin) ELSE SUM(revenue) END AS revenue, CAST(0 AS double precision) AS cost
                     FROM balance
                     WHERE date_balance='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
                     GROUP BY id_carrier_customer
                     UNION
-                    SELECT id_carrier_supplier AS id, CAST(0 AS double precision) AS revenue, SUM(cost) AS cost
+                    SELECT id_carrier_supplier AS id, CAST(0 AS double precision) AS revenue, CASE WHEN ABS(SUM(cost))>ABS(SUM(revenue-margin)) THEN SUM(revenue-margin) ELSE SUM(cost) END AS cost
                     FROM balance
                     WHERE date_balance='{$date}' AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') AND id_destination_int IS NOT NULL
                     GROUP BY id_carrier_supplier)b, carrier c
