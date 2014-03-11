@@ -16,7 +16,7 @@
             $body="";
             if ($accounting_document != null) {
                 $body.= "<h1>SOA $group-Etelix <h3>(".$date." - ".date("g:i a").")</h3></h1>";
-                $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
+                $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3><br> DUE
                               <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
@@ -65,7 +65,7 @@
                              </tr>
                              </table>";
                 
-                $body.= "<br><br><table style='background:#3466B4;text-align:center;color:white'>
+                $body.= "<br><br> NEXT <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>

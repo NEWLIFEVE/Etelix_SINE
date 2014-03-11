@@ -44,6 +44,7 @@ class AccountingDocument extends CActiveRecord
 	/*Usados en recredi*/
 	public $name;
 	public $soa;
+	public $soa_next;
 	public $due_date;
 	public $provision_invoice_sent;
 	public $provision_invoice_received;
