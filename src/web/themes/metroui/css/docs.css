@@ -623,6 +623,11 @@ select
     /*margin-right: 16%;*/
     position: absolute!important;
 }
+.order_recopa
+{
+    position: absolute!important;
+    margin: -105px 231px;
+}
 .imprimir
 {
     color: white;
