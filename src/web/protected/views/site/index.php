@@ -31,9 +31,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
-        <!-- <div class="Reportes RECOPA" id="recopa">
+        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br> -->
+        </div><br> 
 
 <!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
@@ -74,6 +74,14 @@ $this->pageTitle = Yii::app()->name;
             <option value="0">TODOS</option>
             <option value="1">+2000$</option>
             <option value="2">-2000$</option>
+            </select> 
+        </div>
+        <div class="formInputs order_recopa">
+            <h3>Ordenar</h3>
+            <select name="order_recopa" id="order_recopa">
+            <option value="">Seleccione</option>
+            <option value="0">Alfabéticamente</option>
+            <option value="1">Mayor a menor</option>
             </select> 
         </div>
         <div class="formInputs periodo">

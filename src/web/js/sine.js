@@ -98,7 +98,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -122,7 +122,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recopa":
-                    var mostrar =['.fecha,.filter_oper,.vencidas']; 
+                    var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "refi_prov": 
@@ -253,7 +253,7 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
                 break               
             case 'recopa':
-                var respuesta=$SINE.UI.validaCampos($('#id_filter_oper').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());
                 break               
             case 'refi_prov':
                 var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
@@ -392,16 +392,16 @@ $SINE.AJAX=(function()
 	 */
 	function _getNamesCarriers()
 	{
-            $.ajax({url:"../Carrier/Nombres",success:function(datos)
-            {
-                    $SINE.DATA.carriers=JSON.parse(datos);
-                    $SINE.DATA.nombresCarriers=Array();
-                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
-                    {
-                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
-                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
-            }
-            });
+//            $.ajax({url:"../Carrier/Nombres",success:function(datos)
+//            {
+//                    $SINE.DATA.carriers=JSON.parse(datos);
+//                    $SINE.DATA.nombresCarriers=Array();
+//                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
+//                    {
+//                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
+//                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
+//            }
+//            });
             $.ajax({url:"../Grupos/Nombres",success:function(datos)
             {
                     $SINE.DATA.groups=JSON.parse(datos);

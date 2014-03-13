@@ -2,6 +2,10 @@
 ============
 
 Sistema de Reportes para Billing
+
+Release 1.2.5.1
+    -Nuevo reporte de SOA con un total vencido y el proximo a vencer.
+    -algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
 Release 1.2.5
     - Nueva version de provisiones
     - Agregados revenue, margin y cost de los ultimos tres dias por carrier
