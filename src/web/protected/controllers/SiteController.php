@@ -168,12 +168,12 @@ class SiteController extends Controller
                     break;
                 case 'refac':
                     $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
-                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC");
+                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_POST['id_periodo']);
                     $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                     break;
                 case 'refi_prov':
                     $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
-                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV");
+                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV",$_POST['id_periodo']);
 
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
@@ -224,11 +224,11 @@ class SiteController extends Controller
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
-                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);
                    break;
               case 'refi_prov':
                    $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
-                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV",$_GET['id_periodo']);
 
                    break;
               case 'recredi':
@@ -271,10 +271,10 @@ class SiteController extends Controller
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                    break;
               case 'refac':
-                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC");
+                   $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);
                    break;
               case 'refi_prov':
-                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV");
+                   $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV",$_GET['id_periodo']);
 
                    break;
               case 'recredi':
