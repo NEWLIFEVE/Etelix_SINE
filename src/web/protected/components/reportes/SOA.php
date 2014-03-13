@@ -98,14 +98,15 @@
                             $body.="</tr>";   
                         }         
                     }
-                    $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
+                    $body.="<tr " . Reportes::define_estilos_null() . "><td colspan='3'></td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPaymentNext,3). "</td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRecNext,3). "</td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedCollectionNext,3). "</td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSendNext,3). "</td>
                              <td></td>
                              </tr>";
-                    $body.="<br><br>
+                    $body.="<tr " . Reportes::define_estilos_null() . "><td colspan='8'></td></tr>";
+                    $body.="</table><br>
                              <table align='right'>
                              <tr><td colspan='5'></td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>

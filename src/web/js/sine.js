@@ -98,7 +98,7 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -118,7 +118,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.fecha,.intercompany,.no_activity']; 
+                    var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recopa":
@@ -250,7 +250,7 @@ $SINE.UI=(function()
                 var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
             case 'recredi':
-                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
                 break               
             case 'recopa':
                 var respuesta=$SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());
@@ -421,7 +421,7 @@ $SINE.AJAX=(function()
 	{
 		_getNamesCarriers();
 //                _updateFactPeriod();
-//                _updateTerminoPago();
+                _UpdateTerminoPago();
 	}
         /**
         * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
@@ -438,14 +438,17 @@ $SINE.AJAX=(function()
                  data: formulario,
                  success: function(data)
                  {   
-                     console.log(data);
+//                     console.log(data);
                      if(action=="/site/Excel"){         
                          $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                          $(".excel_a").removeAttr("href");
+                         console.log("vista previa exitosa");
                      }else if(action=="/site/previa"){ 
-                         $SINE.UI.fancy_box(data);  
+                         $SINE.UI.fancy_box(data);
+                         console.log("Descarga exitosa");
                      }else{                              
                          $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                         console.log(data);
                      }    
                  }
             });
@@ -459,15 +462,14 @@ $SINE.AJAX=(function()
 //                }
 //            });
 //        }
-//        function _updateTerminoPago()
-//        {
-//            $.ajax({url:"/site/updateTerminoPago",success:function(data)
-//                {
-//                    console.log(data);
-//                    $("#id_termino_pago").append(data);
-//                }
-//            });
-//        }
+        function _UpdateTerminoPago()
+        {
+            $.ajax({url:"/site/UpdateTerminoPago",success:function(data)
+                {
+                    $("#id_termino_pago").append(data);
+                }
+            });
+        }
         
 	return {init:init,
                 _getFormPost:_getFormPost,
