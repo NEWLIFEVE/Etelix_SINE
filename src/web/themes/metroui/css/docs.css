@@ -261,6 +261,7 @@ div.login.error input#LoginForm_password
 {
     border-right: 7px solid #2E62B4;
     height: 539px;
+    /*height: 477px;*/
     width: 358px;
     margin-top: -34%;
     background: white; 
@@ -277,15 +278,20 @@ div.login.error input#LoginForm_password
 {
     background: white;
     width: 92%;
-    height: 77px;
+    height: 65px;
     margin-top: 0%;
     margin-left: 4%;
     float: left;
     padding-left: 28px;
     border-bottom: 1px solid silver;
+    transition:width 0.3s;
+    -webkit-transition:width 0.3s;
+    padding-bottom: 25%;/*quitar al tener todos los reportes*/
+
 }
 .Reportes:hover 
 {
+    width: 96%;
     background: silver;
     border-bottom: 1px solid #2E62B4;
 }
@@ -306,6 +312,7 @@ div.login.error input#LoginForm_password
 .h1_report
 {
     color:#2E62B4!important;
+    /*font-size: 31pt!important;*/
 }
 .h1_reportClick
 {
@@ -337,6 +344,7 @@ select, input
     width: 142px;
     float: right;
     margin-right: 10px;
+    margin-bottom: 2px;
 }
 
 img.ver
@@ -371,6 +379,33 @@ img.oculta
     position: absolute;
     margin-left: 0%;
 }
+
+#previa
+{
+    background-image:-webkit-linear-gradient(180deg, #06ACFA 87px, #10469B 50px);   
+} 
+#previa:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #35C7F5 87px, #166EB4 50px);    
+}
+#excel
+{
+    background-image:-webkit-linear-gradient(180deg, #049C47 87px, #10469B 50px);   
+} 
+#excel:hover 
+{
+    background-image:-webkit-linear-gradient(180deg, #0AB857 87px, #166EB4 50px);    
+}
+#mail
+{
+    background-image:-webkit-linear-gradient(180deg, #F0950C 87px, #10469B  50px);   
+} 
+#mail:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #ECA02D 87px, #166EB4 50px);    
+}
+
+
     /* < ESTILOS DE DATEPICKER UI*/
 .ui-state-default 
 {
@@ -428,7 +463,7 @@ img.oculta
     position: fixed;
     right: 0px;
     height: 112%;
-    margin-top: -570px;
+    margin-top: -552px;
     opacity: 0.5;
     padding-top: 4%;
     width: 12%;
@@ -505,6 +540,27 @@ li.ui-menu-item a
     z-index: 1030;
     display:none;
 }
+.views_not
+{
+    background-color: rgba(0,0,0,0.4);
+    content: "";
+    height: 11%;
+    position: fixed;
+    text-align: center;
+    top: 48px;
+    left: 2%;
+    width: 96%;
+    z-index: 1030;
+    display:none;
+}
+.views_not:hover
+{
+    background-color: rgba(0,0,0,0.7);
+}
+.h1_views_not
+{
+    color:white!important;
+}
 .mensaje
 {
     background-color: white;
@@ -517,16 +573,33 @@ li.ui-menu-item a
     width: 490px;
     z-index: 1031;
 }
+.fancybox
+{
+    background-color: white;
+    color: #6E6E6E;
+    margin: -37% 14% auto;
+    padding: 23px 30px 43px 28px;
+    position: fixed;
+    text-align: left;
+    width: 990px;
+    z-index: 1031;
+    height: 583px;
+    overflow-y: scroll;
+}
 
 select 
 {
     width: 207px!important;
 }
-#No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  ,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
+ #No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  
+,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
+,#No_venc::-webkit-input-placeholder ,#Si_venc::-webkit-input-placeholder 
+,#No_act::-webkit-input-placeholder  ,#Si_act::-webkit-input-placeholder 
+,#No_inter::-webkit-input-placeholder,#Si_inter::-webkit-input-placeholder 
 {
     color:    #2E62B4;
 }
-#No_disp,#Si_disp ,#No_prov,#Si_prov
+#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter
 {
     width: 12%;
     height: 1.88em!important;
@@ -541,10 +614,19 @@ select
 {
     width: 392px;
 }
-.termino_pago 
+.vencidas
+{
+    margin-top: 20%;
+}
+.periodo, .filter_oper
 {
     /*margin-right: 16%;*/
     position: absolute!important;
+}
+.order_recopa
+{
+    position: absolute!important;
+    margin: -105px 231px;
 }
 .imprimir
 {
@@ -568,3 +650,7 @@ select
     display: none;
 }
 /*....*/
+
+/*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/
+
+/*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/

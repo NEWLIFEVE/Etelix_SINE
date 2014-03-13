@@ -21,12 +21,17 @@ class Provisions extends CApplicationComponent
 	 */
 	public $invoicesReceived;
 
+	public $numTrafficSend;
+	public $numTrafficReceived;
+	public $numInvoicesSend;
+	public $numInvoicesReceived;
+
 	/**
 	 *
 	 */
 	public function init() 
     {
-       
+       $this->numTrafficSend=$this->numTrafficReceived=0;
     }
 
     /**
@@ -48,6 +53,8 @@ class Provisions extends CApplicationComponent
     	$this->runInvoiceProvision(true);
     	//
     	$this->runInvoiceProvision(false);
+
+    	//$this->sendNotification();
     }
 
 	/**
@@ -70,10 +77,10 @@ class Provisions extends CApplicationComponent
 	 */
 	public function getData($type=true)
 	{
-		$data=array('title'=>'proveedor','id'=>'id_carrier_supplier','margin'=>'cost','variable'=>'invoicesReceived');
-		if($type) $data=array('title'=>'cliente','id'=>'id_carrier_customer','margin'=>'revenue','variable'=>'invoicesSent');
+		$data=array('title'=>'proveedor','id'=>'id_carrier_supplier','margin'=>'CASE WHEN ABS(SUM(revenue-margin))<ABS(SUM(cost)) THEN SUM(revenue-margin) ELSE SUM(cost) END','variable'=>'invoicesReceived');
+		if($type) $data=array('title'=>'cliente','id'=>'id_carrier_customer','margin'=>'CASE WHEN ABS(SUM(cost+margin))<ABS(SUM(revenue)) THEN SUM(cost+margin) ELSE SUM(revenue) END','variable'=>'invoicesSent');
 
-		$sql="SELECT {$data['id']} AS id, date_balance, SUM(minutes) AS minutes, SUM({$data['margin']}) AS margin
+		$sql="SELECT {$data['id']} AS id, date_balance, SUM(minutes) AS minutes, {$data['margin']} AS margin
 			  FROM balance
 			  WHERE date_balance='{$this->date}' AND id_destination IS NULL AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination')
 			  GROUP BY {$data['id']}, date_balance
@@ -90,20 +97,21 @@ class Provisions extends CApplicationComponent
 	{
 		$values="";
 
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'");
-		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'");
+		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
+		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
 
 		$type_document=TypeAccountingDocument::model()->find($data['condition'])->id;
 
 		$currency=Currency::model()->find("name='$'")->id;
 
-		$num=count($this->$data['variable']);
+		$this->$data['num']=$num=count($this->$data['variable']);
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
 			if($factura->margin!=0)
 			{
 				if($key>0 && $key<$num) $values.=",";
 				$values.="(";
+				$values.="'".$factura->date_balance."',";
 				$values.="'".$factura->date_balance."',";
 				$values.="'".$factura->date_balance."',";
 				$values.=$factura->minutes.",";
@@ -115,20 +123,26 @@ class Provisions extends CApplicationComponent
 				$values.=")";
 			}
 		}
-		$sql="INSERT INTO accounting_document(issue_date, from_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
+		$sql="INSERT INTO accounting_document(issue_date, from_date, to_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
 			  VALUES ".$values;
-		$command = Yii::app()->db->createCommand($sql);
-        if($command->execute())
-        {
-			return true;
-        }
-        else
-        {
-            return false;
-        }
-		
+		if($num>0)
+		{
+			$command = Yii::app()->db->createCommand($sql);
+	        if($command->execute())
+	        {
+				var_dump("Se generaron ".$this->$data['num']." ".$data['condition']."s para el dia ".$this->date);
+	        }
+	        else
+	        {
+	            return false;
+	        }
+	    }
 	}
 
+	/**
+	 * Se encargad de generar las provisiones de facturas
+	 * @param boolean $type true=clientes, false=proveedores
+	 */
 	public function runInvoiceProvision($type=true)
 	{
 		$model=Carrier::model()->findAll();
@@ -138,6 +152,8 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
+			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
+			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
 		{
@@ -145,6 +161,8 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
+			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 	}
 
@@ -160,16 +178,23 @@ class Provisions extends CApplicationComponent
 		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
 		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
+		$typeProvisions['num']="numInvoicesSend";
 
 		$sql="SELECT tp.*
-			  FROM termino_pago tp, contrato_termino_pago ctp, contrato con
-			  WHERE tp.id=ctp.id_termino_pago AND ctp.id_contrato=con.id AND con.id_carrier={$idCarrier} AND con.end_date IS NULL AND ctp.end_date IS NULL";
+			  FROM termino_pago tp,
+			  	   (SELECT id, start_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_contrato, id_termino_pago
+			  	   	FROM contrato_termino_pago
+			  	   	WHERE start_date<='{$this->date}') ctp,
+				   (SELECT id, sign_date, production_date, id_carrier, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date
+				   	FROM contrato
+				   	WHERE sign_date<='{$this->date}') con
+			  WHERE tp.id=ctp.id_termino_pago AND ctp.id_contrato=con.id AND con.id_carrier={$idCarrier} AND con.end_date>'{$this->date}' AND ctp.end_date>'{$this->date}'";
 
 		$TerminoPago=TerminoPago::model()->findBySql($sql);
 		if($TerminoPago!==null)
 		{
 			$tempdate=$firstDay=$trafficProvisions=$sql=null;
-			switch (Reportes::define_tp($TerminoPago->name)['periodo'])
+			switch ($TerminoPago->period)
 			{
 				case 30:
 					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
@@ -233,82 +258,160 @@ class Provisions extends CApplicationComponent
 		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
 		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
+		$typeProvisions['num']="numInvoicesReceived";
 
-		$sql="SELECT ctps.month_break AS month_break, ctps.first_day AS first_day, tp.name AS payment_term, fp.name AS billing_period
-			  FROM contrato con, contrato_termino_pago_supplier ctps, termino_pago tp, fact_period fp
-			  WHERE con.id_carrier={$idCarrier} AND con.id=ctps.id_contrato AND tp.id=ctps.id_termino_pago_supplier AND fp.id=ctps.id_fact_period AND con.end_date IS NULL AND ctps.end_date IS NULL";
+		$sql="SELECT ctps.id, ctps.start_date, ctps.end_date, ctps.id_contrato, ctps.month_break, ctps.first_day, tp.period AS payment_term, fp.name AS billing_period
+			  FROM (SELECT id, sign_date, production_date, id_carrier, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date
+			  		FROM contrato
+			  		WHERE sign_date<='{$this->date}') con,
+				   (SELECT id, start_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_contrato, id_termino_pago_supplier, month_break, first_day, id_fact_period
+				   	FROM contrato_termino_pago_supplier
+				   	WHERE start_date<='{$this->date}') ctps,
+				   termino_pago tp,
+				   fact_period fp
+			  WHERE con.id_carrier={$idCarrier} AND con.id=ctps.id_contrato AND tp.id=ctps.id_termino_pago_supplier AND fp.id=ctps.id_fact_period AND con.end_date>'{$this->date}' AND ctps.end_date>'{$this->date}'";
 
 		$TerminoPago=TerminoPago::model()->findBySql($sql);
-		if($TerminoPago!==null)
+		$carrier=Carrier::getName($idCarrier);
+		if($carrier=="BSG-SHARE")
 		{
-			$tempdate=$firstDay=$trafficProvisions=null;
-			switch (Reportes::define_tp($TerminoPago->payment_term)['periodo'])
+			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-27";
+			if($tempdate===$this->date)
 			{
-				case 30:
-					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
-					if($tempdate===$this->date)
-					{
-						$firstDay=DateManagement::getDayOne($this->date);
-						$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-					}
-					break;
-				case 15:
-					if($TerminoPago->billing_period=="Regular(1-15/16-ULT)")
-					{
-						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-15";
-						if($tempdate===$this->date)
-						{
-							$firstDay=DateManagement::getDayOne($this->date);
-							$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-						}
+				$firstDay=DateManagement::getDayOne($this->date);
+				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
+			}
+			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+			if($tempdate===$this->date)
+			{
+				$firstDay=$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-28";
+				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
+			}
+		}
+		else
+		{
+			if($TerminoPago!==null)
+			{
+				$tempdate=$firstDay=$trafficProvisions=null;
+				switch ($TerminoPago->payment_term)
+				{
+					case 30:
 						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 						if($tempdate===$this->date)
 						{
-							$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-16";
-							$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-						}
-					}
-					if($TerminoPago->billing_period=="Dia Antes (ULT-14/15-PEN)")
-					{
-						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-14";
-						if($tempdate===$this->date)
-						{
 							$firstDay=DateManagement::getDayOne($this->date);
 							$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							//var_dump("Generando factura mensual del ".$firstDay." al ".$this->date);
 						}
-						$ultimo=DateManagement::howManyDays($this->date)-1;
-						$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".$ultimo;
-						if($tempdate===$this->date)
+						break;
+					case 15:
+						if($TerminoPago->billing_period=="Regular(1-15/16-ULT)")
 						{
-							$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-16";
-							$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-15";
+							if($tempdate===$this->date)
+							{
+								$firstDay=DateManagement::getDayOne($this->date);
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
+							}
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+							if($tempdate===$this->date)
+							{
+								$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-16";
+								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+								//var_dump("Generando factura de quincenal regular del ".$firstDay." al ".$this->date);
+							}
 						}
-					}
-					break;
-				case 7:
-					if($TerminoPago->billing_period=="Dia Mes(1-7/8-14/15-21/22-ULT)")
-					{
-						$ultimo=DateManagement::howManyDays($this->date);
-						switch (DateManagement::separatesDate($this->date)['day'])
+						elseif($TerminoPago->billing_period=="Dia Antes (ULT-14/15-PEN)")
 						{
-							case 7:
-							case 14:
-							case 21:
-								$firstDay=DateManagement::calculateDate('-6',$this->date);
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-14";
+							if($tempdate===$this->date)
+							{
+								$firstDay=DateManagement::leastOneMonth($this->date)['lastday'];
 								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								break;
-							case $ultimo:
-								$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-22";
+								//var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
+							}
+							$ultimo=DateManagement::howManyDays($this->date)-1;
+							$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".$ultimo;
+							if($tempdate===$this->date)
+							{
+								$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-15";
 								$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-								break;
+								//var_dump("Generando factura de quincenal dia anterior del ".$firstDay." al ".$this->date);
+							}
 						}
-						
-					}
-					if($TerminoPago->billing_period=="Dia Semana(L/M/M/J/V/S/D)")
-					{
-						
-					}
-					break;
+						break;
+					case 7:
+						//si es por dia del mes
+						if($TerminoPago->billing_period=="Dia Mes(1-7/8-14/15-21/22-ULT)")
+						{
+							$last=DateManagement::howManyDays($this->date);
+							switch (DateManagement::separatesDate($this->date)['day'])
+							{
+								case 7:
+								case 14:
+								case 21:
+									$firstDay=DateManagement::calculateDate('-6',$this->date);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
+									break;
+								case $last:
+									$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-22";
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de mes del ".$firstDay." al ".$this->date);
+									break;
+							}
+						}
+						if($TerminoPago->billing_period=="Dia Semana(L/M/M/J/V/S/D)")
+						{
+							//Obtengo el numero del dia que seria el fin del periodo
+							$end=$this->_getEndPeriod($TerminoPago->first_day);
+							//primero verifico si pica mes
+							if($TerminoPago->month_break===1)
+							{
+								//Cuando es fin de mes
+								$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+								if($tempdate==$this->date)
+								{
+									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de semana que pican mes(fin de mes) del ".$firstDay." al ".$this->date);
+									break;
+								}
+								//cuando esta en el fin del periodo de facturacion
+								if($end==DateManagement::getDayNumberWeek($this->date))
+								{
+									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+									if(DateManagement::separatesDate($firstDay)['month']==DateManagement::separatesDate($this->date)['month'])
+									{
+										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+										//var_dump("Generando factura de 7/7 dia de semana que pican mes(durante el mes) del ".$firstDay." al ".$this->date);
+										break;
+									}
+									else
+									{
+										$firstDay=DateManagement::getDayOne($this->date);
+										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+										//var_dump("Generando factura de 7/7 dia de semana que pican mes(inicio de mes) del ".$firstDay." al ".$this->date);
+										break;
+									}
+								}
+							}
+							else
+							{
+								if($end===DateManagement::getDayNumberWeek($this->date))
+								{
+									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+									//var_dump("Generando factura de 7/7 dia de semana que no pican mes del ".$firstDay." al ".$this->date);
+									break;
+								}
+							}
+						}
+						break;
+				}
 			}
 		}
 	}
@@ -386,9 +489,8 @@ class Provisions extends CApplicationComponent
 	 * @param int $typeProvisions
 	 * @return void
 	 */
-	private function __insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
+	private function _insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
 	{
-		var_dump($startDate,$endDate);
 		$trafficProvisions=$this->getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 		if($trafficProvisions->amount!=null)
 		{
@@ -406,8 +508,47 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_changeStatusProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 				$this->_changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions);
+				$this->$typeProvisions['num']=$this->$typeProvisions['num']+1;
 			}
 		}
+	}
+
+	/**
+	 * @return int
+	 */
+	private function _getEndPeriod($num)
+	{
+		$day=$num;
+		for ($i=1; $i < 7; $i++)
+		{ 
+			if($day<7)
+			{
+				$day+=1;
+			}
+			else
+			{
+				$day=1;
+			}
+		}
+		return (int)$day;
+	}
+
+	public function sendNotification()
+	{
+		$body="<!DOCTYPE html>
+				<html lang='es'>
+					<head>
+						<title>Notificación</title>
+						<meta charset='utf-8'>
+					</head>
+					<body style='font-family:Segoe UI;'>
+						<header style='font-size:3em;'>Provisiones Generadas</header>
+						<section>Ya estan disponibles las provisiones hasta el día ".$this->date."</section>
+						<footer style='font-size:0.8em;'>Correo enviado automaticamente a las ".date("H:i:s A")."</footer>
+					</body>
+				</html>";
+		$user="manuelz@sacet.biz";
+		Yii::app()->mail->enviar($body, $user, "Provisiones Generadas");
 	}
 }
 ?>

@@ -16,9 +16,12 @@ return array(
 	'components'=>array(
 		'provisions'=>array(
             'class'=>"application.components.Provisions",
+        ),
+        'mail'=>array(
+            'class'=>"application.components.EnviarEmail",
         ),		
 		'db'=>array(
-            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=sori',
+            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=dev_sori',
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
             'password'=>'Nsusfd8263',

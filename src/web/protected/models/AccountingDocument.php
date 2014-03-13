@@ -41,6 +41,17 @@
  */
 class AccountingDocument extends CActiveRecord
 {
+	/*Usados en recredi*/
+	public $name;
+	public $soa;
+	public $due_date;
+	public $provision_invoice_sent;
+	public $provision_invoice_received;
+	public $provision_traffic_sent;
+	public $provision_traffic_received;
+	public $received_dispute;
+	public $sent_dispute;
+	public $balance;
           
         public $group;
         public $carrier;
@@ -54,6 +65,9 @@ class AccountingDocument extends CActiveRecord
         public $minutos_balance;
         public $min_diference;
         public $monto_diference;
+        public $fac_amount;
+        public $fac_minutes;
+        public $fac_doc_number;
 	/**
 	 * @return string the associated database table name
 	 */
