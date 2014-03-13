@@ -22,7 +22,7 @@ switch ($server)
 		defined('YII_DEBUG') or define('YII_DEBUG',true);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 		break;
-	case 'SERVER_NAME_PRE_PROD':
+	case 'SERVER_NAME_DEV':
 	default:
 		$config=dirname(__FILE__).'/protected/config/main_dev.php';
 		defined('YII_DEBUG') or define('YII_DEBUG',true);
