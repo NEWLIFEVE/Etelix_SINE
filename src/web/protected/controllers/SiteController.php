@@ -178,7 +178,7 @@ class SiteController extends Controller
                     break;
                case 'recredi':
                     $correos['recredi']['asunto']="SINE - RECREDI".self::reportTitle($date);
-                    $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']));
+                    $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$_POST['id_termino_pago']);
                     $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                     break;
                case 'recopa':
@@ -231,7 +231,7 @@ class SiteController extends Controller
                    break;
               case 'recredi':
                    $archivos['recredi']['nombre']="SINE - RECREDI ".self::reportTitle($date)."-".date("g:i a");
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
                    break;
               case 'recopa':
                    $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($date)."-".date("g:i a");
@@ -275,7 +275,7 @@ class SiteController extends Controller
                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($from_date,$date,"REFI PROV",$_GET['id_periodo']);
                    break;
               case 'recredi':
-                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']));
+                   $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
                    break;
               case 'recopa':
                    $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
@@ -369,6 +369,16 @@ class SiteController extends Controller
     {
         if($var==""||$var=="0")return FALSE;
             else return TRUE;
+    }
+    public static function ActionUpdateTerminoPago()
+    {   
+        $tp="";
+        $TerminoPago=TerminoPago::getModel();
+        foreach ($TerminoPago as $key => $model) {
+            if($model->name!="Sin estatus")
+            $tp.= "<option value=".$model->id.">".$model->name."</option>";
+        }
+        echo $tp."<option value='todos'>TODOS</option>";
     }
 }
 ?>
