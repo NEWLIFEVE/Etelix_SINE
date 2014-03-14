@@ -18,9 +18,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes SOA" id="soa">
             <H1 class='h1_report h1SOA'>S O A</H1> 
         </div><br>
-<!--        <div class="Reportes SummarySOA" id="SummarySOA">
-            <H1 class='h1_report h1SummarySOA'>SUMMSOA</H1> 
-        </div><br>-->
+        <div class="Reportes summary" id="summary">
+            <H1 class='h1_report h1Summary'>SUMMARY</H1> 
+        </div><br>
         <div class="Reportes BALANCE" id="balance">
             <h1 class='h1_report h1BALANCE'>Balance</h1>
         </div><br>

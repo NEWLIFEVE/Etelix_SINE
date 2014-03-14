@@ -70,6 +70,9 @@ class AccountingDocument extends CActiveRecord
         public $fac_amount;
         public $fac_minutes;
         public $fac_doc_number;
+        public $last_pago_cobro;
+        public $last_date_pago_cobro;
+        public $type_c_p;
 	/**
 	 * @return string the associated database table name
 	 */

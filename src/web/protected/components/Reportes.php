@@ -37,6 +37,11 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
+    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    {
+        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var;
+    }
 
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 

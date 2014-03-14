@@ -647,6 +647,10 @@ select
 {
     opacity: 1;
 }
+table .tableSumary
+{
+    width: 100%!important;  
+}
 /*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
 .trabajando 
 {

@@ -166,6 +166,11 @@ class SiteController extends Controller
                     $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                     $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                     break;
+                case 'summary':
+                    $correos['summary']['asunto']="SINE - SUMMARY".self::reportTitle($date);
+                    $correos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$_POST['id_termino_pago']);
+                    $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
+                    break;
                 case 'refac':
                     $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
                     $correos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_POST['id_periodo']);
@@ -221,6 +226,10 @@ class SiteController extends Controller
                    $archivos['balance']['nombre']="SINE - BALANCE".self::reportTitle($date)."-".date("g:i a");
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$_GET['grupo']);
                    break;
+              case 'summary':
+                   $archivos['summary']['nombre']="SINE - SUMMARY".self::reportTitle($date)."-".date("g:i a");
+                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+                   break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);
@@ -267,6 +276,9 @@ class SiteController extends Controller
                    break;
               case 'balance':
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
+                   break;
+              case 'summary':
+                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
                    break;
               case 'refac':
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);
