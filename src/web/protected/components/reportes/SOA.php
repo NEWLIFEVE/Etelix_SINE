@@ -16,7 +16,7 @@
             $body="";
             if ($accounting_document != null) {
                 $body.= "<h1>SOA $group-Etelix <h3>(".$date." - ".date("g:i a").")</h3></h1>";
-                $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3><br> DUE
+                $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
                               <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
@@ -57,15 +57,15 @@
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSend,3). "</td>
                              <td></td>
                              </tr>";
-                $body.="</table>";
-                $body.="<br><table align='right'>
-                             <tr><td colspan='5'></td>
+                $body.="</table><br>";
+                $body.="<table align='right'>
+                             <tr><td colspan='4'></td>
+                             <tr><td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA (DUE)</td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                              </tr>
-                             </table>";
-                
-                $body.= "<br><br> NEXT <table style='background:#3466B4;text-align:center;color:white'>
+                        </table>";
+                $body.= "<br><br><br><br><table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
@@ -105,9 +105,10 @@
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSendNext,3). "</td>
                              <td></td>
                              </tr>";
-                    $body.="<br><br>
+                    $body.="</table><br>;
                              <table align='right'>
-                             <tr><td colspan='5'></td>
+                             <tr><td colspan='4'></td>
+                             <tr><td colspan='2'style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                              </tr>
