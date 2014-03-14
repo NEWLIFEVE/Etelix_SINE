@@ -2,7 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
-
+    
+    -modificacion de recredi, soa(due), soa(next) con sus respectivos due date, tambien ahora el recredi se filtra por termino pago.
     -nuevo soa terminado.
     -algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
 

@@ -28,8 +28,6 @@ class Recredi extends Reportes
             $typeRecredi=TerminoPago::getModelFind($PaymentTerm)->name;
         }
         
-                
-        
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
         $style_number_row="style='border:0px solid black;text-align:center;background:#83898F;color:white;'";
         $style_basic="style='border:1px solid black;text-align:center;'";
@@ -380,7 +378,6 @@ class Recredi extends Reportes
               GROUP BY c.id_carrier_groups";
         return Balance::model()->findAllBySql($sql);
     }
-
     /**
      *
      */
