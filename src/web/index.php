@@ -10,21 +10,20 @@ define('SERVER_NAME_DEV','sine.local');
 $server=$_SERVER['SERVER_NAME'];
 // change the following paths if necessary
 $yii='../../../yii/framework/yii.php';
+$config=dirname(__FILE__).'/protected/config/main.php';
+
 switch ($server)
 {
-	case 'SERVER_NAME_PROD':
-		$config=dirname(__FILE__).'/protected/config/main.php';
+	case SERVER_NAME_PROD:
 		defined('YII_DEBUG') or define('YII_DEBUG',false);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',0);
 		break;
-	case 'SERVER_NAME_PRE_PROD':
-		$config=dirname(__FILE__).'/protected/config/main_pre.php';
+	case SERVER_NAME_PRE_PROD:
 		defined('YII_DEBUG') or define('YII_DEBUG',true);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 		break;
-	case 'SERVER_NAME_DEV':
+	case SERVER_NAME_DEV:
 	default:
-		$config=dirname(__FILE__).'/protected/config/main_dev.php';
 		defined('YII_DEBUG') or define('YII_DEBUG',true);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 		break;

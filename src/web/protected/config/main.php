@@ -1,5 +1,24 @@
-
 <?php
+$server=$_SERVER['SERVER_NAME'];
+switch ($server)
+{
+    case SERVER_NAME_PROD:
+        $server_db='localhost';
+        $sori_db='sori';
+        $pass_db='Nsusfd8263';
+        break;
+    case SERVER_NAME_PRE_PROD:
+        $server_db='localhost';
+        $sori_db='dev_sori';
+        $pass_db='Nsusfd8263';
+        break;
+    case SERVER_NAME_DEV:
+    default:
+        $server_db='localhost';
+        $sori_db='sori';
+        $pass_db='123';
+        break;
+}
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // 
@@ -63,10 +82,10 @@ return array(
 			),
 		),
         'db'=>array(
-            'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
+            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sori_db,
             'emulatePrepare'=>true,
             'username'=>'postgres',
-            'password'=>'Nsusfd8263',
+            'password'=>$pass_db,
             'charset'=>'utf8',
             ),
         'errorHandler'=>array(
