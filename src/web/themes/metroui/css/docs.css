@@ -623,6 +623,11 @@ select
     /*margin-right: 16%;*/
     position: absolute!important;
 }
+.termino_pago
+{
+    position: absolute!important;
+    margin: -105px 220px;
+}
 .order_recopa
 {
     position: absolute!important;
@@ -642,6 +647,7 @@ select
 {
     opacity: 1;
 }
+
 /*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
 .trabajando 
 {

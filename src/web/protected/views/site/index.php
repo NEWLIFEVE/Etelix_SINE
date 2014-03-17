@@ -18,6 +18,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes SOA" id="soa">
             <H1 class='h1_report h1SOA'>S O A</H1> 
         </div><br>
+        <div class="Reportes summary" id="summary">
+            <H1 class='h1_report h1Summary'>SUMMARY</H1> 
+        </div><br>
         <div class="Reportes BALANCE" id="balance">
             <h1 class='h1_report h1BALANCE'>Balance</h1>
         </div><br>
@@ -31,9 +34,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div><br>
-        <div class="Reportes RECOPA" id="recopa">
+<!--        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br> 
+        </div><br> -->
 
 <!--        <div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
@@ -93,7 +96,13 @@ $this->pageTitle = Yii::app()->name;
             <option value="30">MENSUAL</option>
             </select> 
         </div>
-
+        <div class="formInputs termino_pago">
+            <h3>Termino Pago</h3>
+            <select name="id_termino_pago" id="id_termino_pago">
+            <option value="">Seleccione</option>
+            </select> 
+        </div>
+        
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provision Fact</h3>
             <div class="btn-group" data-toggle="buttons-radio">
@@ -129,6 +138,7 @@ $this->pageTitle = Yii::app()->name;
                 <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
+        
 <!--        <div class='formInputs pronostico'>
             <h3>Pronostico</h3>
             <div class="btn-group" data-toggle="buttons-radio">

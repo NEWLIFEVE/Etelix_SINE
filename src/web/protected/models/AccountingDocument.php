@@ -44,6 +44,8 @@ class AccountingDocument extends CActiveRecord
 	/*Usados en recredi*/
 	public $name;
 	public $soa;
+	public $soa_next;
+	public $due_date_next;
 	public $due_date;
 	public $provision_invoice_sent;
 	public $provision_invoice_received;
@@ -68,6 +70,9 @@ class AccountingDocument extends CActiveRecord
         public $fac_amount;
         public $fac_minutes;
         public $fac_doc_number;
+        public $last_pago_cobro;
+        public $last_date_pago_cobro;
+        public $type_c_p;
 	/**
 	 * @return string the associated database table name
 	 */

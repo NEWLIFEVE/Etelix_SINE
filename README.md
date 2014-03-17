@@ -2,7 +2,9 @@
 ============
 
 Sistema de Reportes para Billing
-
+    -nuevo reporte "summary", el mismo se encarga de dar un listrado de grupos que a su vez contienen ultimos pagos o cobros, soas vencidos y por vencer y se filtra por "no actividad", termino pago e intercompañia
+    -se agrego titulos para las tablas que indican los balances en soa, soa(due) y soa(next)
+    -modificacion de recredi, soa(due), soa(next) con sus respectivos due date, tambien ahora el recredi se filtra por termino pago.
     -nuevo soa terminado.
     -algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
 

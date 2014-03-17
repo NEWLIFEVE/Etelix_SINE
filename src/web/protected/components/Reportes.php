@@ -37,6 +37,11 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
+    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    {
+        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var;
+    }
 
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
@@ -70,10 +75,10 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type
      */
-    public function recredi($date,$intercompany,$no_activity)
+    public function recredi($date,$intercompany,$no_activity,$PaymentTerm)
     {
         $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity);
+        return $var->report($date,$intercompany,$no_activity,$PaymentTerm);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -710,11 +715,11 @@ class Reportes extends CApplicationComponent
     {
         if($var<0) $var=$var*-1;
          
-        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25")  return "SEMANAL";
+        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25"||$var=="21")  return "SEMANAL";
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
     }
 
     /**
