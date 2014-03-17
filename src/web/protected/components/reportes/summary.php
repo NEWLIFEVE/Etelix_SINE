@@ -45,7 +45,7 @@ class summary extends Reportes
                     <td colspan='10'></td>
                 </tr>
                </table>
-               <table class='tableSumary'>
+               <table style='width: 100%;'>
                 <tr>
                     <td {$styleNumberRow} >N°</td>
                     <td {$styleCarrier} > CARRIER </td>
