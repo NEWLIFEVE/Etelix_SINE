@@ -22,7 +22,10 @@ $this->pageTitle = Yii::app()->name;
             <H1 class='h1_report h1Summary'>SUMMARY</H1> 
         </div><br>
         <div class="Reportes BALANCE" id="balance">
-            <h1 class='h1_report h1BALANCE'>Balance</h1>
+            <h1 class='h1_report h1BALANCE'>BALANCE</h1>
+        </div><br>
+        <div class="Reportes reteco" id="reteco">
+            <h1 class='h1_report h1reteco'>RETECO</h1>
         </div><br>
         <div class="Reportes REFAC" id="refac">
             <h1 class='h1_report h1REFAC'>REFAC</h1>

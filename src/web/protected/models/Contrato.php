@@ -24,6 +24,13 @@
  */
 class Contrato extends CActiveRecord
 {
+    /**USADOS PARA RETECO**/
+    public $carrier;
+    public $sign_date_tp;
+    public $payment_term;
+    public $sign_date_tps;
+    public $payment_term_s;
+    
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
@@ -33,7 +40,6 @@ class Contrato extends CActiveRecord
     {
         return parent::model($className);
     }
-
     /**
      * @return string the associated database table name
      */

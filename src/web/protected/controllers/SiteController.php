@@ -161,15 +161,20 @@ class SiteController extends Controller
                     $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
+                case 'summary':
+                    $correos['summary']['asunto']="SINE - SUMMARY".self::reportTitle($date);
+                    $correos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$_POST['id_termino_pago']);
+                    $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
+                    break;
                 case 'balance':
                     $correos['balance']['asunto']="SINE - BALANCE".self::reportTitle($date);
                     $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                     $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                     break;
-                case 'summary':
-                    $correos['summary']['asunto']="SINE - SUMMARY".self::reportTitle($date);
-                    $correos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$_POST['id_termino_pago']);
-                    $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
+                case 'reteco':
+                    $correos['reteco']['asunto']="SINE - RETECO".self::reportTitle($date);
+                    $correos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
+                    $correos['reteco']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['reteco']['asunto'].".xls";
                     break;
                 case 'refac':
                     $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
@@ -222,13 +227,17 @@ class SiteController extends Controller
                    $archivos['soa']['nombre']="SINE - SOA".self::reportTitle($date)."-".date("g:i a");
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition,$_GET['grupo']);
                    break;
+               case 'summary':
+                   $archivos['summary']['nombre']="SINE - SUMMARY".self::reportTitle($date)."-".date("g:i a");
+                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+                   break;
               case 'balance':
                    $archivos['balance']['nombre']="SINE - BALANCE".self::reportTitle($date)."-".date("g:i a");
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$_GET['grupo']);
                    break;
-              case 'summary':
-                   $archivos['summary']['nombre']="SINE - SUMMARY".self::reportTitle($date)."-".date("g:i a");
-                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+              case 'reteco':
+                   $archivos['reteco']['nombre']="SINE - RETECO".self::reportTitle($date)."-".date("g:i a");
+                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");
@@ -274,11 +283,14 @@ class SiteController extends Controller
               case 'soa':
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
                    break;
+              case 'summary':
+                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+                   break;
               case 'balance':
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                    break;
-              case 'summary':
-                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+              case 'reteco':
+                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
                    break;
               case 'refac':
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);

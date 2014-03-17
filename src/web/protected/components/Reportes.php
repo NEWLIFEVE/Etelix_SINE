@@ -23,7 +23,19 @@ class Reportes extends CApplicationComponent
         $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
         return $var;
     }
-
+    /**
+     * 
+     * @param type $date
+     * @param type $intercompany
+     * @param type $no_activity
+     * @param type $PaymentTerm
+     * @return type
+     */
+    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    {
+        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var;
+    }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -37,11 +49,19 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
-    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    /**
+     * 
+     * @param type $grupo
+     * @param type $fecha
+     * @param type $no_disp
+     * @return type
+     */
+    public function reteco($date)
     {
-        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        $var=reteco::report($date);
         return $var;
     }
+    
 
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
