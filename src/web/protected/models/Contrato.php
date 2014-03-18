@@ -26,6 +26,7 @@ class Contrato extends CActiveRecord
 {
     /**USADOS PARA RETECO**/
     public $carrier;
+    public $group;
     public $sign_date_tp;
     public $payment_term;
     public $sign_date_tps;

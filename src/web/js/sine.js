@@ -456,10 +456,10 @@ $SINE.AJAX=(function()
                      if(action=="/site/Excel"){         
                          $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                          $(".excel_a").removeAttr("href");
-                         console.log("vista previa exitosa");
+                         console.log("Descarga Exitosa");
                      }else if(action=="/site/previa"){ 
                          $SINE.UI.fancy_box(data);
-                         console.log("Descarga exitosa");
+                         console.log("Vista Previa Exitosa");
                      }else{                              
                          $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
                          console.log(data);

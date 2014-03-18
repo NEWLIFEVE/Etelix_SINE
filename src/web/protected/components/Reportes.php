@@ -252,7 +252,7 @@ class Reportes extends CApplicationComponent
 //                $to_date = Utility::formatDateSINE($model->due_date,"d-M-y");
 //        }
         //provisional...//
-        
+       
         if($balanceDueDate==NULL){
         switch ($model->id_type_accounting_document){
             case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":

@@ -47,7 +47,7 @@
                             $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
-                            $body.="</tr>"; 
+                            $body.="</tr>";
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
@@ -95,9 +95,12 @@
                             $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
-                            $body.="</tr>";   
+                            $body.="</tr>"; 
+//                            if($document->due_date!=NULL)
+//                            $last_due_date=$document->due_date;
                         }         
                     }
+//                    var_dump($last_due_date);
                     $body.="<tr " . Reportes::define_estilos_null() . "><td colspan='3'></td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPaymentNext,3). "</td>
                              <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRecNext,3). "</td>

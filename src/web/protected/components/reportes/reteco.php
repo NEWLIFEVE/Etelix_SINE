@@ -25,15 +25,16 @@ class reteco extends Reportes
               <td colspan='2'>
                   <h1>RETECO</h1>
               </td>
-              <td colspan='9'>  AL {$date} </td>
+              <td colspan='10'>  AL {$date} </td>
           <tr>
-              <td colspan='9'></td>
+              <td colspan='10'></td>
           </tr>
          </table>
          <table style='width: 100%;border:1px solid black;'>
           <tr>
               <td {$styleRowsNumb} > N° </td>
               <td {$styleCarriers} > CARRIER </td>
+              <td {$styleCarriers} > GROUP </td>
               <td {$styleContrato} > SIGN DATE </td>
               <td {$styleContrato} > PRODUCTION DATE </td>
               <td {$styleTPCustom} > SIGN DATE TPC </td>
@@ -48,11 +49,12 @@ class reteco extends Reportes
             $body.="<tr>
                         <td {$styleRowsNumb} > {$pos} </td>
                         <td {$styleRowBasic} > ".$document->carrier." </td>
-                        <td ".self::defineStyleNeed($document->sign_date)."> ".$document->sign_date." </td>
-                        <td ".self::defineStyleNeed($document->production_date)."> ".$document->production_date." </td>
-                        <td ".self::defineStyleNeed($document->sign_date_tp)."> ".$document->sign_date_tp." </td>
+                        <td ".self::defineStyleNeed($document->group)."> ".$document->group." </td>
+                        <td ".self::defineStyleNeed($document->sign_date)."> ".Utility::formatDateSINE($document->sign_date,"Y-m-d")." </td>
+                        <td ".self::defineStyleNeed($document->production_date)."> ".Utility::formatDateSINE($document->production_date,"Y-m-d")." </td>
+                        <td ".self::defineStyleNeed($document->sign_date_tp)."> ".Utility::formatDateSINE($document->sign_date_tp,"Y-m-d")." </td>
                         <td ".self::defineStyleNeed($document->payment_term)."> ".$document->payment_term." </td>
-                        <td ".self::defineStyleNeed($document->sign_date_tps)."> ".$document->sign_date_tps." </td>
+                        <td ".self::defineStyleNeed($document->sign_date_tps)."> ".Utility::formatDateSINE($document->sign_date_tps,"Y-m-d")." </td>
                         <td ".self::defineStyleNeed($document->payment_term_s)."> ".$document->payment_term_s." </td>
                         <td {$styleRowsNumb} > {$pos} </td>
                     </tr>";
@@ -69,17 +71,56 @@ class reteco extends Reportes
     }
     public static function getData()
     {
-        $sql="SELECT  c.name AS carrier, con.sign_date, con.production_date, ctp.start_date AS sign_date_tp, tp.name AS payment_term, ctps.start_date AS sign_date_tps, tps.name AS payment_term_s
-                FROM contrato con, carrier c, contrato_termino_pago ctp, termino_pago tp, contrato_termino_pago_supplier ctps, termino_pago tps
-              WHERE con.end_date IS NULL
-                    AND con.id_carrier=c.id
-                    AND ctp.end_date IS NULL
-                    AND con.id=ctp.id_contrato
-                    AND ctp.id_termino_pago=tp.id
-                    AND ctps.end_date IS NULL
-                    AND con.id=ctps.id_contrato
-                    AND ctps.id_termino_pago_supplier=tps.id
-              ORDER BY c.name, tp.name, tps.name ASC";
+        $sql="SELECT /*carrier name*/
+                    car.name AS carrier, 
+                    /*group name*/
+                    (SELECT name AS group
+                    FROM carrier_groups
+                    WHERE id=car.id_carrier_groups) AS group,
+                   /*sign_date*/
+                   (SELECT sign_date
+                    FROM contrato con
+                    WHERE end_date IS NULL
+                      AND id_carrier=car.id) AS sign_date,
+                   /*production_date*/
+                   (SELECT production_date
+                    FROM contrato con
+                    WHERE end_date IS NULL
+                      AND id_carrier=car.id) AS production_date,
+                    /*sign_date_tp*/
+                    (SELECT ctp.start_date AS sign_date_tp 
+                    FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
+                    WHERE con.end_date IS NULL
+                        AND con.id_carrier=car.id
+                        AND ctp.end_date IS NULL
+                        AND con.id=ctp.id_contrato
+                        AND ctp.id_termino_pago=tp.id) AS sign_date_tp,
+                    /*payment_term*/
+                    (SELECT tp.name AS payment_term
+                    FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
+                    WHERE con.end_date IS NULL
+                        AND con.id_carrier=car.id
+                        AND ctp.end_date IS NULL
+                        AND con.id=ctp.id_contrato
+                        AND ctp.id_termino_pago=tp.id) AS payment_term,
+                    /*sign_date_tps*/
+                    (SELECT ctps.start_date AS sign_date_tps 
+                    FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
+                    WHERE con.end_date IS NULL
+                        AND con.id_carrier=car.id
+                        AND ctps.end_date IS NULL
+                        AND con.id=ctps.id_contrato
+                        AND ctps.id_termino_pago_supplier=tp.id) AS sign_date_tps,
+                    /*payment_term_s*/
+                    (SELECT tp.name AS payment_term_s
+                    FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
+                    WHERE con.end_date IS NULL
+                        AND con.id_carrier=car.id
+                        AND ctps.end_date IS NULL
+                        AND con.id=ctps.id_contrato
+                        AND ctps.id_termino_pago_supplier=tp.id) AS payment_term_s
+                FROM carrier car
+                ORDER BY carrier, payment_term, payment_term_s ASC";
     
         return Contrato::model()->findAllBySql($sql);
     }

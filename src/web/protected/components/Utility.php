@@ -160,9 +160,13 @@ Class Utility
      */
     public static function formatDateSINE($fecha,$formato)
     {
-        $fecha_actual =strtotime($fecha);
-        $valid = date($formato,$fecha_actual );
-        return $valid;
+        if($fecha!=NULL){
+            $fecha_actual =strtotime($fecha);
+            $valid = date($formato,$fecha_actual );
+            return $valid;
+        }else{  
+            return NULL;
+        }
     }
 
     /**
