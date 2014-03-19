@@ -20,6 +20,7 @@ class summary extends Reportes
         $styleNumberRow="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
         $styleBasic="style='border:1px solid black;text-align: left;'";
         $styleBasicNum="style='border:1px solid black;text-align: right;'";
+        $styleBasicDate="style='border:1px solid black;text-align: center;'";
         $styleNull="style='border:0px solid white;text-align: left:'";
         $styleCarrier="style='border:1px solid black;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
@@ -40,16 +41,15 @@ class summary extends Reportes
                     <td colspan='2'>
                         <h1>SUMMARY - {$typeRecredi}</h1>
                     </td>
-                    <td colspan='10'>  AL {$date} </td>
+                    <td colspan='9'>  AL {$date} </td>
                 <tr>
-                    <td colspan='10'></td>
+                    <td colspan='9'></td>
                 </tr>
                </table>
                <table style='width: 100%;'>
                 <tr>
                     <td {$styleNumberRow} >N°</td>
                     <td {$styleCarrier} > CARRIER </td>
-                    <td {$styleNumberRow} > T=C/P </td>
                     <td {$styleDatePC} > ULTIMO(Pag/Cobr) </td>
                     <td {$styleDatePC} > FECHA(Pag/Cobr) </td>
                     <td {$styleSoa} > SOA(DUE) </td>
@@ -67,13 +67,12 @@ class summary extends Reportes
             $body.=" <tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
-                      <td {$styleBasic} > ".$document->type_c_p." </td>
-                      <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->last_pago_cobro)." </td>
-                      <td {$styleBasic} > ".$document->last_date_pago_cobro." </td>
+                      <td {$styleBasicNum} > ".self::definePaymCollect($document->type_c_p).Yii::app()->format->format_decimal($document->last_pago_cobro)." </td>
+                      <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
-                      <td {$styleBasic} > ".$document->due_date." </td>
+                      <td {$styleBasicDate} > ".$document->due_date." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa_next)." </td>
-                      <td {$styleBasic} > ".$document->due_date_next." </td>
+                      <td {$styleBasicDate} > ".$document->due_date_next." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
         }
@@ -89,6 +88,13 @@ class summary extends Reportes
                   </tr>
                   </table>";
           return $body;
+    }
+    public static function definePaymCollect($var)
+    {
+        if($var=="Pago")
+            return "-";
+        else 
+            return "";
     }
     /**
      * Encargada de traer la data

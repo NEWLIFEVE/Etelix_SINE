@@ -49,16 +49,10 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
-    /**
-     * 
-     * @param type $grupo
-     * @param type $fecha
-     * @param type $no_disp
-     * @return type
-     */
-    public function reteco($date)
+
+    public function reteco($carActived,$typePaymentTerm,$paymentTerm)
     {
-        $var=reteco::report($date);
+        $var=reteco::report($carActived,$typePaymentTerm,$paymentTerm);
         return $var;
     }
     
