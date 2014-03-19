@@ -37,7 +37,7 @@ class reteco extends Reportes
               <td {$styleRowsNumb} > N° </td>
               <td {$styleCarriers} > CARRIER </td>
               <td {$styleCarriers} > GROUP </td>
-              <td {$styleActived} > INACTIV </td>
+              <td {$styleActived} > INACTIVE </td>
               <td {$styleContrato} > SIGN DATE </td>
               <td {$styleContrato} > PRODUCTION DATE </td>
               <td {$styleTPCustom} > SIGN DATE TPC </td>
