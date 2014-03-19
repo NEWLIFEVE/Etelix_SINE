@@ -173,7 +173,7 @@ class SiteController extends Controller
                     break;
                 case 'reteco':
                     $correos['reteco']['asunto']="SINE - RETECO".self::reportTitle($date);
-                    $correos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
+                    $correos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_POST['Si_car_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['reteco']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['reteco']['asunto'].".xls";
                     break;
                 case 'refac':
@@ -237,7 +237,7 @@ class SiteController extends Controller
                    break;
               case 'reteco':
                    $archivos['reteco']['nombre']="SINE - RETECO".self::reportTitle($date)."-".date("g:i a");
-                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
+                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_GET['Si_car_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                    break;
               case 'refac':
                    $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($from_date, $date)." ".str_replace("-","",$from_date).self::reportTitle($date)."-".date("g:i a");

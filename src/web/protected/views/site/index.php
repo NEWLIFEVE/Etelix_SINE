@@ -110,7 +110,7 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs termino_pago">
             <h3>Termino Pago</h3>
             <select name="id_termino_pago" id="id_termino_pago">
-                <option value="todos">TODOS</option>
+                <option value="todos">Todos</option>
             </select> 
         </div>
         

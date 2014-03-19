@@ -43,16 +43,16 @@ class summary extends Reportes
                     <td colspan='2'>
                         <h1>SUMMARY - {$typeRecredi}</h1>
                     </td>
-                    <td colspan='9'>  AL {$date} </td>
+                    <td colspan='10'>  AL {$date} </td>
                 <tr>
-                    <td colspan='9'></td>
+                    <td colspan='10'></td>
                 </tr>
                </table>
                <table style='width: 100%;'>
                 <tr>
                     <td {$styleNumberRow} >N°</td>
                     <td {$styleCarrier} > CARRIER </td>
-                    
+                    <td {$styleActived} > INACTIV </td>
                     <td {$styleDatePC} > ULTIMO(Pag/Cobr) </td>
                     <td {$styleDatePC} > FECHA(Pag/Cobr) </td>
                     <td {$styleSoa} > SOA(DUE) </td>
@@ -61,7 +61,6 @@ class summary extends Reportes
                     <td {$styleDueDateN} > DUE DATE(N) </td>
                     <td {$styleNumberRow} >N°</td>
                 </tr>";
-//                    <td {$styleActived} > INACTIV </td>
         foreach ($documents as $key => $document)
         { 
             $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
@@ -72,7 +71,7 @@ class summary extends Reportes
             $body.=" <tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
-                      
+                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
                       <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
@@ -81,10 +80,9 @@ class summary extends Reportes
                       <td {$styleBasicDate} > ".$document->due_date_next." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
-//                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
         }
          $body.=" <tr>
-                      <td {$styleNull} colspan='2'></td>
+                      <td {$styleNull} colspan='3'></td>
                       <td {$styleDatePC} >".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
                       <td {$styleNull} ></td>
                       <td {$styleSoa} >".Yii::app()->format->format_decimal($soa)."</td>
