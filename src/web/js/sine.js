@@ -34,9 +34,9 @@ $SINE.UI=(function()
             {
                 if($(this).val()=='null' && $("#tipo_report").val()=="reteco"){
                     $("#id_termino_pago").val("todos");
-                    $("#id_termino_pago").attr('disabled','');
+                    $(".termino_pago").hide('fast');
                 }else{
-                    $("#id_termino_pago").removeAttr('disabled');
+                    $(".termino_pago").show('fast');
                 }
             });
         } 
@@ -129,7 +129,7 @@ $SINE.UI=(function()
                 case "summary":
                   var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                      $("#id_termino_pago").removeAttr('disabled');
+                      $(".termino_pago").show('fast');
                       $("#id_termino_pago").val("todos");
                   break; 
                 case "balance":
@@ -137,9 +137,9 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   break; 
                 case "reteco":
-                  var mostrar =['.type_termino_pago,.termino_pago,.car_activity']; 
+//                  var mostrar =['.type_termino_pago,.termino_pago,.car_activity']; 
+                  var mostrar =['.type_termino_pago,.car_activity']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                      $("#id_termino_pago").attr('disabled','');
                   break; 
                 case "refac":
                     var mostrar =['.periodo,.fecha']; 

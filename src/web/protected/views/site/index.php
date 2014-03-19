@@ -102,9 +102,9 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs type_termino_pago">
             <h3>Tipo de Termino Pago</h3>
             <select name="type_termino_pago" id="type_termino_pago">
-            <option value=null>Todos</option>
-            <option value="0">Customer</option>
-            <option value="1">Supplier</option>
+                <option value=null>Todos</option>
+                <option value="0">Customer</option>
+                <option value="1">Supplier</option>
             </select> 
         </div>
         <div class="formInputs termino_pago">
