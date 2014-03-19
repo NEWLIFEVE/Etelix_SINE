@@ -6,15 +6,15 @@ define('SERVER_NAME_PROD','s1248-101');
 $server=gethostname();
 // change the following paths if necessary
 $yii='../../../yii/framework/yii.php';
+$config=dirname(__FILE__).'/protected/config/console.php';
+
 switch ($server)
 {
-	case 'SERVER_NAME_PROD':
-		$config=dirname(__FILE__).'/protected/config/console.php';
+	case SERVER_NAME_PROD:
 		defined('YII_DEBUG') or define('YII_DEBUG',false);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',0);
 		break;
 	default:
-		$config=dirname(__FILE__).'/protected/config/console_dev.php';
 		defined('YII_DEBUG') or define('YII_DEBUG',true);
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 		break;

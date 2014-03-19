@@ -1,10 +1,23 @@
 <?php
-
+$server=gethostname();
+switch ($server)
+{
+	case SERVER_NAME_PROD:
+		$server_db='localhost';
+        $sori_db='sori';
+        $pass_db='Nsusfd8263';
+		break;
+	default:
+		$server_db='localhost';
+        $sori_db='sori';
+        $pass_db='123';
+		break;
+}
 // This is the configuration for yiic console application.
 // Any writable CConsoleApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Console Application',
+	'name'=>'SINE-consola',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -21,10 +34,10 @@ return array(
             'class'=>"application.components.EnviarEmail",
         ),		
 		'db'=>array(
-            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=sori',
+            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='$sori_db,
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
-            'password'=>'Nsusfd8263',
+            'password'=>$pass_db,
 			'charset'=>'utf8',
             ),
 		'log'=>array(
