@@ -290,7 +290,7 @@ class SiteController extends Controller
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                    break;
               case 'reteco':
-                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($date);
+                   $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_GET['Si_car_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                    break;
               case 'refac':
                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($from_date,$date,"REFAC",$_GET['id_periodo']);
@@ -391,8 +391,12 @@ class SiteController extends Controller
     }
     public static function trueFalse($var)
     {
-        if($var==""||$var=="0")return FALSE;
-            else return TRUE;
+        if($var==""||$var=="0")
+            return FALSE;
+        elseif($var===null)
+            return NULL;
+         else   
+            return TRUE;
     }
     public static function ActionUpdateTerminoPago()
     {   
