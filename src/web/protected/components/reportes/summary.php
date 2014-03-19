@@ -20,6 +20,7 @@ class summary extends Reportes
         $styleNumberRow="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
         $styleBasic="style='border:1px solid black;text-align: left;'";
         $styleBasicNum="style='border:1px solid black;text-align: right;'";
+        $styleActived="style='background:#F0950C;color:white;border:1px solid black;text-align:center;'";
         $styleBasicDate="style='border:1px solid black;text-align: center;'";
         $styleNull="style='border:0px solid white;text-align: left:'";
         $styleCarrier="style='border:1px solid black;background:silver;text-align:center;color:white;'";
@@ -27,6 +28,7 @@ class summary extends Reportes
         $styleSoa="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleDueDateD="style='border:1px solid black;background:#F89289;text-align:center;color:white;'";
         $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
         $last_pago_cobro=$soa=$soa_next=0;
          
         if($PaymentTerm=="todos") {
@@ -50,6 +52,7 @@ class summary extends Reportes
                 <tr>
                     <td {$styleNumberRow} >N°</td>
                     <td {$styleCarrier} > CARRIER </td>
+                    
                     <td {$styleDatePC} > ULTIMO(Pag/Cobr) </td>
                     <td {$styleDatePC} > FECHA(Pag/Cobr) </td>
                     <td {$styleSoa} > SOA(DUE) </td>
@@ -58,8 +61,10 @@ class summary extends Reportes
                     <td {$styleDueDateN} > DUE DATE(N) </td>
                     <td {$styleNumberRow} >N°</td>
                 </tr>";
+//                    <td {$styleActived} > INACTIV </td>
         foreach ($documents as $key => $document)
         { 
+            $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
             $soa+=$document->soa;
@@ -67,7 +72,8 @@ class summary extends Reportes
             $body.=" <tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
-                      <td {$styleBasicNum} > ".self::definePaymCollect($document->type_c_p).Yii::app()->format->format_decimal($document->last_pago_cobro)." </td>
+                      
+                      <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
                       <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
                       <td {$styleBasicDate} > ".$document->due_date." </td>
@@ -75,9 +81,10 @@ class summary extends Reportes
                       <td {$styleBasicDate} > ".$document->due_date_next." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
+//                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
         }
          $body.=" <tr>
-                      <td {$styleNull} colspan='3'></td>
+                      <td {$styleNull} colspan='2'></td>
                       <td {$styleDatePC} >".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
                       <td {$styleNull} ></td>
                       <td {$styleSoa} >".Yii::app()->format->format_decimal($soa)."</td>
@@ -89,12 +96,26 @@ class summary extends Reportes
                   </table>";
           return $body;
     }
-    public static function definePaymCollect($var)
+    public static function definePaymCollect($model,$attr)
     {
-        if($var=="Pago")
-            return "-";
-        else 
+        if($attr=="value"){
+            if($model->type_c_p=="Pago")
+                return "-".$model->last_pago_cobro;
+            else 
+                return $model->last_pago_cobro;
+        }else{
+            if($model->type_c_p=="Pago")
+                 return "red";
+             else 
+                 return "black";
+        }
+    }
+    public static function defineActive($var)
+    {
+        if($var!="16")
             return "";
+        else
+            return "x";
     }
     /**
      * Encargada de traer la data
@@ -105,17 +126,17 @@ class summary extends Reportes
      */
     public static function getData($date,$intercompany=TRUE,$no_activity=TRUE,$PaymentTerm)
     {
-     if($intercompany)           $intercompany="";
-     elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
-    
-     if($no_activity)           $no_activity="";
-     elseif($no_activity==FALSE) $no_activity=" WHERE due_date IS NOT NULL";
-     
-     if($PaymentTerm=="todos") {
-         $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
-     }else{
-         $filterPaymentTerm="{$PaymentTerm}";
-     }
+        if($intercompany)           $intercompany="";
+        elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+
+        if($no_activity)           $no_activity="";
+        elseif($no_activity==FALSE) $no_activity=" WHERE due_date IS NOT NULL";
+
+        if($PaymentTerm=="todos") {
+            $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
+        }else{
+            $filterPaymentTerm="{$PaymentTerm}";
+        }
 
     //El id del grupo
         $sqlExpirationCustomer="SELECT tp.expiration

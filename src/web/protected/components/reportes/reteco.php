@@ -86,99 +86,93 @@ class reteco extends Reportes
           else
             $carActived="AND cm.id_managers!=16";
           
-          if($paymentTerm=="todos") 
-               $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
+        if($paymentTerm=="todos") 
+            $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
           else
-               $filterPaymentTerm="$paymentTerm";
-          
-          switch ($typePaymentTerm){
-            case NULL:
-                $tableNext="";
-                $wherePaymentTerm="";
-                break;
-            case FALSE:
-                $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
-                $wherePaymentTerm="AND con.end_date IS NULL
-                                   AND con.id_carrier=car.id
-                                   AND ctp.end_date IS NULL
-                                   AND con.id=ctp.id_contrato
-                                   AND ctp.id_termino_pago=tp.id
-                                   AND tp.id IN({$filterPaymentTerm})";
-                break;
-            case TRUE:
-                $tableNext=", contrato con,  contrato_termino_pago_supplier ctp, termino_pago tp";
-                $wherePaymentTerm="AND con.end_date IS NULL
-                                   AND con.id_carrier=car.id
-                                   AND ctp.end_date IS NULL
-                                   AND con.id=ctp.id_contrato
-                                   AND ctp.id_termino_pago_supplier=tp.id
-                                   AND tp.id IN({$filterPaymentTerm})";
-                break;
-                default :
-                $tableNext="";
-                $wherePaymentTerm="";
-                break;
-          }
-         
+            $filterPaymentTerm="$paymentTerm";
 
-        $sql="  SELECT /*carrier name*/
-                    car.name AS carrier, 
-                    /*group name*/
-                    (SELECT name AS group
-                     FROM carrier_groups
-                     WHERE id=car.id_carrier_groups) AS group,
-                    /*activo o inactivo*/
-		    (SELECT id_managers 
-		     FROM carrier_managers 
-                     WHERE id_carrier=car.id
-                       AND end_date IS NULL) AS active,
-                   /*sign_date*/
-                   (SELECT sign_date
-                    FROM contrato con
-                    WHERE end_date IS NULL
-                      AND id_carrier=car.id) AS sign_date,
-                   /*production_date*/
-                   (SELECT production_date
-                    FROM contrato con
-                    WHERE end_date IS NULL
-                      AND id_carrier=car.id) AS production_date,
-                    /*sign_date_tp*/
-                    (SELECT ctp.start_date AS sign_date_tp 
-                     FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
-                     WHERE con.end_date IS NULL
-                       AND con.id_carrier=car.id
-                       AND ctp.end_date IS NULL
-                       AND con.id=ctp.id_contrato
-                       AND ctp.id_termino_pago=tp.id) AS sign_date_tp,
-                    /*payment_term*/
-                    (SELECT tp.name AS payment_term
-                     FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
-                     WHERE con.end_date IS NULL
-                       AND con.id_carrier=car.id
-                       AND ctp.end_date IS NULL
-                       AND con.id=ctp.id_contrato
-                       AND ctp.id_termino_pago=tp.id) AS payment_term,
-                    /*sign_date_tps*/
-                    (SELECT ctps.start_date AS sign_date_tps 
-                     FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
-                     WHERE con.end_date IS NULL
-                       AND con.id_carrier=car.id
-                       AND ctps.end_date IS NULL
-                       AND con.id=ctps.id_contrato
-                       AND ctps.id_termino_pago_supplier=tp.id) AS sign_date_tps,
-                    /*payment_term_s*/
-                    (SELECT tp.name AS payment_term_s
-                     FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
-                     WHERE con.end_date IS NULL
-                       AND con.id_carrier=car.id
-                       AND ctps.end_date IS NULL
-                       AND con.id=ctps.id_contrato
-                       AND ctps.id_termino_pago_supplier=tp.id) AS payment_term_s
-                FROM carrier car, carrier_managers cm {$tableNext}
-                WHERE cm.id_carrier=car.id
-                  AND cm.end_date IS NULL {$carActived} AND cm.id_carrier IS NOT NULL
-                      {$wherePaymentTerm}
-                ORDER BY carrier, payment_term ASC";
+        if($typePaymentTerm==NULL){
+            $tableNext="";
+            $wherePaymentTerm="";
+        }
+        if($typePaymentTerm==FALSE){
+            $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
+            $wherePaymentTerm="AND con.end_date IS NULL
+                               AND con.id_carrier=car.id
+                               AND ctp.end_date IS NULL
+                               AND con.id=ctp.id_contrato
+                               AND ctp.id_termino_pago=tp.id
+                               AND tp.id IN({$filterPaymentTerm})";
+        }
+        if($typePaymentTerm==TRUE){
+            $tableNext=", contrato con,  contrato_termino_pago_supplier ctp, termino_pago tp";
+            $wherePaymentTerm="AND con.end_date IS NULL
+                               AND con.id_carrier=car.id
+                               AND ctp.end_date IS NULL
+                               AND con.id=ctp.id_contrato
+                               AND ctp.id_termino_pago_supplier=tp.id
+                               AND tp.id IN({$filterPaymentTerm})";
+        }
+
+
+        $sql="SELECT /*carrier name*/
+                car.name AS carrier, 
+                /*group name*/
+                (SELECT name AS group
+                 FROM carrier_groups
+                 WHERE id=car.id_carrier_groups) AS group,
+                /*activo o inactivo*/
+                (SELECT id_managers 
+                 FROM carrier_managers 
+                 WHERE id_carrier=car.id
+                   AND end_date IS NULL) AS active,
+               /*sign_date*/
+               (SELECT sign_date
+                FROM contrato con
+                WHERE end_date IS NULL
+                  AND id_carrier=car.id) AS sign_date,
+               /*production_date*/
+               (SELECT production_date
+                FROM contrato con
+                WHERE end_date IS NULL
+                  AND id_carrier=car.id) AS production_date,
+                /*sign_date_tp*/
+                (SELECT ctp.start_date AS sign_date_tp 
+                 FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
+                 WHERE con.end_date IS NULL
+                   AND con.id_carrier=car.id
+                   AND ctp.end_date IS NULL
+                   AND con.id=ctp.id_contrato
+                   AND ctp.id_termino_pago=tp.id) AS sign_date_tp,
+                /*payment_term*/
+                (SELECT tp.name AS payment_term
+                 FROM contrato con,  contrato_termino_pago ctp, termino_pago tp
+                 WHERE con.end_date IS NULL
+                   AND con.id_carrier=car.id
+                   AND ctp.end_date IS NULL
+                   AND con.id=ctp.id_contrato
+                   AND ctp.id_termino_pago=tp.id) AS payment_term,
+                /*sign_date_tps*/
+                (SELECT ctps.start_date AS sign_date_tps 
+                 FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
+                 WHERE con.end_date IS NULL
+                   AND con.id_carrier=car.id
+                   AND ctps.end_date IS NULL
+                   AND con.id=ctps.id_contrato
+                   AND ctps.id_termino_pago_supplier=tp.id) AS sign_date_tps,
+                /*payment_term_s*/
+                (SELECT tp.name AS payment_term_s
+                 FROM contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp
+                 WHERE con.end_date IS NULL
+                   AND con.id_carrier=car.id
+                   AND ctps.end_date IS NULL
+                   AND con.id=ctps.id_contrato
+                   AND ctps.id_termino_pago_supplier=tp.id) AS payment_term_s
+            FROM carrier car, carrier_managers cm {$tableNext}
+            WHERE cm.id_carrier=car.id
+              AND cm.end_date IS NULL {$carActived} AND cm.id_carrier IS NOT NULL
+                  {$wherePaymentTerm}
+            ORDER BY carrier, payment_term ASC";
     
         return Contrato::model()->findAllBySql($sql);
     }
