@@ -123,7 +123,7 @@ class TerminoPago extends CActiveRecord
      */
     public static function getModel()
     {
-    	return self::model()->findAll();
+    	return self::model()->findAll(array('order' => 'name desc'));
     }
     public static function getModelFind($id)
     {

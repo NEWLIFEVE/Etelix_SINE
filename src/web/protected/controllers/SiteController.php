@@ -406,7 +406,7 @@ class SiteController extends Controller
             if($model->name!="Sin estatus")
             $tp.= "<option value=".$model->id.">".$model->name."</option>";
         }
-        echo $tp."<option value='todos'>TODOS</option>";
+        echo $tp;
     }
 }
 ?>
