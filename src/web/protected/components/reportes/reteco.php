@@ -81,6 +81,7 @@ class reteco extends Reportes
     }
     public static function getData($carActived=TRUE,$typePaymentTerm,$paymentTerm)
     {
+        var_dump($typePaymentTerm);
         if($carActived)
             $carActived="";
           else
@@ -91,11 +92,12 @@ class reteco extends Reportes
           else
             $filterPaymentTerm="$paymentTerm";
           
-        if($typePaymentTerm==NULL){
+        if($typePaymentTerm===NULL){
+            var_dump($typePaymentTerm);
             $tableNext="";
             $wherePaymentTerm="";
         }
-        if($typePaymentTerm==FALSE){
+        if($typePaymentTerm===FALSE){
             $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
             $wherePaymentTerm="AND con.end_date IS NULL
                                AND con.id_carrier=car.id
@@ -104,7 +106,7 @@ class reteco extends Reportes
                                AND ctp.id_termino_pago=tp.id
                                AND tp.id IN({$filterPaymentTerm})";
         }
-        if($typePaymentTerm==TRUE){
+        if($typePaymentTerm===TRUE){
             $tableNext=", contrato con,  contrato_termino_pago_supplier ctp, termino_pago tp";
             $wherePaymentTerm="AND con.end_date IS NULL
                                AND con.id_carrier=car.id

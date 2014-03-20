@@ -391,12 +391,13 @@ class SiteController extends Controller
     }
     public static function trueFalse($var)
     {
+        if($var=="null")
+            return NULL;
         if($var==""||$var=="0")
             return FALSE;
-        if($var=="todos")
-            return NULL;
-        else   
+        else
             return TRUE;
+        
     }
     public static function ActionUpdateTerminoPago()
     {   
