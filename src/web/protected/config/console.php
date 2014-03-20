@@ -21,7 +21,7 @@ return array(
             'class'=>"application.components.EnviarEmail",
         ),		
 		'db'=>array(
-            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=dev_sori',
+            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=sori',
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
             'password'=>'Nsusfd8263',

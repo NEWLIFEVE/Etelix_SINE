@@ -6,18 +6,21 @@ switch ($server)
     case SERVER_NAME_PROD:
         $server_db='localhost';
         $sori_db='sori';
+        $user_db='postgres';
         $pass_db='Nsusfd8263';
         break;
     case SERVER_NAME_PRE_PROD:
         $server_db='localhost';
         $sori_db='dev_sori';
+        $user_db='postgres';
         $pass_db='Nsusfd8263';
         break;
     case SERVER_NAME_DEV:
     default:
-        $server_db='172.16.17.190';
+        $server_db='67.215.160.89';
         $sori_db='sori';
-        $pass_db='123';
+        $user_db='postgres';
+        $pass_db='Nsusfd8263';
         break;
 }
 // uncomment the following to define a path alias
@@ -83,10 +86,11 @@ return array(
 			),
 		),
         'db'=>array(
-            'connectionString'=>'pgsql:host=67.215.160.89;port=5432;dbname=sori',
+
+            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sori_db,
             'emulatePrepare'=>true,
-            'username'=>'postgres',
-            'password'=>'Nsusfd8263',
+            'username'=>$user_db,
+            'password'=>$pass_db,
             'charset'=>'utf8',
             ),
         'errorHandler'=>array(
