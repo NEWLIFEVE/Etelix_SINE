@@ -114,7 +114,6 @@ class reteco extends Reportes
                                AND tp.id IN({$filterPaymentTerm})";
         }
 
-
         $sql="SELECT /*carrier name*/
                 car.name AS carrier, 
                 /*group name*/
