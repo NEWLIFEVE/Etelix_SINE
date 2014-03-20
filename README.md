@@ -2,7 +2,6 @@
 ============
 
 Sistema de Reportes para Billing
-    -reteco listo.
     -summary por terminar pero igual se sube.
     -modificacion de sql para reteco
     -nuevo reporte reteco, el cual muestra todos los contratos al dia y especifica que datos les falta por completar para cada contrato.
