@@ -81,7 +81,6 @@ class reteco extends Reportes
     }
     public static function getData($carActived=TRUE,$typePaymentTerm,$paymentTerm)
     {
-        var_dump($typePaymentTerm);
         if($carActived)
             $carActived="";
           else
