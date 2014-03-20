@@ -9,6 +9,7 @@
         {
             $accumulated=$accumulatedPayment=$accumulatedCollection=$accumulatedInvoiceSend=$accumulatedInvoiceRec = 0;
             $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext = 0;
+            $last_due_date_next=$last_due_date_due="";
             
             $accounting_document = SOA::get_Model($group, $date, $dispute,$provition,"1"); //trae el sql pricipal
             $acc_doc_detal=SOA::get_Model($group, $date, $dispute,$provition,"2");//trae el sql para consultas de elementos o atributos puntuales

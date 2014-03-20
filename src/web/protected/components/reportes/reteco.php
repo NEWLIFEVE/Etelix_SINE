@@ -92,7 +92,6 @@ class reteco extends Reportes
             $filterPaymentTerm="$paymentTerm";
           
         if($typePaymentTerm===NULL){
-            var_dump($typePaymentTerm);
             $tableNext="";
             $wherePaymentTerm="";
         }
