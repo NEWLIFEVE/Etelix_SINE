@@ -1,5 +1,25 @@
-
 <?php
+//Obtenemos el nombre del servidor actual
+$server=$_SERVER['SERVER_NAME'];
+switch ($server)
+{
+    case SERVER_NAME_PROD:
+        $server_db='localhost';
+        $sori_db='sori';
+        $pass_db='Nsusfd8263';
+        break;
+    case SERVER_NAME_PRE_PROD:
+        $server_db='localhost';
+        $sori_db='dev_sori';
+        $pass_db='Nsusfd8263';
+        break;
+    case SERVER_NAME_DEV:
+    default:
+        $server_db='172.16.17.190';
+        $sori_db='sori';
+        $pass_db='123';
+        break;
+}
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // 

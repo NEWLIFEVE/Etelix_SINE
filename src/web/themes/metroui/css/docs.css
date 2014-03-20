@@ -278,7 +278,8 @@ div.login.error input#LoginForm_password
 {
     background: white;
     width: 92%;
-    height: 65px;
+    height: 77px;
+    /*height: 65px;*/
     margin-top: 0%;
     margin-left: 4%;
     float: left;
@@ -286,7 +287,7 @@ div.login.error input#LoginForm_password
     border-bottom: 1px solid silver;
     transition:width 0.3s;
     -webkit-transition:width 0.3s;
-    padding-bottom: 25%;/*quitar al tener todos los reportes*/
+    /*padding-bottom: 25%;quitar al tener todos los reportes*/
 
 }
 .Reportes:hover 
@@ -591,15 +592,16 @@ select
 {
     width: 207px!important;
 }
- #No_disp::-webkit-input-placeholder ,#Si_disp::-webkit-input-placeholder  
-,#No_prov::-webkit-input-placeholder ,#Si_prov::-webkit-input-placeholder 
-,#No_venc::-webkit-input-placeholder ,#Si_venc::-webkit-input-placeholder 
-,#No_act::-webkit-input-placeholder  ,#Si_act::-webkit-input-placeholder 
-,#No_inter::-webkit-input-placeholder,#Si_inter::-webkit-input-placeholder 
+ #No_disp::-webkit-input-placeholder ,  #Si_disp::-webkit-input-placeholder  
+,#No_prov::-webkit-input-placeholder ,  #Si_prov::-webkit-input-placeholder 
+,#No_venc::-webkit-input-placeholder ,  #Si_venc::-webkit-input-placeholder 
+,#No_act::-webkit-input-placeholder  ,  #Si_act::-webkit-input-placeholder 
+,#No_car_act::-webkit-input-placeholder,#Si_car_act::-webkit-input-placeholder 
+,#No_inter::-webkit-input-placeholder,  #Si_inter::-webkit-input-placeholder 
 {
     color:    #2E62B4;
 }
-#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter
+#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter,#No_car_act,#Si_car_act
 {
     width: 12%;
     height: 1.88em!important;
@@ -628,6 +630,10 @@ select
     position: absolute!important;
     margin: -105px 220px;
 }
+.type_termino_pago
+{
+    margin-bottom: 10px;
+}
 .order_recopa
 {
     position: absolute!important;
@@ -648,12 +654,17 @@ select
     opacity: 1;
 }
 
+
 /*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
 .trabajando 
 {
     width: 417px;
     padding: 110px;
     display: none;
+}
+.h3_note
+{
+    color:red!important;
 }
 /*....*/
 

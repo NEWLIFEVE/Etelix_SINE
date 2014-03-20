@@ -350,6 +350,7 @@ class Recredi extends Reportes
                     AND con.id_carrier=c.id
                     AND ctp.id_contrato=con.id
                     AND ctp.id_termino_pago=tp.id
+                    AND ctp.end_date IS NULL
                     AND tp.id IN({$filterPaymentTerm})
                     {$intercompany}  
               ORDER BY cg.name ASC)activity {$no_activity} ";
