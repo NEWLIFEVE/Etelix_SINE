@@ -28,7 +28,7 @@ class summary extends Reportes
         $styleSoa="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleDueDateD="style='border:1px solid black;background:#F89289;text-align:center;color:white;'";
         $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
-        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+//        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
         $last_pago_cobro=$soa=$soa_next=0;
          
         if($PaymentTerm=="todos") {
@@ -61,7 +61,7 @@ class summary extends Reportes
                     <td {$styleDueDateN} > DUE DATE(N) </td>
                     <td {$styleNumberRow} >N°</td>
                 </tr>";
-//                    <td {$styleActived} > INACTIV </td>
+//                    <td {$styleActived} > INACTIVE </td>
         foreach ($documents as $key => $document)
         { 
             $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
@@ -72,7 +72,7 @@ class summary extends Reportes
             $body.=" <tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
-                     
+                      
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
                       <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
@@ -81,7 +81,7 @@ class summary extends Reportes
                       <td {$styleBasicDate} > ".$document->due_date_next." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
-//                       <td {$styleRowActiv} > ".self::defineActive(16)." </td>
+//                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
         }
          $body.=" <tr>
                       <td {$styleNull} colspan='2'></td>
