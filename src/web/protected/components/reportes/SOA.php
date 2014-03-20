@@ -63,9 +63,9 @@
                 $body.="</table><br>";
                 $body.="<table align='right'>
                              <tr><td colspan='3'></td>
-                             <tr><td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
+                             <tr><td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>".Utility::formatDateSINE(DateManagement::calculateDate("-".Utility::formatDateSINE($last_due_date_due,"d"), $date),"d")." days due</td>
-                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                              </tr>
@@ -120,9 +120,9 @@
                 $body.="</table><br>;
                          <table align='right'>
                          <tr><td colspan='3'></td>
-                         <tr><td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
+                         <tr><td colspan='2'style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
+                         <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
                          <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>{$nextDate} day next</td>
-                         <td colspan='2'style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
                          <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                          <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
