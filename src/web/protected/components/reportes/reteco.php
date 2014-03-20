@@ -90,7 +90,7 @@ class reteco extends Reportes
             $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
           else
             $filterPaymentTerm="$paymentTerm";
-
+          
         if($typePaymentTerm==NULL){
             $tableNext="";
             $wherePaymentTerm="";
