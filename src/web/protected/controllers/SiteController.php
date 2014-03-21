@@ -157,7 +157,7 @@ class SiteController extends Controller
             switch ($_POST['tipo_report'])
             {
                 case 'soa':
-                    $correos['soa']['asunto']="SINE - SOA".self::reportTitle($date);
+                    $correos['soa']['asunto']="SINE - SOA de {$group}".self::reportTitle($date);
                     $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
@@ -167,7 +167,7 @@ class SiteController extends Controller
                     $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
                     break;
                 case 'balance':
-                    $correos['balance']['asunto']="SINE - BALANCE".self::reportTitle($date);
+                    $correos['balance']['asunto']="SINE - BALANCE de {$group}".self::reportTitle($date);
                     $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
                     $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                     break;
@@ -224,7 +224,7 @@ class SiteController extends Controller
             
             switch ($_GET['tipo_report']) {
               case 'soa':
-                   $archivos['soa']['nombre']="SINE - SOA".self::reportTitle($date)."-".date("g:i a");
+                   $archivos['soa']['nombre']="SINE - SOA de {$group}".self::reportTitle($date)."-".date("g:i a");
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition,$_GET['grupo']);
                    break;
                case 'summary':
@@ -232,7 +232,7 @@ class SiteController extends Controller
                    $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
                    break;
               case 'balance':
-                   $archivos['balance']['nombre']="SINE - BALANCE".self::reportTitle($date)."-".date("g:i a");
+                   $archivos['balance']['nombre']="SINE - BALANCE de {$group}".self::reportTitle($date)."-".date("g:i a");
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$_GET['grupo']);
                    break;
               case 'reteco':
@@ -391,12 +391,13 @@ class SiteController extends Controller
     }
     public static function trueFalse($var)
     {
+        if($var=="null")
+            return NULL;
         if($var==""||$var=="0")
             return FALSE;
-        elseif($var===null)
-            return NULL;
-         else   
+        else
             return TRUE;
+        
     }
     public static function ActionUpdateTerminoPago()
     {   

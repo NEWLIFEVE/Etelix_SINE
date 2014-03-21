@@ -3,6 +3,10 @@
 
 Sistema de Reportes para Billing
 
+Realese 1.2.7
+    - Nombre de Carrier en SOA y BALANCE
+    - Orden de Pie de Tabla en SOA
+
 Release 1.2.6
     - Summary por terminar pero igual se sube.
     - Modificacion de sql para reteco

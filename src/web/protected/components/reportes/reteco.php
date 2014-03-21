@@ -90,12 +90,12 @@ class reteco extends Reportes
             $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
           else
             $filterPaymentTerm="$paymentTerm";
-
-        if($typePaymentTerm==NULL){
+          
+        if($typePaymentTerm===NULL){
             $tableNext="";
             $wherePaymentTerm="";
         }
-        if($typePaymentTerm==FALSE){
+        if($typePaymentTerm===FALSE){
             $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
             $wherePaymentTerm="AND con.end_date IS NULL
                                AND con.id_carrier=car.id
@@ -104,7 +104,7 @@ class reteco extends Reportes
                                AND ctp.id_termino_pago=tp.id
                                AND tp.id IN({$filterPaymentTerm})";
         }
-        if($typePaymentTerm==TRUE){
+        if($typePaymentTerm===TRUE){
             $tableNext=", contrato con,  contrato_termino_pago_supplier ctp, termino_pago tp";
             $wherePaymentTerm="AND con.end_date IS NULL
                                AND con.id_carrier=car.id
@@ -113,7 +113,6 @@ class reteco extends Reportes
                                AND ctp.id_termino_pago_supplier=tp.id
                                AND tp.id IN({$filterPaymentTerm})";
         }
-
 
         $sql="SELECT /*carrier name*/
                 car.name AS carrier, 

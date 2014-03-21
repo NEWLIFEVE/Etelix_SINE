@@ -396,7 +396,10 @@ class Reportes extends CApplicationComponent
         }
         elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7)
         {
-            return "-".Yii::app()->format->format_decimal($model->amount,3);
+//            if($model->amount<0)
+               return Yii::app()->format->format_decimal($model->amount,3);
+//            else
+//               return "-".Yii::app()->format->format_decimal($model->amount,3);
         }
         else
         {
