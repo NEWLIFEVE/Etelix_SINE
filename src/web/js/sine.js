@@ -17,17 +17,35 @@ $SINE.UI=(function()
             _datepicker();
             _clickElement();
             _hoverLink();
+            _predefined();
+            _changeElement();
  	}
+        function _predefined()
+        {
+            $('#No_inter,#No_act,#No_car_act').val('No').addClass("active");
+        }
         function _datepicker() 
         {
             $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
         };
+        function _changeElement() 
+        {
+            $('#type_termino_pago').change(function()
+            {
+                if($(this).val()=='null' && $("#tipo_report").val()=="reteco"){
+                    $("#id_termino_pago").val("todos");
+                    $(".termino_pago").hide('fast');
+                }else{
+                    $(".termino_pago").show('fast');
+                }
+            });
+        } 
         function _clickElement() 
         {
-            $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#previa,#mail,#excel,#views_not').on('click',function()
+            $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not').on('click',function()
             {   
                 switch ($(this).attr("id")){
-                    case "soa":case"balance":case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": 
+                    case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
                         $SINE.UI.resolve_reports_menu($(this));
                         $SINE.UI.elijeOpciones($(this));
                         break;
@@ -45,6 +63,9 @@ $SINE.UI=(function()
                         break;
                     case "No_act": case "Si_act": 
                         $SINE.UI.agrega_Val_radio($(this),$('#No_act, #Si_act'));
+                        break;
+                    case "No_car_act": case "Si_car_act": 
+                        $SINE.UI.agrega_Val_radio($(this),$('#No_car_act,#Si_car_act'));
                         break;
                     case "previa": case "mail": case "excel": 
                         $SINE.UI.export_report($(this));
@@ -70,7 +91,7 @@ $SINE.UI=(function()
          */
         function resolve_reports_menu(selec)
 	{
-            var params = $('#soa,#balance,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis');
+            var params = $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis');
             params.children().removeClass('h1_reportClick').addClass('h1_report');
             params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
             params.removeAttr('style');
@@ -88,7 +109,7 @@ $SINE.UI=(function()
 	{
             var dio_click=click[0].id;
             $(no_Click).val(''); 
-            if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_inter'){$(click).val('Si');$(click).blur();}
+            if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'){$(click).val('Si');$(click).blur();}
             else {$(click).val('No');$(click).blur();}
         }
         /**
@@ -98,16 +119,26 @@ $SINE.UI=(function()
          */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.no_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
                   var mostrar =['.fecha,.grupo,.provisiones,.disputas']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
-                case "balance":
-                  var mostrar =['.fecha,.grupo,.disputas']; 
+                case "summary":
+                  var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
+                      $("#id_termino_pago").val("todos");
+                  break; 
+                case "balance":
+                  var mostrar =['.fecha,.grupo,.disputas,.note']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar);
+                  break; 
+                case "reteco":
+                  var mostrar =['.type_termino_pago,.car_activity']; 
+                      $SINE.UI.formChangeAccDoc(ocultar, mostrar);
+                      $("#id_termino_pago").val("todos");
                   break; 
                 case "refac":
                     var mostrar =['.periodo,.fecha']; 
@@ -118,7 +149,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.fecha,.intercompany,.no_activity']; 
+                    var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recopa":
@@ -139,7 +170,7 @@ $SINE.UI=(function()
 //            $('.barra_tools_click').show();
             
             //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-            if(nombre=="soa"||nombre=="balance"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi"||nombre=="recopa")
+            if(nombre=="soa"||nombre=="balance"||nombre=="summary"||nombre=="reteco"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi"||nombre=="recopa")
                 {
                     $('.barra_tools_click').show('fast');
                 }else{
@@ -242,15 +273,21 @@ $SINE.UI=(function()
            switch (tipo){
             case 'soa':
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
-                break               
+                break 
+            case 'summary':
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
+                break 
             case 'balance':
                 var respuesta=$SINE.UI.validaCampos($('#grupo').serializeArray());
+                break               
+            case 'reteco':
+                var respuesta=$SINE.UI.validaCampos($('#datepicker').serializeArray());
                 break               
             case 'refac':
                 var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
                 break               
             case 'recredi':
-                var respuesta=$SINE.UI.validaCampos($('#tipo_report').serializeArray());
+                var respuesta=$SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
                 break               
             case 'recopa':
                 var respuesta=$SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());
@@ -421,7 +458,7 @@ $SINE.AJAX=(function()
 	{
 		_getNamesCarriers();
 //                _updateFactPeriod();
-//                _updateTerminoPago();
+                _UpdateTerminoPago();
 	}
         /**
         * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
@@ -438,14 +475,17 @@ $SINE.AJAX=(function()
                  data: formulario,
                  success: function(data)
                  {   
-                     console.log(data);
+//                     console.log(data);
                      if(action=="/site/Excel"){         
                          $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                          $(".excel_a").removeAttr("href");
+                         console.log("Descarga Exitosa");
                      }else if(action=="/site/previa"){ 
-                         $SINE.UI.fancy_box(data);  
+                         $SINE.UI.fancy_box(data);
+                         console.log("Vista Previa Exitosa");
                      }else{                              
                          $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                         console.log(data);
                      }    
                  }
             });
@@ -459,15 +499,14 @@ $SINE.AJAX=(function()
 //                }
 //            });
 //        }
-//        function _updateTerminoPago()
-//        {
-//            $.ajax({url:"/site/updateTerminoPago",success:function(data)
-//                {
-//                    console.log(data);
-//                    $("#id_termino_pago").append(data);
-//                }
-//            });
-//        }
+        function _UpdateTerminoPago()
+        {
+            $.ajax({url:"/site/UpdateTerminoPago",success:function(data)
+                {
+                    $("#id_termino_pago").append(data);
+                }
+            });
+        }
         
 	return {init:init,
                 _getFormPost:_getFormPost,

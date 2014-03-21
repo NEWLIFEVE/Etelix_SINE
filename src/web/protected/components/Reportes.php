@@ -23,7 +23,19 @@ class Reportes extends CApplicationComponent
         $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
         return $var;
     }
-
+    /**
+     * 
+     * @param type $date
+     * @param type $intercompany
+     * @param type $no_activity
+     * @param type $PaymentTerm
+     * @return type
+     */
+    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    {
+        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var;
+    }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
      * @param type $grupo
@@ -37,6 +49,13 @@ class Reportes extends CApplicationComponent
         $var=balance_report::reporte($grupo,$fecha,$no_disp);
         return $var;
     }
+
+    public function reteco($carActived,$typePaymentTerm,$paymentTerm)
+    {
+        $var=reteco::report($carActived,$typePaymentTerm,$paymentTerm);
+        return $var;
+    }
+    
 
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
@@ -70,10 +89,10 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type
      */
-    public function recredi($date,$intercompany,$no_activity)
+    public function recredi($date,$intercompany,$no_activity,$PaymentTerm)
     {
         $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity);
+        return $var->report($date,$intercompany,$no_activity,$PaymentTerm);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -118,7 +137,7 @@ class Reportes extends CApplicationComponent
                              FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                              WHERE a.id_carrier IN(Select id from carrier where $group)
                                      AND a.id_type_accounting_document=tad.id AND a.id_carrier=c.id AND a.id_currency=s.id AND c.id_carrier_groups = g.id AND confirm != -1
-                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8))";
+                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
                   }
                 break;
             case "balance": 
@@ -129,7 +148,7 @@ class Reportes extends CApplicationComponent
                             SELECT a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                             WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$date}'
-                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8))";
+                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
                  }
                 break;
             default:
@@ -227,7 +246,7 @@ class Reportes extends CApplicationComponent
 //                $to_date = Utility::formatDateSINE($model->due_date,"d-M-y");
 //        }
         //provisional...//
-        
+       
         if($balanceDueDate==NULL){
         switch ($model->id_type_accounting_document){
             case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":
@@ -377,7 +396,10 @@ class Reportes extends CApplicationComponent
         }
         elseif($model->id_type_accounting_document==5||$model->id_type_accounting_document==7)
         {
-            return "-".Yii::app()->format->format_decimal($model->amount,3);
+//            if($model->amount<0)
+               return Yii::app()->format->format_decimal($model->amount,3);
+//            else
+//               return "-".Yii::app()->format->format_decimal($model->amount,3);
         }
         else
         {
@@ -548,11 +570,11 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $model->amount;
                 break;
-            case "1":case "3":case "6":case "8":case"10":case "12":case "15":
+            case "1":case "3":case "6":case "7":case"10":case "12":case "15":
 
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "5":case "7":case "11":case "13":case "14":
+            case "2":case "4":case "5":case "8":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
                 break;
             default:
@@ -710,11 +732,11 @@ class Reportes extends CApplicationComponent
     {
         if($var<0) $var=$var*-1;
          
-        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25")  return "SEMANAL";
+        if($var=="4"||$var=="5"||$var=="6"||$var=="7"||$var=="23"||$var=="24"||$var=="25"||$var=="21")  return "SEMANAL";
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
     }
 
     /**
