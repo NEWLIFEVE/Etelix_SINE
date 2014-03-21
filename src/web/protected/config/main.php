@@ -83,10 +83,10 @@ return array(
 			),
 		),
         'db'=>array(
-            'connectionString'=>'pgsql:host=localhost;port=5432;dbname=sori',
+            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sori_db,
             'emulatePrepare'=>true,
             'username'=>'postgres',
-            'password'=>'Nsusfd8263',
+            'password'=>$pass_db,
             'charset'=>'utf8',
             ),
         'errorHandler'=>array(
