@@ -5,7 +5,7 @@ define('SERVER_NAME_PROD','s1248-101');
 //Obtenemos el nombre del servidor actual
 $server=gethostname();
 // change the following paths if necessary
-$yii='../../../yii/framework/yii.php';
+$yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
 $config=dirname(__FILE__).'/protected/config/console.php';
 
 switch ($server)

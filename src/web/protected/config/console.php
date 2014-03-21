@@ -34,7 +34,7 @@ return array(
             'class'=>"application.components.EnviarEmail",
         ),		
 		'db'=>array(
-            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='$sori_db,
+            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sori_db,
 			'emulatePrepare'=>true,
 			'username'=>'postgres',
             'password'=>$pass_db,

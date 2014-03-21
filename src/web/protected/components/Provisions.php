@@ -27,7 +27,7 @@ class Provisions extends CApplicationComponent
 	 * Contiene el array con las provisiones de trafico recibido encontrado en el balance
 	 * @var array
 	 */
-	public $invoizcesReceived;
+	public $invoicesReceived;
 
 	/**
 	 * Contiene el numero de provisiones de trafico enviado generado en una fecha
@@ -118,6 +118,7 @@ class Provisions extends CApplicationComponent
 			  WHERE date_balance='{$this->date}' AND id_destination IS NULL AND id_carrier_supplier<>(SELECT id FROM carrier WHERE name='Unknown_Carrier') AND id_destination_int<>(SELECT id FROM destination_int WHERE name='Unknown_Destination') {$one}
 			  GROUP BY {$data['id']}, date_balance
 			  ORDER BY margin DESC";
+		//	  var_dump($sql);
 		$this->$data['variable']=Balance::model()->findAllBySql($sql);
 	}
 
@@ -138,6 +139,7 @@ class Provisions extends CApplicationComponent
 		$currency=Currency::model()->find("name='$'")->id;
 
 		$this->$data['num']=$num=count($this->$data['variable']);
+		var_dump($num,$data['variable']);
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
 			if($factura->margin!=0)
@@ -182,18 +184,32 @@ class Provisions extends CApplicationComponent
 		$model=Carrier::model()->findAll();
 		if($type)
 		{
-			foreach ($model as $key => $carrier)
+			if($this->carrier)
 			{
-				$this->_generateInvoiceProvisionCustomer($carrier->id);
+				$this->_generateInvoiceProvisionCustomer($this->carrier);
+			}
+			else
+			{
+				foreach ($model as $key => $carrier)
+				{
+					$this->_generateInvoiceProvisionCustomer($carrier->id);
+				}
 			}
 			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
 		{
-			foreach ($model as $key => $carrier)
+			if($this->carrier)
 			{
-				$this->_generateInvoiceProvisionSupplier($carrier->id);
+				$this->_generateInvoiceProvisionSupplier($this->carrier);
+			}
+			else
+			{
+				foreach ($model as $key => $carrier)
+				{
+					$this->_generateInvoiceProvisionSupplier($carrier->id);
+				}
 			}
 			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
@@ -580,7 +596,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _deleteProvision($startDate,$endDate,$idCarrier,$typeProvision)
 	{
-		return AccountingDocumentProvisions::model()->delete('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvisions));
+		return AccountingDocumentProvisions::model()->delete('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvision));
 	}
 
 	/**
