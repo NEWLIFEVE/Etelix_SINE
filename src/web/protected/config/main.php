@@ -11,7 +11,7 @@ switch ($server)
         break;
     case SERVER_NAME_PRE_PROD:
         $server_db='localhost';
-        $sori_db='dev_sori';
+        $sori_db='sori';
         $user_db='postgres';
         $pass_db='Nsusfd8263';
         break;
