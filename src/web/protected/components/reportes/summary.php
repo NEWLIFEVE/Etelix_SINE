@@ -26,10 +26,11 @@ class summary extends Reportes
         $styleCarrier="style='border:1px solid black;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
         $styleSoa="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
-        $styleDueDateD="style='border:1px solid black;background:#F89289;text-align:center;color:white;'";
+        $styleSoaNext="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $styleDueDateD="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
 //        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
-        $last_pago_cobro=$soa=$soa_next=0;
+        $last_pago_cobro=$soa=$soa_next=0;$dueDaysNext="";
          
         if($PaymentTerm=="todos") {
          $typeRecredi="GENERAL";
@@ -43,9 +44,9 @@ class summary extends Reportes
                     <td colspan='2'>
                         <h1>SUMMARY - {$typeRecredi}</h1>
                     </td>
-                    <td colspan='9'>  AL {$date} </td>
+                    <td colspan='10'>  AL {$date} </td>
                 <tr>
-                    <td colspan='9'></td>
+                    <td colspan='10'></td>
                 </tr>
                </table>
                <table style='width: 100%;'>
@@ -57,13 +58,20 @@ class summary extends Reportes
                     <td {$styleDatePC} > FECHA(Pag/Cobr) </td>
                     <td {$styleSoa} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
-                    <td {$styleSoa} > SOA(NEXT) </td>
+                    <td {$styleDueDateD} > DUE DAYS </td>
+                    <td {$styleSoaNext} > SOA(NEXT) </td>
                     <td {$styleDueDateN} > DUE DATE(N) </td>
+                    <td {$styleDueDateN} > DUE DAYS </td>
                     <td {$styleNumberRow} >N°</td>
                 </tr>";
 //                    <td {$styleActived} > INACTIVE </td>
         foreach ($documents as $key => $document)
         { 
+            if($document->due_date_next==NULL||$document->due_date_next==$document->due_date)
+                $dueDaysNext="0";
+            else
+                $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
+            
             $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
@@ -77,8 +85,10 @@ class summary extends Reportes
                       <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
                       <td {$styleBasicDate} > ".$document->due_date." </td>
+                      <td {$styleBasicDate} > ".DateManagement::howManyDaysBetween($document->due_date, $date)." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa_next)." </td>
                       <td {$styleBasicDate} > ".$document->due_date_next." </td>
+                      <td {$styleBasicDate} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
 //                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
@@ -89,13 +99,16 @@ class summary extends Reportes
                       <td {$styleNull} ></td>
                       <td {$styleSoa} >".Yii::app()->format->format_decimal($soa)."</td>
                       <td {$styleNull} ></td>
-                      <td {$styleSoa} >".Yii::app()->format->format_decimal($soa_next)."</td>
+                      <td {$styleNull} ></td>
+                      <td {$styleSoaNext} >".Yii::app()->format->format_decimal($soa_next)."</td>
+                      <td {$styleNull} ></td>
                       <td {$styleNull} ></td>
                       <td {$styleNull} ></td>
                   </tr>
                   </table>";
           return $body;
     }
+    
     public static function definePaymCollect($model,$attr)
     {
         if($attr=="value"){
@@ -162,47 +175,26 @@ class summary extends Reportes
                                 WHERE con.id_carrier=c.id AND ctps.id_contrato=con.id AND ctps.id_termino_pago_supplier=tp.id AND con.end_date>='{$date}' AND con.sign_date IS NOT NULL AND ctps.end_date>='{$date}' AND c.id IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)
                                 LIMIT 1";
         $due_date="(SELECT MAX(date)
-                    FROM (SELECT CASE WHEN ({$sqlExpirationCustomer})=0 THEN MAX(issue_date)
-                                      WHEN ({$sqlExpirationCustomer})=3 THEN CAST(MAX(issue_date) + interval '3 days' AS date)
-                                      WHEN ({$sqlExpirationCustomer})=5 THEN CAST(MAX(issue_date) + interval '5 days' AS date)
-                                      WHEN ({$sqlExpirationCustomer})=7 THEN CAST(MAX(issue_date) + interval '7 days' AS date)
-                                      WHEN ({$sqlExpirationCustomer})=15 THEN CAST(MAX(issue_date) + interval '15 days' AS date)
-                                      WHEN ({$sqlExpirationCustomer})=30 THEN CAST(MAX(issue_date) + interval '30 days' AS date)
-                                      WHEN ({$sqlExpirationCustomer}) IS NULL THEN CAST(MAX(issue_date) + interval '7 days' AS date) END AS date
+                    FROM (SELECT CASE WHEN ({$sqlExpirationCustomer})=0 THEN issue_date
+                                      WHEN ({$sqlExpirationCustomer})=3 THEN CAST(issue_date + interval '3 days' AS date)
+                                      WHEN ({$sqlExpirationCustomer})=5 THEN CAST(issue_date + interval '5 days' AS date)
+                                      WHEN ({$sqlExpirationCustomer})=7 THEN CAST(issue_date + interval '7 days' AS date)
+                                      WHEN ({$sqlExpirationCustomer})=15 THEN CAST(issue_date + interval '15 days' AS date)
+                                      WHEN ({$sqlExpirationCustomer})=30 THEN CAST(issue_date + interval '30 days' AS date)
+                                      WHEN ({$sqlExpirationCustomer}) IS NULL THEN CAST(issue_date + interval '7 days' AS date) END AS date
                           FROM accounting_document
-                          WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=1 AND issue_date<='{$date}'
+                          WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=1 
                           UNION
-                          SELECT CASE WHEN ({$sqlExpirationSupplier})=0 THEN MAX(valid_received_date)
-                                      WHEN ({$sqlExpirationSupplier})=3 THEN CAST(MAX(valid_received_date) + interval '3 days' AS date)
-                                      WHEN ({$sqlExpirationSupplier})=5 THEN CAST(MAX(valid_received_date) + interval '5 days' AS date)
-                                      WHEN ({$sqlExpirationSupplier})=7 THEN CAST(MAX(valid_received_date) + interval '7 days' AS date)
-                                      WHEN ({$sqlExpirationSupplier})=15 THEN CAST(MAX(valid_received_date) + interval '15 days' AS date)
-                                      WHEN ({$sqlExpirationSupplier})=30 THEN CAST(MAX(valid_received_date) + interval '30 days' AS date)
-                                      WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(MAX(valid_received_date) + interval '7 days' AS date) END AS date
+                          SELECT CASE WHEN ({$sqlExpirationSupplier})=0 THEN valid_received_date
+                                      WHEN ({$sqlExpirationSupplier})=3 THEN CAST(valid_received_date + interval '3 days' AS date)
+                                      WHEN ({$sqlExpirationSupplier})=5 THEN CAST(valid_received_date + interval '5 days' AS date)
+                                      WHEN ({$sqlExpirationSupplier})=7 THEN CAST(valid_received_date + interval '7 days' AS date)
+                                      WHEN ({$sqlExpirationSupplier})=15 THEN CAST(valid_received_date + interval '15 days' AS date)
+                                      WHEN ({$sqlExpirationSupplier})=30 THEN CAST(valid_received_date + interval '30 days' AS date)
+                                      WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(valid_received_date + interval '7 days' AS date) END AS date
                           FROM accounting_document
-                          WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=2 AND valid_received_date<='{$date}') d)  ";
-
-         $due_date_next=" (SELECT MAX(date)
-                            FROM (SELECT CASE WHEN ({$sqlExpirationCustomer})=0 THEN MAX(issue_date)
-                                              WHEN ({$sqlExpirationCustomer})=3 THEN CAST(MAX(issue_date) + interval '3 days' AS date)
-                                              WHEN ({$sqlExpirationCustomer})=5 THEN CAST(MAX(issue_date) + interval '5 days' AS date)
-                                              WHEN ({$sqlExpirationCustomer})=7 THEN CAST(MAX(issue_date) + interval '7 days' AS date)
-                                              WHEN ({$sqlExpirationCustomer})=15 THEN CAST(MAX(issue_date) + interval '15 days' AS date)
-                                              WHEN ({$sqlExpirationCustomer})=30 THEN CAST(MAX(issue_date) + interval '30 days' AS date)
-                                              WHEN ({$sqlExpirationCustomer}) IS NULL THEN CAST(MAX(issue_date) + interval '7 days' AS date) END AS date
-                                  FROM accounting_document
-                                  WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=1 AND issue_date>'{$date}'
-                                  UNION
-                                  SELECT CASE WHEN ({$sqlExpirationSupplier})=0 THEN MAX(valid_received_date)
-                                              WHEN ({$sqlExpirationSupplier})=3 THEN CAST(MAX(valid_received_date) + interval '3 days' AS date)
-                                              WHEN ({$sqlExpirationSupplier})=5 THEN CAST(MAX(valid_received_date) + interval '5 days' AS date)
-                                              WHEN ({$sqlExpirationSupplier})=7 THEN CAST(MAX(valid_received_date) + interval '7 days' AS date)
-                                              WHEN ({$sqlExpirationSupplier})=15 THEN CAST(MAX(valid_received_date) + interval '15 days' AS date)
-                                              WHEN ({$sqlExpirationSupplier})=30 THEN CAST(MAX(valid_received_date) + interval '30 days' AS date)
-                                              WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(MAX(valid_received_date) + interval '7 days' AS date) END AS date
-                                  FROM accounting_document
-                                  WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=2 AND valid_received_date>'{$date}') d) ";  
-                                  
+                          WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=2 ) d
+                            ";/* esto es lo que continua en el caso de due_date= WHERE d.date<='{$date}')*/    
         $sql="/*filtro el due_date null*/ 
               SELECT * FROM 
                  (SELECT cg.id AS id, 
@@ -235,27 +227,38 @@ class summary extends Reportes
                      cg.name AS name,
                      /*segmento para soas y due_dates*/
                      /*El monto del soa*/ 
-                     (SELECT (i.amount+(p.amount-n.amount)) AS amount
+                     (SELECT (i.amount+e.amount+p.amount-n.amount-r.amount) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
-                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,8,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') p,
-                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,7,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND 
+                           CASE WHEN ({$sqlExpirationCustomer})=0 THEN issue_date
+                                              WHEN ({$sqlExpirationCustomer})=3 THEN CAST(issue_date + interval '3 days' AS date)
+                                              WHEN ({$sqlExpirationCustomer})=5 THEN CAST(issue_date + interval '5 days' AS date)
+                                              WHEN ({$sqlExpirationCustomer})=7 THEN CAST(issue_date + interval '7 days' AS date)
+                                              WHEN ({$sqlExpirationCustomer})=15 THEN CAST(issue_date + interval '15 days' AS date)
+                                              WHEN ({$sqlExpirationCustomer})=30 THEN CAST(issue_date + interval '30 days' AS date)
+                                              WHEN ({$sqlExpirationCustomer}) IS NULL THEN CAST(issue_date + interval '7 days' AS date) END<='{$date}') e,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND 
+                           CASE WHEN ({$sqlExpirationSupplier})=0 THEN valid_received_date
+                                              WHEN ({$sqlExpirationSupplier})=3 THEN CAST(valid_received_date + interval '3 days' AS date)
+                                              WHEN ({$sqlExpirationSupplier})=5 THEN CAST(valid_received_date + interval '5 days' AS date)
+                                              WHEN ({$sqlExpirationSupplier})=7 THEN CAST(valid_received_date + interval '7 days' AS date)
+                                              WHEN ({$sqlExpirationSupplier})=15 THEN CAST(valid_received_date + interval '15 days' AS date)
+                                              WHEN ({$sqlExpirationSupplier})=30 THEN CAST(valid_received_date + interval '30 days' AS date)
+                                              WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(valid_received_date + interval '7 days' AS date) END<='{$date}') r,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') p,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
                    /*el due date del soa*/
                    
-                            {$due_date} AS due_date,
+                           {$due_date} WHERE d.date<='{$date}') AS due_date,
                                 
                     /*soa next*/
-                    (SELECT (
-                            (SELECT (i.amount+(p.amount-n.amount)) AS amount
-                            FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
-                                 (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,8,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)  AND issue_date<='{$date}') p,
-                                 (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,7,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)  AND issue_date<='{$date}') n)
-                            +(p.amount-n.amount)) AS amount
-                    FROM 
-                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,8,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND {$due_date_next}>'{$date}' AND issue_date>'{$date}') p,
-                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,7,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND {$due_date_next}>'{$date}' AND issue_date>'{$date}') n) AS soa_next,
-                            /*el due date del soa next*/
+                     (SELECT (i.amount+(p.amount-n.amount)) AS amount
+                      FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) p,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) n) AS soa_next, 
+                   /*el due date del soa next*/
                             
-                            {$due_date_next} AS due_date_next
+                           {$due_date}) AS due_date_next
                                 
                            /*fin segmento para soas y due_dates*/
               FROM carrier_groups cg,
