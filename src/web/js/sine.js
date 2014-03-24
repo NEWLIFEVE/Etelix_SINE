@@ -22,7 +22,8 @@ $SINE.UI=(function()
  	}
         function _predefined()
         {
-            $('#No_inter,#No_act,#No_car_act').val('No').addClass("active");
+            $('#No_inter,#No_act,#No_car_act,#No_prov').val('No').addClass("active");
+            $('#Si_disp').val('Si').addClass("active");
         }
         function _datepicker() 
         {
