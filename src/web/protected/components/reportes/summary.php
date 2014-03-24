@@ -249,8 +249,7 @@ class summary extends Reportes
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
                    /*el due date del soa*/
                    
-                           {$due_date}
-                           WHERE d.date<='{$date}') AS due_date,
+                           {$due_date} WHERE d.date<='{$date}') AS due_date,
                                 
                     /*soa next*/
                      (SELECT (i.amount+(p.amount-n.amount)) AS amount
@@ -259,7 +258,7 @@ class summary extends Reportes
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) n) AS soa_next, 
                    /*el due date del soa next*/
                             
-                            {$due_date}) AS due_date_next
+                           {$due_date}) AS due_date_next
                                 
                            /*fin segmento para soas y due_dates*/
               FROM carrier_groups cg,
