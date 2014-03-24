@@ -127,7 +127,7 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "summary":
-                  var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
+                  var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                       $("#id_termino_pago").val("todos");
                   break; 
