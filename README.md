@@ -5,10 +5,13 @@ Sistema de Reportes para Billing
 
 
 Realese 1.2.8
+    - Default los inputs de soa, balance, sumary y reteco.
     - Arreglado Due_date y Monto Due en Summary.
     - Arreglado calculo de dias vencidos y por vencer.
     - recredi mejorado.
     - nuevos filtros para recredi y summary
+    - Agregado dias vencidos y por vencer en Summary.
+
 
 Realese 1.2.7
     - Nombre de Carrier en SOA y BALANCE
