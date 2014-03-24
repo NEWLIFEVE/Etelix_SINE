@@ -4,6 +4,7 @@
 Sistema de Reportes para Billing
 
 Realese 1.2.8
+    - Default los inputs de soa, balance, sumary y reteco.
     - Arreglado Due_date y Monto Due en Summary.
     - Arreglado calculo de dias vencidos y por vencer.
     - Agregado dias vencidos y por vencer en Summary.
