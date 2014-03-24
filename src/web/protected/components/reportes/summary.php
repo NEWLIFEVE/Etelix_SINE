@@ -67,7 +67,7 @@ class summary extends Reportes
 //                    <td {$styleActived} > INACTIVE </td>
         foreach ($documents as $key => $document)
         { 
-            if($document->due_date_next==NULL)
+            if($document->due_date_next==NULL||$document->due_date_next==$document->due_date)
                 $dueDaysNext="0";
             else
                 $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
