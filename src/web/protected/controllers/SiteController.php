@@ -284,7 +284,7 @@ class SiteController extends Controller
                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
                    break;
               case 'summary':
-                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$_GET['id_termino_pago']);
+                   $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                    break;
               case 'balance':
                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);

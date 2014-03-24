@@ -31,9 +31,9 @@ class Reportes extends CApplicationComponent
      * @param type $PaymentTerm
      * @return type
      */
-    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    public function summary($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
     {
-        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        $var=summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
         return $var;
     }
     /**

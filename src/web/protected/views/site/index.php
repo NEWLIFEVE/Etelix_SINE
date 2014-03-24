@@ -136,14 +136,14 @@ $this->pageTitle = Yii::app()->name;
             </div>  
         </div>
         <div class='formInputs no_activity'>
-            <h3>Sin actividad</h3>
+            <h3>Carrier Sin Mov 6M</h3>
             <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_act" id="Si_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_act" id="No_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
             </div>  
         </div>
         <div class='formInputs car_activity'>
-            <h3>Carrier In Activos</h3>
+            <h3>Carrier Inactivos</h3>
             <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_car_act" id="Si_car_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
                 <input name="No_car_act" id="No_car_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>

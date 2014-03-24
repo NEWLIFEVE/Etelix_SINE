@@ -22,7 +22,8 @@ $SINE.UI=(function()
  	}
         function _predefined()
         {
-            $('#No_inter,#No_act,#No_car_act').val('No').addClass("active");
+            $('#No_inter,#No_act,#No_car_act,#No_prov').val('No').addClass("active");
+            $('#Si_disp').val('Si').addClass("active");
         }
         function _datepicker() 
         {
@@ -32,11 +33,10 @@ $SINE.UI=(function()
         {
             $('#type_termino_pago').change(function()
             {
-                if($(this).val()=='null' && $("#tipo_report").val()=="reteco"){
-                    $("#id_termino_pago").val("todos");
-                    $(".termino_pago").hide('fast');
-                }else{
-                    $(".termino_pago").show('fast');
+                switch ($(this).attr("id")){
+                    case "type_termino_pago":
+                        $SINE.UI.adminInput($(this));
+                        break;
                 }
             });
         } 
@@ -117,9 +117,24 @@ $SINE.UI=(function()
          * @param {type} obj
          * @returns {undefined}
          */
+        /*********/
+        function adminInput(obj)
+        {
+            if($(obj).val()=='null'){
+                $("#id_termino_pago").val("todos");
+                $(".termino_pago,.termino_pago_sum_re").hide('fast');
+            }else{
+                $(".termino_pago,.termino_pago_sum_re").show('fast');
+            }
+        }
+        /**
+         * 
+         * @param {type} obj
+         * @returns {undefined}
+         */
         function elijeOpciones(obj)
 	{
-            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
+            var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
             nombre=obj[0].id;
             switch (nombre){
                 case "soa":
@@ -127,18 +142,24 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "summary":
-                  var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
+                  var mostrar =['.fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                      $("#id_termino_pago").val("todos");
+                      $("#type_termino_pago").val("null");
+                      $SINE.UI.adminInput($('#type_termino_pago'));
+                      $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
+                      $(".termino_pago").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago");
                   break; 
                 case "balance":
                   var mostrar =['.fecha,.grupo,.disputas,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   break; 
                 case "reteco":
-                  var mostrar =['.type_termino_pago,.car_activity']; 
+                  var mostrar =['.type_termino_pago,.car_activity,.type_termino_pago_sum_re']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                      $("#id_termino_pago").val("todos");
+                      $("#type_termino_pago").val("null");
+                      $SINE.UI.adminInput($('#type_termino_pago'));
+                      $(".type_termino_pago_sum_re").addClass("type_termino_pago"),$(".type_termino_pago").removeClass("type_termino_pago_sum_re");
+                      $(".termino_pago_sum_re").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re");
                   break; 
                 case "refac":
                     var mostrar =['.periodo,.fecha']; 
@@ -149,8 +170,12 @@ $SINE.UI=(function()
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   break; 
                 case "recredi":
-                    var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.note']; 
+                    var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.note']; 
                       $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                      $("#type_termino_pago").val("null");
+                      $SINE.UI.adminInput($('#type_termino_pago'));
+                      $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
+                      $(".termino_pago").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago");
                   break; 
                 case "recopa":
                     var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
@@ -405,7 +430,8 @@ $SINE.UI=(function()
                 seleccionaCampos:seleccionaCampos,
                 changeHtml:changeHtml,
                 fancy_box:fancy_box,
-                imprimir:imprimir
+                imprimir:imprimir,
+                adminInput:adminInput
 	};
 })();
 

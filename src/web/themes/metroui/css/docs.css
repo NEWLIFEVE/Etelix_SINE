@@ -278,7 +278,8 @@ div.login.error input#LoginForm_password
 {
     background: white;
     width: 92%;
-    height: 77px;
+    /*height: 77px;*/
+    height: 67px;
     /*height: 65px;*/
     margin-top: 0%;
     margin-left: 4%;
@@ -628,11 +629,26 @@ select
 .termino_pago
 {
     position: absolute!important;
-    margin: -105px 220px;
+    margin: 0px 220px;
 }
 .type_termino_pago
 {
     margin-bottom: 10px;
+    position: absolute;
+}
+.termino_pago_sum_re
+{
+    position: absolute!important;
+    margin: 0px 220px;
+}
+.type_termino_pago_sum_re
+{
+    margin: -105px 219px;
+    position: absolute;
+}
+.car_activity 
+{
+    margin-top: 100px;
 }
 .order_recopa
 {

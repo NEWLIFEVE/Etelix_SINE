@@ -74,7 +74,7 @@ class reteco extends Reportes
     }
     public static function defineStyleNeed($var)
     {
-        if($var==NULL||$var=="Sin estatus")
+        if($var==NULL)
             return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
         else 
             return "style='background:white;color:black;border:1px solid black;text-align:left;'";
@@ -169,6 +169,7 @@ class reteco extends Reportes
                    AND ctps.id_termino_pago_supplier=tp.id) AS payment_term_s
             FROM carrier car, carrier_managers cm {$tableNext}
             WHERE cm.id_carrier=car.id
+              AND car.id NOT IN(select id from carrier where name='Unknown_Carrier')
               AND cm.end_date IS NULL {$carActived} AND cm.id_carrier IS NOT NULL
                   {$wherePaymentTerm}
             ORDER BY carrier, payment_term ASC";
