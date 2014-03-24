@@ -65,7 +65,7 @@
                              <tr><td colspan='3'></td>
                              <tr><td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>".Utility::formatDateSINE(DateManagement::calculateDate("-".Utility::formatDateSINE($last_due_date_due,"d"), $date),"d")." days due</td>
+                             <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>".DateManagement::howManyDaysBetween($last_due_date_due, $date)." days due</td>
                              <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                              <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                              </tr>
@@ -108,7 +108,7 @@
                 if($last_due_date_next=="") { 
                     $nextDate="0";
                 } else{
-                    $nextDate=Utility::formatDateSINE(DateManagement::calculateDate("-".Utility::formatDateSINE($date,"d"),$last_due_date_next),"d");
+                    $nextDate=abs(DateManagement::howManyDaysBetween($last_due_date_next, $date));
                 }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td colspan='3'></td>
                          <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPaymentNext,3). "</td>

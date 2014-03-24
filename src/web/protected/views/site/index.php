@@ -6,47 +6,52 @@
  */
 $this->pageTitle = Yii::app()->name;
 ?>
-
-<article class='titulo90'>
-            SINE 
-</article>
-    
-<div class='subtitulos'><h2>Seleccione reporte</h2></div>
-
+<article class='titulo90'>SINE</article>
+<div class='subtitulos'>
+    <h2>Seleccione reporte</h2>
+</div>
 <div class="listadeReportesscroll">
     <div class="listadeReportes">
         <div class="Reportes SOA" id="soa">
-            <H1 class='h1_report h1SOA'>S O A</H1> 
-        </div><br>
+            <h1 class='h1_report h1SOA'>S O A</h1>
+        </div>
+        <br>
         <div class="Reportes summary" id="summary">
-            <H1 class='h1_report h1Summary'>SUMMARY</H1> 
-        </div><br>
+            <h1 class='h1_report h1Summary'>SUMMARY</h1> 
+        </div>
+        <br>
         <div class="Reportes BALANCE" id="balance">
             <h1 class='h1_report h1BALANCE'>BALANCE</h1>
-        </div><br>
+        </div>
+        <br>
         <div class="Reportes reteco" id="reteco">
             <h1 class='h1_report h1reteco'>RETECO</h1>
-        </div><br>
+        </div>
+        <br>
         <div class="Reportes REFAC" id="refac">
             <h1 class='h1_report h1REFAC'>REFAC</h1>
-        </div><br>
+        </div>
+        <br>
         <div class="Reportes REFI_PROV" id="refi_prov">
             <h1 class='h1_report h1REFI_PROV'>REPROV</h1>
-        </div><br>
-
+        </div>
+        <br>
         <div class="Reportes RECREDI" id="recredi">
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
-        </div><br>
-<!--        <div class="Reportes RECOPA" id="recopa">
+        </div>
+        <br>
+        <!--<div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
-        </div><br> -->
-
-<!--        <div class="Reportes WAIVER" id="waiver">
+        </div>
+        <br>-->
+        <!--<div class="Reportes WAIVER" id="waiver">
             <h1 class='h1_report h1WAIVER'>WAIVER</h1>
-        </div><br>
-        <div class="Reportes REDIS" id="redis">
+        </div>
+        <br>-->
+        <!--<div class="Reportes REDIS" id="redis">
             <h1 class='h1_report h1REDIS'>REDIS</h1>
-        </div><br>-->
+        </div>
+        <br>-->
     </div>
 </div>
 <div>
@@ -176,7 +181,7 @@ $this->pageTitle = Yii::app()->name;
 <div class="barra_tools_click">
     <footer id="botones_exportar">
         <div id="previa" class="botones">
-                <img src="/images/previa.png" title='Vista previa del reporte'>
+            <img src="/images/previa.png" title='Vista previa del reporte'>
         </div>
         <div id="excel" class="botones">
             <a class="excel_a">
@@ -188,4 +193,6 @@ $this->pageTitle = Yii::app()->name;
         </div>
     </footer>
 </div>
-<div class="views_not" id="views_not"><h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4></div>
+<div class="views_not" id="views_not">
+    <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
+</div>
