@@ -30,7 +30,7 @@ class summary extends Reportes
         $styleDueDateD="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
 //        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
-        $last_pago_cobro=$soa=$soa_next=0;
+        $last_pago_cobro=$soa=$soa_next=0;$dueDaysNext="";
          
         if($PaymentTerm=="todos") {
          $typeRecredi="GENERAL";
@@ -59,7 +59,7 @@ class summary extends Reportes
                     <td {$styleSoa} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
                     <td {$styleDueDateD} > DUE DAYS </td>
-                    <td {$styleSoa} > SOA(NEXT) </td>
+                    <td {$styleSoaNext} > SOA(NEXT) </td>
                     <td {$styleDueDateN} > DUE DATE(N) </td>
                     <td {$styleDueDateN} > DUE DAYS </td>
                     <td {$styleNumberRow} >N°</td>
@@ -67,6 +67,11 @@ class summary extends Reportes
 //                    <td {$styleActived} > INACTIVE </td>
         foreach ($documents as $key => $document)
         { 
+            if($document->due_date_next==NULL)
+                $dueDaysNext="0";
+            else
+                $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
+            
             $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
@@ -80,10 +85,10 @@ class summary extends Reportes
                       <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
                       <td {$styleBasicDate} > ".$document->due_date." </td>
-                      <td {$styleBasicDate} > ".Utility::formatDateSINE(DateManagement::calculateDate("-".Utility::formatDateSINE($document->due_date,"d"), $date),"d")." </td>
+                      <td {$styleBasicDate} > ".DateManagement::howManyDaysBetween($document->due_date, $date)." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa_next)." </td>
                       <td {$styleBasicDate} > ".$document->due_date_next." </td>
-                      <td {$styleBasicDate} > ".Utility::formatDateSINE(DateManagement::calculateDate("-".Utility::formatDateSINE($date,"d"),$document->due_date_next),"d")." </td>
+                      <td {$styleBasicDate} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
 //                      <td {$styleRowActiv} > ".self::defineActive(16)." </td>
@@ -95,7 +100,7 @@ class summary extends Reportes
                       <td {$styleSoa} >".Yii::app()->format->format_decimal($soa)."</td>
                       <td {$styleNull} ></td>
                       <td {$styleNull} ></td>
-                      <td {$styleSoa} >".Yii::app()->format->format_decimal($soa_next)."</td>
+                      <td {$styleSoaNext} >".Yii::app()->format->format_decimal($soa_next)."</td>
                       <td {$styleNull} ></td>
                       <td {$styleNull} ></td>
                       <td {$styleNull} ></td>
