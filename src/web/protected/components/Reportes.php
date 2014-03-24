@@ -87,12 +87,12 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_from
      * @param type $fecha_to
      * @param type $tipo_report
-     * @return type
+     * @return type   
      */
-    public function recredi($date,$intercompany,$no_activity,$PaymentTerm)
+    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
     {
         $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var->report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)

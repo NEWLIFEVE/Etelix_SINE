@@ -18,15 +18,15 @@ class summary extends Reportes
             ini_set('max_execution_time', $seg);
             
         $styleNumberRow="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
-        $styleBasic="style='border:1px solid black;text-align: left;'";
-        $styleBasicNum="style='border:1px solid black;text-align: right;'";
+        $styleBasic="style='border:1px solid black;text-align: left;color=#6F7074;'";
+        $styleBasicNum="style='border:1px solid black;text-align: right;color=#6F7074;'";
         $styleActived="style='background:#F0950C;color:white;border:1px solid black;text-align:center;'";
         $styleBasicDate="style='border:1px solid black;text-align: center;'";
         $styleNull="style='border:0px solid white;text-align: left:'";
         $styleCarrier="style='border:1px solid black;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
 
-        $styleSoa="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
+        $styleSoaDue="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleSoaNext="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
         $styleDueDateD="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
         $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
@@ -122,7 +122,7 @@ class summary extends Reportes
             if($model->type_c_p=="Pago")
                  return "red";
              else 
-                 return "black";
+                 return "#6F7074";
         }
     }
     public static function defineActive($var)
@@ -279,14 +279,18 @@ class summary extends Reportes
                                               WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(valid_received_date + interval '7 days' AS date) END<='{$date}') r,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
-
-
-                   /*el due date del soa next*/
+                   
+                   /*el due date del soa*/
+                   
+                           {$due_date} WHERE d.date<='{$date}') AS due_date,
+                               
+                   /*el soa next*/
 
                      (SELECT (i.amount+(p.amount-n.amount)) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) n) AS soa_next, 
+                   
                    /*el due date del soa next*/
 
                            {$due_date}) AS due_date_next

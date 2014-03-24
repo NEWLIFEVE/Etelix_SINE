@@ -2,7 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
-
+    -recredi mejorado.
+    -nuevos filtros para recredi y summary
 Realese 1.2.7
     - Nombre de Carrier en SOA y BALANCE
     - Orden de Pie de Tabla en SOA
