@@ -3,9 +3,12 @@
 
 Sistema de Reportes para Billing
 
+
 Realese 1.2.8
     - Arreglado Due_date y Monto Due en Summary.
     - Arreglado calculo de dias vencidos y por vencer.
+    - recredi mejorado.
+    - nuevos filtros para recredi y summary
 
 Realese 1.2.7
     - Nombre de Carrier en SOA y BALANCE
@@ -62,9 +65,9 @@ Realese 1.0.1
        - Eliminado due date para pagos y cobros y saldo inicial
        - Ordenado por Issue_date y el periodo de facturación.
 Release 1.0
-    - Reporte SOA funcionando sin provisiones
+       - Reporte SOA funcionando sin provisiones
 Release 0.0.1
-    - Reporte SOA
+       - Reporte SOA
 
 
 
