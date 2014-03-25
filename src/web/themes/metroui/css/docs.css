@@ -630,6 +630,7 @@ select
 {
     position: absolute!important;
     margin: 0px 220px;
+    width: inherit;
 }
 .type_termino_pago
 {
@@ -640,6 +641,7 @@ select
 {
     position: absolute!important;
     margin: 0px 220px;
+    width: inherit;
 }
 .type_termino_pago_sum_re
 {

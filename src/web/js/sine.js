@@ -52,10 +52,9 @@ $SINE.UI=(function()
                     $SINE.UI.adminInput($(this));
                     break;
                 case "id_termino_pago":
-                    if($("#type_termino_pago").val()=='null'){
-                         $(this).val("todos");
-                         $SINE.UI.adminInput(("#type_termino_pago"));
-                    }
+                    if($("#type_termino_pago").val()=='null')
+                        $SINE.UI.adminInput(("#type_termino_pago"));
+                    
                     break;
             }
         });
@@ -155,10 +154,9 @@ $SINE.UI=(function()
     {
         if($(obj).val()=='null'){
             $("#id_termino_pago").val("todos");
-            $("#id_termino_pago option:selected").text("Customer/Supplier");
+            $(".label_custom_supplier").html("Termino Pago");
         }else{
-            $("#id_termino_pago").val("todos");
-            $("#id_termino_pago option:selected").text($("#type_termino_pago option:selected").text());
+            $(".label_custom_supplier").html("Termino Pago "+$("#type_termino_pago option:selected").text());
         } 
     }
         /**
