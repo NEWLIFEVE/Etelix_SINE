@@ -43,6 +43,13 @@ class DateManagement
         $date=strtotime($date);
         return (int)date('N',$date);
     }
+    public static function getNumberWeek($date)
+    {
+        if($date!=null)
+             return date('W', strtotime($date));
+        else
+            return NULL;
+    }
 
     /**
      * Retorna el nombre del dia de la semana de una fecha

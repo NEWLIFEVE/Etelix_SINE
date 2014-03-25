@@ -33,7 +33,6 @@ class summary extends Reportes
         $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
         $last_pago_cobro=$soa=$soa_next=0;$dueDaysNext="";
 
-         
         if($PaymentTerm=="todos") {
          $typeRecredi="GENERAL";
         }else{
@@ -76,6 +75,7 @@ class summary extends Reportes
                 $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
             
             $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
+            $styleOldDate="style='border:1px solid black;text-align: center;background:".self::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
             $soa+=$document->soa;
@@ -85,12 +85,12 @@ class summary extends Reportes
                       <td {$styleBasic} > ".$document->name." </td>
                       <td {$styleRowActiv} > ".self::defineActive($document->active)." </td>
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
-                      <td {$styleBasicDate} > ".$document->last_date_pago_cobro." </td>
+                      <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
-                      <td {$styleBasicDate} > ".$document->due_date." </td>
+                      <td {$styleBasicDate} > ".Utility::formatDateSINE($document->due_date,"Y-m-d")." </td>
                       <td {$styleBasicDate} > ".DateManagement::howManyDaysBetween($document->due_date, $date)." </td>
                       <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa_next)." </td>
-                      <td {$styleBasicDate} > ".$document->due_date_next." </td>
+                      <td {$styleBasicDate} > ".Utility::formatDateSINE($document->due_date_next,"Y-m-d")." </td>
                       <td {$styleBasicDate} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                   </tr>";  
@@ -111,6 +111,13 @@ class summary extends Reportes
           return $body;
     }
     
+    public static function defineStyleOld($dateModel,$date)
+    {
+        if(DateManagement::getNumberWeek($dateModel)==DateManagement::getNumberWeek($date)-1 && Utility::formatDateSINE($dateModel,"Y")==Utility::formatDateSINE($date,"Y"))        
+            return "#FCD746";
+        else
+            return "#fff";
+    }
     public static function definePaymCollect($model,$attr)
     {
         if($attr=="value"){

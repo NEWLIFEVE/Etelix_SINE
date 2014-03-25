@@ -3,7 +3,8 @@
 
 Sistema de Reportes para Billing
 
-
+    - modificacion de comportamiento de select termino pago en recredi, summary y reteco
+    - cambio de indicadores 
 Realese 1.2.8
     - Default los inputs de soa, balance, sumary y reteco.
     - Arreglado Due_date y Monto Due en Summary.
