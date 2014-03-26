@@ -40,7 +40,7 @@ $this->pageTitle = Yii::app()->name;
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div>
         <br>
-        <!--<div class="Reportes RECOPA" id="recopa">
+<!--        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
         </div>
         <br>-->

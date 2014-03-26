@@ -16,42 +16,34 @@ class summary extends Reportes
         $carrierGroups=CarrierGroups::getAllGroups();
             $seg=count($carrierGroups)*3;
             ini_set('max_execution_time', $seg);
-        $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-        $styleBasic="style='border:1px solid silver;text-align: left;color=#6F7074;'";
-        $styleBasicCenter="style='border:1px solid silver;text-align: center;color=#6F7074;'";
-        $styleBasicNumDue="style='border:1px solid silver;text-align: right;color=#6F7074;background:#DEECF7;'";
-        $styleBasicNumNext="style='border:1px solid silver;text-align: right;color=#6F7074;background:#DEF7DF;'";
-        $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
-        $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;'";
-        $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;'";
-//        $styleNull="style='border:0px solid white;text-align: left:'";
-        $styleCarrier="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
-        $styleDatePC="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
-        $styleSoaDue="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
-        $styleSoaNext="style='border:1px solid silver;background:#049C47;text-align:center;color:white;white-space: nowrap;'";
-        $styleDueDateD="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
-        $styleDueDateN="style='border:1px solid silver;background:#049C47;text-align:center;color:white;white-space: nowrap;'";
-        $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
-        $firstWeekOne=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+1", $date), "first");
-        $lastWeekOne=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+1", $date), "last");
-        $firstWeekTwo=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+2", $date), "first");
-        $lastWeekTwo=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+2", $date), "last");
-        $firstWeekThree=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+3", $date), "first");
-        $lastWeekThree=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+3", $date), "last");
-        $firstWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "first");
-        $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
-        $last_pago_cobro=$soaPrev=$soaThisWeek=$soaWeekOne=$soaWeekTwo=$soaWeekThree=$soaWeekFour=0;$dueDaysDue=$dueDaysNext="";
-        
-        if($PaymentTerm=="todos") 
-            $typeSummary="GENERAL";
-        else
-            $typeSummary=TerminoPago::getModelFind($PaymentTerm)->name;
+            
+        $styleNumberRow="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
+        $styleBasic="style='border:1px solid black;text-align: left;color=#6F7074;'";
+        $styleBasicNum="style='border:1px solid black;text-align: right;color=#6F7074;'";
+        $styleActived="style='background:#F0950C;color:white;border:1px solid black;text-align:center;'";
+        $styleBasicDate="style='border:1px solid black;text-align: center;'";
+        $styleNull="style='border:0px solid white;text-align: left:'";
+        $styleCarrier="style='border:1px solid black;background:silver;text-align:center;color:white;'";
+        $styleDatePC="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
+
+        $styleSoaDue="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
+        $styleSoaNext="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $styleDueDateD="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
+        $styleDueDateN="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+        $last_pago_cobro=$soa=$soa_next=0;$dueDaysNext="";
+
+        if($PaymentTerm=="todos") {
+         $typeRecredi="GENERAL";
+        }else{
+            $typeRecredi=TerminoPago::getModelFind($PaymentTerm)->name;
+        }
         $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$PaymentTerm);
 
         $body="<table>
                 <tr>
                     <td colspan='2'>
-                        <h1>SUMMARY - {$typeSummary}</h1>
+                        <h1>SUMMARY - {$typeRecredi}</h1>
                     </td>
                     <td colspan='11'>  AL {$date} </td>
                 <tr>
@@ -60,159 +52,68 @@ class summary extends Reportes
                </table>
                <table style='width: 100%;'>
                 <tr>
-                    <td colspan='5'></td>
-                    <td {$styleSoaDue} colspan='2'> PREVIOUS </td>
-                    <td {$styleSoaDue} colspan='2'> THIS WEEK </td>
-                    <td></td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekFour,"d")."-".Utility::formatDateSINE($lastWeekFour,"d")."".Utility::formatDateSINE($lastWeekFour,"M")." </td>
-                    <td colspan='2'></td>
-                </tr>
-                <tr>
                     <td {$styleNumberRow} >N°</td>
                     <td {$styleCarrier} > CARRIER </td>
                     <td {$styleActived} > INACTIVE </td>
-                    <td {$styleDatePC} > LAST(Pay/Coll) </td>
-                    <td {$styleDatePC} > DATE(Pay/Coll) </td>
+                    <td {$styleDatePC} > ULTIMO(Pag/Cobr) </td>
+                    <td {$styleDatePC} > FECHA(Pag/Cobr) </td>
                     <td {$styleSoaDue} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
-                    <td {$styleSoaDue} > SOA(DUE) </td>
-                    <td {$styleDueDateD} > DUE DATE(D) </td>
-                    <td {$styleDueDateD} > DUE DAYS </td> 
+
+                    <td {$styleDueDateD} > DUE DAYS </td>
+
                     <td {$styleSoaNext} > SOA(NEXT) </td>
                     <td {$styleDueDateN} > DUE DATE(N) </td>
-                    <td {$styleSoaNext} > SOA(NEXT) </td>
-                    <td {$styleDueDateN} > DUE DATE(N) </td>
-                    <td {$styleSoaNext} > SOA(NEXT) </td>
-                    <td {$styleDueDateN} > DUE DATE(N) </td>
-                    <td {$styleSoaNext} > SOA(NEXT) </td>
-                    <td {$styleDueDateN} > DUE DATE(N) </td>  
                     <td {$styleDueDateN} > DUE DAYS </td>
                     <td {$styleNumberRow} >N°</td>
                 </tr>";
         foreach ($documents as $key => $document)
         { 
-            $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
             if($document->due_date_next==NULL||$document->due_date_next==$document->due_date)
                 $dueDaysNext="0";
-            $dueDaysDue=DateManagement::howManyDaysBetween($document->due_date, $date);
-            if($dueDaysDue>365 || $dueDaysDue==NULL)
-                $dueDaysDue="0";
+            else
+                $dueDaysNext=abs(DateManagement::howManyDaysBetween($document->due_date_next,$date));
             
-            $styleCollPaym="style='border:1px solid silver;text-align: right;color:".self::definePaymCollect($document,"style")."'";
-            $styleOldDate="style='border:1px solid silver;text-align: center;background:".self::defineStyleOld($document->last_date_pago_cobro, $date)."'";
+            $styleCollPaym="style='border:1px solid black;text-align: right;color:".self::definePaymCollect($document,"style")."'";
+            $styleOldDate="style='border:1px solid black;text-align: center;background:".self::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
-            $soaPrev=self::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrev);
-            $soaThisWeek=self::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeek);
-            $soaWeekOne=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOne);
-            $soaWeekTwo=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwo);
-            $soaWeekThree=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThree);
-            $soaWeekFour=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFour);
-
-            $body.="<tr>
+            $soa+=$document->soa;
+            $soa_next+=$document->soa_next;
+            $body.=" <tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
                       <td {$styleRowActiv} > ".self::defineActive($document->active)." </td>
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
-                      <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
-                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
-                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicDateDue} > {$dueDaysDue} </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
+                      <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td>
+                      <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa)." </td>
+                      <td {$styleBasicDate} > ".Utility::formatDateSINE($document->due_date,"Y-m-d")." </td>
+                      <td {$styleBasicDate} > ".DateManagement::howManyDaysBetween($document->due_date, $date)." </td>
+                      <td {$styleBasicNum} > ".Yii::app()->format->format_decimal($document->soa_next)." </td>
+                      <td {$styleBasicDate} > ".Utility::formatDateSINE($document->due_date_next,"Y-m-d")." </td>
+                      <td {$styleBasicDate} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
-                    </tr>";   
+                  </tr>";  
         }
-         $body.="<tr>
-                    <td {$styleNumberRow} ></td>
-                    <td {$styleCarrier} colspan='2'></td>
-                    <td {$styleDatePC} colspan='2'> PAYMENT/COLLECTION </td>
-                    <td {$styleSoaDue} colspan='2'> SOA(DUE)PREVIOUS </td>
-                    <td {$styleSoaDue} colspan='3'> SOA(DUE)THIS WEEK </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
-                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
-                    <td {$styleSoaNext} colspan='3'> WEEK ".Utility::formatDateSINE($firstWeekFour,"d")."-".Utility::formatDateSINE($lastWeekFour,"d")."".Utility::formatDateSINE($lastWeekFour,"M")." </td>
-                    <td {$styleNumberRow} ></td>
-                 </tr>";
-         $body.="<tr>
-                    <td {$styleBasicCenter} colspan='3'>TOTALS</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaPrev)."</td>
-                    <td {$styleBasicCenter} colspan='3'>".Yii::app()->format->format_decimal($soaThisWeek)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOne)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwo)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThree)."</td>
-                    <td {$styleBasicCenter} colspan='4'>".Yii::app()->format->format_decimal($soaWeekFour)."</td>
+         $body.=" <tr>
+                      <td {$styleNull} colspan='3'></td>
+                      <td {$styleDatePC} >".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
+                      <td {$styleNull} ></td>
+                      <td {$styleSoaDue} >".Yii::app()->format->format_decimal($soa)."</td>
+                      <td {$styleNull} ></td>
+                      <td {$styleNull} ></td>
+                      <td {$styleSoaNext} >".Yii::app()->format->format_decimal($soa_next)."</td>
+                      <td {$styleNull} ></td>
+                      <td {$styleNull} ></td>
+                      <td {$styleNull} ></td>
                   </tr>
-                 </table>";     
+                  </table>";
           return $body;
     }
-    public static function defineAcums($value,$dueDate,$date, $firstWeek, $lastWeek, $prev, $acum)
-    {
-        if($firstWeek==NULL && $lastWeek==NULL){
-            if($prev=="prev"){
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $acum+$value;
-                }else{
-                    return $acum;
-                }
-            }else{
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $acum+$value;
-                }else{
-                    return $acum;
-                }
-            }
-        }else{
-            if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
-                return $acum+$value;
-            }else{
-                return $acum;
-            }
-        }
-    }
-    public static function defineValueTD($value,$dueDate,$date, $firstWeek, $lastWeek, $prev)
-    {
-        if($firstWeek==NULL && $lastWeek==NULL){
-            if($prev=="prev"){
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $value;
-                }else{
-                    return "";
-                }
-            }else{
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $value;
-                }else{
-                    return "";
-                }
-            }
-        }else{
-            if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
-                return $value;
-            }else{
-                return "";
-            }
-        }
-    }
-
+    
     public static function defineStyleOld($dateModel,$date)
     {
-        if(DateManagement::firstOrLastDayWeek($dateModel,"first") == DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date),"first"))
-//        if(DateManagement::getNumberWeek($dateModel)==DateManagement::getNumberWeek($date)-1 && Utility::formatDateSINE($dateModel,"Y")==Utility::formatDateSINE($date,"Y"))        
+        if(DateManagement::getNumberWeek($dateModel)==DateManagement::getNumberWeek($date)-1 && Utility::formatDateSINE($dateModel,"Y")==Utility::formatDateSINE($date,"Y"))        
             return "#FCD746";
         else
             return "#fff";
