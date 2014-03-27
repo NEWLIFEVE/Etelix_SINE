@@ -51,7 +51,7 @@ class summary extends Reportes
         $body="<table>
                 <tr>
                     <td colspan='4'>
-                        <h1>SUMMARY </h1><h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h2>
+                        <h1>SUMMARY  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
                     </td>
                     <td colspan='9'>  AL {$date} </td>
                 <tr>
