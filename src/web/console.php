@@ -1,8 +1,12 @@
 <?php
 date_default_timezone_set('America/Caracas');
+define('SERVER_NAME_PROD','s1248-101');
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
 $config=dirname(__FILE__).'/protected/config/console.php';
+
+$server=gethostname();
+
 // remove the following lines when in production mode
 //defined('YII_DEBUG') or define('YII_DEBUG',true);
 // specify how many levels of call stack should be shown in each log message
