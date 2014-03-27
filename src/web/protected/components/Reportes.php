@@ -110,7 +110,7 @@ class Reportes extends CApplicationComponent
     public static function define_grupo($grupo)
     {    
         if($grupo=="CABINAS PERU")  
-            return "id_carrier_groups=301 OR id_carrier_groups=443";
+            return "id_carrier_groups IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
         else   
             return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
@@ -920,6 +920,12 @@ class Reportes extends CApplicationComponent
                 }
             }
         }
+        /**
+         * METODO ENCARGADO DE DESVIAR LOS MONTOS DEPENDIENDO (SI ES NEGATIVO O POSITIVO) PARA EL CALCULO DE TOTALES EN SUMMARY
+         * @param type $value
+         * @param type $var
+         * @return int
+         */
         public static function defineLessOrHigher($value, $var)
         {
             if($var==FALSE){
