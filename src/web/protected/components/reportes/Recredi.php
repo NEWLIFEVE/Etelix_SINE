@@ -38,10 +38,10 @@ class Recredi extends Reportes
 
         $body="<table>
                 <tr>
-                    <td colspan='2'>
+                    <td colspan='3'>
                         <h1>RECREDI - ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
                     </td>
-                    <td colspan='10'>  AL {$date} </td>
+                    <td colspan='9'>  AL {$date} </td>
                 <tr>
                     <td colspan='10'></td>
                 </tr>
