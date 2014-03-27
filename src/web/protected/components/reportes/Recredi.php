@@ -11,23 +11,18 @@ class Recredi extends Reportes
      * @return string
      * @access public
      */
-    public function report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
+    public function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
         $carrierGroups=CarrierGroups::getAllGroups();
             $seg=count($carrierGroups)*3;
             ini_set('max_execution_time', $seg);
             
         if($date==null) $date=date('Y-m-d');
-        $documents=$this->_getData($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+        $documents=$this->_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
         $balances_3=$this->_getBalances(DateManagement::calculateDate('-3',$date));
         $balances_2=$this->_getBalances(DateManagement::calculateDate('-2',$date));
         $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
-        if($PaymentTerm=="todos") {
-         $typeRecredi="GENERAL";
-        }else{
-            $typeRecredi=TerminoPago::getModelFind($PaymentTerm)->name;
-        }
-        
+
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
         $style_number_row="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
         $style_basic="style='border:1px solid black;text-align:center;'";
@@ -44,7 +39,7 @@ class Recredi extends Reportes
         $body="<table>
                 <tr>
                     <td colspan='2'>
-                        <h1>RECREDI - {$typeRecredi}</h1>
+                        <h1>RECREDI - ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
                     </td>
                     <td colspan='10'>  AL {$date} </td>
                 <tr>
@@ -190,30 +185,30 @@ class Recredi extends Reportes
         
         $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
 
-        if($no_activity==TRUE)$body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota 1: No presenta movimiento a la fecha</td></tr><table>";
+        if($noActivity==TRUE)$body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota 1: No presenta movimiento a la fecha</td></tr><table>";
           else  $body."";
         return $body;
     }
     
     /**
      * Encargada de traer la data
-     * @param date $date,$intercompany=TRUE,$no_activity=TRUE,$PaymentTerm
+     * @param date $date,$intercompany=TRUE,$noActivity=TRUE,$paymentTerm
      * @return array
      * @since 2.0
      * @access private
      */
-    private function _getData($date,$intercompany=TRUE,$no_activity=TRUE,$typePaymentTerm,$PaymentTerm)
+    private function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
     {
         if($intercompany)           $intercompany="";
         elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
 
-        if($no_activity)           $no_activity="";
-        elseif($no_activity==FALSE) $no_activity=" WHERE due_date IS NOT NULL";
+        if($noActivity)           $noActivity="";
+        elseif($noActivity==FALSE) $noActivity=" WHERE due_date IS NOT NULL";
 
-        if($PaymentTerm=="todos") {
+        if($paymentTerm=="todos") {
             $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
         }else{
-            $filterPaymentTerm="{$PaymentTerm}";
+            $filterPaymentTerm="{$paymentTerm}";
         }
         
         
@@ -284,7 +279,7 @@ class Recredi extends Reportes
                          
         $sql="/*filtro el due_date null*/ 
               SELECT * FROM 
-                 (SELECT cg.id AS id,
+                 (SELECT DISTINCT cg.id AS id,
                      /*El Nombre del grupo*/ 
                      cg.name AS name,
                      /*segmento para soas y due_dates*/
@@ -361,10 +356,9 @@ class Recredi extends Reportes
                    carrier c {$tableNext}
                    
               WHERE c.id_carrier_groups=cg.id 
-                    AND group_leader=1
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$no_activity}";
+              ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
 

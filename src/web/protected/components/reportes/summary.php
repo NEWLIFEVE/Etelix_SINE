@@ -11,7 +11,7 @@ class summary extends Reportes
      * @return string
      * @access public
      */
-    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$PaymentTerm)
+    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
         $carrierGroups=CarrierGroups::getAllGroups();
             $seg=count($carrierGroups)*3;
@@ -42,16 +42,12 @@ class summary extends Reportes
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
         $last_pago_cobro=$soaPrev=$soaThisWeek=$soaWeekOne=$soaWeekTwo=$soaWeekThree=$soaWeekFour=0;$dueDaysDue=$dueDaysNext="";
         
-        if($PaymentTerm=="todos") 
-            $typeSummary="GENERAL";
-        else
-            $typeSummary=TerminoPago::getModelFind($PaymentTerm)->name;
-        $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$PaymentTerm);
+        $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
 
         $body="<table>
                 <tr>
                     <td colspan='2'>
-                        <h1>SUMMARY - {$typeSummary}</h1>
+                        <h1>SUMMARY - ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
                     </td>
                     <td colspan='11'>  AL {$date} </td>
                 <tr>
@@ -101,36 +97,36 @@ class summary extends Reportes
             if($dueDaysDue>365 || $dueDaysDue==NULL)
                 $dueDaysDue="0";
             
-            $styleCollPaym="style='border:1px solid silver;text-align: right;color:".self::definePaymCollect($document,"style")."'";
-            $styleOldDate="style='border:1px solid silver;text-align: center;background:".self::defineStyleOld($document->last_date_pago_cobro, $date)."'";
+            $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document,"style")."'";
+            $styleOldDate="style='border:1px solid silver;text-align: center;background:".Reportes::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
-            $soaPrev=self::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrev);
-            $soaThisWeek=self::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeek);
-            $soaWeekOne=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOne);
-            $soaWeekTwo=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwo);
-            $soaWeekThree=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThree);
-            $soaWeekFour=self::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFour);
+            $soaPrev=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrev);
+            $soaThisWeek=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeek);
+            $soaWeekOne=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOne);
+            $soaWeekTwo=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwo);
+            $soaWeekThree=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThree);
+            $soaWeekFour=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFour);
 
             $body.="<tr>
                       <td {$styleNumberRow} >{$pos}</td>
                       <td {$styleBasic} > ".$document->name." </td>
-                      <td {$styleRowActiv} > ".self::defineActive($document->active)." </td>
-                      <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(self::definePaymCollect($document,"value"))." </td>
+                      <td {$styleRowActiv} > ".Reportes::defineActive($document->active)." </td>
+                      <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(Reportes::definePaymCollect($document,"value"))." </td>
                       <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
-                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
-                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
+                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
+                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
+                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateDue} > {$dueDaysDue} </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(self::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(self::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
+                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
+                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL))." </td>
+                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL))." </td>
+                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                     </tr>";   
@@ -160,92 +156,15 @@ class summary extends Reportes
                  </table>";     
           return $body;
     }
-    public static function defineAcums($value,$dueDate,$date, $firstWeek, $lastWeek, $prev, $acum)
-    {
-        if($firstWeek==NULL && $lastWeek==NULL){
-            if($prev=="prev"){
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $acum+$value;
-                }else{
-                    return $acum;
-                }
-            }else{
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $acum+$value;
-                }else{
-                    return $acum;
-                }
-            }
-        }else{
-            if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
-                return $acum+$value;
-            }else{
-                return $acum;
-            }
-        }
-    }
-    public static function defineValueTD($value,$dueDate,$date, $firstWeek, $lastWeek, $prev)
-    {
-        if($firstWeek==NULL && $lastWeek==NULL){
-            if($prev=="prev"){
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $value;
-                }else{
-                    return "";
-                }
-            }else{
-                if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
-                    return $value;
-                }else{
-                    return "";
-                }
-            }
-        }else{
-            if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
-                return $value;
-            }else{
-                return "";
-            }
-        }
-    }
-
-    public static function defineStyleOld($dateModel,$date)
-    {
-        if(DateManagement::firstOrLastDayWeek($dateModel,"first") == DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date),"first"))
-//        if(DateManagement::getNumberWeek($dateModel)==DateManagement::getNumberWeek($date)-1 && Utility::formatDateSINE($dateModel,"Y")==Utility::formatDateSINE($date,"Y"))        
-            return "#FCD746";
-        else
-            return "#fff";
-    }
-    public static function definePaymCollect($model,$attr)
-    {
-        if($attr=="value"){
-            if($model->type_c_p=="Pago")
-                return "-".$model->last_pago_cobro;
-            else 
-                return $model->last_pago_cobro;
-        }else{
-            if($model->type_c_p=="Pago")
-                 return "red";
-             else 
-                 return "#6F7074";
-        }
-    }
-    public static function defineActive($var)
-    {
-        if($var!="16")
-            return "";
-        else
-            return "x";
-    }
+    
     /**
      * Encargada de traer la data
-     * @param date $date,$intercompany=TRUE,$no_activity=TRUE,$PaymentTerm
+     * @param date $date,$intercompany=TRUE,$no_activity=TRUE,$paymentTerm
      * @return array
      * @since 1.0
      * @access public
      */
-    public static function getData($date,$intercompany=TRUE,$no_activity=TRUE,$typePaymentTerm,$PaymentTerm)
+    public static function getData($date,$intercompany=TRUE,$no_activity=TRUE,$typePaymentTerm,$paymentTerm)
     {
         if($intercompany)           $intercompany="";
         elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
@@ -253,10 +172,10 @@ class summary extends Reportes
         if($no_activity)           $no_activity="";
         elseif($no_activity==FALSE) $no_activity=" WHERE due_date IS NOT NULL";
 
-        if($PaymentTerm=="todos") {
+        if($paymentTerm=="todos") {
             $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
         }else{
-            $filterPaymentTerm="{$PaymentTerm}";
+            $filterPaymentTerm="{$paymentTerm}";
         }
         
         
@@ -281,7 +200,6 @@ class summary extends Reportes
                                AND tp.id IN({$filterPaymentTerm})";
         }
 
-    //El id del grupo
         $sqlExpirationCustomer="SELECT tp.expiration
                                 FROM carrier c, 
                                      (SELECT id, sign_date, production_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_carrier, id_company, up, bank_fee
@@ -328,7 +246,7 @@ class summary extends Reportes
 
         $sql="/*filtro el due_date null*/ 
               SELECT * FROM 
-                 (SELECT cg.id AS id, 
+                 (SELECT DISTINCT cg.id AS id, 
                                    /*monto del ultimo pago o cobro*/
 	                            (select amount 
                                         from accounting_document
@@ -406,7 +324,6 @@ class summary extends Reportes
                    carrier c {$tableNext}
                    
               WHERE c.id_carrier_groups=cg.id 
-                    AND group_leader=1
                     {$wherePaymentTerm}
                     {$intercompany}  
               ORDER BY cg.name ASC)activity {$no_activity}";
