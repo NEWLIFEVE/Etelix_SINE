@@ -25,7 +25,7 @@ class reteco extends Reportes
         $body="<table>
           <tr>
               <td colspan='4'>
-                  <h1>RETECO </h1><h3>- ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h3>
+                  <h1>RETECO </h1><h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h2>
               </td>
               <td colspan='9'>  AL ".date("Y-m-d")." </td>
           <tr>
