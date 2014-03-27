@@ -24,10 +24,10 @@ class reteco extends Reportes
         $documents=  self::getData($carActived,$typePaymentTerm,$paymentTerm);
         $body="<table>
           <tr>
-              <td colspan='3'>
-                  <h1>RETECO - ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
+              <td colspan='4'>
+                  <h1>RETECO </h1><h3>- ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h3>
               </td>
-              <td colspan='10'>  AL ".date("Y-m-d")." </td>
+              <td colspan='9'>  AL ".date("Y-m-d")." </td>
           <tr>
               <td colspan='10'></td>
           </tr>

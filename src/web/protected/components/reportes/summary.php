@@ -17,13 +17,17 @@ class summary extends Reportes
             $seg=count($carrierGroups)*3;
             ini_set('max_execution_time', $seg);
         $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-        $styleBasic="style='border:1px solid silver;text-align: left;color=#6F7074;'";
+        $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
         $styleBasicCenter="style='border:1px solid silver;text-align: center;color=#6F7074;'";
-        $styleBasicNumDue="style='border:1px solid silver;text-align: right;color=#6F7074;background:#DEECF7;'";
-        $styleBasicNumNext="style='border:1px solid silver;text-align: right;color=#6F7074;background:#DEF7DF;'";
-        $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
+        $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;'";
         $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;'";
+        $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;'";
+        $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;'";
+        $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;'";
         $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;'";
+        $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
+        $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;'";
+        $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
 //        $styleNull="style='border:0px solid white;text-align: left:'";
         $styleCarrier="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
@@ -46,10 +50,10 @@ class summary extends Reportes
 
         $body="<table>
                 <tr>
-                    <td colspan='3'>
-                        <h1>SUMMARY - ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
+                    <td colspan='4'>
+                        <h1>SUMMARY </h1><h3>- ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h3>
                     </td>
-                    <td colspan='10'>  AL {$date} </td>
+                    <td colspan='9'>  AL {$date} </td>
                 <tr>
                     <td colspan='11'></td>
                 </tr>
@@ -109,24 +113,24 @@ class summary extends Reportes
             $soaWeekFour=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFour);
 
             $body.="<tr>
-                      <td {$styleNumberRow} >{$pos}</td>
+                      <td {$styleNumberRow} > {$pos} </td>
                       <td {$styleBasic} > ".$document->name." </td>
                       <td {$styleRowActiv} > ".Reportes::defineActive($document->active)." </td>
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(Reportes::definePaymCollect($document,"value"))." </td>
                       <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
                       <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
-                      <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
+                      <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateDue} > {$dueDaysDue} </td>
                       <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
                       <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNextTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
+                      <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL),"Y-m-d")." </td>
                       <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL))." </td>
                       <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL),"Y-m-d")." </td>
-                      <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL))." </td>
-                      <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumNextTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL))." </td>
+                      <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                     </tr>";   
