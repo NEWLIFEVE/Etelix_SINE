@@ -2,7 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
-    - modificacion en summary, ahora se muestra con una especie de pronostico por semana.
+    - modificacion en summary, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
     - cambios en la forma como se muestra el nombre de los reportes reteco, summary y recredi.
     - modificacion de comportamiento de select termino pago en recredi, summary y reteco.
     - cambio de indicadores para el termino pago. 
