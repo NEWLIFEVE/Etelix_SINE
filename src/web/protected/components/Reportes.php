@@ -920,6 +920,21 @@ class Reportes extends CApplicationComponent
                 }
             }
         }
+        public static function defineLessOrHigher($value, $var)
+        {
+            if($var==FALSE){
+                if($value<0)
+                    return $value;
+                else
+                    return 0;
+            }else{
+                if($value>=0)
+                    return $value;
+                else
+                    return 0;
+            }
+        }
+ 
         /**
          * METODO ENCARGADO DE POSICIONAR LOS MONTOS Y LOS DUE_DATE DEPENDIENDO DE LA SEMANA
          * @param type $value

@@ -18,17 +18,20 @@ class summary extends Reportes
             ini_set('max_execution_time', $seg);
         $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
         $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
-        $styleBasicCenter="style='border:1px solid silver;text-align: center;color=#6F7074;'";
+        $styleBasicCenter="style='border:1px solid silver;text-align: center;color:#6F7074;'";
+        $styleBasicCenterLess="style='border:1px solid silver;text-align: center;color:red;'";
+        $styleBasicCenterHigherDue="style='border:1px solid silver;text-align: center;color:#3466B4;'";
+        $styleBasicCenterHigherNext="style='border:1px solid silver;text-align: center;color:#049C47;'";
         $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;'";
-        $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;'";
+        $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;'";
         $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;'";
-        $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;'";
+        $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;'";
         $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;'";
-        $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;'";
+        $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;'";
         $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
-        $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;'";
+        $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;'";
         $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
-//        $styleNull="style='border:0px solid white;text-align: left:'";
+        $styleNull="style='border:0px solid white;text-align: left:'";
         $styleCarrier="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
         $styleSoaDue="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
@@ -36,6 +39,7 @@ class summary extends Reportes
         $styleDueDateD="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
         $styleDueDateN="style='border:1px solid silver;background:#049C47;text-align:center;color:white;white-space: nowrap;'";
         $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+        
         $firstWeekOne=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+1", $date), "first");
         $lastWeekOne=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+1", $date), "last");
         $firstWeekTwo=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+2", $date), "first");
@@ -44,7 +48,10 @@ class summary extends Reportes
         $lastWeekThree=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+3", $date), "last");
         $firstWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "first");
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
-        $last_pago_cobro=$soaPrev=$soaThisWeek=$soaWeekOne=$soaWeekTwo=$soaWeekThree=$soaWeekFour=0;$dueDaysDue=$dueDaysNext="";
+        $last_pago_cobro=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
+        $soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=$soaWeekThreeLess=$soaWeekFourLess=0;
+        $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=0;
+        $dueDaysDue=$dueDaysNext="";
         
         $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
 
@@ -102,15 +109,30 @@ class summary extends Reportes
                 $dueDaysDue="0";
             
             $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document,"style")."'";
-            $styleOldDate="style='border:1px solid silver;text-align: center;background:".Reportes::defineStyleOld($document->last_date_pago_cobro, $date)."'";
+            $styleOldDate="style='border:1px solid silver;text-align: center;color:#6F7074;background:".Reportes::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
             $last_pago_cobro+=$document->last_pago_cobro;
-            $soaPrev=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrev);
-            $soaThisWeek=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeek);
-            $soaWeekOne=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOne);
-            $soaWeekTwo=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwo);
-            $soaWeekThree=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThree);
-            $soaWeekFour=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFour);
+            
+            $soaPrevLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevLess);
+            $soaThisWeekLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekLess);
+            $soaWeekOneLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneLess);
+            $soaWeekTwoLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoLess);
+            $soaWeekThreeLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeLess);
+            $soaWeekFourLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourLess);
+            
+            $soaPrevHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevHigher);
+            $soaThisWeekHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekHigher);
+            $soaWeekOneHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneHigher);
+            $soaWeekTwoHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoHigher);
+            $soaWeekThreeHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeHigher);
+            $soaWeekFourHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourHigher);
+            
+            $soaPrevTotal=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrevTotal);
+            $soaThisWeekTotal=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekTotal);
+            $soaWeekOneTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneTotal);
+            $soaWeekTwoTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoTotal);
+            $soaWeekThreeTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeTotal);
+            $soaWeekFourTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourTotal);
 
             $body.="<tr>
                       <td {$styleNumberRow} > {$pos} </td>
@@ -133,31 +155,54 @@ class summary extends Reportes
                       <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
                       <td {$styleNumberRow} >{$pos}</td>
-                    </tr>";   
+                    </tr>"; 
         }
          $body.="<tr>
-                    <td {$styleNumberRow} ></td>
-                    <td {$styleCarrier} colspan='2'></td>
+                    <td {$styleNull} colspan='3'></td>
                     <td {$styleDatePC} colspan='2'> PAYMENT/COLLECTION </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)PREVIOUS </td>
-                    <td {$styleSoaDue} colspan='3'> SOA(DUE)THIS WEEK </td>
+                    <td {$styleSoaDue} colspan='2'> SOA(DUE)THIS WEEK </td>
+                    <td {$styleNull} ></td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
-                    <td {$styleSoaNext} colspan='3'> WEEK ".Utility::formatDateSINE($firstWeekFour,"d")."-".Utility::formatDateSINE($lastWeekFour,"d")."".Utility::formatDateSINE($lastWeekFour,"M")." </td>
-                    <td {$styleNumberRow} ></td>
+                    <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekFour,"d")."-".Utility::formatDateSINE($lastWeekFour,"d")."".Utility::formatDateSINE($lastWeekFour,"M")." </td>
+                    <td {$styleNull} ></td>
                  </tr>";
          $body.="<tr>
-                    <td {$styleBasicCenter} colspan='3'>TOTALS</td>
+                    <td {$styleNull} colspan='3'></td>
                     <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaPrev)."</td>
-                    <td {$styleBasicCenter} colspan='3'>".Yii::app()->format->format_decimal($soaThisWeek)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOne)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwo)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThree)."</td>
-                    <td {$styleBasicCenter} colspan='4'>".Yii::app()->format->format_decimal($soaWeekFour)."</td>
+                    <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
+                    <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
+                    <td {$styleNull} ></td>
+                    <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneHigher)."</td>
+                    <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoHigher)."</td>
+                    <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeHigher)."</td>
+                    <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourHigher)."</td>
+                  </tr>";
+         $body.="<tr>
+                    <td {$styleNull} colspan='3'></td>
+                    <td {$styleNull} colspan='2'></td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaPrevLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekLess)."</td>
+                    <td {$styleNull} ></td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourLess)."</td>   
+                 </tr>";   
+         $body.="<tr>
+                    <td {$styleNull} colspan='3'></td>
+                    <td {$styleNull} colspan='2'></td>
+                    <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevTotal)."</td>
+                    <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekTotal)."</td>
+                    <td {$styleNull} ></td>
+                    <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneTotal)."</td>
+                    <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoTotal)."</td>
+                    <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeTotal)."</td>
+                    <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourTotal)."</td>
                   </tr>
-                 </table>";     
+                 </table>";   
           return $body;
     }
     
