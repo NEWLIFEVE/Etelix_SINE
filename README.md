@@ -2,18 +2,19 @@
 ============
 
 Sistema de Reportes para Billing
-    - se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
-    - se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
-    - modificacion en summary, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
-    - cambios en la forma como se muestra el nombre de los reportes reteco, summary y recredi.
-    - modificacion de comportamiento de select termino pago en recredi, summary y reteco.
-    - cambio de indicadores para el termino pago. 
+    - Modificado SUMMARY, para que soporte mostrar data de varias semanas. ademas de sus respectivos totales de cuentas por pagar y cuentas por cobrar.
+    - Se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
+    - Se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
+    - Modificacion en SUMMARY, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
+    - Cambios en la forma como se muestra el nombre de los reportes RETECO, SUMMARY y RECREDI.
+    - Modificacion de comportamiento de select termino pago en RECREDI, SUMMARY y RETECO.
+    - Cambio de indicadores para el termino pago. 
 Realese 1.2.8
-    - Default los inputs de soa, balance, sumary y reteco.
-    - Arreglado Due_date y Monto Due en Summary.
+    - Default los inputs de soa, balance, sumary y RETECO.
+    - Arreglado Due_date y Monto Due en SUMMARY.
     - Arreglado calculo de dias vencidos y por vencer.
-    - recredi mejorado.
-    - nuevos filtros para recredi y summary
+    - RECREDI mejorado.
+    - Nuevos filtros para RECREDI y SUMMARY
     - Agregado dias vencidos y por vencer en Summary.
 
 
