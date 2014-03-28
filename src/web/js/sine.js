@@ -37,6 +37,7 @@ $SINE.UI=(function()
     function _datepicker() 
     {
         $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( "#fromDate, #toDate").datepicker({ dateFormat: "yy-mm-dd"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite

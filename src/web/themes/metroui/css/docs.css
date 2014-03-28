@@ -689,3 +689,22 @@ select
 /*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/
 
 /*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/
+
+/*PROVISIONES*/
+#genProvision 
+{
+    background: #3466B4;
+    width: 129px;
+    height: 103px;
+    padding-left: 21px;
+    margin: 102px 45px;
+}
+#genProvision:hover
+{
+    background: #166EB4;
+}
+.formProvisions 
+{
+    margin: -175px 14px;
+}
+

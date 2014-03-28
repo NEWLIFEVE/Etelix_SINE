@@ -409,5 +409,9 @@ class SiteController extends Controller
         }
         echo $tp;
     }
+    public function actionProvisions()
+    {
+        $this->render('Provisions');
+    }
 }
 ?>
