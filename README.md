@@ -2,7 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
-    - Modificado SUMMARY, para que soporte mostrar data de varias semanas. ademas de sus respectivos totales de cuentas por pagar y cuentas por cobrar.
+Release 1.2.9
     - Se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
     - Se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
     - Modificacion en SUMMARY, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
