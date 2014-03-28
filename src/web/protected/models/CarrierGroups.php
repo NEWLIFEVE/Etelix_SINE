@@ -93,7 +93,8 @@ class CarrierGroups extends CActiveRecord
 	 */
 	public static function getNames()
 	{
-		return self::model()->findAll();
+//	    return self::model()->findAll();
+	    return self::model()->findAllBySql("SELECT name FROM carrier_groups WHERE id not in(select id from carrier_groups where name='Unknown_Carrier')");
 	}
 
 	public static function getID($name)
