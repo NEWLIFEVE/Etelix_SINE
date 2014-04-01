@@ -96,12 +96,19 @@ class CarrierGroups extends CActiveRecord
 		return self::model()->findAll();
 	}
 
-	public static function getID($name)
+	/**
+	 *
+	 */
+	public static function getId($name)
 	{
 	    return self::model()->find("name=:name", array(':name'=>$name))->id;
-        }
-        public static function getAllGroups()
-        {
-            return CarrierGroups::model()->findAll();
-        }
+    }
+
+    /**
+     *
+     */
+    public static function getAllGroups()
+    {
+        return CarrierGroups::model()->findAll();
+    }
 }
