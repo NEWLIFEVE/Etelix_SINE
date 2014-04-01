@@ -599,10 +599,11 @@ select
 ,#No_act::-webkit-input-placeholder  ,  #Si_act::-webkit-input-placeholder 
 ,#No_car_act::-webkit-input-placeholder,#Si_car_act::-webkit-input-placeholder 
 ,#No_inter::-webkit-input-placeholder,  #Si_inter::-webkit-input-placeholder 
+,#No_div::-webkit-input-placeholder,  #Si_div::-webkit-input-placeholder 
 {
     color:    #2E62B4;
 }
-#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter,#No_car_act,#Si_car_act
+#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter,#No_car_act,#Si_car_act,#No_div,#Si_div
 {
     width: 12%;
     height: 1.88em!important;
@@ -646,6 +647,16 @@ select
 .type_termino_pago_sum_re
 {
     margin: -105px 219px;
+    position: absolute;
+}
+.termino_pago_refac_reprov
+{
+    margin: -105px 219px;
+    position: absolute;
+}
+.divide_Factura
+{
+    margin: -4px 0px;
     position: absolute;
 }
 .car_activity 

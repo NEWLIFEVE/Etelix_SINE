@@ -118,47 +118,54 @@ $this->pageTitle = Yii::app()->name;
                 <option value="todos">Todos</option>
             </select> 
         </div>
+        <div class="formInputs divide_Factura">
+            <h3>Fact Divid Por Mes</h3>
+             <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_div" id="Si_div" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_div" id="No_div" placeholder="No" type="text" value=""class="btn btn-primary">
+             </div> 
+        </div>
         
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provision Fact</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_prov" id="Si_prov" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_prov" id="No_prov" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div> 
         <div class='formInputs disputas'>
             <h3>Disputas</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div>
         <div class='formInputs vencidas'>
             <h3>Venc +2sem</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_venc" id="Si_venc" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_venc" id="No_venc" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_venc" id="Si_venc" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_venc" id="No_venc" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div>
         <div class='formInputs no_activity'>
             <h3>Carrier Sin Mov 6M</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_act" id="Si_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_act" id="No_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_act" id="Si_act" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_act" id="No_act" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div>
         <div class='formInputs car_activity'>
             <h3>Carrier Inactivos</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_car_act" id="Si_car_act" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_car_act" id="No_car_act" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_car_act" id="Si_car_act" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_car_act" id="No_car_act" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div>
         <div class='formInputs intercompany'>
             <h3>Intercompañia</h3>
             <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_inter" id="Si_inter" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
+                <input name="Si_inter" id="Si_inter" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">
             </div>  
         </div>
         <div class='formInputs note'>
