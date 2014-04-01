@@ -1,12 +1,35 @@
 <?php
 date_default_timezone_set('America/Caracas');
-// change the following paths if necessary
+//Definimos nuestro servidor de produccion
+define('SERVER_NAME_PROD','s1248-101');
+//Definimos el directorio de desarrollo
+define('DIRECTORY_NAME_PRE_PROD','dev_sine');
+//Obtenemos el nombre del servidor actual
+$server=gethostname();
+if($server==SERVER_NAME_PROD)
+{
+	$server=dirname(__FILE__);
+	$nuevo=explode(DIRECTORY_SEPARATOR,$server);
+	$num=count($nuevo);
+	if($nuevo[$num-3]==DIRECTORY_NAME_PRE_PROD)
+	{
+		defined('YII_DEBUG') or define('YII_DEBUG',true);
+		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+	}
+	else
+	{
+		defined('YII_DEBUG') or define('YII_DEBUG',false);
+		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',0);
+	}
+}
+else
+{
+	defined('YII_DEBUG') or define('YII_DEBUG',true);
+	defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+}
+
 $yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
 $config=dirname(__FILE__).'/protected/config/console.php';
-// remove the following lines when in production mode
-//defined('YII_DEBUG') or define('YII_DEBUG',true);
-// specify how many levels of call stack should be shown in each log message
-//defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
 require_once($yii);
 Yii::createConsoleApplication($config)->run();
