@@ -118,4 +118,21 @@ class Carrier extends CActiveRecord
 	{
 		return self::model()->findAll();
 	}
+
+	/**
+	 * Retorna el id de un carrier solicitado
+	 * @access public
+	 * @static
+	 * @param string $carrier
+	 * @return int
+	 */
+	public static function getId($name)
+	{
+		if($name!=null)
+		{
+			$carrier=self::model()->find('name=:name',array(':name'=>$name));
+			if($carrier!=null) return $carrier->id;
+			else return false;
+		}
+	}
 }
