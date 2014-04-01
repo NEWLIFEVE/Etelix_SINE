@@ -15,7 +15,13 @@ class Provisions extends CApplicationComponent
 	 * Contiene el id de carrier en caso de ser provisiones para un solo carrier
 	 * @var int
 	 */
-	public $carrier;
+	public $carriers;
+
+	/**
+	 * Contiene el nombre del grupo introducido por parametros
+	 * @var string
+	 */
+	public $group;
 
 	/**
 	 * Contiene el array con las provisiones de trafico enviado encontradas en el balance
@@ -59,16 +65,24 @@ class Provisions extends CApplicationComponent
 	public function init() 
     {
        $this->numTrafficSend=$this->numTrafficReceived=0;
-       $this->carrier=null;
+       $this->carriers=$this->group=null;
     }
 
     /**
      * Metodo encargado de correr las provisiones
      * @access public
      */
-    public function run($dateSet=null,$carrier=null)
+    public function run($dateSet=null,$group=null)
     {
-    	if($carrier!=null) $this->carrier=Carrier::getId($carrier);
+    	if($group!=null)
+    	{
+    		$this->group=$group;
+    		$this->carriers=Carrier::model()->findAll('id_carrier_groups=:id',array(':id'=>CarrierGroups::getId($group)));
+    	}
+    	else
+    	{
+    		$this->carriers=Carrier::model()->findAll();
+    	}
 
     	$this->getDate($dateSet);
     	//Obtengo la data de clientes
@@ -111,7 +125,7 @@ class Provisions extends CApplicationComponent
 		if($type) $data=array('title'=>'cliente','id'=>'id_carrier_customer','margin'=>'CASE WHEN ABS(SUM(cost+margin))<ABS(SUM(revenue)) THEN SUM(cost+margin) ELSE SUM(revenue) END','variable'=>'invoicesSent');
 
 		$one="";
-		if($this->carrier!==null && $this->carrier!==false) $one="AND {$data['id']}={$this->carrier}";
+		if($this->group!==null && $this->group!==false) $one="AND {$data['id']} IN(".$this->_carriers().")";
 
 		$sql="SELECT {$data['id']} AS id, date_balance, SUM(minutes) AS minutes, {$data['margin']} AS margin
 			  FROM balance
@@ -139,25 +153,21 @@ class Provisions extends CApplicationComponent
 		$currency=Currency::model()->find("name='$'")->id;
 
 		$this->$data['num']=$num=count($this->$data['variable']);
-		var_dump($num,$data['variable']);
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
-			if($factura->margin!=0)
-			{
-				$this->_deleteProvision($factura->date_balance,$factura->date_balance,$factura->id,$type_document);
-				if($key>0 && $key<$num) $values.=",";
-				$values.="(";
-				$values.="'".$factura->date_balance."',";
-				$values.="'".$factura->date_balance."',";
-				$values.="'".$factura->date_balance."',";
-				$values.=$factura->minutes.",";
-				$values.=$factura->margin.",";
-				$values.=$type_document.",";
-				$values.=$factura->id.",";
-				$values.=$currency.",";
-				$values.="1";
-				$values.=")";
-			}
+			$this->_deleteProvision($factura->date_balance,$factura->date_balance,$factura->id,$type_document);
+			if($key>0 && $key<$num) $values.=",";
+			$values.="(";
+			$values.="'".$factura->date_balance."',";
+			$values.="'".$factura->date_balance."',";
+			$values.="'".$factura->date_balance."',";
+			$values.=$factura->minutes.",";
+			$values.=$factura->margin.",";
+			$values.=$type_document.",";
+			$values.=$factura->id.",";
+			$values.=$currency.",";
+			$values.="1";
+			$values.=")";
 		}
 		$sql="INSERT INTO accounting_document(issue_date, from_date, to_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
 			  VALUES ".$values;
@@ -181,35 +191,21 @@ class Provisions extends CApplicationComponent
 	 */
 	public function runInvoiceProvision($type=true)
 	{
-		$model=Carrier::model()->findAll();
+		
 		if($type)
 		{
-			if($this->carrier)
+			foreach ($this->carriers as $key => $carrier)
 			{
-				$this->_generateInvoiceProvisionCustomer($this->carrier);
-			}
-			else
-			{
-				foreach ($model as $key => $carrier)
-				{
-					$this->_generateInvoiceProvisionCustomer($carrier->id);
-				}
+				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
 			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
 		{
-			if($this->carrier)
+			foreach ($this->carriers as $key => $carrier)
 			{
-				$this->_generateInvoiceProvisionSupplier($this->carrier);
-			}
-			else
-			{
-				foreach ($model as $key => $carrier)
-				{
-					$this->_generateInvoiceProvisionSupplier($carrier->id);
-				}
+				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
 			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
@@ -326,9 +322,9 @@ class Provisions extends CApplicationComponent
 	{
 		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
 
-		$typeProvisions['traffic']=TypeAccountingDocument::model()->find($data['condition'])->id;
-		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
-		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
+		$typeProvisions['traffic']=TypeAccountingDocument::model()->find("name='Provision Trafico Recibida'")->id;
+		$typeProvisions['invoice']=TypeAccountingDocument::model()->find("name='Provision Factura Recibida'")->id;
+		$typeProvisions['real']=TypeAccountingDocument::model()->find("name='Factura Recibida'")->id;
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
 		$typeProvisions['num']="numInvoicesReceived";
 
@@ -348,6 +344,7 @@ class Provisions extends CApplicationComponent
 		if($carrier=="BSG-SHARE")
 		{
 			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-27";
+			if(DateManagement::separatesDate($this->date)['month']=="12") $tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-25";
 			if($tempdate===$this->date)
 			{
 				$firstDay=DateManagement::getDayOne($this->date);
@@ -357,7 +354,8 @@ class Provisions extends CApplicationComponent
 			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
 			if($tempdate===$this->date)
 			{
-				$firstDay=$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-28";
+				$firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-28";
+				if(DateManagement::separatesDate($this->date)['month']=="12") $firstDay=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-26";
 				$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
 				//var_dump("Generando factura de BSH SHARE del ".$firstDay." al ".$this->date);
 			}
@@ -596,7 +594,8 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _deleteProvision($startDate,$endDate,$idCarrier,$typeProvision)
 	{
-		return AccountingDocumentProvisions::model()->delete('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvision));
+		var_dump($startDate,$endDate,$idCarrier,$typeProvision);
+		return AccountingDocumentProvisions::model()->deleteAll('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvision));
 	}
 
 	/**
@@ -617,6 +616,21 @@ class Provisions extends CApplicationComponent
 			}
 		}
 		return (int)$day;
+	}
+
+	/**
+	 * 
+	 */
+	private function _carriers()
+	{
+		$body="";
+		$num=count($this->carriers);
+		foreach ($this->carriers as $key => $carrier)
+		{
+			if($key>0 && $key<$num) $body.=",";
+			$body.=$carrier->id;
+		}
+		return $body;
 	}
 }
 ?>
