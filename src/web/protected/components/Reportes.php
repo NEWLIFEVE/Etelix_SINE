@@ -921,6 +921,50 @@ class Reportes extends CApplicationComponent
             }
         }
         /**
+         * EN EL CASO DE THIS WEEK ENCUENTRA DATOS DE DUE Y NEXT Y SI ESTA EN EL RANFO DE FECHA LO UBICA EN THIS WEEK. ESTO ES DEBIDO A QUE ALGUNAS FACTURAS VENCEN EN THIS WEEK, PERO OTRAS YA ESTAN VENCIDAS
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @return string
+         */    
+        public static function defineValueThisNext($valueResult,$valueNext,$dueDateNext, $date)
+        {
+            if($valueResult==""||$valueResult==NULL){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext;
+                }else{
+                    return "";
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+        /**
+         * DEFINE LOS ACUMULADOS PARA THIS WEEK CON DUE Y NEXT
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @param type $acum
+         * @return type
+         */
+        public static function defineAcumsThisWeek($valueResult,$valueNext,$dueDateNext, $date, $acum)
+        {
+            if($valueResult==$acum){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext+$acum;
+                }else{
+                    return $acum;
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+
+        /**
          * METODO ENCARGADO DE DESVIAR LOS MONTOS DEPENDIENDO (SI ES NEGATIVO O POSITIVO) PARA EL CALCULO DE TOTALES EN SUMMARY
          * @param type $value
          * @param type $var
