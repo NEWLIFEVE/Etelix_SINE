@@ -20,6 +20,17 @@ class DateManagement
 		$newDate=strtotime($days.' day',strtotime($date));
 		return date('Y-m-d',$newDate);
 	}
+        /**
+         * se encarga de sumar o restar semanas
+         * @param type $week
+         * @param type $date
+         * @return type
+         */
+	public static function calculateWeek($week,$date)
+	{
+		$newDate=strtotime($week.' week',strtotime($date));
+		return date('Y-m-d',$newDate);
+	}
 
 	/**
 	 * Metodo que lleva a dia uno cualquier fecha pasada como parametro
@@ -42,6 +53,37 @@ class DateManagement
     {
         $date=strtotime($date);
         return (int)date('N',$date);
+    }
+    /**
+     * retorna el numero de semana de la fecha que se le pase
+     * @param type $date
+     * @return null
+     */
+    public static function getNumberWeek($date)
+    {
+        if($date!=null)
+             return date('W', strtotime($date));
+        else
+            return NULL;
+    }
+    /**
+     * retorna dependiendo de '$typeDay' una fecha con el primer o el ultimo dia de la semana que se le pasa por '$date'
+     * @param type $date
+     * @param type $typeDay
+     * @return type
+     */
+    public static function firstOrLastDayWeek($date,$typeDay)
+    {
+        if($date!=NULL){
+            $month=date("m",strtotime($date));
+            $day=date("d",strtotime($date));
+            $diaSemana=date("N",strtotime($date));
+            $year=date("Y",strtotime($date));
+            if($typeDay=="first")                    # A la fecha recibida, le restamos el dia de la semana y se obtiene una fecha con el "d"igual a lunes
+                 return date("Y-m-d",mktime(0,0,0,$month,$day-$diaSemana+1,$year));
+              else                                   # A la fecha recibida, le sumamos el dia de la semana menos siete y obtendremos el  "d"igual a domingo
+                 return date("Y-m-d",mktime(0,0,0,$month,$day+(7-$diaSemana),$year));  
+        }
     }
 
     /**

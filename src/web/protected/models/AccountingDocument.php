@@ -73,6 +73,7 @@ class AccountingDocument extends CActiveRecord
         public $last_pago_cobro;
         public $last_date_pago_cobro;
         public $type_c_p;
+        public $active;
 	/**
 	 * @return string the associated database table name
 	 */

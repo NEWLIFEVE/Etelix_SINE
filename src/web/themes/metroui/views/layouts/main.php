@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div id="footer">
-                Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.2.7
+                Copyright &copy; <?php echo date('Y'); ?> SACET All Rights Reserved. Version 1.2.8
             </div>
             <div class="clear"></div>
         </div>

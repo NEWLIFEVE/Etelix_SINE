@@ -24,12 +24,12 @@ class reteco extends Reportes
         $documents=  self::getData($carActived,$typePaymentTerm,$paymentTerm);
         $body="<table>
           <tr>
-              <td colspan='2'>
-                  <h1>RETECO</h1>
+              <td colspan='4'>
+                  <h1>RETECO  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
               </td>
-              <td colspan='11'>  AL ".date("Y-m-d")." </td>
+              <td colspan='9'>  AL ".date("Y-m-d")." </td>
           <tr>
-              <td colspan='11'></td>
+              <td colspan='10'></td>
           </tr>
          </table>
          <table style='width: 100%;border:1px solid black;'>
@@ -52,33 +52,20 @@ class reteco extends Reportes
             $body.="<tr>
                         <td {$styleRowsNumb} > {$pos} </td>
                         <td {$styleRowBasic} > ".$document->carrier." </td>
-                        <td ".self::defineStyleNeed($document->group)."> ".$document->group." </td>
-                        <td {$styleRowActiv}> ".self::defineActive($document->active)." </td>
-                        <td ".self::defineStyleNeed($document->sign_date)."> ".Utility::formatDateSINE($document->sign_date,"Y-m-d")." </td>
-                        <td ".self::defineStyleNeed($document->production_date)."> ".Utility::formatDateSINE($document->production_date,"Y-m-d")." </td>
-                        <td ".self::defineStyleNeed($document->sign_date_tp)."> ".Utility::formatDateSINE($document->sign_date_tp,"Y-m-d")." </td>
-                        <td ".self::defineStyleNeed($document->payment_term)."> ".$document->payment_term." </td>
-                        <td ".self::defineStyleNeed($document->sign_date_tps)."> ".Utility::formatDateSINE($document->sign_date_tps,"Y-m-d")." </td>
-                        <td ".self::defineStyleNeed($document->payment_term_s)."> ".$document->payment_term_s." </td>
+                        <td ".Reportes::defineStyleNeed($document->group)."> ".$document->group." </td>
+                        <td {$styleRowActiv}> ".Reportes::defineActive($document->active)." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date)."> ".Utility::formatDateSINE($document->sign_date,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->production_date)."> ".Utility::formatDateSINE($document->production_date,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date_tp)."> ".Utility::formatDateSINE($document->sign_date_tp,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->payment_term)."> ".$document->payment_term." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date_tps)."> ".Utility::formatDateSINE($document->sign_date_tps,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->payment_term_s)."> ".$document->payment_term_s." </td>
                         <td {$styleRowsNumb} > {$pos} </td>
                     </tr>";
         }
-          return $body;
+        return $body;
     }
-    public static function defineActive($var)
-    {
-        if($var!="16")
-            return "";
-        else
-            return "x";
-    }
-    public static function defineStyleNeed($var)
-    {
-        if($var==NULL||$var=="Sin estatus")
-            return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
-        else 
-            return "style='background:white;color:black;border:1px solid black;text-align:left;'";
-    }
+
     public static function getData($carActived=TRUE,$typePaymentTerm,$paymentTerm)
     {
         if($carActived)
@@ -169,6 +156,7 @@ class reteco extends Reportes
                    AND ctps.id_termino_pago_supplier=tp.id) AS payment_term_s
             FROM carrier car, carrier_managers cm {$tableNext}
             WHERE cm.id_carrier=car.id
+              AND car.id NOT IN(select id from carrier where name='Unknown_Carrier')
               AND cm.end_date IS NULL {$carActived} AND cm.id_carrier IS NOT NULL
                   {$wherePaymentTerm}
             ORDER BY carrier, payment_term ASC";

@@ -31,9 +31,9 @@ class Reportes extends CApplicationComponent
      * @param type $PaymentTerm
      * @return type
      */
-    public function summary($date,$intercompany,$no_activity,$PaymentTerm)
+    public function summary($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
     {
-        $var=summary::report($date,$intercompany,$no_activity,$PaymentTerm);
+        $var=summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
         return $var;
     }
     /**
@@ -87,12 +87,12 @@ class Reportes extends CApplicationComponent
      * @param type $fecha_from
      * @param type $fecha_to
      * @param type $tipo_report
-     * @return type
+     * @return type   
      */
-    public function recredi($date,$intercompany,$no_activity,$PaymentTerm)
+    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
     {
         $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity,$PaymentTerm);
+        return $var->report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -110,7 +110,7 @@ class Reportes extends CApplicationComponent
     public static function define_grupo($grupo)
     {    
         if($grupo=="CABINAS PERU")  
-            return "id_carrier_groups=301 OR id_carrier_groups=443";
+            return "id_carrier_groups IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
         else   
             return "id_carrier_groups=".CarrierGroups::getID($grupo)."";
     }
@@ -849,5 +849,185 @@ class Reportes extends CApplicationComponent
                }
             }
         }
+        /**
+         * metodos generales para RETECO, RECREDI Y SUMMARY
+         */
+        
+         /**   se usa para summary y reteco
+         * DEFINE SI EL CARRIER ESTA ACTIVO O NO
+         * @param type $var
+         * @return string
+         */
+        public static function defineActive($var)
+        {
+            if($var!="16")
+                return "";
+            else
+                return "x";
+        }
+        /**
+         * DEVUELVE EL NOMBRE COMPLEMENTARIO PARA LOS REPORTES DEPENDIENDO EL TERMINO PAGO
+         * @param type $PaymentTerm
+         * @return string
+         */
+        public static function defineNameExtra($PaymentTerm,$relation)
+        {
+            if($PaymentTerm=="todos"){ 
+                return "GENERAL";
+            }else{
+                if($relation===FALSE)
+                   return "CUSTOMER ".TerminoPago::getModelFind($PaymentTerm)->name;
+
+                if($relation===TRUE)
+                   return "SUPPLIER ".TerminoPago::getModelFind($PaymentTerm)->name;
+            }
+        }
+        /**
+         *  metodos para SUMMARY
+         */
+        /**
+         * METODO ENCARGADO DE DEFINIR LOS ACUMULADOS
+         * @param type $value
+         * @param type $dueDate
+         * @param type $date
+         * @param type $firstWeek
+         * @param type $lastWeek
+         * @param type $prev
+         * @param type $acum
+         * @return type
+         */
+        public static function defineAcums($value,$dueDate,$date, $firstWeek, $lastWeek, $prev, $acum)
+        {
+            if($firstWeek==NULL && $lastWeek==NULL){
+                if($prev=="prev"){
+                    if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
+                        return $acum+$value;
+                    }else{
+                        return $acum;
+                    }
+                }else{
+                    if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
+                        return $acum+$value;
+                    }else{
+                        return $acum;
+                    }
+                }
+            }else{
+                if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
+                    return $acum+$value;
+                }else{
+                    return $acum;
+                }
+            }
+        }
+        /**
+         * METODO ENCARGADO DE DESVIAR LOS MONTOS DEPENDIENDO (SI ES NEGATIVO O POSITIVO) PARA EL CALCULO DE TOTALES EN SUMMARY
+         * @param type $value
+         * @param type $var
+         * @return int
+         */
+        public static function defineLessOrHigher($value, $var)
+        {
+            if($var==FALSE){
+                if($value<0)
+                    return $value;
+                else
+                    return 0;
+            }else{
+                if($value>=0)
+                    return $value;
+                else
+                    return 0;
+            }
+        }
+ 
+        /**
+         * METODO ENCARGADO DE POSICIONAR LOS MONTOS Y LOS DUE_DATE DEPENDIENDO DE LA SEMANA
+         * @param type $value
+         * @param type $dueDate
+         * @param type $date
+         * @param type $firstWeek
+         * @param type $lastWeek
+         * @param type $prev
+         * @return string
+         */
+        public static function defineValueTD($value,$dueDate,$date, $firstWeek, $lastWeek, $prev)
+        {
+            if($firstWeek==NULL && $lastWeek==NULL){
+                if($prev=="prev"){
+                    if(DateManagement::firstOrLastDayWeek($dueDate,"first") < DateManagement::firstOrLastDayWeek($date,"first")){
+                        return $value;
+                    }else{
+                        return "";
+                    }
+                }else{
+                    if(DateManagement::firstOrLastDayWeek($dueDate,"first") == DateManagement::firstOrLastDayWeek($date,"first")){
+                        return $value;
+                    }else{
+                        return "";
+                    }
+                }
+            }else{
+                if($dueDate>=$firstWeek && $dueDate<=$lastWeek){
+                    return $value;
+                }else{
+                    return "";
+                }
+            }
+        }
+        /**
+         * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD
+         * @param type $dateModel
+         * @param type $date
+         * @return string
+         */
+        public static function defineStyleOld($dateModel,$date)
+        {
+            if(DateManagement::firstOrLastDayWeek($dateModel,"first") == DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date),"first"))
+                return "#FCD746";
+            else
+                return "#fff";
+        }
+        /**
+         * DEFINE COLOR Y SIGNO PARA DISTINGUIR PAGOS Y COBROS
+         * @param type $model
+         * @param type $attr
+         * @return string
+         */
+        public static function definePaymCollect($model,$attr)
+        {
+            if($attr=="value"){
+                if($model->type_c_p=="Pago")
+                    return "-".$model->last_pago_cobro;
+                else 
+                    return $model->last_pago_cobro;
+            }else{
+                if($model->type_c_p=="Pago")
+                     return "red";
+                 else 
+                     return "#6F7074";
+            }
+        }
+        /**
+         * fin metodos SUMMARY
+         */
+        /**
+         * RETECO
+         */
+        /**
+         * SE ENCARGA DE DEFINIR ESTILOS PARA RETECO
+         * @param type $var
+         * @return string
+         */
+        public static function defineStyleNeed($var)
+        {
+            if($var==NULL)
+                return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
+            else 
+                return "style='background:white;color:black;border:1px solid black;text-align:left;'";
+        }
+        /**
+         * fin RETECO
+         */
 }
 ?>

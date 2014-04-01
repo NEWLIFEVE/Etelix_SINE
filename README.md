@@ -2,6 +2,20 @@
 ============
 
 Sistema de Reportes para Billing
+    - se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
+    - se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
+    - modificacion en summary, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
+    - cambios en la forma como se muestra el nombre de los reportes reteco, summary y recredi.
+    - modificacion de comportamiento de select termino pago en recredi, summary y reteco.
+    - cambio de indicadores para el termino pago. 
+Realese 1.2.8
+    - Default los inputs de soa, balance, sumary y reteco.
+    - Arreglado Due_date y Monto Due en Summary.
+    - Arreglado calculo de dias vencidos y por vencer.
+    - recredi mejorado.
+    - nuevos filtros para recredi y summary
+    - Agregado dias vencidos y por vencer en Summary.
+
 
 Realese 1.2.7
     - Nombre de Carrier en SOA y BALANCE
@@ -58,9 +72,9 @@ Realese 1.0.1
        - Eliminado due date para pagos y cobros y saldo inicial
        - Ordenado por Issue_date y el periodo de facturación.
 Release 1.0
-    - Reporte SOA funcionando sin provisiones
+       - Reporte SOA funcionando sin provisiones
 Release 0.0.1
-    - Reporte SOA
+       - Reporte SOA
 
 
 
