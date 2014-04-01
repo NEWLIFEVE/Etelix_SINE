@@ -15,6 +15,7 @@ switch ($server)
     case SERVER_NAME_DEV:
     default:
         $server_db='localhost';
+        $user_db='postgres';
         $sori_db='sori';
         $pass_db='123';
         break;
@@ -84,7 +85,7 @@ return array(
         'db'=>array(
             'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sori_db,
             'emulatePrepare'=>true,
-            'username'=>'postgres',
+            'username'=>$user_db,
             'password'=>$pass_db,
             'charset'=>'utf8',
             ),
