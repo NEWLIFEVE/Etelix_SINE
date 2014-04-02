@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+    - Modificacion de soa y balance para que muestre facturas y demas documentos que esten repetidos.
     - Agregados totales de minutos para refac y reprov.
     - Agregada nota que indica al usuario que debe seleccionar el ultimo dia del periodo de facturacion en el datepicker para refac y reprov.
     - Solucionados detalles en summary.
