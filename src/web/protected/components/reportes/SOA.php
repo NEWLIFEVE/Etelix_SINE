@@ -317,5 +317,4 @@
                  return $model->due_date;     
         }
     }
-
     ?>

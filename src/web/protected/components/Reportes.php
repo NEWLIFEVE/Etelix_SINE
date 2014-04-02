@@ -207,10 +207,10 @@ class Reportes extends CApplicationComponent
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
             case "2":
-                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "1":
-                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "7":case "8":   //hay que mejoprarlo, tengo la idea, pero mejor discutirlo antes
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -228,6 +228,13 @@ class Reportes extends CApplicationComponent
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
         }
         return $description;
+    }
+    public static function defineFormatPeriod($model)
+    {
+        if(Utility::formatDateSINE($model->from_date,"M-")==Utility::formatDateSINE($model->to_date,"M-"))
+            return " d";
+        else
+            return "M-d";
     }
 
     /**
@@ -634,7 +641,7 @@ class Reportes extends CApplicationComponent
         }
         elseif($model->id_type_accounting_document==9 && $model->amount<0)
         {
-            return $acumuladoFacRec - ($model->amount*-1);
+            return $acumuladoFacRec + ($model->amount*-1);
         }
         elseif($model->id_type_accounting_document==8)
         {

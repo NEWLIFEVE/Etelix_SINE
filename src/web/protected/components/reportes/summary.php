@@ -48,7 +48,7 @@ class summary extends Reportes
         $lastWeekThree=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+3", $date), "last");
         $firstWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "first");
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
-        $last_pago_cobro=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
+        $last_payment_collect=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
         $soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=$soaWeekThreeLess=$soaWeekFourLess=0;
         $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=0;
         $dueDaysDue=$dueDaysNext="";
@@ -111,7 +111,7 @@ class summary extends Reportes
             $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document,"style")."'";
             $styleOldDate="style='border:1px solid silver;text-align: center;color:#6F7074;background:".Reportes::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
-            $last_pago_cobro+=$document->last_pago_cobro;
+            $last_payment_collect+=$document->last_pago_cobro;
             
             $soaPrevLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevLess);
             $soaThisWeekLess=Reportes::defineAcumsThisWeek(Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekLess),Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next, $date, $soaThisWeekLess);
@@ -171,7 +171,7 @@ class summary extends Reportes
                  </tr>";
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
+                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_payment_collect)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
                     <td {$styleNull} ></td>
