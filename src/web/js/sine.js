@@ -166,7 +166,7 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
-        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
+        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro'],
         nombre=obj[0].id;
         switch (nombre){
             case "soa":
@@ -194,7 +194,7 @@ $SINE.UI=(function()
                   $(".termino_pago_sum_re").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re");
               break; 
             case "refac":
-                var mostrar =['.periodo,.fecha']; 
+                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "waiver":
@@ -214,7 +214,7 @@ $SINE.UI=(function()
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "refi_prov": 
-                var mostrar =['.periodo,.fecha']; 
+                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break;
             case "redis": 
