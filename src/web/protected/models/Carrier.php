@@ -119,4 +119,21 @@ class Carrier extends CActiveRecord
 //		return self::model()->findAll();
             return self::model()->findAllBySql("SELECT name FROM carrier_groups WHERE id not in(select id from carrier where name='Unknown_Carrier')");
 	}
+
+	/**
+	 * Retorna el id de un carrier solicitado
+	 * @access public
+	 * @static
+	 * @param string $carrier
+	 * @return int
+	 */
+	public static function getId($name)
+	{
+		if($name!=null)
+		{
+			$carrier=self::model()->find('name=:name',array(':name'=>$name));
+			if($carrier!=null) return $carrier->id;
+			else return false;
+		}
+	}
 }

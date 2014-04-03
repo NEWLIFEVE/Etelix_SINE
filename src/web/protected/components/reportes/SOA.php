@@ -147,7 +147,7 @@
            $group=Reportes::define_grupo($group);
             $sql="SELECT *
                     FROM(/*me traigo todos los documentos, menos facturas*/
-                    SELECT issue_date, valid_received_date, doc_number, from_date, to_date, g.name AS group,
+                    SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
                            CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                       FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                       WHERE a.id_carrier IN(Select id from carrier where $group)
@@ -160,7 +160,7 @@
                {$dispute}     
                UNION
                     /*me traigo facturas enviadas*/
-                SELECT issue_date, valid_received_date, doc_number, from_date, to_date, g.name AS group,
+                SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
                            CASE WHEN (SELECT tp.expiration
                          FROM carrier c,
                             (SELECT id, sign_date, production_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_carrier, id_company, up, bank_fee
@@ -233,7 +233,7 @@
 
              UNION/*me traigo facturas recibidas*/
              
-                SELECT issue_date, valid_received_date, doc_number, from_date, to_date, g.name AS group,
+                SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
                       CASE WHEN (SELECT tp.expiration
                         FROM carrier c, 
                              (SELECT id, sign_date, production_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_carrier, id_company, up, bank_fee
@@ -317,5 +317,4 @@
                  return $model->due_date;     
         }
     }
-
     ?>

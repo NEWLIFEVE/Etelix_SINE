@@ -684,6 +684,10 @@ select
 {
     color:red!important;
 }
+.note_ref_pro 
+{
+    display: -webkit-inline-box;
+}
 /*....*/
 
 /*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/
