@@ -179,7 +179,11 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
+<<<<<<< HEAD
         var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_Factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
+=======
+        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro'],
+>>>>>>> dev
         nombre=obj[0].id;
         switch (nombre){
             case "soa":
@@ -206,8 +210,13 @@ $SINE.UI=(function()
                   $(".type_termino_pago_sum_re").addClass("type_termino_pago"),$(".type_termino_pago").removeClass("type_termino_pago_sum_re");
                   $(".termino_pago_sum_re,.termino_pago_refac_reprov").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re termino_pago_refac_reprov");
               break; 
+<<<<<<< HEAD
             case "refac":case "refi_prov":
                 var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov']; 
+=======
+            case "refac":
+                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
+>>>>>>> dev
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $(".label_custom_supplier").html("Termino Pago");
                   $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
@@ -228,6 +237,13 @@ $SINE.UI=(function()
                 var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
+<<<<<<< HEAD
+=======
+            case "refi_prov": 
+                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
+                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+              break;
+>>>>>>> dev
             case "redis": 
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
