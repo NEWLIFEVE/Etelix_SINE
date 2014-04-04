@@ -79,7 +79,7 @@ $this->pageTitle = Yii::app()->name;
             <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
         </div>
         <div class="note_ref_pro">
-            <h3 class="h3_note">Seleccione el ultimo dia del ciclo</h3> 
+            <h3 class="h3_note instructive">Seleccione el ultimo dia del ciclo</h3> 
         </div>
         <div class="formInputs filter_oper">
             <h3>Mostrar Operadores</h3>
@@ -118,11 +118,11 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs termino_pago">
             <h3 class="label_custom_supplier">Termino Pago</h3>
             <select name="id_termino_pago" id="id_termino_pago">
-                <option value="todos">Todos</option>
+                <option value="">Seleccione</option>
             </select> 
         </div>
-        <div class="formInputs divide_Factura">
-            <h3>Fact Divid Por Mes</h3>
+        <div class="formInputs divide_factura">
+            <h3 class="label_divided">Mostrar carriers que dividen por mes</h3>
              <div class="btn-group" data-toggle="buttons-radio">
                 <input name="Si_div" id="Si_div" type="text" placeholder="Si" value=""class="btn btn-primary">
                 <input name="No_div" id="No_div" placeholder="No" type="text" value=""class="btn btn-primary">

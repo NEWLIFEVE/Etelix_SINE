@@ -626,6 +626,7 @@ select
 {
     /*margin-right: 16%;*/
     position: absolute!important;
+    margin: 24px 0px;
 }
 .termino_pago
 {
@@ -654,9 +655,9 @@ select
     margin: -105px 219px;
     position: absolute;
 }
-.divide_Factura
+.divide_factura
 {
-    margin: -4px 0px;
+    margin: 29px 0px;
     position: absolute;
 }
 .car_activity 
@@ -695,9 +696,18 @@ select
 {
     color:red!important;
 }
+.instructive
+{
+    color:#06ACFA !important;
+}
 .note_ref_pro 
 {
-    display: -webkit-inline-box;
+    margin: -17px 9px;
+    position: absolute;
+}
+.label_divided 
+{
+    width: 52%;
 }
 /*....*/
 

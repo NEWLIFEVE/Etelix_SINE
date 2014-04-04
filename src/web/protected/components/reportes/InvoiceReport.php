@@ -8,72 +8,78 @@ class InvoiceReport extends Reportes
     /**
      * @access public
      * @static
-     * @param date $fecha_from
-     * @param date $fecha_to
-     * @param string $tipo_report
+     * @param date $fromDate
+     * @param date $toDate
+     * @param string $typeReport
      */
-    public static function reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm=null)
+    public static function reporte($fromDate,$toDate,$typeReport,$paymentTerm=null,$dividedInvoice)
     {
         //Fecha que va en el reporte
         $fecha=date('Y-m-d');
         //Estilos
-        $style_title="style='background:#96B6E6;text-align:center;'";
-        $style_description="style='background:silver;text-align:center;'";
-        $style_provisiones="style='border:1px solid black;background:#E99241;text-align:center;'";
-        $style_sori="style='border:1px solid black;background:#96B6E6;text-align:center;'";
-        $style_diference="style='border:1px solid black;background:#18B469;text-align:center;'";
-        $style_totals="style='border:1px solid black;background:silver;text-align:center;'";
+        $styleDescription="style='border:0px solid silver;text-align:left;background:#fff;color:#06ACFA;'";
+        $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+        $style_provisiones="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $style_sori="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
+        $style_diference="style='border:1px solid silver;background:#18B469;text-align:center;color:white;'";
+        $style_totals="style='border:1px solid silver;background:silver;text-align:center;'";
+        $style_date_null="style='background:white;text-align:center;color:silver'";
         $acumulado_factura=$acumulado_provisiones=$acumulado_diference=$acumulado_factura_min=$acumulado_provisiones_min=$acumulado_diference_min=0;
         //Traigo las Provisiones de base de datos
-        $documents=self::getModel($fecha_from, $fecha_to,$tipo_report,$paymentTerm);
+        $documents=self::getModel($fromDate, $toDate,$typeReport,$paymentTerm,$dividedInvoice);
         
-        $reporte="<table>
+        $reporte="<table style='width: 100%;'>
                     <tr rowspan='2'>
-                        <td colspan='10'></td>
+                        <td colspan='12'></td>
                     </tr>
                     <tr>
-                        <td ".$style_title." colspan='10'><b>".$tipo_report." ".Reportes::define_num_dias($fecha_from,$fecha_to)." ".str_replace("-","",$fecha_from)." - ".str_replace("-","",$fecha_to)." al ".str_replace("-","",$fecha)."</b></td>
+                        <td colspan='12'><h1>".$typeReport."</h1>".str_replace("-","",$fromDate)." - ".str_replace("-","",$toDate)." al ".str_replace("-","",$fecha)."</td>    
                     </tr>
                     <tr>
-                        <td colspan='10'></td>
+                        <td colspan='12'></td>
                     </tr>
                     <tr>
-                        <td ".$style_title."><b>TIPO DE FACTURACION</b></td>
-                        <td ".$style_description." colspan='3'>".Reportes::define_num_dias($fecha_from,$fecha_to)."</td>
-                        <td colspan='6'></td>
+                        <td colspan='3'>TIPO DE FACTURACION</td>
+                        <td {$styleDescription}colspan='3'>".Reportes::define_num_dias($fromDate,$toDate)."</td>
+                        <td colspan='7'></td>
                     </tr>
                     <tr>
-                        <td colspan='10'></td>
+                        <td colspan='12'></td>
                     </tr>
                     <tr>
-                        <td ".$style_title."><b>PERIODO</b></td>
-                        <td ".$style_description." colspan='3'>".Utility::formatDateSINE($fecha_from,"F j")." - ".Utility::formatDateSINE($fecha_to,"F j")."</td>
-                        <td colspan='6'></td>
+                        <td colspan='3'>PERIODO</td>
+                        <td {$styleDescription}colspan='3'>".Utility::formatDateSINE($fromDate,"F j")." - ".Utility::formatDateSINE($toDate,"F j")."</td>
+                        <td colspan='7'></td>
                     </tr>
                     <tr>
-                        <td colspan='10'></td>
+                        <td colspan='12'></td>
                     </tr>
                     <tr>
+                        <td {$styleNumberRow} ></td>
                         <td colspan='3'".$style_provisiones."><b>CAPTURA</b></td>
                         <td colspan='4'".$style_sori."><b>FACTURACION SORI</b></td>
                         <td colspan='3'".$style_diference."><b>DIFERENCIAS</b></td>
+                        <td {$styleNumberRow} ></td>
                     </tr>
                     <tr>
-                        <td ".$style_provisiones."><b>OPERADOR</b></td>
-                        <td ".$style_provisiones."><b>MINUTOS</b></td>
-                        <td ".$style_provisiones."><b>MONTO $</b></td>
-                        <td ".$style_sori."><b>OPERADOR</b></td>
-                        <td ".$style_sori."><b>MINUTOS</b></td>
-                        <td ".$style_sori."><b>MONTO</b></td>
-                        <td ".$style_sori."><b>Num FACTURA</b></td>
-                        <td ".$style_diference."><b>OPERADOR</b></td>
-                        <td ".$style_diference."><b>MINUTOS</b></td>
-                        <td ".$style_diference."><b>MONTO</b></td>
+                        <td {$styleNumberRow} >N°</td>
+                        <td ".$style_provisiones.">OPERADOR</td>
+                        <td ".$style_provisiones.">MINUTOS</td>
+                        <td ".$style_provisiones.">MONTO $</td>
+                        <td ".$style_sori.">OPERADOR</td>
+                        <td ".$style_sori.">MINUTOS</td>
+                        <td ".$style_sori.">MONTO</td>
+                        <td ".$style_sori.">Num FACTURA</td>
+                        <td ".$style_diference.">OPERADOR</td>
+                        <td ".$style_diference.">MINUTOS</td>
+                        <td ".$style_diference.">MONTO</td>
+                        <td {$styleNumberRow} >N°</td>
                     </tr>";
         if($documents!=null)
         {
             foreach($documents as $key => $document)
             {
+                $pos=$key+1;
                 $style=self::style($document);
 
                 $acumulado_factura+=$document->fac_amount;
@@ -83,30 +89,46 @@ class InvoiceReport extends Reportes
                 $acumulado_provisiones_min+=$document->minutes;
                 $acumulado_diference_min+=$document->min_diference;
                 $reporte.="<tr>
-                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->minutes,3)."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->amount,3)."</td>
-                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_minutes,3)."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_amount,3)."</td>
-                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->doc_number."</td>
-                            <td style='border:1px solid black;text-align:left;background:{$style}'>".$document->carrier."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->min_diference,3)."</td>
-                            <td style='border:1px solid black;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->monto_diference,3)."</td>
-                           </tr>";
+                            <td {$styleNumberRow} >{$pos}</td>
+                            <td style='border:1px solid silver;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->minutes,3)."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->amount,3)."</td>
+                            <td style='border:1px solid silver;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_minutes,3)."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->fac_amount,3)."</td>
+                            <td style='border:1px solid silver;text-align:left;background:{$style}'>".$document->doc_number."</td>
+                            <td style='border:1px solid silver;text-align:left;background:{$style}'>".$document->carrier."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->min_diference,3)."</td>
+                            <td style='border:1px solid silver;text-align:right;background:{$style}'>".Yii::app()->format->format_decimal($document->monto_diference,3)."</td>
+                            <td {$styleNumberRow} >{$pos}</td>
+                          </tr>";
             }
+        }else{
+            $reporte.="<tr>
+                            <td {$style_date_null} colspan='12'>En este periodo no hay datos registrados</td>
+                          </tr>";
         }
         $reporte.="<tr>
-                    <td $style_provisiones ><b>TOTAL</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_provisiones_min,3)."</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_provisiones,3)."</b></td>
-                    <td $style_sori ><b>TOTAL</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_factura_min,3)."</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_factura,3)."</b></td>
-                    <td $style_sori ></td>
-                    <td $style_diference ><b>TOTAL</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_diference_min,3)."</b></td>
-                    <td $style_totals ><b>".Yii::app()->format->format_decimal($acumulado_diference,3)."</b></td>
+                    <td ></td>
+                    <td $style_provisiones ><b>MINUTOS</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_provisiones_min,3)."</td>
+                    <td $style_sori ><b>MINUTOS</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_factura_min,3)."</td>
+                    <td ></td>
+                    <td $style_diference ><b>MINUTOS</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_diference_min,3)."</td>
+                    <td ></td>
+                   </tr>
+                   <tr>
+                    <td ></td>
+                    <td $style_provisiones ><b>MONTO $</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_provisiones,3)."</td>
+                    <td $style_sori ><b>MONTO $</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_factura,3)."</td>
+                    <td ></td>
+                    <td $style_diference ><b>MONTO $</b></td>
+                    <td $style_totals colspan='2'>".Yii::app()->format->format_decimal($acumulado_diference,3)."</td>
+                    <td ></td>
                    </tr>";
         $reporte.="</table>";
         return $reporte;
@@ -114,17 +136,22 @@ class InvoiceReport extends Reportes
 
     /**
      * ejecuta la consulta para traer el trafico de minutos y monto por cada carrier que pase por el foreach
-     * @access public
-     * @static
-     * @param type $model
-     * @param type $tipo_report
+     * @param type $startDate
+     * @param type $endDate
+     * @param type $typeReport
+     * @param type $paymentTerm
+     * @param type $dividedInvoice
      * @return type
      */
-    private static function getModel($startDate, $endDate,$tipo_report,$paymentTerm=null) 
+    private static function getModel($startDate, $endDate, $typeReport, $paymentTerm=null, $dividedInvoice) 
     {
-        if($paymentTerm==null) $paymentTerm=7;
-        if($tipo_report=="REFAC")
+        $from=">=";
+        $to="<=";
+        $divided="";
+        if($typeReport=="REFAC")
         { 
+            if($paymentTerm==null) 
+                $paymentTerm=7;
             $provision="Provision Factura Enviada";
             $factura="Factura Enviada";
             $carriers="SELECT c.id
@@ -133,11 +160,24 @@ class InvoiceReport extends Reportes
         }
         else
         {
+            if($dividedInvoice != "Si"){
+                if(TerminoPago::getModelFind($paymentTerm)->period==7){
+                    $divided=" AND ctps.month_break NOT IN(1)";
+                    $from="=";
+                    $to="=";
+                }
+            }
             $provision="Provision Factura Recibida";
             $factura="Factura Recibida";
             $carriers="SELECT c.id
                        FROM carrier c, contrato con, contrato_termino_pago_supplier ctps, termino_pago tp
-                       WHERE con.id_carrier=c.id AND con.end_date IS NULL AND ctps.id_contrato=con.id AND ctps.id_termino_pago_supplier=tp.id AND ctps.end_date IS NULL AND tp.period={$paymentTerm}";
+                       WHERE con.id_carrier=c.id 
+                         AND con.end_date IS NULL 
+                         AND ctps.id_contrato=con.id 
+                         AND ctps.id_termino_pago_supplier=tp.id 
+                         AND ctps.end_date IS NULL 
+                         AND tp.id={$paymentTerm}
+                         {$divided}";
         }
         
 
@@ -155,8 +195,8 @@ class InvoiceReport extends Reportes
                             FROM accounting_document
                             WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS doc_number
                     FROM carrier c, accounting_document ad
-                    WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date>='{$startDate}' AND ad.to_date<='{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')
-                    ORDER BY c.name ASC) b";
+                    WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date{$from}'{$startDate}' AND ad.to_date{$to}'{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')
+                    ORDER BY c.name ASC) b ";
         return AccountingDocument::model()->findAllBySql($sql);
     }
 
@@ -165,8 +205,8 @@ class InvoiceReport extends Reportes
      */
     private static function style($document)
     {
-        if($document->fac_amount==null) return '#E99241';
-        if($document->monto_diference>=1||$document->monto_diference<=-1) return '#F8CB3C';
+        if($document->fac_amount==null) return '#FCC089';
+        if($document->monto_diference>=1||$document->monto_diference<=-1) return '#FAE08D';
         return '#ffffff';
     }
 }

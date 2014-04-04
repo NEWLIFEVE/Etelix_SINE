@@ -27,8 +27,8 @@ $SINE.UI=(function()
      */
     function _predefined()
     {
-        $('#No_inter,#No_act,#No_car_act,#No_prov,#No_div').val('No').addClass("active");
-        $('#Si_disp').val('Si').addClass("active");
+        $('#No_inter,#No_act,#No_car_act,#No_prov').val('No').addClass("active");
+        $('#Si_disp,#Si_div').val('Si').addClass("active");
     }
     /**
      * datepicker jquery ui
@@ -53,7 +53,7 @@ $SINE.UI=(function()
                     break;
                 case "id_termino_pago":
                     if($("#tipo_report").val()=="refi_prov"){
-                        $SINE.UI.adminTp($(this).val());
+                        $SINE.UI.adminTp($(this));
                     }else{
                         if($("#type_termino_pago").val()=='null')
                             $SINE.UI.adminInput(("#type_termino_pago"));
@@ -168,9 +168,9 @@ $SINE.UI=(function()
     function adminTp(obj)
     {
         if($(obj).val()=="1"||$(obj).val()=="3"||$(obj).val()=="4"||$(obj).val()=="5")
-            $(".divide_Factura").show("fast");
+            $(".divide_factura").show("fast");
         else
-            $(".divide_Factura").hide("fast");
+            $(".divide_factura").hide("fast");
     }
         /**
          * administra inputs de formulario para la pantalla principal
@@ -179,11 +179,8 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
-<<<<<<< HEAD
-        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_Factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note'],
-=======
-        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro'],
->>>>>>> dev
+        var ocultar =[".operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro,#id_termino_pago option[value='todos'],#id_termino_pago option[value='']"],
+
         nombre=obj[0].id;
         switch (nombre){
             case "soa":
@@ -191,7 +188,7 @@ $SINE.UI=(function()
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "summary":
-              var mostrar =['.fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.termino_pago_refac_reprov']; 
+              var mostrar =[".fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
@@ -203,21 +200,24 @@ $SINE.UI=(function()
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
               break; 
             case "reteco":
-              var mostrar =['.type_termino_pago,.car_activity,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov']; 
+              var mostrar =[".type_termino_pago,.car_activity,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
                   $(".type_termino_pago_sum_re").addClass("type_termino_pago"),$(".type_termino_pago").removeClass("type_termino_pago_sum_re");
                   $(".termino_pago_sum_re,.termino_pago_refac_reprov").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re termino_pago_refac_reprov");
               break; 
-<<<<<<< HEAD
-            case "refac":case "refi_prov":
-                var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov']; 
-=======
             case "refac":
-                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
->>>>>>> dev
+//                var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro']; 
+                var mostrar =['.fecha,.periodo,.note_ref_pro']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+//                  $(".label_custom_supplier").html("Termino Pago");
+//                  $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
+              break;
+            case "refi_prov":
+                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,#id_termino_pago option[value='']"]; 
+                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  $("#id_termino_pago").val("");
                   $(".label_custom_supplier").html("Termino Pago");
                   $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
               break;
@@ -226,7 +226,7 @@ $SINE.UI=(function()
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "recredi":
-                var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note']; 
+                var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
@@ -237,13 +237,6 @@ $SINE.UI=(function()
                 var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
-<<<<<<< HEAD
-=======
-            case "refi_prov": 
-                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
-                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-              break;
->>>>>>> dev
             case "redis": 
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
@@ -370,7 +363,7 @@ $SINE.UI=(function()
              var respuesta=$SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());
              break               
          case 'refi_prov':
-             var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
+             var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
              break               
          case 'redis':
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());

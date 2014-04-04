@@ -2,6 +2,9 @@
 ============
 
 Sistema de Reportes para Billing
+    - Modificacion de  refac y reprov a nivel de estilos.
+    - Modificacion de reprov para que la busqueda sea hecha por termino de pago y ahora tiene la oportunidad de indicar si quiere ver carriers periodo 7 que piquen el mes,
+      esta opcion viene por defecto en "si", la misma influye mas que todo al momento de consultar en un periodo dividido entre dos meses, donde se encontraran facturas completas y divididas
     - Modificacion de soa y balance para que muestre facturas y demas documentos que esten repetidos.
     - Agregados totales de minutos para refac y reprov.
     - Agregada nota que indica al usuario que debe seleccionar el ultimo dia del periodo de facturacion en el datepicker para refac y reprov.
