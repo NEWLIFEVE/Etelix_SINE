@@ -2,10 +2,15 @@
 ============
 
 Sistema de Reportes para Billing
+
     - Modificacion de  refac y reprov a nivel de estilos.
     - Modificacion de reprov para que la busqueda sea hecha por termino de pago y ahora tiene la oportunidad de indicar si quiere ver carriers periodo 7 que piquen el mes,
-      esta opcion viene por defecto en "si", la misma influye mas que todo al momento de consultar en un periodo dividido entre dos meses, donde se encontraran facturas completas y divididas
-    - Modificacion de soa y balance para que muestre facturas y demas documentos que esten repetidos.
+      esta opcion viene por defecto en "si", la misma influye mas que todo al momento de consultar en un periodo dividido entre dos meses, donde se encontraran facturas completas y divididas.
+
+
+Realese 1.2.9.1
+    - Se arreglo el SOA y balance para que incluya todos los documentos, incluso repetidos, de esta forma
+      el valor del SOA y el SUMMARY (SOA) son iguales.
     - Agregados totales de minutos para refac y reprov.
     - Agregada nota que indica al usuario que debe seleccionar el ultimo dia del periodo de facturacion en el datepicker para refac y reprov.
     - Solucionados detalles en summary.
@@ -15,10 +20,11 @@ Sistema de Reportes para Billing
     - Modificacion en summary, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
     - Cambios en la forma como se muestra el nombre de los reportes reteco, summary y recredi.
     - Modificacion de comportamiento de select termino pago en recredi, summary y reteco.
-    - Cambio de indicadores para el termino pago. 
+    - Cambio de indicadores para el termino pago.
+ 
 Realese 1.2.8
-    - Default los inputs de soa, balance, sumary y reteco.
-    - Arreglado Due_date y Monto Due en Summary.
+    - Default los inputs de soa, balance, sumary y RETECO.
+    - Arreglado Due_date y Monto Due en SUMMARY.
     - Arreglado calculo de dias vencidos y por vencer.
     - Recredi mejorado.
     - Nuevos filtros para recredi y summary
