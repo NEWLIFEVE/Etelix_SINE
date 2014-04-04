@@ -9,6 +9,7 @@ Release 1.2.9
     - Cambios en la forma como se muestra el nombre de los reportes RETECO, SUMMARY y RECREDI.
     - Modificacion de comportamiento de select termino pago en RECREDI, SUMMARY y RETECO.
     - Cambio de indicadores para el termino pago. 
+    
 Realese 1.2.8
     - Default los inputs de soa, balance, sumary y RETECO.
     - Arreglado Due_date y Monto Due en SUMMARY.
