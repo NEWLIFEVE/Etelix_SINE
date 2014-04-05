@@ -9,14 +9,14 @@ if($server==SERVER_NAME_PROD)
 	if($nuevo[$num-3]==DIRECTORY_NAME_PRE_PROD)
 	{
 		$server_db='localhost';
-        $sine_db='sori';
+        $sine_db='dev_sori';
         $user_db='postgres';
         $pass_db='Nsusfd8263';
 	}
 	else
 	{
 		$server_db='localhost';
-        $sine_db='dev_sori';
+        $sine_db='sori';
         $user_db='postgres';
         $pass_db='Nsusfd8263';
 	}
