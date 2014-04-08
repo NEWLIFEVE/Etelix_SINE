@@ -151,15 +151,15 @@ class SiteController extends Controller
                     $correos['reteco']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['reteco']['asunto'].".xls";
                     break;
                case 'refac':
-                    $fromDate=Reportes::define_fecha_from($_POST['id_periodo'],$date);
+                    $fromDate=Reportes::defineFromDate($_POST['id_periodo'],$date);
                     $correos['refac']['asunto']="SINE - REFAC ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'));
-                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fromDate,$date,"REFAC",$_POST['id_periodo']);
+                    $correos['refac']['cuerpo']=Yii::app()->reportes->refac($fromDate,$date,"REFAC",$_POST['id_periodo'],$this->trueFalse($_POST['Si_sum']));
                     $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                     break;
                case 'refi_prov':
-                    $fromDate=Reportes::define_fecha_from(TerminoPago::getModelFind($_POST['id_termino_pago'])->period,$date);
+                    $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($_POST['id_termino_pago'])->period,$date);
                     $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'));
-                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_POST['id_termino_pago'],$_POST['Si_div']);
+                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_POST['id_termino_pago'],$_POST['Si_div'],$this->trueFalse($_POST['Si_sum']));
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                case 'recredi':
@@ -220,14 +220,14 @@ class SiteController extends Controller
                     $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_GET['Si_car_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'refac':
-                    $fromDate=Reportes::define_fecha_from($_GET['id_periodo'],$date);
+                    $fromDate=Reportes::defineFromDate($_GET['id_periodo'],$date);
                     $archivos['refac']['nombre']="SINE - REFAC ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'))." ".date("g:i a");
-                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fromDate,$date,"REFAC",$_GET['id_periodo']);
+                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($fromDate,$date,"REFAC",$_GET['id_periodo'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'refi_prov':
-                    $fromDate=Reportes::define_fecha_from(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date);
+                    $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date);
                     $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'))." ".date("g:i a");
-                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div']);
+                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'recredi':
                     $archivos['recredi']['nombre']="SINE - RECREDI ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']))." ".self::reportTitle($date)."-".date("g:i a");
@@ -279,10 +279,10 @@ class SiteController extends Controller
                     $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_GET['Si_car_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'refac':
-                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac(Reportes::define_fecha_from($_GET['id_periodo'],$date),$date,"REFAC",$_GET['id_periodo']);
+                    $archivos['refac']['cuerpo']=Yii::app()->reportes->refac(Reportes::defineFromDate($_GET['id_periodo'],$date),$date,"REFAC",$_GET['id_periodo'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'refi_prov':
-                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov(Reportes::define_fecha_from(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date),$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div']);
+                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov(Reportes::defineFromDate(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date),$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'recredi':
                     $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
