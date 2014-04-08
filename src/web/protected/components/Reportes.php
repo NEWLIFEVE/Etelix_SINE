@@ -60,26 +60,31 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refac($fromDate,$toDate,$typeReport,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,NULL);
         return $var;
     }
 
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
+     * @param type $dividedInvoice
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice);
         return $var;
     }
 
@@ -132,7 +137,7 @@ class Reportes extends CApplicationComponent
                      return " ";
                   }else{
                      return "UNION
-                             SELECT issue_date, valid_received_date, doc_number, from_date, to_date, g.name AS group, CAST(NULL AS date) AS due_date, 
+                             SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
                                     amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                              FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                              WHERE a.id_carrier IN(Select id from carrier where $group)
@@ -145,7 +150,7 @@ class Reportes extends CApplicationComponent
                     return " ";
                  }else{
                     return "UNION
-                            SELECT a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+                            SELECT a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                             WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$date}'
                                   AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
@@ -207,10 +212,10 @@ class Reportes extends CApplicationComponent
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
             case "2":
-                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "1":
-                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "7":case "8":   //hay que mejoprarlo, tengo la idea, pero mejor discutirlo antes
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -228,6 +233,13 @@ class Reportes extends CApplicationComponent
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
         }
         return $description;
+    }
+    public static function defineFormatPeriod($model)
+    {
+        if(Utility::formatDateSINE($model->from_date,"M-")==Utility::formatDateSINE($model->to_date,"M-"))
+            return " d";
+        else
+            return "M-d";
     }
 
     /**
@@ -634,7 +646,7 @@ class Reportes extends CApplicationComponent
         }
         elseif($model->id_type_accounting_document==9 && $model->amount<0)
         {
-            return $acumuladoFacRec - ($model->amount*-1);
+            return $acumuladoFacRec + ($model->amount*-1);
         }
         elseif($model->id_type_accounting_document==8)
         {
@@ -682,7 +694,7 @@ class Reportes extends CApplicationComponent
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
                 break;
             case 15:
                 if(date("d", strtotime($fecha_to)) == 15)
@@ -920,6 +932,50 @@ class Reportes extends CApplicationComponent
                 }
             }
         }
+        /**
+         * EN EL CASO DE THIS WEEK ENCUENTRA DATOS DE DUE Y NEXT Y SI ESTA EN EL RANFO DE FECHA LO UBICA EN THIS WEEK. ESTO ES DEBIDO A QUE ALGUNAS FACTURAS VENCEN EN THIS WEEK, PERO OTRAS YA ESTAN VENCIDAS
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @return string
+         */    
+        public static function defineValueThisNext($valueResult,$valueNext,$dueDateNext, $date)
+        {
+            if($valueResult==""||$valueResult==NULL){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext;
+                }else{
+                    return "";
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+        /**
+         * DEFINE LOS ACUMULADOS PARA THIS WEEK CON DUE Y NEXT
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @param type $acum
+         * @return type
+         */
+        public static function defineAcumsThisWeek($valueResult,$valueNext,$dueDateNext, $date, $acum)
+        {
+            if($valueResult==$acum){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext+$acum;
+                }else{
+                    return $acum;
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+
         /**
          * METODO ENCARGADO DE DESVIAR LOS MONTOS DEPENDIENDO (SI ES NEGATIVO O POSITIVO) PARA EL CALCULO DE TOTALES EN SUMMARY
          * @param type $value
