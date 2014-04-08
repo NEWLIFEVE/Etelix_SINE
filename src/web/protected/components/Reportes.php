@@ -60,26 +60,31 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refac($fromDate,$toDate,$typeReport,$paymentTerm)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,NULL);
         return $var;
     }
 
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
+     * @param type $dividedInvoice
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice);
         return $var;
     }
 
@@ -689,7 +694,7 @@ class Reportes extends CApplicationComponent
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
                 break;
             case 15:
                 if(date("d", strtotime($fecha_to)) == 15)

@@ -28,7 +28,7 @@ $SINE.UI=(function()
     function _predefined()
     {
         $('#No_inter,#No_act,#No_car_act,#No_prov').val('No').addClass("active");
-        $('#Si_disp').val('Si').addClass("active");
+        $('#Si_disp,#Si_div').val('Si').addClass("active");
     }
     /**
      * datepicker jquery ui
@@ -52,9 +52,12 @@ $SINE.UI=(function()
                     $SINE.UI.adminInput($(this));
                     break;
                 case "id_termino_pago":
-                    if($("#type_termino_pago").val()=='null')
-                        $SINE.UI.adminInput(("#type_termino_pago"));
-                    
+                    if($("#tipo_report").val()=="refi_prov"){
+                        $SINE.UI.adminTp($(this));
+                    }else{
+                        if($("#type_termino_pago").val()=='null')
+                            $SINE.UI.adminInput(("#type_termino_pago"));
+                    }
                     break;
             }
         });
@@ -65,7 +68,7 @@ $SINE.UI=(function()
      */
     function _clickElement() 
     {
-        $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not').on('click',function()
+        $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not').on('click',function()
         {   
             switch ($(this).attr("id")){
                 case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
@@ -89,6 +92,9 @@ $SINE.UI=(function()
                     break;
                 case "No_car_act": case "Si_car_act": 
                     $SINE.UI.agrega_Val_radio($(this),$('#No_car_act,#Si_car_act'));
+                    break;
+                case "No_div": case "Si_div": 
+                    $SINE.UI.agrega_Val_radio($(this),$('#No_div,#Si_div'));
                     break;
                 case "previa": case "mail": case "excel": 
                     $SINE.UI.export_report($(this));
@@ -141,7 +147,7 @@ $SINE.UI=(function()
     {
         var dio_click=click[0].id;
         $(no_Click).val(''); 
-        if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'){$(click).val('Si');$(click).blur();}
+        if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'||dio_click=='Si_div'){$(click).val('Si');$(click).blur();}
         else {$(click).val('No');$(click).blur();}
     }
     /**
@@ -159,6 +165,13 @@ $SINE.UI=(function()
             $(".label_custom_supplier").html("Termino Pago "+$("#type_termino_pago option:selected").text());
         } 
     }
+    function adminTp(obj)
+    {
+        if($(obj).val()=="1"||$(obj).val()=="3"||$(obj).val()=="4"||$(obj).val()=="5")
+            $(".divide_factura").show("fast");
+        else
+            $(".divide_factura").hide("fast");
+    }
         /**
          * administra inputs de formulario para la pantalla principal
          * @param {type} obj
@@ -166,7 +179,8 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
-        var ocultar =['.operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro'],
+        var ocultar =[".operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro,#id_termino_pago option[value='todos'],#id_termino_pago option[value='']"],
+
         nombre=obj[0].id;
         switch (nombre){
             case "soa":
@@ -174,49 +188,55 @@ $SINE.UI=(function()
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "summary":
-              var mostrar =['.fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re']; 
+              var mostrar =[".fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
                   $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
-                  $(".termino_pago").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago");
+                  $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
               break; 
             case "balance":
               var mostrar =['.fecha,.grupo,.disputas,.note']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
               break; 
             case "reteco":
-              var mostrar =['.type_termino_pago,.car_activity,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago']; 
+              var mostrar =[".type_termino_pago,.car_activity,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
                   $(".type_termino_pago_sum_re").addClass("type_termino_pago"),$(".type_termino_pago").removeClass("type_termino_pago_sum_re");
-                  $(".termino_pago_sum_re").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re");
+                  $(".termino_pago_sum_re,.termino_pago_refac_reprov").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re termino_pago_refac_reprov");
               break; 
             case "refac":
-                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
+//                var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro']; 
+                var mostrar =['.fecha,.periodo,.note_ref_pro']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-              break; 
+//                  $(".label_custom_supplier").html("Termino Pago");
+//                  $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
+              break;
+            case "refi_prov":
+                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,#id_termino_pago option[value='']"]; 
+                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  $("#id_termino_pago").val("");
+                  $(".label_custom_supplier").html("Termino Pago");
+                  $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
+              break;
             case "waiver":
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
             case "recredi":
-                var mostrar =['.fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.note']; 
+                var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $("#type_termino_pago").val("null");
                   $SINE.UI.adminInput($('#type_termino_pago'));
                   $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
-                  $(".termino_pago").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago");
+                  $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
               break; 
             case "recopa":
                 var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
-            case "refi_prov": 
-                var mostrar =['.periodo,.fecha,.note_ref_pro']; 
-                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-              break;
             case "redis": 
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
@@ -224,16 +244,9 @@ $SINE.UI=(function()
         }
         $("#tipo_report").val(nombre);
         $('.formulario').css('display','block').css('width','81%').css('margin-left','39%');
-//            $('.barra_tools_click').show();
+            $('.barra_tools_click').show("fast");
 
-        //ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN
-        if(nombre=="soa"||nombre=="balance"||nombre=="summary"||nombre=="reteco"||nombre=="refac"||nombre=="refi_prov"||nombre=="recredi"||nombre=="recopa")
-        {
-            $('.barra_tools_click').show('fast');
-        }else{
-            $('.barra_tools_click').hide('fast');
-        }
-                //.....
+
     }
     /**
      * se encarga de indicar que boton e input ocultar o mostrar en el cambio entre grupos y operador
@@ -350,7 +363,7 @@ $SINE.UI=(function()
              var respuesta=$SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());
              break               
          case 'refi_prov':
-             var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
+             var respuesta=$SINE.UI.validaCampos($('#id_termino_pago').serializeArray());
              break               
          case 'redis':
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
@@ -463,7 +476,8 @@ $SINE.UI=(function()
             changeHtml:changeHtml,
             fancy_box:fancy_box,
             imprimir:imprimir,
-            adminInput:adminInput
+            adminInput:adminInput,
+            adminTp:adminTp
     };
 })();
 
