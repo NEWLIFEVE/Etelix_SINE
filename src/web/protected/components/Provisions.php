@@ -512,15 +512,20 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _changeStatusProvision($startDate,$endDate,$idCarrier,$idDocument)
 	{
-		$model=AccountingDocumentProvisions::model()->find('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
-		if($model->id!=null)
+		$provisiones=AccountingDocumentProvisions::model()->findAll('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
+		foreach ($provisiones as $key => $provision)
+		{
+			$provision->confirm=-1;
+			$provision->save();
+		}
+		/*if($model->id!=null)
 		{
 			$model->confirm=-1;
 			if($model->save())
 	        {
 	        	return true;
 	        }
-		}
+		}*/
         return false;
 	}
 
