@@ -144,6 +144,7 @@ class Provisions extends CApplicationComponent
 	public function generateTrafficProvision($type=true)
 	{
 		$values="";
+		$count=0;
 
 		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
 		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
@@ -156,22 +157,26 @@ class Provisions extends CApplicationComponent
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
 			$this->_deleteProvision($factura->date_balance,$factura->date_balance,$factura->id,$type_document);
-			if($key>0 && $key<$num) $values.=",";
-			$values.="(";
-			$values.="'".$factura->date_balance."',";
-			$values.="'".$factura->date_balance."',";
-			$values.="'".$factura->date_balance."',";
-			$values.=$factura->minutes.",";
-			$values.=$factura->margin.",";
-			$values.=$type_document.",";
-			$values.=$factura->id.",";
-			$values.=$currency.",";
-			$values.="1";
-			$values.=")";
+			if($factura->margin!=0)
+			{
+				$count+=1;
+				if($key>0 && $key<$num) $values.=",";
+				$values.="(";
+				$values.="'".$factura->date_balance."',";
+				$values.="'".$factura->date_balance."',";
+				$values.="'".$factura->date_balance."',";
+				$values.=$factura->minutes.",";
+				$values.=$factura->margin.",";
+				$values.=$type_document.",";
+				$values.=$factura->id.",";
+				$values.=$currency.",";
+				$values.="1";
+				$values.=")";
+			}
 		}
 		$sql="INSERT INTO accounting_document(issue_date, from_date, to_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
 			  VALUES ".$values;
-		if($num>0)
+		if($count>0)
 		{
 			$command = Yii::app()->db->createCommand($sql);
 	        if($command->execute())
@@ -510,23 +515,32 @@ class Provisions extends CApplicationComponent
 	 * @param int $idDocument
 	 * @return boolean
 	 */
-	private function _changeStatusProvision($startDate,$endDate,$idCarrier,$idDocument)
+	private function _changeStatusProvisions($startDate,$endDate,$idCarrier,$idDocument)
 	{
-		$provisiones=AccountingDocumentProvisions::model()->findAll('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
-		foreach ($provisiones as $key => $provision)
+		$model=AccountingDocument::model()->findAll('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
+		foreach ($model as $key => $value)
 		{
-			$provision->confirm=-1;
-			$provision->save();
+			$this->_changeStatusProvision($value->id);
 		}
-		/*if($model->id!=null)
+	}
+
+	/**
+	 * Metodo encargado de cambiar el estado de una provision de trafico si se le generó una provision de factura
+	 * @access private
+	 * @param date $startDate
+	 * @param date $endDate
+	 * @param int $idCarrier
+	 * @param int $idDocument
+	 * @return boolean
+	 */
+	private function _changeStatusProvision($id)
+	{
+		$provision=AccountingDocumentProvisions::model()->findByPk($id);
+		$provision->confirm=-1;
+		if($provision->save())
 		{
-			$model->confirm=-1;
-			if($model->save())
-	        {
-	        	return true;
-	        }
-		}*/
-        return false;
+			return true;
+		}
 	}
 
 	/**
@@ -582,7 +596,7 @@ class Provisions extends CApplicationComponent
 			$doccument->confirm=1;
 			if($doccument->save())
 			{
-				$this->_changeStatusProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
+				$this->_changeStatusProvisions($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 				$this->_changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions);
 				$this->$typeProvisions['num']=$this->$typeProvisions['num']+1;
 			}
