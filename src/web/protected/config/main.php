@@ -18,14 +18,14 @@ switch ($server)
     case SERVER_NAME_DEV:
     default:
 
-        $server_db='67.215.160.89';
-        $sine_db='sori';
-        $user_db='postgres';
-        $pass_db='Nsusfd8263';
-//        $server_db='172.16.17.190';
+//        $server_db='67.215.160.89';
 //        $sine_db='sori';
 //        $user_db='postgres';
-//        $pass_db='123';
+//        $pass_db='Nsusfd8263';
+        $server_db='172.16.17.190';
+        $sine_db='sori';
+        $user_db='postgres';
+        $pass_db='123';
         break;
 }
 // uncomment the following to define a path alias
