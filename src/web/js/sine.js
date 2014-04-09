@@ -148,9 +148,9 @@ $SINE.UI=(function()
      */
     function agrega_Val_radio(click,no_Click)
     {
-        var dio_click=click[0].id;
+        var dio_click=click[0].id.substring(0,2);
         $(no_Click).val(''); 
-        if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'||dio_click=='Si_div'||dio_click=='Si_sum'){$(click).val('Si');$(click).blur();}
+        if (dio_click=='Si'){$(click).val('Si');$(click).blur();}
         else {$(click).val('No');$(click).blur();}
     }
     /**
@@ -158,7 +158,6 @@ $SINE.UI=(function()
      * @param {type} obj
      * @returns {undefined}
      */
-    /*********/
     function adminInput(obj)
     {
         if($(obj).val()=='null'){
@@ -168,6 +167,11 @@ $SINE.UI=(function()
             $(".label_custom_supplier").html("Termino Pago "+$("#type_termino_pago option:selected").text());
         } 
     }
+    /**
+     * Administra elementos para que se muestren u oculten pasandole como variable el .val del elemento, por ahora solo trabaja con termino pago
+     * @param {type} obj
+     * @returns {undefined}
+     */
     function adminTp(obj)
     {
         if($(obj).val()=="1"||$(obj).val()=="3"||$(obj).val()=="4"||$(obj).val()=="5")
@@ -176,7 +180,7 @@ $SINE.UI=(function()
             $(".divide_factura").hide("fast");
     }
         /**
-         * administra inputs de formulario para la pantalla principal
+         * administra inputs de formulario para la pantalla principal tomando como variable el id del elemento seleccionado
          * @param {type} obj
          * @returns {undefined}
          */
@@ -193,8 +197,7 @@ $SINE.UI=(function()
             case "summary":
               var mostrar =[".fecha,.type_termino_pago,.type_termino_pago_sum_re,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                  $("#type_termino_pago").val("null");
-                  $SINE.UI.adminInput($('#type_termino_pago'));
+                  $SINE.UI.adminInput($("#type_termino_pago").val("null"));
                   $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
                   $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
               break; 
@@ -205,8 +208,7 @@ $SINE.UI=(function()
             case "reteco":
               var mostrar =[".type_termino_pago,.car_activity,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar);
-                  $("#type_termino_pago").val("null");
-                  $SINE.UI.adminInput($('#type_termino_pago'));
+                  $SINE.UI.adminInput($("#type_termino_pago").val("null"));
                   $(".type_termino_pago_sum_re").addClass("type_termino_pago"),$(".type_termino_pago").removeClass("type_termino_pago_sum_re");
                   $(".termino_pago_sum_re,.termino_pago_refac_reprov").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re termino_pago_refac_reprov");
               break; 
@@ -231,8 +233,7 @@ $SINE.UI=(function()
             case "recredi":
                 var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-                  $("#type_termino_pago").val("null");
-                  $SINE.UI.adminInput($('#type_termino_pago'));
+                  $SINE.UI.adminInput($("#type_termino_pago").val("null"));
                   $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
                   $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
               break; 
@@ -272,7 +273,7 @@ $SINE.UI=(function()
         }
     }
     /**
-    * Metodo encargado de la actualizacion de las facturas en disputas y notas de credito
+    * metodo encargado de ocultar y mostrar input y demas elementos dependiendo de la opcion seleccionada
     * @access public
     * @param ocultar array es el arreglo que contiene los elementos a ocultarse
     * @param mostrar array es el arreglo que contiene los elementos a mostrarse
