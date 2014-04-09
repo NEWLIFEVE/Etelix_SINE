@@ -5,21 +5,21 @@
      */
     class SOA extends Reportes 
     {
-        public static function reporte($group, $date, $dispute,$provition) 
+        public static function reporte($group, $date, $dispute,$provision) 
         {
             $accumulated=$accumulatedPayment=$accumulatedCollection=$accumulatedInvoiceSend=$accumulatedInvoiceRec = 0;
             $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext = 0;
             $last_due_date_next=$last_due_date_due="";
             
-            $accounting_document = SOA::get_Model($group, $date, $dispute,$provition,"1"); //trae el sql pricipal
-            $acc_doc_detal=SOA::get_Model($group, $date, $dispute,$provition,"2");//trae el sql para consultas de elementos o atributos puntuales
+            $accounting_document = SOA::get_Model($group, $date, $dispute,$provision,"1"); //trae el sql pricipal
+            $acc_doc_detal=SOA::get_Model($group, $date, $dispute,$provision,"2");//trae el sql para consultas de elementos o atributos puntuales
 
             $body="";
             if ($accounting_document != null) {
                 $body.= "<h1>SOA $group-Etelix <h3>(".$date." - ".date("g:i a").")</h3></h1>";
                 $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
                               <table style='background:#3466B4;text-align:center;color:white'>
-                              <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
+                              <tr style='border:1px solid silver; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
                               <td style='width:100px;'>Due Date</td>
@@ -63,15 +63,15 @@
                 $body.="</table><br>";
                 $body.="<table align='right'>
                              <tr><td colspan='3'></td>
-                             <tr><td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>".DateManagement::howManyDaysBetween($last_due_date_due, $date)." days due</td>
-                             <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
-                             <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
+                             <tr><td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
+                             <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
+                             <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>".DateManagement::howManyDaysBetween($last_due_date_due, $date)." days due</td>
+                             <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
+                             <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                              </tr>
                         </table>";
                 $body.= "<br><br><br><br><table style='background:#3466B4;text-align:center;color:white'>
-                              <tr style='border:1px solid black; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
+                              <tr style='border:1px solid silver; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
                               <td style='width:250px;'>Description</td>
                               <td style='width:100px;'>Issue Date</td>
                               <td style='width:100px;'>Due Date</td>
@@ -120,11 +120,11 @@
                 $body.="</table><br>;
                          <table align='right'>
                          <tr><td colspan='3'></td>
-                         <tr><td colspan='2'style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
-                         <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
-                         <td style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>{$nextDate} day next</td>
-                         <td colspan='2' style='background:#3466B4;border:1px solid black;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
-                         <td style='background:#3466B4;border:1px solid black;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
+                         <tr><td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
+                         <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
+                         <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>{$nextDate} day next</td>
+                         <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
+                         <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
                          </table>";
                 return $body;
@@ -138,25 +138,25 @@
          * @param type $group
          * @param type $date
          * @param type $dispute
-         * @param type $provitions
+         * @param type $provisions
          * @param type $tipoSql
          * @return type
          */
-        public static function get_Model($group, $date, $dispute,$provitions,$tipoSql) 
+        public static function get_Model($group, $date, $dispute,$provisions,$tipoSql) 
         {
-           $group=Reportes::define_grupo($group);
+            $group=Reportes::define_grupo($group);
             $sql="SELECT *
                     FROM(/*me traigo todos los documentos, menos facturas*/
                     SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
                            CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                       FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                       WHERE a.id_carrier IN(Select id from carrier where $group)
-                          AND tad.name NOT IN('Factura Enviada','Factura Recibida','Disputa Recibida','Disputa Enviada','Provision Trafico Enviada','Provision Trafico Recibida'{$provitions}) 
+                          AND tad.name IN('Pago','Cobro','Nota de Credito Recibida','Nota de Credito Enviada','Bank Fee Cobro','Bank Fee Pago','Saldo Inicial') 
                           AND a.id_type_accounting_document=tad.id
                           AND a.id_carrier=c.id
                           AND a.id_currency=s.id
                           AND c.id_carrier_groups = g.id
-                          AND confirm != -1
+               {$provisions}
                {$dispute}     
                UNION
                     /*me traigo facturas enviadas*/

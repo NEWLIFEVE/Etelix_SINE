@@ -124,7 +124,7 @@ class SiteController extends Controller
 
             if(($_POST['grupo'])!=NULL) $group=$_POST['grupo'];
 
-            if(isset($_POST['No_prov'])) $provition=Reportes::define_prov($_POST['No_prov']);
+            if(isset($_POST['No_prov'])) $provision=Reportes::define_prov($_POST['No_prov'],$group);
 
             if(isset($_POST['No_disp'])) $dispute=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$group,$date);
 
@@ -132,7 +132,7 @@ class SiteController extends Controller
             {
                case 'soa':
                     $correos['soa']['asunto']="SINE - SOA de {$group}".self::reportTitle($date);
-                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
+                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
                case 'summary':
@@ -196,7 +196,7 @@ class SiteController extends Controller
 
             if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
 
-            if(isset($_GET['No_prov'])) $provition=SOA::define_prov($_GET['No_prov']);
+            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
 
             if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
@@ -205,7 +205,7 @@ class SiteController extends Controller
             {
                 case 'soa':
                     $archivos['soa']['nombre']="SINE - SOA de {$group}".self::reportTitle($date)."-".date("g:i a");
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition,$_GET['grupo']);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$_GET['grupo']);
                     break;
                 case 'summary':
                     $archivos['summary']['nombre']="SINE - SUMMARY ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']))." ".self::reportTitle($date)."-".date("g:i a");
@@ -259,7 +259,7 @@ class SiteController extends Controller
 
             if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
 
-            if(isset($_GET['No_prov'])) $provition=SOA::define_prov($_GET['No_prov']);
+            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
 
             if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
@@ -267,7 +267,7 @@ class SiteController extends Controller
             switch($_GET['tipo_report'])
             {
                 case 'soa':
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
                     break;
                 case 'summary':
                     $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);

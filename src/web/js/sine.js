@@ -412,7 +412,7 @@ $SINE.UI=(function()
      */
     function msj_cargando(cuerpo_msj,imagen)
     {
-        $(".fondo_negro, .mensaje").remove();
+        $(".fondo_negro, .mensaje, .fancybox").remove();
         var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"'></div>").hide(); 
         $("body").append(msj); 
         msj.fadeIn('slow');

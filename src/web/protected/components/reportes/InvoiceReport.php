@@ -261,16 +261,16 @@ class InvoiceReport extends Reportes
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
                                (SELECT minutes
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_minutes,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_minutes,
                                (SELECT amount
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_amount,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_amount,
                                (SELECT doc_number
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS doc_number
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS doc_number
                         FROM carrier c, accounting_document ad
                         WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date{$from}'{$startDate}' AND ad.to_date{$to}'{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')
-                        ORDER BY c.name ASC) b $summaryFilter ";
+                        ORDER BY c.name ASC) b $summaryFilter";
             $return=AccountingDocument::model()->findAllBySql($sql); 
             
         }else{

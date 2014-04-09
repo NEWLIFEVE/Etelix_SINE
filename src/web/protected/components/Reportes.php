@@ -14,13 +14,13 @@ class Reportes extends CApplicationComponent
      * @param type $grupo
      * @param type $fecha
      * @param type $no_disp
-     * @param type $no_prov
+     * @param type $provision
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$no_prov)
+    public function SOA($grupo,$fecha,$no_disp,$provision)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$provision);
         return $var;
     }
     /**
@@ -166,14 +166,26 @@ class Reportes extends CApplicationComponent
     /**
      * 
      * @param type $no_prov
+     * @param type $group
      * @return type
      */
-    public static function define_prov($no_prov)
+    public static function define_prov($no_prov,$group)
     {
+        if($group!=null)$group=Reportes::define_grupo($group);
         if($no_prov=="No"){
-            return",'Provision Factura Enviada','Provision Factura Recibida'";
-        } else{
             return"";
+        } else{
+            return "UNION
+                    SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
+                         CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
+                    FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
+                    WHERE a.id_carrier IN(Select id from carrier where {$group})
+                        AND tad.name  IN('Provision Factura Enviada','Provision Factura Recibida') 
+                        AND a.id_type_accounting_document=tad.id
+                        AND a.id_carrier=c.id
+                        AND a.id_currency=s.id
+                        AND c.id_carrier_groups = g.id
+                        AND a.id_accounting_document IS NULL";
         }
     }
 
@@ -292,26 +304,26 @@ class Reportes extends CApplicationComponent
     {
         switch ($model->id_type_accounting_document){
             case "3": case "4":
-                $estilos=" style='background:silver;color:black;border:1px solid black;'";
+                $estilos=" style='background:silver;color:black;border:1px solid silver;'";
                 break;
             case "14":case "15":
-                $estilos=" style='background:#E5EAF5;color:black;border:1px solid black;'";
+                $estilos=" style='background:#E5EAF5;color:black;border:1px solid silver;'";
                 break;
             case "5": case "6":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             case "7": case "8":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             
             case "10":case "12": 
-                $estilos=" style='background:#5CC468;color:black;border:1px solid black;'";
+                $estilos=" style='background:#5CC468;color:black;border:1px solid silver;'";
                 break;
             case "11": case "13":
-                $estilos=" style='background:#F8B679;color:black;border:1px solid black;'";
+                $estilos=" style='background:#FCC089;color:black;border:1px solid silver;'";
                 break;
             default:
-                $estilos = " style='background:white;color:black;border:1px solid black;'";
+                $estilos = " style='background:white;color:black;border:1px solid silver;'";
         }
         return $estilos;
     }
@@ -332,7 +344,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_totals()
     {
-        $estilos = " style='background:white;color:black;border:1px solid black;'";
+        $estilos = " style='background:white;color:black;border:1px solid silver;'";
         return $estilos;
     }
 
@@ -1080,9 +1092,9 @@ class Reportes extends CApplicationComponent
         public static function defineStyleNeed($var)
         {
             if($var==NULL)
-                return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
+                return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
             else 
-                return "style='background:white;color:black;border:1px solid black;text-align:left;'";
+                return "style='background:white;color:black;border:1px solid silver;text-align:left;'";
         }
         /**
          * fin RETECO
