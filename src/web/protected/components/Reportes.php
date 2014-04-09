@@ -60,26 +60,33 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $periodPaymentTerm
+     * @param type $sum
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refac($fromDate,$toDate,$typeReport,$periodPaymentTerm,$sum)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$periodPaymentTerm,NULL,$sum);
         return $var;
     }
 
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
+     * @param type $dividedInvoice
+     * @param type $sum
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice, $sum)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
         return $var;
     }
 
@@ -575,7 +582,7 @@ class Reportes extends CApplicationComponent
         switch ($model->id_type_accounting_document)
         {
             case "9":
-                return $model->amount;
+                return $acumulado + $model->amount;
                 break;
             case "1":case "3":case "6":case "7":case"10":case "12":case "15":
 
@@ -681,32 +688,32 @@ class Reportes extends CApplicationComponent
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
-     * @param type $fecha_to
+     * @param type $toDate
      * @return type
      */
-    public static function define_fecha_from($tp, $fecha_to)
+    public static function defineFromDate($tp, $toDate)
     {
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-6day', strtotime($toDate)));
                 break;
             case 15:
-                if(date("d", strtotime($fecha_to)) == 15)
+                if(date("d", strtotime($toDate)) == 15)
                 {
-                    return DateManagement::getDayOne($fecha_to);
+                    return DateManagement::getDayOne($toDate);
                 }
-                elseif($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::howManyDays($fecha_to))
+                elseif($toDate == DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-' . DateManagement::howManyDays($toDate))
                 {
-                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                    return DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-16';
                 }
                 else
                 {
-                    return DateManagement::calculateDate('-15',$fecha_to);
+                    return DateManagement::calculateDate('-15',$toDate);
                 }
                 break;
             case 30:
-                return DateManagement::getDayOne($fecha_to);
+                return DateManagement::getDayOne($toDate);
                 break;
             default:
                 break;
@@ -743,7 +750,7 @@ class Reportes extends CApplicationComponent
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28"||$var=="29")return "MENSUAL"; 
     }
 
     /**
