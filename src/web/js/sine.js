@@ -27,7 +27,7 @@ $SINE.UI=(function()
      */
     function _predefined()
     {
-        $('#No_inter,#No_act,#No_car_act,#No_prov').val('No').addClass("active");
+        $('#No_inter,#No_act,#No_car_act,#No_prov, #No_sum').val('No').addClass("active");
         $('#Si_disp,#Si_div').val('Si').addClass("active");
     }
     /**
@@ -68,7 +68,7 @@ $SINE.UI=(function()
      */
     function _clickElement() 
     {
-        $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not').on('click',function()
+        $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#previa,#mail,#excel,#views_not').on('click',function()
         {   
             switch ($(this).attr("id")){
                 case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
@@ -95,6 +95,9 @@ $SINE.UI=(function()
                     break;
                 case "No_div": case "Si_div": 
                     $SINE.UI.agrega_Val_radio($(this),$('#No_div,#Si_div'));
+                    break;
+                case "No_sum": case "Si_sum": 
+                    $SINE.UI.agrega_Val_radio($(this),$('#No_sum,#Si_sum'));
                     break;
                 case "previa": case "mail": case "excel": 
                     $SINE.UI.export_report($(this));
@@ -147,7 +150,7 @@ $SINE.UI=(function()
     {
         var dio_click=click[0].id;
         $(no_Click).val(''); 
-        if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'||dio_click=='Si_div'){$(click).val('Si');$(click).blur();}
+        if (dio_click=='Si_prov'||dio_click=='Si_disp'||dio_click=='Si_venc'||dio_click=='Si_act'||dio_click=='Si_car_act'||dio_click=='Si_inter'||dio_click=='Si_div'||dio_click=='Si_sum'){$(click).val('Si');$(click).blur();}
         else {$(click).val('No');$(click).blur();}
     }
     /**
@@ -179,7 +182,7 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
-        var ocultar =[".operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro,#id_termino_pago option[value='todos'],#id_termino_pago option[value='']"],
+        var ocultar =[".operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro,.summary_option,#id_termino_pago option[value='todos'],#id_termino_pago option[value='']"],
 
         nombre=obj[0].id;
         switch (nombre){
@@ -209,13 +212,13 @@ $SINE.UI=(function()
               break; 
             case "refac":
 //                var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro']; 
-                var mostrar =['.fecha,.periodo,.note_ref_pro']; 
+                var mostrar =['.fecha,.periodo,.note_ref_pro,.summary_option']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
 //                  $(".label_custom_supplier").html("Termino Pago");
 //                  $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
               break;
             case "refi_prov":
-                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,#id_termino_pago option[value='']"]; 
+                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,.summary_option,#id_termino_pago option[value='']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $("#id_termino_pago").val("");
                   $(".label_custom_supplier").html("Termino Pago");
