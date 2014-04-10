@@ -26,6 +26,7 @@ switch ($server)
         $user_db='postgres';
         $pass_db='Nsusfd8263';
 
+
         break;
 }
 // uncomment the following to define a path alias
