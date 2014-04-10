@@ -568,6 +568,7 @@ class Provisions extends CApplicationComponent
 		{
 			$provision=AccountingDocumentProvisions::model()->find('from_date>=:start AND to_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$data['invoice']));
 			$provision->confirm=-1;
+			$provision->id_accounting_document=$invoice->id;
 			if($provision->save())
 			{
 				return true;
@@ -589,6 +590,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
 	{
+		//var_dump("la suma desde ".TypeAccountingDocument::model()->findByPk($typeProvisions['traffic'])->name." para generar una ".TypeAccountingDocument::model()->findByPk($typeProvisions['invoice'])->name." en las fechas ".$startDate." ".$endDate);
 		$trafficProvisions=$this->_getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 		if($trafficProvisions->amount!=null)
 		{
