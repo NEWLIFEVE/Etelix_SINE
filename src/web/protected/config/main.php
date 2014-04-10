@@ -17,7 +17,7 @@ switch ($server)
         break;
     case SERVER_NAME_DEV:
     default:
-       $server_db='172.16.17.190';
+       $server_db='localhost';
        $sine_db='sori';
        $user_db='postgres';
        $pass_db='123';
