@@ -317,13 +317,13 @@ class Reportes extends CApplicationComponent
                 break;
             
             case "10":case "12": 
-                $estilos=" style='background:#5CC468;color:black;border:1px solid silver;'";
+                $estilos=" style='background:#AFDBB4;color:black;border:1px solid silver;'";
                 break;
             case "11": case "13":
-                $estilos=" style='background:#FCC089;color:black;border:1px solid silver;'";
+                $estilos=" style='background:#FAD8B9;color:black;border:1px solid silver;'";
                 break;
             default:
-                $estilos = " style='background:white;color:black;border:1px solid silver;'";
+                $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         }
         return $estilos;
     }
@@ -334,7 +334,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_null()
     {
-        $estilos = " style='background:white;color:black;border:1px solid white;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid white;'";
         return $estilos;
     }
 
@@ -344,7 +344,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_totals()
     {
-        $estilos = " style='background:white;color:black;border:1px solid silver;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         return $estilos;
     }
 
@@ -1094,7 +1094,7 @@ class Reportes extends CApplicationComponent
             if($var==NULL)
                 return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
             else 
-                return "style='background:white;color:black;border:1px solid silver;text-align:left;'";
+                return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
         }
         /**
          * fin RETECO

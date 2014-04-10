@@ -24,17 +24,17 @@ class Recredi extends Reportes
         $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
 
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
-        $style_number_row="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
-        $style_basic="style='border:1px solid black;text-align:center;'";
-        $style_carrier_head="style='border:0px solid black;background:silver;text-align:center;color:white;'";
-        $style_soa_head="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
-        $style_prov_fact_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
-        $style_prov_traf_head="style='border:1px solid black;background:#248CB4;text-align:center;color:white;'";
-        $style_prov_disp_head="style='border:1px solid black;background:#C37881;text-align:center;color:white;'";
-        $style_balance_head="style='border:0px solid black;background:#2E62B4;text-align:center;color:white;'";
-        $style_cost_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
-        $style_revenue_head="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
-        $style_margin_head="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+        $style_basic="style='border:1px solid silver;text-align:center;'";
+        $style_carrier_head="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
+        $style_soa_head="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
+        $style_prov_fact_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $style_prov_traf_head="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
+        $style_prov_disp_head="style='border:1px solid silver;background:#C37881;text-align:center;color:white;'";
+        $style_balance_head="style='border:1px solid silver;background:#2E62B4;text-align:center;color:white;'";
+        $style_cost_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $style_revenue_head="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
+        $style_margin_head="style='border:1px solid silver;background:#049C47;text-align:center;color:white;'";
 
         $body="<table>
                 <tr>
@@ -360,7 +360,7 @@ class Recredi extends Reportes
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$noActivity}  jj";
+              ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
 

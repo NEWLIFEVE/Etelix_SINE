@@ -18,16 +18,16 @@
             if ($accounting_document != null) {
                 $body.= "<h1>SOA $group-Etelix <h3>(".$date." - ".date("g:i a").")</h3></h1>";
                 $body.= "<h3 style='margin-top:-5%;text-align:right'>All amounts are expresed in ".$acc_doc_detal->currency."</h3>
-                              <table style='background:#3466B4;text-align:center;color:white'>
+                         <table style='background:#3466B4;text-align:center;color:white'>
                               <tr style='border:1px solid silver; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
-                              <td style='width:250px;'>Description</td>
-                              <td style='width:100px;'>Issue Date</td>
-                              <td style='width:100px;'>Due Date</td>
-                              <td style='width:100px;'>Payments on account <br>(Etelix to $group)</td>
-                              <td style='width:100px;'>Received invoices</td>
-                              <td style='width:100px;'>Payments on account <br>($group to Etelix)</td>
-                              <td style='width:100px;'>Invoices to collect</td>
-                              <td style='width:100px;'>Due Balance</td>
+                                 <td style='width:250px;'>Description</td>
+                                 <td style='width:100px;'>Issue Date</td>
+                                 <td style='width:100px;'>Due Date</td>
+                                 <td style='width:100px;'>Payments on account <br>(Etelix to $group)</td>
+                                 <td style='width:100px;'>Received invoices</td>
+                                 <td style='width:100px;'>Payments on account <br>($group to Etelix)</td>
+                                 <td style='width:100px;'>Invoices to collect</td>
+                                 <td style='width:100px;'>Due Balance</td>
                               </tr>";
                 foreach ($accounting_document as $key => $document) 
                     {
@@ -54,33 +54,34 @@
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPayment,3). "</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRec,3). "</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedCollection,3). "</td>
-                             <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSend,3). "</td>
-                             <td></td>
-                             </tr>";
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPayment,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRec,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedCollection,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSend,3). "</td>
+                           <td></td>
+                        </tr>";
                 $body.="</table><br>";
                 $body.="<table align='right'>
-                             <tr><td colspan='3'></td>
-                             <tr><td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
-                             <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
-                             <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>".DateManagement::howManyDaysBetween($last_due_date_due, $date)." days due</td>
-                             <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
-                             <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
-                             </tr>
-                        </table>";
-                $body.= "<br><br><br><br><table style='background:#3466B4;text-align:center;color:white'>
-                              <tr style='border:1px solid silver; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
-                              <td style='width:250px;'>Description</td>
-                              <td style='width:100px;'>Issue Date</td>
-                              <td style='width:100px;'>Due Date</td>
-                              <td style='width:100px;'>Payments on account <br>(Etelix to $group)</td>
-                              <td style='width:100px;'>Received invoices</td>
-                              <td style='width:100px;'>Payments on account <br>($group to Etelix)</td>
-                              <td style='width:100px;'>Invoices to collect</td>
-                              <td style='width:100px;'>Due Balance</td>
-                              </tr>";
+                         <tr>
+                            <td></td>
+                            <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA  (DUE)</td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>DUE: {$last_due_date_due}</td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>".DateManagement::howManyDaysBetween($last_due_date_due, $date)." days due</td>
+                            <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
+                          </tr>
+                        </table><br><br>";
+                $body.="<table style='background:#3466B4;text-align:center;color:white;margin-top: 70px;'>
+                         <tr style='border:1px solid silver; color: #FFF;  font-weight: bold; height:70px;text-align:center; vertical-align: middle;'>
+                            <td style='width:250px;'>Description</td>
+                            <td style='width:100px;'>Issue Date</td>
+                            <td style='width:100px;'>Due Date</td>
+                            <td style='width:100px;'>Payments on account <br>(Etelix to $group)</td>
+                            <td style='width:100px;'>Received invoices</td>
+                            <td style='width:100px;'>Payments on account <br>($group to Etelix)</td>
+                            <td style='width:100px;'>Invoices to collect</td>
+                            <td style='width:100px;'>Due Balance</td>
+                         </tr>";
                 foreach ($accounting_document as $key => $document) 
                 {
                     if(self::dueOrNext($document)>$date)
@@ -111,22 +112,23 @@
                     $nextDate=abs(DateManagement::howManyDaysBetween($last_due_date_next, $date));
                 }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td colspan='3'></td>
-                         <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPaymentNext,3). "</td>
-                         <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRecNext,3). "</td>
-                         <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedCollectionNext,3). "</td>
-                         <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSendNext,3). "</td>
-                         <td></td>
-                         </tr>";
-                $body.="</table><br>;
-                         <table align='right'>
-                         <tr><td colspan='3'></td>
-                         <tr><td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
-                         <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
-                         <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>{$nextDate} day next</td>
-                         <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
-                         <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedPaymentNext,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceRecNext,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedCollectionNext,3). "</td>
+                           <td " . Reportes::define_estilos_totals() . ">". Yii::app()->format->format_decimal($accumulatedInvoiceSendNext,3). "</td>
+                           <td></td>
+                        </tr>";
+                $body.="</table><br>
+                        <table align='right'>
+                         <tr>
+                            <td></td>
+                            <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SOA (NEXT)</td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>NEXT: {$last_due_date_next}</td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>{$nextDate} day next</td>
+                            <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
+                            <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
-                         </table>";
+                        </table>";
                 return $body;
             }else{
                 return 'No hay data, o puede que falte datos  en las condiciones comerciales de carrier pertenecientes al grupo';
