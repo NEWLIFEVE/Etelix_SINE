@@ -134,9 +134,10 @@ class InvoiceReport extends Reportes
             $backPeriods=self::getBackPeriods($paymentTerm, $toDate, $typeReport);
             $segTwo=count($backPeriods)*30;
                 ini_set('max_execution_time', $segTwo);
-            $body.="<tr>
-                       <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
-                   </tr>";
+            if(count($backPeriods)>1)
+                $body.="<tr>
+                           <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
+                       </tr>";
             foreach ($backPeriods as $key => $periods) 
             {
                 $pos=$key+1;
@@ -274,13 +275,13 @@ class InvoiceReport extends Reportes
             
         }else{
                 $sql="SELECT SUM(b.minutes) AS minutes,
-                                       SUM(b.amount) AS amount, 
-                                       SUM(b.fac_minutes) AS fac_minutes, 
-                                       SUM(b.fac_amount) AS fac_amount, 
-                                       SUM(b.fac_minutes-b.minutes) AS min_diference, 
-                                       SUM(b.fac_amount-b.amount) AS monto_diference,
-                                       '{$startDate}' AS from_date,
-                                       '{$endDate}' AS to_date
+                             SUM(b.amount) AS amount, 
+                             SUM(b.fac_minutes) AS fac_minutes, 
+                             SUM(b.fac_amount) AS fac_amount, 
+                             SUM(b.fac_minutes-b.minutes) AS min_diference, 
+                             SUM(b.fac_amount-b.amount) AS monto_diference,
+                             '{$startDate}' AS from_date,
+                             '{$endDate}' AS to_date
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
                                (SELECT minutes
                                 FROM accounting_document
@@ -302,10 +303,11 @@ class InvoiceReport extends Reportes
     }
     public static function getBackPeriods($periodPaymentTerm, $date, $typeReport)
     {
+        $period=NULL;
         if($typeReport=="REFAC") //obtengo el atributo periodo
             $period=$periodPaymentTerm;
         else
-            $period=TerminoPago::getModelFind($period)->period;
+            $period=TerminoPago::getModelFind($periodPaymentTerm)->period;
 
        $key=0;//obtengo el array de los periodos pasados
        $array=array(); 

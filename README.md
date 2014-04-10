@@ -2,6 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
+    - Pequeñas mejoras en SINE.js.
+    - pequeñas mejoras en refac y reprov.
     - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.
     - Modificado refac y reprov para que genere summary por medio de un check adicional donde se define si se muestra o no.
     - Modificacion de  refac y reprov a nivel de estilos.
