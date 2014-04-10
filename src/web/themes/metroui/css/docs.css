@@ -691,20 +691,47 @@ select
 /*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/
 
 /*PROVISIONES*/
+#showProvisions
+{
+    margin: 0px; 
+}
 #genProvision 
 {
     background: #3466B4;
-    width: 129px;
-    height: 103px;
-    padding-left: 21px;
-    margin: 102px 45px;
+    height: 62px;
+    padding: 2px 11px 10px 15px;
+    margin: 404px 169px;
+    position: absolute;
+    width: 60%;
 }
 #genProvision:hover
 {
     background: #166EB4;
 }
-.formProvisions 
+.H1provInput
+{
+    color: white!important;
+    text-align: center;
+}
+/*.formProvisions 
 {
     margin: -175px 14px;
+}*/
+#formProvisions 
+{
+    position: absolute;
+    margin: 114px 157px;
 }
-
+.date
+{
+    position: absolute;
+    margin: 0px 166px;
+}
+.viewsProvisions
+{
+    display:none;
+}
+.titleProv
+{
+    margin: 0px 0px 45px 0px!important;
+}

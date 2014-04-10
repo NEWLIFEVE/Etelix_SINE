@@ -513,7 +513,7 @@ class Provisions extends CApplicationComponent
 		}
 	}
 
-	/**
+        /**
 	 * @return int
 	 */
 	private function _getEndPeriod($num)

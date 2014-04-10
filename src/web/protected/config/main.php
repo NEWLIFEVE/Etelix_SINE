@@ -69,6 +69,9 @@ return array(
         'format'=>array(
             'class'=>"application.components.Formatter",
         ),
+        'provisions'=>array(
+            'class'=>"application.components.Provisions",
+        ),
         'bootstrap'=>array(
             'class'=>'application.extensions.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
         ),

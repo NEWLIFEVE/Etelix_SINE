@@ -14,7 +14,7 @@ return array(
 		),
 	// application components
 	'components'=>array(
-		'provisions'=>array(
+	'provisions'=>array(
             'class'=>"application.components.Provisions",
         ),
         'mail'=>array(

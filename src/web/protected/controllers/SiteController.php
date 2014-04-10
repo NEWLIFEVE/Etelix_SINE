@@ -411,7 +411,11 @@ class SiteController extends Controller
     }
     public function actionProvisions()
     {
-        $this->render('Provisions');
+        return $this->render('Provisions');
+    }
+    public function actionGenProvisions()
+    {
+        echo Yii::app()->provisions->run($_GET['fromDate'],$_GET['grupo']);
     }
 }
 ?>

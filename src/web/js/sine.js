@@ -37,7 +37,6 @@ $SINE.UI=(function()
     function _datepicker() 
     {
         $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
-        $( "#fromDate, #toDate").datepicker({ dateFormat: "yy-mm-dd"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite
@@ -66,7 +65,7 @@ $SINE.UI=(function()
      */
     function _clickElement() 
     {
-        $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not').on('click',function()
+        $('#showProvisions,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#previa,#mail,#excel,#views_not,#genProvision').on('click',function()
         {   
             switch ($(this).attr("id")){
                 case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
@@ -93,6 +92,13 @@ $SINE.UI=(function()
                     break;
                 case "previa": case "mail": case "excel": 
                     $SINE.UI.export_report($(this));
+                    break;
+                case "genProvision": 
+                    $SINE.UI.genProvisions($(this));
+                    break;
+                case "showProvisions": 
+                    
+                    $SINE.UI.msj_cargando("","");$SINE.UI.fancy_box($(".viewsProvisions").html());  
                     break;
                 case "views_not":
                     $(this).remove();
@@ -299,8 +305,7 @@ $SINE.UI=(function()
     */
     function export_report(click)
     {
-        var valid_input=$SINE.UI.seleccionaCampos($('#tipo_report').val()); 
-        if(valid_input==0)
+        if($SINE.UI.seleccionaCampos($('#tipo_report').val()) == 0)
         {
             $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
         }else{
@@ -319,6 +324,18 @@ $SINE.UI=(function()
                       $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
                   });
                   } 
+        }
+    }
+    function genProvisions(click)
+    {
+        if($SINE.UI.seleccionaCampos($(click).attr('id')) == 0)
+        {
+            $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
+        }else{
+              console.log("ya esta listo para el ajax");
+                $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#formProvisions").serialize());
+//                $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
+
         }
     }
      /**
@@ -355,6 +372,9 @@ $SINE.UI=(function()
              break               
          case 'redis':
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
+             break               
+         case 'genProvision':
+             var respuesta=$SINE.UI.validaCampos($('#fromDate,#toDate').serializeArray());
              break               
         }
         console.log(respuesta);
@@ -464,7 +484,8 @@ $SINE.UI=(function()
             changeHtml:changeHtml,
             fancy_box:fancy_box,
             imprimir:imprimir,
-            adminInput:adminInput
+            adminInput:adminInput,
+            genProvisions:genProvisions
     };
 })();
 
@@ -549,6 +570,18 @@ $SINE.AJAX=(function()
              }
         });
     }
+    function provisions(type,action,formulario)
+    {
+        $.ajax({
+             type: type,
+             url: action,
+             data: formulario,
+             success: function(data)
+             {     
+                 console.log(data);
+             }
+        });
+    }
 //        function _updateFactPeriod()
 //        {
 //            $.ajax({url:"/site/updateFactPeriod",success:function(data)
@@ -569,7 +602,8 @@ $SINE.AJAX=(function()
 
     return {init:init,
             _getFormPost:_getFormPost,
-            send:send
+            send:send,
+            provisions:provisions
            }
 })();
 

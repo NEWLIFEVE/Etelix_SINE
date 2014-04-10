@@ -26,10 +26,9 @@
                         <?php echo Yii::app()->name; ?>
                     </a>
                     <span class="element-divider"></span>
-                        <a href="/site/Provisions" class="element">
+                        <label id='showProvisions'class="element">
                             Provisiones
-                        </a>
-                    <span class="element-divider"></span>
+                        </label>
                     <?php if (!Yii::app()->user->isGuest): ?>
                         <span class="element-divider"></span>
                         <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout ('.Yii::app()->user->name.')', array('/site/logout'), array('class'=>'element')); ?>
