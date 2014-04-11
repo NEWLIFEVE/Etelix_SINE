@@ -1,19 +1,15 @@
 <?php
 /**
-* 
-*/
+ * 
+ */
 class ProvisionsCommand extends CConsoleCommand
 {
 	public function run($args)
 	{
-		if(isset($args[0]))
-		{
-	    	Yii::app()->provisions->run($args[0]);
-		}
-		else
-		{
-	    	Yii::app()->provisions->run();
-		}
+		$group=$date=null;
+		if(isset($args[0])) $date=$args[0];
+		if(isset($args[1])) $group=$args[1];
+		Yii::app()->provisions->run($date,$group);
 	}
 }
 ?>

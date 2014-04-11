@@ -2,7 +2,17 @@
 ============
 
 Sistema de Reportes para Billing
+
+Realese 1.2.9.1
+    - Se arreglo el SOA para que incluya todos los documentos, incluso repetidos, de esta forma
+      el valor del SOA y el SUMMARY (SOA) son iguales.
+    
 Release 1.2.9
+    - Modificacion de soa y balance para que muestre facturas y demas documentos que esten repetidos.
+    - Agregados totales de minutos para refac y reprov.
+    - Agregada nota que indica al usuario que debe seleccionar el ultimo dia del periodo de facturacion en el datepicker para refac y reprov.
+    - Solucionados detalles en summary.
+    - Mejora en generacion de reporte soa(en descripcion cuando el periodo esta conformado por meses diferentes, muestra ambos en formato "Oct-07-Sep-13", de lo contrario solo muestra el formato original "Oct-07-13")
     - Se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
     - Se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
     - Modificacion en SUMMARY, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
@@ -14,8 +24,8 @@ Realese 1.2.8
     - Default los inputs de soa, balance, sumary y RETECO.
     - Arreglado Due_date y Monto Due en SUMMARY.
     - Arreglado calculo de dias vencidos y por vencer.
-    - RECREDI mejorado.
-    - Nuevos filtros para RECREDI y SUMMARY
+    - Recredi mejorado.
+    - Nuevos filtros para recredi y summary
     - Agregado dias vencidos y por vencer en Summary.
 
 
@@ -33,13 +43,13 @@ Release 1.2.6
     - Nuevo soa terminado.
 Release 1.2.5.1
     - Nuevo reporte de SOA con un total vencido y el proximo a vencer.
-    - algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
+    - Algunas moficicaciones temporales en Reportes.php implementadas para hacer que soa y balance funcionen de diferentes maneras (recomendable modificar el balance para que se genere tal como el soa actual)
 Release 1.2.5
     - Nueva version de provisiones
     - Agregados revenue, margin y cost de los ultimos tres dias por carrier
     - Mejora en REPROV y REFAC
 Release 1.2.4.1
-    - cambio en formula donde se utiliza notas de credito para calcular balance acumulado
+    - Cambio en formula donde se utiliza notas de credito para calcular balance acumulado
     - Corregido problema en comando de provisiones
 Release 1.2.4
     - Corregida calculo de dias en REPROV
