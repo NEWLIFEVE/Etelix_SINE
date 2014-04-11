@@ -14,13 +14,13 @@ class Reportes extends CApplicationComponent
      * @param type $grupo
      * @param type $fecha
      * @param type $no_disp
-     * @param type $no_prov
+     * @param type $provision
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$no_prov)
+    public function SOA($grupo,$fecha,$no_disp,$provision)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$provision);
         return $var;
     }
     /**
@@ -63,12 +63,13 @@ class Reportes extends CApplicationComponent
      * @param type $fromDate
      * @param type $toDate
      * @param type $typeReport
-     * @param type $paymentTerm
+     * @param type $periodPaymentTerm
+     * @param type $sum
      * @return type
      */
-    public function refac($fromDate,$toDate,$typeReport,$paymentTerm)
+    public function refac($fromDate,$toDate,$typeReport,$periodPaymentTerm,$sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,NULL);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$periodPaymentTerm,NULL,$sum);
         return $var;
     }
 
@@ -80,11 +81,12 @@ class Reportes extends CApplicationComponent
      * @param type $typeReport
      * @param type $paymentTerm
      * @param type $dividedInvoice
+     * @param type $sum
      * @return type
      */
-    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice)
+    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice, $sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
         return $var;
     }
 
@@ -164,14 +166,26 @@ class Reportes extends CApplicationComponent
     /**
      * 
      * @param type $no_prov
+     * @param type $group
      * @return type
      */
-    public static function define_prov($no_prov)
+    public static function define_prov($no_prov,$group)
     {
+        if($group!=null)$group=Reportes::define_grupo($group);
         if($no_prov=="No"){
-            return",'Provision Factura Enviada','Provision Factura Recibida'";
-        } else{
             return"";
+        } else{
+            return "UNION
+                    SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
+                         CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
+                    FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
+                    WHERE a.id_carrier IN(Select id from carrier where {$group})
+                        AND tad.name  IN('Provision Factura Enviada','Provision Factura Recibida') 
+                        AND a.id_type_accounting_document=tad.id
+                        AND a.id_carrier=c.id
+                        AND a.id_currency=s.id
+                        AND c.id_carrier_groups = g.id
+                        AND a.id_accounting_document IS NULL";
         }
     }
 
@@ -290,26 +304,26 @@ class Reportes extends CApplicationComponent
     {
         switch ($model->id_type_accounting_document){
             case "3": case "4":
-                $estilos=" style='background:silver;color:black;border:1px solid black;'";
+                $estilos=" style='background:silver;color:black;border:1px solid silver;'";
                 break;
             case "14":case "15":
-                $estilos=" style='background:#E5EAF5;color:black;border:1px solid black;'";
+                $estilos=" style='background:#E5EAF5;color:black;border:1px solid silver;'";
                 break;
             case "5": case "6":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             case "7": case "8":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             
             case "10":case "12": 
-                $estilos=" style='background:#5CC468;color:black;border:1px solid black;'";
+                $estilos=" style='background:#AFDBB4;color:black;border:1px solid silver;'";
                 break;
             case "11": case "13":
-                $estilos=" style='background:#F8B679;color:black;border:1px solid black;'";
+                $estilos=" style='background:#FAD8B9;color:black;border:1px solid silver;'";
                 break;
             default:
-                $estilos = " style='background:white;color:black;border:1px solid black;'";
+                $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         }
         return $estilos;
     }
@@ -320,7 +334,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_null()
     {
-        $estilos = " style='background:white;color:black;border:1px solid white;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid white;'";
         return $estilos;
     }
 
@@ -330,7 +344,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_totals()
     {
-        $estilos = " style='background:white;color:black;border:1px solid black;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         return $estilos;
     }
 
@@ -580,7 +594,7 @@ class Reportes extends CApplicationComponent
         switch ($model->id_type_accounting_document)
         {
             case "9":
-                return $model->amount;
+                return $acumulado + $model->amount;
                 break;
             case "1":case "3":case "6":case "7":case"10":case "12":case "15":
 
@@ -686,32 +700,32 @@ class Reportes extends CApplicationComponent
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
-     * @param type $fecha_to
+     * @param type $toDate
      * @return type
      */
-    public static function define_fecha_from($tp, $fecha_to)
+    public static function defineFromDate($tp, $toDate)
     {
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-6day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-6day', strtotime($toDate)));
                 break;
             case 15:
-                if(date("d", strtotime($fecha_to)) == 15)
+                if(date("d", strtotime($toDate)) == 15)
                 {
-                    return DateManagement::getDayOne($fecha_to);
+                    return DateManagement::getDayOne($toDate);
                 }
-                elseif($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::howManyDays($fecha_to))
+                elseif($toDate == DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-' . DateManagement::howManyDays($toDate))
                 {
-                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                    return DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-16';
                 }
                 else
                 {
-                    return DateManagement::calculateDate('-15',$fecha_to);
+                    return DateManagement::calculateDate('-15',$toDate);
                 }
                 break;
             case 30:
-                return DateManagement::getDayOne($fecha_to);
+                return DateManagement::getDayOne($toDate);
                 break;
             default:
                 break;
@@ -748,7 +762,7 @@ class Reportes extends CApplicationComponent
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28"||$var=="29")return "MENSUAL"; 
     }
 
     /**
@@ -1078,9 +1092,9 @@ class Reportes extends CApplicationComponent
         public static function defineStyleNeed($var)
         {
             if($var==NULL)
-                return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
+                return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
             else 
-                return "style='background:white;color:black;border:1px solid black;text-align:left;'";
+                return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
         }
         /**
          * fin RETECO

@@ -121,6 +121,13 @@ $this->pageTitle = Yii::app()->name;
                 <option value="">Seleccione</option>
             </select> 
         </div>
+        <div class="formInputs summary_option">
+            <h3>Mostrar Summary</h3>
+             <div class="btn-group" data-toggle="buttons-radio">
+                <input name="Si_sum" id="Si_sum" type="text" placeholder="Si" value=""class="btn btn-primary">
+                <input name="No_sum" id="No_sum" placeholder="No" type="text" value=""class="btn btn-primary">
+             </div> 
+        </div>
         <div class="formInputs divide_factura">
             <h3 class="label_divided">Mostrar carriers que dividen por mes</h3>
              <div class="btn-group" data-toggle="buttons-radio">
@@ -128,7 +135,6 @@ $this->pageTitle = Yii::app()->name;
                 <input name="No_div" id="No_div" placeholder="No" type="text" value=""class="btn btn-primary">
              </div> 
         </div>
-        
         <div class='formInputs provisiones'>
             <h3 class="h_prov">Provision Fact</h3>
             <div class="btn-group" data-toggle="buttons-radio">

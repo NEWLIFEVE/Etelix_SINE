@@ -2,7 +2,10 @@
 ============
 
 Sistema de Reportes para Billing
-
+    - Pequeñas mejoras en SINE.js.
+    - pequeñas mejoras en refac y reprov.
+    - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.
+    - Modificado refac y reprov para que genere summary por medio de un check adicional donde se define si se muestra o no.
     - Modificacion de  refac y reprov a nivel de estilos.
     - Modificacion de reprov para que la busqueda sea hecha por termino de pago y ahora tiene la oportunidad de indicar si quiere ver carriers periodo 7 que piquen el mes,
       esta opcion viene por defecto en "si", la misma influye mas que todo al momento de consultar en un periodo dividido entre dos meses, donde se encontraran facturas completas y divididas.
