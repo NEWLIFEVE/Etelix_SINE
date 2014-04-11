@@ -2,6 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
+
+Realese 1.2.10
     - Nueva version de Provisiones: 
         * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
         * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
