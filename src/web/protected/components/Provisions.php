@@ -242,7 +242,7 @@ class Provisions extends CApplicationComponent
 						<footer style='font-size:0.8em;'>Correo enviado automaticamente a las ".date("H:i:s A")."</footer>
 					</body>
 				</html>";
-		$user="mmzmm3z@gmail.com";
+		$user="manuelz@sacet.biz";
 		Yii::app()->mail->enviar($body, $user, "Provisiones Generadas");
 	}
 
