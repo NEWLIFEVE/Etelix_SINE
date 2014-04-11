@@ -701,11 +701,11 @@ select
 {
     color:red!important;
 }
-.instructive
+.instructive,.provisionNote
 {
     color:#06ACFA !important;
 }
-.note_ref_pro 
+.note_ref_pro
 {
     margin: -17px 9px;
     position: absolute;

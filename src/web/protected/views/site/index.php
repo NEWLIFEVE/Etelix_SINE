@@ -212,11 +212,13 @@ $this->pageTitle = Yii::app()->name;
 <div class="views_not" id="views_not">
     <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
 </div>
+
+
 <div class="viewsProvisions" id="viewsProvisions">
     
         <form id="formProvisions">
                 <h1 class="titleProv">Provisiones </h1>
-                <h3 class="h3_note">Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
+                <h3 class="provisionNote">Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
             <div name="formProvisions"  class="formProvisions">
                 <div class="formInputs group">
                     <h3>Grupo</h3>

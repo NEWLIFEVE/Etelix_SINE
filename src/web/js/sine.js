@@ -68,8 +68,7 @@ $SINE.UI=(function()
      */
     function _clickElement() 
     {
-        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,\n\
-           #No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#previa,#mail,#excel,#views_not').on('click',function()
+        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#previa,#mail,#excel,#views_not').on('click',function()
         {   
             switch ($(this).attr("id")){
                 case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
@@ -104,11 +103,12 @@ $SINE.UI=(function()
                     $SINE.UI.export_report($(this));
                     break;
                 case "genProvision": 
+                    console.log("dio click genProvision");
                     $SINE.UI.genProvisions($(this));
                     break;
                 case "showProvisions": 
-                    
-                    $SINE.UI.msj_cargando("","");$SINE.UI.fancy_box($(".viewsProvisions").html());  
+                    $("body").append($(".viewsProvisions").html());$(".viewsProvisions").fadeIn('slow');
+//                    $SINE.UI.msj_cargando("","");$SINE.UI.fancy_box($(".viewsProvisions").html());  
                     break;
                 case "views_not":
                     $(this).remove();
@@ -346,6 +346,7 @@ $SINE.UI=(function()
     }
     function genProvisions(click)
     {
+        console.log("paso a genProvision");
         if($SINE.UI.seleccionaCampos($(click).attr('id')) == 0)
         {
             $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
@@ -392,7 +393,7 @@ $SINE.UI=(function()
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
              break               
          case 'genProvision':
-             var respuesta=$SINE.UI.validaCampos($('#fromDate,#toDate').serializeArray());
+             var respuesta=$SINE.UI.validaCampos($('#datepicker').serializeArray());
              break               
         }
         console.log(respuesta);
