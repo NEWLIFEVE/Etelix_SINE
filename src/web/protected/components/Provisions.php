@@ -97,6 +97,8 @@ class Provisions extends CApplicationComponent
     	$this->runInvoiceProvision(true);
     	//
     	$this->runInvoiceProvision(false);
+    	
+    	if($this->numInvoicesSend>0 || $this->numInvoicesReceived>0) var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas y ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
 
     	if(!YII_DEBUG) $this->sendNotification();
     }
@@ -144,9 +146,16 @@ class Provisions extends CApplicationComponent
 	public function generateTrafficProvision($type=true)
 	{
 		$values="";
+		$count=0;
 
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
-		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
+		if($type) 
+		{
+			$data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
+		}
+		else
+		{
+			$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
+		}
 
 		$type_document=TypeAccountingDocument::model()->find($data['condition'])->id;
 
@@ -156,22 +165,26 @@ class Provisions extends CApplicationComponent
 		foreach ($this->$data['variable'] as $key => $factura)
 		{
 			$this->_deleteProvision($factura->date_balance,$factura->date_balance,$factura->id,$type_document);
-			if($key>0 && $key<$num) $values.=",";
-			$values.="(";
-			$values.="'".$factura->date_balance."',";
-			$values.="'".$factura->date_balance."',";
-			$values.="'".$factura->date_balance."',";
-			$values.=$factura->minutes.",";
-			$values.=$factura->margin.",";
-			$values.=$type_document.",";
-			$values.=$factura->id.",";
-			$values.=$currency.",";
-			$values.="1";
-			$values.=")";
+			if($factura->margin!=0)
+			{
+				$count+=1;
+				if($key>0 && $key<$num) $values.=",";
+				$values.="(";
+				$values.="'".$factura->date_balance."',";
+				$values.="'".$factura->date_balance."',";
+				$values.="'".$factura->date_balance."',";
+				$values.=$factura->minutes.",";
+				$values.=$factura->margin.",";
+				$values.=$type_document.",";
+				$values.=$factura->id.",";
+				$values.=$currency.",";
+				$values.="1";
+				$values.=")";
+			}
 		}
 		$sql="INSERT INTO accounting_document(issue_date, from_date, to_date, minutes, amount, id_type_accounting_document, id_carrier, id_currency, confirm)
 			  VALUES ".$values;
-		if($num>0)
+		if($count>0)
 		{
 			$command = Yii::app()->db->createCommand($sql);
 	        if($command->execute())
@@ -198,7 +211,6 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
-			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
@@ -207,7 +219,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
-			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+			
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 	}
@@ -230,7 +242,7 @@ class Provisions extends CApplicationComponent
 						<footer style='font-size:0.8em;'>Correo enviado automaticamente a las ".date("H:i:s A")."</footer>
 					</body>
 				</html>";
-		$user="mmzmm3z@gmail.com";
+		$user="manuelz@sacet.biz";
 		Yii::app()->mail->enviar($body, $user, "Provisiones Generadas");
 	}
 
@@ -241,10 +253,10 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _generateInvoiceProvisionCustomer($idCarrier)
 	{
-		$data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'invoice'=>"name='Provision Factura Enviada'",'real'=>"name='Factura Enviada'");
-		$typeProvisions['traffic']=TypeAccountingDocument::model()->find($data['condition'])->id;
-		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
-		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
+		//$data=array('variable'=>'invoicesSent');
+		$typeProvisions['traffic']=TypeAccountingDocument::model()->find("name='Provision Trafico Enviada'")->id;
+		$typeProvisions['invoice']=TypeAccountingDocument::model()->find("name='Provision Factura Enviada'")->id;
+		$typeProvisions['real']=TypeAccountingDocument::model()->find("name='Factura Enviada'")->id;
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
 		$typeProvisions['num']="numInvoicesSend";
 
@@ -290,13 +302,13 @@ class Provisions extends CApplicationComponent
 
 				case 7:
 					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+					$num=DateManagement::getDayNumberWeek($this->date);
 					if($tempdate===$this->date)
 					{
 						$firstDay=DateManagement::getMonday($this->date);
 						$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
 					}
-					$num=DateManagement::getDayNumberWeek($this->date);
-					if($num==7)
+					elseif($num==7)
 					{
 						$monday=DateManagement::getMonday($this->date);
 						if(DateManagement::separatesDate($monday)['month']==DateManagement::separatesDate($this->date)['month'])
@@ -320,7 +332,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _generateInvoiceProvisionSupplier($idCarrier)
 	{
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
+		//$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
 
 		$typeProvisions['traffic']=TypeAccountingDocument::model()->find("name='Provision Trafico Recibida'")->id;
 		$typeProvisions['invoice']=TypeAccountingDocument::model()->find("name='Provision Factura Recibida'")->id;
@@ -510,18 +522,34 @@ class Provisions extends CApplicationComponent
 	 * @param int $idDocument
 	 * @return boolean
 	 */
-	private function _changeStatusProvision($startDate,$endDate,$idCarrier,$idDocument)
+	private function _changeStatusProvisions($startDate,$endDate,$idCarrier,$idDocument,$otherDocument)
 	{
-		$model=AccountingDocumentProvisions::model()->find('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
-		if($model->id!=null)
+		var_dump($startDate,$endDate,$idCarrier,TypeAccountingDocument::model()->findByPk($idDocument)->name);
+		$model=AccountingDocument::model()->findAll('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
+		foreach ($model as $key => $value)
 		{
-			$model->confirm=-1;
-			if($model->save())
-	        {
-	        	return true;
-	        }
+			$this->_changeStatusProvision($value->id,$otherDocument);
 		}
-        return false;
+	}
+
+	/**
+	 * Metodo encargado de cambiar el estado de una provision de trafico si se le generó una provision de factura
+	 * @access private
+	 * @param date $startDate
+	 * @param date $endDate
+	 * @param int $idCarrier
+	 * @param int $idDocument
+	 * @return boolean
+	 */
+	private function _changeStatusProvision($id,$otherDocument)
+	{
+		$provision=AccountingDocumentProvisions::model()->findByPk($id);
+		$provision->confirm=-1;
+		$provision->id_accounting_document=$otherDocument;
+		if($provision->save())
+		{
+			return true;
+		}
 	}
 
 	/**
@@ -540,6 +568,7 @@ class Provisions extends CApplicationComponent
 		{
 			$provision=AccountingDocumentProvisions::model()->find('from_date>=:start AND to_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$data['invoice']));
 			$provision->confirm=-1;
+			$provision->id_accounting_document=$invoice->id;
 			if($provision->save())
 			{
 				return true;
@@ -561,12 +590,13 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
 	{
+		//var_dump("la suma desde ".TypeAccountingDocument::model()->findByPk($typeProvisions['traffic'])->name." para generar una ".TypeAccountingDocument::model()->findByPk($typeProvisions['invoice'])->name." en las fechas ".$startDate." ".$endDate);
 		$trafficProvisions=$this->_getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 		if($trafficProvisions->amount!=null)
 		{
 			$this->_deleteProvision($startDate,$endDate,$idCarrier,$typeProvisions['invoice']);
 			$doccument=new AccountingDocumentProvisions;
-			$doccument->issue_date=$endDate;
+			$doccument->issue_date=DateManagement::calculateDate('+1',$endDate);
 			$doccument->from_date=$startDate;
 			$doccument->to_date=$endDate;
 			$doccument->minutes=$trafficProvisions->minutes;
@@ -577,7 +607,7 @@ class Provisions extends CApplicationComponent
 			$doccument->confirm=1;
 			if($doccument->save())
 			{
-				$this->_changeStatusProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
+				$this->_changeStatusProvisions($startDate,$endDate,$idCarrier,$typeProvisions['traffic'],$doccument->id);
 				$this->_changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions);
 				$this->$typeProvisions['num']=$this->$typeProvisions['num']+1;
 			}
@@ -594,7 +624,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _deleteProvision($startDate,$endDate,$idCarrier,$typeProvision)
 	{
-		var_dump($startDate,$endDate,$idCarrier,$typeProvision);
+		//var_dump($startDate,$endDate,$idCarrier,TypeAccountingDocument::model()->findByPk($typeProvision)->name);
 		return AccountingDocumentProvisions::model()->deleteAll('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvision));
 	}
 

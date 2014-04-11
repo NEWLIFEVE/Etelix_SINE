@@ -2,13 +2,21 @@
 ============
 
 Sistema de Reportes para Billing
+    - Nueva version de Provisiones: 
+        * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
+        * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
+    - Pequeñas mejoras en SINE.js.
+    - pequeñas mejoras en refac y reprov.
+    - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.
+    - Modificado refac y reprov para que genere summary por medio de un check adicional donde se define si se muestra o no.
+    - Modificacion de  refac y reprov a nivel de estilos.
+    - Modificacion de reprov para que la busqueda sea hecha por termino de pago y ahora tiene la oportunidad de indicar si quiere ver carriers periodo 7 que piquen el mes,
+      esta opcion viene por defecto en "si", la misma influye mas que todo al momento de consultar en un periodo dividido entre dos meses, donde se encontraran facturas completas y divididas.
+
 
 Realese 1.2.9.1
-    - Se arreglo el SOA para que incluya todos los documentos, incluso repetidos, de esta forma
+    - Se arreglo el SOA y balance para que incluya todos los documentos, incluso repetidos, de esta forma
       el valor del SOA y el SUMMARY (SOA) son iguales.
-    
-Release 1.2.9
-    - Modificacion de soa y balance para que muestre facturas y demas documentos que esten repetidos.
     - Agregados totales de minutos para refac y reprov.
     - Agregada nota que indica al usuario que debe seleccionar el ultimo dia del periodo de facturacion en el datepicker para refac y reprov.
     - Solucionados detalles en summary.

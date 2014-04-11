@@ -13,14 +13,14 @@ class reteco extends Reportes
      */
     public static function report($carActived,$typePaymentTerm,$paymentTerm)
     {
-        $styleRowsNumb="style='background:#83898F;color:white;border:1px solid black;text-align:center;'";
-        $styleCarriers="style='background:silver;color:white;border:1px solid black;text-align:center;'";
-        $styleActived="style='background:#F0950C;color:white;border:1px solid black;text-align:center;'";
-        $styleContrato="style='background:#06ACFA;color:white;border:1px solid black;text-align:center;'";
-        $styleTPCustom="style='background:#049C47;color:white;border:1px solid black;text-align:center;'";
-        $styleTPSupplr="style='background:#F89289;color:white;border:1px solid black;text-align:center;'";
-        $styleRowBasic="style='color:black;border:1px solid black;text-align:left;'";
-        $styleRowActiv="style='color:red;border:1px solid black;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+        $styleRowsNumb="style='background:#83898F;color:white;border:1px solid silver;text-align:center;'";
+        $styleCarriers="style='background:silver;color:white;border:1px solid silver;text-align:center;'";
+        $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
+        $styleContrato="style='background:#06ACFA;color:white;border:1px solid silver;text-align:center;'";
+        $styleTPCustom="style='background:#049C47;color:white;border:1px solid silver;text-align:center;'";
+        $styleTPSupplr="style='background:#F89289;color:white;border:1px solid silver;text-align:center;'";
+        $styleRowBasic="style='color:#6F7074;border:1px solid silver;text-align:left;'";
+        $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
         $documents=  self::getData($carActived,$typePaymentTerm,$paymentTerm);
         $body="<table>
           <tr>
