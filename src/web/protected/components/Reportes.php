@@ -14,13 +14,13 @@ class Reportes extends CApplicationComponent
      * @param type $grupo
      * @param type $fecha
      * @param type $no_disp
-     * @param type $no_prov
+     * @param type $provision
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$no_prov)
+    public function SOA($grupo,$fecha,$no_disp,$provision)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$no_prov);
+        $var=SOA::reporte($grupo,$fecha,$no_disp,$provision);
         return $var;
     }
     /**
@@ -60,26 +60,33 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $periodPaymentTerm
+     * @param type $sum
      * @return type
      */
-    public function refac($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refac($fromDate,$toDate,$typeReport,$periodPaymentTerm,$sum)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$periodPaymentTerm,NULL,$sum);
         return $var;
     }
 
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fecha_from
-     * @param type $fecha_to
+     * @param type $fromDate
+     * @param type $toDate
+     * @param type $typeReport
+     * @param type $paymentTerm
+     * @param type $dividedInvoice
+     * @param type $sum
      * @return type
      */
-    public function refi_prov($fecha_from,$fecha_to,$tipo_report,$paymentTerm)
+    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice, $sum)
     {
-        $var=InvoiceReport::reporte($fecha_from,$fecha_to,$tipo_report,$paymentTerm);
+        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
         return $var;
     }
 
@@ -132,7 +139,7 @@ class Reportes extends CApplicationComponent
                      return " ";
                   }else{
                      return "UNION
-                             SELECT issue_date, valid_received_date, doc_number, from_date, to_date, g.name AS group, CAST(NULL AS date) AS due_date, 
+                             SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
                                     amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                              FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                              WHERE a.id_carrier IN(Select id from carrier where $group)
@@ -145,7 +152,7 @@ class Reportes extends CApplicationComponent
                     return " ";
                  }else{
                     return "UNION
-                            SELECT a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+                            SELECT a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                             WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$date}'
                                   AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
@@ -159,14 +166,26 @@ class Reportes extends CApplicationComponent
     /**
      * 
      * @param type $no_prov
+     * @param type $group
      * @return type
      */
-    public static function define_prov($no_prov)
+    public static function define_prov($no_prov,$group)
     {
+        if($group!=null)$group=Reportes::define_grupo($group);
         if($no_prov=="No"){
-            return",'Provision Factura Enviada','Provision Factura Recibida'";
-        } else{
             return"";
+        } else{
+            return "UNION
+                    SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group,
+                         CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
+                    FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
+                    WHERE a.id_carrier IN(Select id from carrier where {$group})
+                        AND tad.name  IN('Provision Factura Enviada','Provision Factura Recibida') 
+                        AND a.id_type_accounting_document=tad.id
+                        AND a.id_carrier=c.id
+                        AND a.id_currency=s.id
+                        AND c.id_carrier_groups = g.id
+                        AND a.id_accounting_document IS NULL";
         }
     }
 
@@ -207,10 +226,10 @@ class Reportes extends CApplicationComponent
                 $description="Balance - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
             case "2":
-                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." # ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "1":
-                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description =$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "7":case "8":   //hay que mejoprarlo, tengo la idea, pero mejor discutirlo antes
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
@@ -228,6 +247,13 @@ class Reportes extends CApplicationComponent
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
         }
         return $description;
+    }
+    public static function defineFormatPeriod($model)
+    {
+        if(Utility::formatDateSINE($model->from_date,"M-")==Utility::formatDateSINE($model->to_date,"M-"))
+            return " d";
+        else
+            return "M-d";
     }
 
     /**
@@ -278,26 +304,26 @@ class Reportes extends CApplicationComponent
     {
         switch ($model->id_type_accounting_document){
             case "3": case "4":
-                $estilos=" style='background:silver;color:black;border:1px solid black;'";
+                $estilos=" style='background:silver;color:black;border:1px solid silver;'";
                 break;
             case "14":case "15":
-                $estilos=" style='background:#E5EAF5;color:black;border:1px solid black;'";
+                $estilos=" style='background:#E5EAF5;color:black;border:1px solid silver;'";
                 break;
             case "5": case "6":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             case "7": case "8":
-                $estilos=" style='background:white;color:red;border:1px solid black;'";
+                $estilos=" style='background:white;color:red;border:1px solid silver;'";
                 break;
             
             case "10":case "12": 
-                $estilos=" style='background:#5CC468;color:black;border:1px solid black;'";
+                $estilos=" style='background:#AFDBB4;color:black;border:1px solid silver;'";
                 break;
             case "11": case "13":
-                $estilos=" style='background:#F8B679;color:black;border:1px solid black;'";
+                $estilos=" style='background:#FAD8B9;color:black;border:1px solid silver;'";
                 break;
             default:
-                $estilos = " style='background:white;color:black;border:1px solid black;'";
+                $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         }
         return $estilos;
     }
@@ -308,7 +334,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_null()
     {
-        $estilos = " style='background:white;color:black;border:1px solid white;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid white;'";
         return $estilos;
     }
 
@@ -318,7 +344,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_estilos_totals()
     {
-        $estilos = " style='background:white;color:black;border:1px solid black;'";
+        $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
         return $estilos;
     }
 
@@ -568,7 +594,7 @@ class Reportes extends CApplicationComponent
         switch ($model->id_type_accounting_document)
         {
             case "9":
-                return $model->amount;
+                return $acumulado + $model->amount;
                 break;
             case "1":case "3":case "6":case "7":case"10":case "12":case "15":
 
@@ -634,7 +660,7 @@ class Reportes extends CApplicationComponent
         }
         elseif($model->id_type_accounting_document==9 && $model->amount<0)
         {
-            return $acumuladoFacRec - ($model->amount*-1);
+            return $acumuladoFacRec + ($model->amount*-1);
         }
         elseif($model->id_type_accounting_document==8)
         {
@@ -674,32 +700,32 @@ class Reportes extends CApplicationComponent
     /**
      * define la fecha de inicio del reporte para refac y refi_prov
      * @param type $termino_pago
-     * @param type $fecha_to
+     * @param type $toDate
      * @return type
      */
-    public static function define_fecha_from($tp, $fecha_to)
+    public static function defineFromDate($tp, $toDate)
     {
         switch($tp)
         {
             case 7:
-                return date('Y-m-d', strtotime('-7day', strtotime($fecha_to)));
+                return date('Y-m-d', strtotime('-6day', strtotime($toDate)));
                 break;
             case 15:
-                if(date("d", strtotime($fecha_to)) == 15)
+                if(date("d", strtotime($toDate)) == 15)
                 {
-                    return DateManagement::getDayOne($fecha_to);
+                    return DateManagement::getDayOne($toDate);
                 }
-                elseif($fecha_to == DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-' . DateManagement::howManyDays($fecha_to))
+                elseif($toDate == DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-' . DateManagement::howManyDays($toDate))
                 {
-                    return DateManagement::separatesDate($fecha_to)['year'] . '-' . DateManagement::separatesDate($fecha_to)['month'] . '-16';
+                    return DateManagement::separatesDate($toDate)['year'] . '-' . DateManagement::separatesDate($toDate)['month'] . '-16';
                 }
                 else
                 {
-                    return DateManagement::calculateDate('-15',$fecha_to);
+                    return DateManagement::calculateDate('-15',$toDate);
                 }
                 break;
             case 30:
-                return DateManagement::getDayOne($fecha_to);
+                return DateManagement::getDayOne($toDate);
                 break;
             default:
                 break;
@@ -736,7 +762,7 @@ class Reportes extends CApplicationComponent
          
         if($var=="16"||$var=="14"||$var=="15") return "QUINCENAL";
          
-        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28")return "MENSUAL"; 
+        if($var=="30"||$var=="1"||$var=="0"||$var=="31"||$var=="28"||$var=="29")return "MENSUAL"; 
     }
 
     /**
@@ -921,6 +947,50 @@ class Reportes extends CApplicationComponent
             }
         }
         /**
+         * EN EL CASO DE THIS WEEK ENCUENTRA DATOS DE DUE Y NEXT Y SI ESTA EN EL RANFO DE FECHA LO UBICA EN THIS WEEK. ESTO ES DEBIDO A QUE ALGUNAS FACTURAS VENCEN EN THIS WEEK, PERO OTRAS YA ESTAN VENCIDAS
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @return string
+         */    
+        public static function defineValueThisNext($valueResult,$valueNext,$dueDateNext, $date)
+        {
+            if($valueResult==""||$valueResult==NULL){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext;
+                }else{
+                    return "";
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+        /**
+         * DEFINE LOS ACUMULADOS PARA THIS WEEK CON DUE Y NEXT
+         * @param type $valueResult
+         * @param type $valueNext
+         * @param type $dueDateNext
+         * @param type $date
+         * @param type $acum
+         * @return type
+         */
+        public static function defineAcumsThisWeek($valueResult,$valueNext,$dueDateNext, $date, $acum)
+        {
+            if($valueResult==$acum){
+                if(DateManagement::firstOrLastDayWeek($date, "first") == DateManagement::firstOrLastDayWeek($dueDateNext, "first")){
+                    return $valueNext+$acum;
+                }else{
+                    return $acum;
+                }
+            }else{
+                return $valueResult;
+            }
+
+        }
+
+        /**
          * METODO ENCARGADO DE DESVIAR LOS MONTOS DEPENDIENDO (SI ES NEGATIVO O POSITIVO) PARA EL CALCULO DE TOTALES EN SUMMARY
          * @param type $value
          * @param type $var
@@ -1022,9 +1092,9 @@ class Reportes extends CApplicationComponent
         public static function defineStyleNeed($var)
         {
             if($var==NULL)
-                return "style='background:#E99241;color:white;border:1px solid black;text-align:left;'";
+                return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
             else 
-                return "style='background:white;color:black;border:1px solid black;text-align:left;'";
+                return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
         }
         /**
          * fin RETECO

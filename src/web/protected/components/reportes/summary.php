@@ -48,7 +48,7 @@ class summary extends Reportes
         $lastWeekThree=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+3", $date), "last");
         $firstWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "first");
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
-        $last_pago_cobro=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
+        $last_payment_collect=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
         $soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=$soaWeekThreeLess=$soaWeekFourLess=0;
         $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=0;
         $dueDaysDue=$dueDaysNext="";
@@ -111,24 +111,24 @@ class summary extends Reportes
             $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document,"style")."'";
             $styleOldDate="style='border:1px solid silver;text-align: center;color:#6F7074;background:".Reportes::defineStyleOld($document->last_date_pago_cobro, $date)."'";
             $pos=$key+1;
-            $last_pago_cobro+=$document->last_pago_cobro;
+            $last_payment_collect+=$document->last_pago_cobro;
             
             $soaPrevLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevLess);
-            $soaThisWeekLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekLess);
+            $soaThisWeekLess=Reportes::defineAcumsThisWeek(Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekLess),Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next, $date, $soaThisWeekLess);
             $soaWeekOneLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneLess);
             $soaWeekTwoLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoLess);
             $soaWeekThreeLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeLess);
             $soaWeekFourLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourLess);
             
             $soaPrevHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevHigher);
-            $soaThisWeekHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekHigher);
+            $soaThisWeekHigher=Reportes::defineAcumsThisWeek(Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekHigher),Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next, $date, $soaThisWeekHigher);
             $soaWeekOneHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneHigher);
             $soaWeekTwoHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoHigher);
             $soaWeekThreeHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeHigher);
             $soaWeekFourHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourHigher);
             
             $soaPrevTotal=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrevTotal);
-            $soaThisWeekTotal=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekTotal);
+            $soaThisWeekTotal=Reportes::defineAcumsThisWeek(Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekTotal),$document->soa_next,$document->due_date_next, $date, $soaThisWeekTotal);
             $soaWeekOneTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL,$soaWeekOneTotal);
             $soaWeekTwoTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoTotal);
             $soaWeekThreeTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeTotal);
@@ -142,8 +142,8 @@ class summary extends Reportes
                       <td {$styleOldDate} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
                       <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
-                      <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL))." </td>
-                      <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),"Y-m-d")." </td>
+                      <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueThisNext(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL),$document->soa_next,$document->due_date_next, $date))." </td>
+                      <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueThisNext(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),$document->due_date_next,$document->due_date_next, $date),"Y-m-d")." </td>
                       <td {$styleBasicDateDue} > {$dueDaysDue} </td>
                       <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
                       <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
@@ -171,7 +171,7 @@ class summary extends Reportes
                  </tr>";
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_pago_cobro)."</td>
+                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_payment_collect)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
                     <td {$styleNull} ></td>
@@ -205,7 +205,7 @@ class summary extends Reportes
                  </table>";   
           return $body;
     }
-    
+
     /**
      * Encargada de traer la data
      * @param date $date,$intercompany=TRUE,$no_activity=TRUE,$paymentTerm
@@ -375,7 +375,7 @@ class summary extends Reportes
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$no_activity}";
+              ORDER BY cg.name ASC)activity {$no_activity} ";
         return AccountingDocument::model()->findAllBySql($sql);
     }
 }
