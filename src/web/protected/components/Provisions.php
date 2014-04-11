@@ -596,7 +596,7 @@ class Provisions extends CApplicationComponent
 		{
 			$this->_deleteProvision($startDate,$endDate,$idCarrier,$typeProvisions['invoice']);
 			$doccument=new AccountingDocumentProvisions;
-			$doccument->issue_date=$endDate;
+			$doccument->issue_date=DateManagement::calculateDate('+1',$endDate);
 			$doccument->from_date=$startDate;
 			$doccument->to_date=$endDate;
 			$doccument->minutes=$trafficProvisions->minutes;
