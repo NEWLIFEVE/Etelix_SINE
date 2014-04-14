@@ -2,7 +2,13 @@
 ============
 
 Sistema de Reportes para Billing
+
     - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
+
+    - Nueva version de Provisiones: 
+        * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
+        * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
+
     - Pequeñas mejoras en SINE.js.
     - pequeñas mejoras en refac y reprov.
     - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.

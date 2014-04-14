@@ -23,7 +23,7 @@ if($server==SERVER_NAME_PROD)
 }
 else
 {
-	$server_db='localhost';
+	$server_db='172.16.17.190';
     $sine_db='sori';
     $user_db='postgres';
     $pass_db='123';
