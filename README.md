@@ -2,7 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
-
+    - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
     - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
 
     - Nueva version de Provisiones: 

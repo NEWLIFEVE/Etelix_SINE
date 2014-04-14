@@ -188,7 +188,36 @@ class Reportes extends CApplicationComponent
                         AND a.id_accounting_document IS NULL";
         }
     }
-
+    /**
+     * Metodo encargado de determinar los due date vencidos y por vencer en soa,
+     * para lograr filtrar el antes y el despues de la fecha consultada, 
+     * cuando no hay due_date, toma el issue_date y lo coloca como Due_date
+     * @param type $model
+     * @return type
+     */
+    public static function dueOrNext($model)
+    {
+         if($model->due_date==NULL)
+             return $model->issue_date;
+         else
+             return $model->due_date;     
+    }
+    /**
+     * se encarga de buscar y mantener siempre el due_date mas alto
+     * @param type $model
+     * @param type $dueDateNow
+     * @return type
+     */
+    public static function defineDueDateHigher($model, $dueDateNow)
+    {
+        if($model->due_date!=NULL){
+            if($model->due_date < $dueDateNow)
+                $dueDateNow=$dueDateNow;
+            else
+                $dueDateNow=$model->due_date;
+        }
+        return $dueDateNow;
+    }
     /**
      * 
      * @param type $day: la cantidad de dias para sumar o restar

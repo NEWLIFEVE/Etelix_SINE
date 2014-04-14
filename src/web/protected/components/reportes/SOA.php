@@ -31,7 +31,7 @@
                               </tr>";
                 foreach ($accounting_document as $key => $document) 
                     {
-                        if(self::dueOrNext($document)<=$date)
+                        if(Reportes::dueOrNext($document)<=$date)
                         {  
                             $accumulated=Reportes::define_balance_amount($document,$accumulated);
                             $accumulatedPayment=Reportes::define_total_pago($document,$accumulatedPayment);
@@ -49,8 +49,7 @@
                             $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
                             $body.="</tr>";
-                            if($document->due_date!=NULL)
-                            $last_due_date_due=$document->due_date;
+                            $last_due_date_due=Reportes:: defineDueDateHigher($document, $last_due_date_due);
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
@@ -84,7 +83,7 @@
                          </tr>";
                 foreach ($accounting_document as $key => $document) 
                 {
-                    if(self::dueOrNext($document)>$date)
+                    if(Reportes::dueOrNext($document)>$date)
                     { 
                         $accumulated=Reportes::define_balance_amount($document,$accumulated);
                         $accumulatedPaymentNext=Reportes::define_total_pago($document,$accumulatedPaymentNext);
@@ -102,8 +101,7 @@
                         $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                         $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
                         $body.="</tr>"; 
-                        if($document->due_date!=NULL)
-                        $last_due_date_next=$document->due_date;
+                        $last_due_date_next=Reportes:: defineDueDateHigher($document, $last_due_date_next);
                     }         
                 }
                 if($last_due_date_next=="") { 
@@ -310,13 +308,6 @@
                 
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
-        }
-        public static function dueOrNext($model)
-        {
-             if($model->due_date==NULL)
-                 return $model->issue_date;
-             else
-                 return $model->due_date;     
         }
     }
     ?>
