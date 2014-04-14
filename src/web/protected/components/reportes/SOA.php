@@ -307,7 +307,7 @@
                 AND a.id_currency=s.id
                 AND c.id_carrier_groups=g.id) d
                 ORDER BY issue_date";
-                
+
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else        return AccountingDocument::model()->findBySql($sql);
         }
