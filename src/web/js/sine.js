@@ -36,7 +36,7 @@ $SINE.UI=(function()
      */
     function _datepicker() 
     {
-        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( "#datepicker,#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite
@@ -103,7 +103,7 @@ $SINE.UI=(function()
                     $SINE.UI.export_report($(this));
                     break;
                 case "showProvisions": 
-                    $SINE.UI.emergingView($(".viewsProvisions").html());
+                    $SINE.UI.emergingView(null);
 //                    $SINE.AJAX.provisions("GET","/site/Provisions");
                     break;
                 case "genProvision": 
@@ -565,7 +565,7 @@ $SINE.AJAX=(function()
                 for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
                 {
                         $SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
-                };$('input#grupo').autocomplete({source:$SINE.DATA.nombresGroups});
+                };$('input#grupo,input#groups').autocomplete({source:$SINE.DATA.nombresGroups});
         }
         });
     }

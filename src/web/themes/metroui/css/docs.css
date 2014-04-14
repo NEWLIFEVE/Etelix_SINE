@@ -584,8 +584,8 @@ li.ui-menu-item a
 {
     background-color: white;
     color: #6E6E6E;
-    /*margin: -37% 23% auto;*/
-    margin: -67% 23% auto;
+    margin: -37% 23% auto;
+    /*margin: -67% 23% auto;*/
     padding: 87px 4px 43px 28px;
     position: fixed;
     text-align: left;

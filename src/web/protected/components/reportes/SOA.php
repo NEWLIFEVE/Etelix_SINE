@@ -49,8 +49,7 @@
                             $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                             $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
                             $body.="</tr>";
-                            if($document->due_date!=NULL)
-                            $last_due_date_due=$document->due_date;
+                            $last_due_date_due=self:: defineDueDateHigher($document, $last_due_date_due);
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
@@ -102,8 +101,7 @@
                         $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
                         $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
                         $body.="</tr>"; 
-                        if($document->due_date!=NULL)
-                        $last_due_date_next=$document->due_date;
+                        $last_due_date_next=self:: defineDueDateHigher($document, $last_due_date_next);
                     }         
                 }
                 if($last_due_date_next=="") { 
@@ -317,6 +315,16 @@
                  return $model->issue_date;
              else
                  return $model->due_date;     
+        }
+        public static function defineDueDateHigher($model, $dueDateNow)
+        {
+            if($model->due_date!=NULL){
+                if($model->due_date < $dueDateNow)
+                    $dueDateNow=$dueDateNow;
+                else
+                    $dueDateNow=$model->due_date;
+            }
+            return $dueDateNow;
         }
     }
     ?>
