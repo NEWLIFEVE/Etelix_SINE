@@ -102,13 +102,13 @@ $SINE.UI=(function()
                 case "previa": case "mail": case "excel": 
                     $SINE.UI.export_report($(this));
                     break;
+                case "showProvisions": 
+                    $SINE.UI.emergingView($(".viewsProvisions").html());
+//                    $SINE.AJAX.provisions("GET","/site/Provisions");
+                    break;
                 case "genProvision": 
                     console.log("dio click genProvision");
                     $SINE.UI.genProvisions($(this));
-                    break;
-                case "showProvisions": 
-                    $("body").append($(".viewsProvisions").html());$(".viewsProvisions").fadeIn('slow');
-//                    $SINE.UI.msj_cargando("","");$SINE.UI.fancy_box($(".viewsProvisions").html());  
                     break;
                 case "views_not":
                     $(this).remove();
@@ -116,6 +116,9 @@ $SINE.UI=(function()
               }   
         });
     };
+    
+
+    
     /**
      * metodo encargado de escuchar los hover
      * @returns {undefined}
@@ -429,16 +432,30 @@ $SINE.UI=(function()
     }
     /**
      * 
-     * @param {type} cuerpo_msj
-     * @param {type} imagen
+     * @param {type} body_msj
+     * @param {type} img
      * @returns {undefined}
      */
-    function msj_cargando(cuerpo_msj,imagen)
+    function msj_cargando(body_msj,img)
     {
         $(".fondo_negro, .mensaje, .fancybox").remove();
-        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+cuerpo_msj+"<p><br><img src='/images/"+imagen+"'></div>").hide(); 
+        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body_msj+"<p><br><img src='/images/"+img+"'></div>").hide(); 
         $("body").append(msj); 
         msj.fadeIn('slow');
+    }
+    /**
+     * 
+     * @param {type} body_msj
+     * @param {type} additional
+     * @returns {undefined}
+     */
+    function emergingView(body_msj,additional)
+    {
+        $(".emergingBackground,.emergingView, .fondo_negro, .mensaje, .fancybox").remove();
+        var msj=$("<div class='emergingBackground'></div><div class='emergingView'>"+body_msj+"</div>").hide(); 
+        $("body").append(msj); 
+        msj.slideDown('slow');
+        $(".emergingBackground").click(function(){  $(".emergingBackground,.emergingView").slideToggle("slow");});
     }
     /**
      * 
@@ -461,10 +478,11 @@ $SINE.UI=(function()
     function fancy_box(cuerpo)
     {
         $(".mensaje").addClass("fancybox").removeClass("mensaje");
+        $(".fondo_negro").addClass("emergingBackground");
         $(".fancybox").css("display", "none");
         $(".fancybox").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'></div><div class='a_imprimir'>"+cuerpo+"</div>");
         $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
-        $('.fondo_negro').on('click',function () { $(".fondo_negro, .fancybox").fadeOut('slow');});
+        $('.fondo_negro').on('click',function () { $(".fondo_negro, .fancybox").removeClass("emergingBackground").fadeOut('slow');});
     }
     /**
      * 
@@ -505,7 +523,8 @@ $SINE.UI=(function()
             imprimir:imprimir,
             adminInput:adminInput,
             genProvisions:genProvisions,
-            adminTp:adminTp
+            adminTp:adminTp,
+            emergingView:emergingView
     };
 })();
 
@@ -575,7 +594,6 @@ $SINE.AJAX=(function()
              data: formulario,
              success: function(data)
              {   
-//                     console.log(data);
                  if(action=="/site/Excel"){         
                      $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                      $(".excel_a").removeAttr("href");
@@ -599,6 +617,7 @@ $SINE.AJAX=(function()
              success: function(data)
              {     
                  console.log(data);
+                 $SINE.UI.emergingView(data);
              }
         });
     }

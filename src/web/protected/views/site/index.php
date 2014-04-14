@@ -213,29 +213,21 @@ $this->pageTitle = Yii::app()->name;
     <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
 </div>
 
-
 <div class="viewsProvisions" id="viewsProvisions">
-    
-        <form id="formProvisions">
-                <h1 class="titleProv">Provisiones </h1>
-                <h3 class="provisionNote">Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
-            <div name="formProvisions"  class="formProvisions">
-                <div class="formInputs group">
-                    <h3>Grupo</h3>
-                    <input type="text" name="grupo" id="grupo"value=""/>
-                </div>
-                <div class="formInputs date">
-                    <h3>Fecha de Inicio</h3>
-                    <input type="text" name="datepicker" id="datepicker" value=""/>
-                </div>
-            </div>
-        </form>
-<!--        <div id="genProvision" class="botones">
-            <a class="provision">
-               <img src="/images/provision.png" title='Generar provisiones'>
-            </a>
-        </div>-->
-        <div id="genProvision" class="botones">
-            <h2 class="H1provInput">Generar provisiones</h2>
+    <div id="formProvisions">
+        <h1 class="titleProv">Provisiones </h1>
+        <h3 class="provisionNote">* Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
+        <h3 class="provisionNote">* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
+<!--        <div class="formInputs group">
+            <h3>Grupo</h3>
+            <input type="text" name="grupo" id="groups"value=""/>
         </div>
+        <div class="formInputs date">
+            <h3>Fecha de Inicio</h3>
+            <input type="text" name="datepicker" id="datepicker" value=""/>
+        </div>-->
+     </div>
+     <div id="genProvision" class="botones">
+         <h2 class="H1provInput">Generar provisiones</h2>
+     </div>
 </div>

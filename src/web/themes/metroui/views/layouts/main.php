@@ -54,6 +54,7 @@
             </div>
             <div class="clear"></div>
         </div>
+        
         <script>
         var _root_ = "<?php echo Yii::app()->getBaseUrl(true) . '/'; ?>";
         </script>
