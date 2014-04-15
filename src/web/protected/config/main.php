@@ -17,10 +17,10 @@ switch ($server)
         break;
     case SERVER_NAME_DEV:
     default:
-        $server_db='172.16.17.190';
-        $sine_db='sori';
-        $user_db='postgres';
-        $pass_db='123';
+       $server_db='172.16.17.190';
+       $sine_db='sori';
+       $user_db='postgres';
+       $pass_db='123';
         break;
 }
 // uncomment the following to define a path alias
@@ -68,6 +68,9 @@ return array(
         ),
         'format'=>array(
             'class'=>"application.components.Formatter",
+        ),
+        'provisions'=>array(
+            'class'=>"application.components.Provisions",
         ),
         'bootstrap'=>array(
             'class'=>'application.extensions.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions

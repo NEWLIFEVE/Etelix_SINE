@@ -84,6 +84,9 @@ class Provisions extends CApplicationComponent
     		$this->carriers=Carrier::model()->findAll();
     	}
 
+        $seg=count($this->carriers) * 5 * DateManagement::dateDiff($dateSet,date('Y-m-d'));
+        ini_set('max_execution_time', $seg);
+        
     	$this->getDate($dateSet);
     	//Obtengo la data de clientes
     	$this->getData(true);
@@ -98,9 +101,10 @@ class Provisions extends CApplicationComponent
     	//
     	$this->runInvoiceProvision(false);
     	
-    	if($this->numInvoicesSend>0 || $this->numInvoicesReceived>0) var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas y ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
-
-    	if(!YII_DEBUG) $this->sendNotification();
+    	if($this->numInvoicesSend>0 || $this->numInvoicesReceived>0)
+            var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas y ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+    	
+        if(!YII_DEBUG) $this->sendNotification();
     }
 
 	/**

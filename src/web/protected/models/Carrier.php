@@ -136,4 +136,21 @@ class Carrier extends CActiveRecord
 			else return false;
 		}
 	}
+        /**
+         * retorna listado de carriers limitado por el id_carriers_groups
+         * @param type $idGrupo
+         * @return type
+         */
+        public static function getListCarriersGrupo($idGrupo)
+        {
+            return Carrier::model()->findAll("id_carrier_groups =:grupo order by name ASC",array(":grupo"=>$idGrupo));
+        }
+        /**
+         * retorna listado de todos los carriers menos Unknown Carrier
+         * @return type
+         */
+        public static function getListCarrier()
+        {
+            return self::model()->findAllBySql("SELECT * FROM carrier WHERE id not in(select id from carrier where name='Unknown_Carrier')");
+        } 
 }

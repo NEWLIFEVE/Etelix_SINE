@@ -6,8 +6,29 @@
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
+    .emergingView { margin: -38% 19% auto!important; padding: 87px 4px 43px 28px; }
+    .mensaje {margin: -33% 367px auto!important;}   
 }
-
+@media (min-width: 1000px)  and (max-width: 1100px)
+{
+   .emergingView { margin: -50% 13% auto!important;}
+}
+@media (min-width: 900px)  and (max-width: 999px)
+{
+   .emergingView { margin: -55% 8% auto!important;}
+}
+@media (min-width: 800px)  and (max-width: 899px)
+{
+   .emergingView {margin: -62% 3% auto!important}
+}
+/*@media (min-width: 700px)  and (max-width: 799px)
+{
+   .emergingView {margin: -67% 5% auto!important;width: 88%!important;  padding: 7% 0%!important;}
+   .titleProv {width: 205%;}
+   .date {margin: 0px 119px;}
+   #genProvision {margin: 35% 54px auto;width: 82%!important;}
+   .provisionNote {width: 100%;}
+}*/
 @media (min-width: 980px)  and (max-width: 1200px)
 {
     .tile {width: 80px;height: 80px;}
@@ -46,9 +67,11 @@
      .disputas {margin-left: -1px!important;}
      #botones_exportar { margin-top: 188px!important;}
      #ui-datepicker-div {width: 55%!important;}
-     .mensaje{margin: -61% 9% auto!important;}
+     .mensaje{margin: -61% 17% auto!important;}
      #previa{display:none!important;}
      .views_not{display:block!important;}
+     .emergingView {margin: -65% 1% auto!important;}
+     #genProvision {margin: 33% 10% auto!important;width: 71%!important;}
 }
 
 /*@media only screen and (max-width: 320px) {}*/
@@ -95,14 +118,31 @@
     .disputas {margin-left: -47%!important;}
     .provisiones{width: 192px!important}
     #botones_exportar {margin-left: -15%!important;margin-top: -2%!important;}
-    .barra_tools_click {left: -20px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
-    .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
+    .barra_tools_click {left: -20px!important;height: 224px!important;width: 120%!important;margin-top: -83px!important;}
+    /*.mensaje {margin: -107% -13% auto!important;width: 421px!important;}*/
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
     #id_periodo {width: 298px!important;}
     .periodo{margin-left: -17%!important;}
     #ui-datepicker-div {width: 85%!important;}
     /*PROVISIONAL*/
     .trabajando {width: 242px!important;padding: 2px!important;margin-top: 76%!important;margin-left: -17%!important;}
+    .emergingView {margin: -147% -2% auto!important;padding: 40px 0px 3px 8px!important;width: 104%!important;}
+    .group {width: 100%!important; margin: 0% -6%!important;}
+    .date {margin: 50% -94%!important;}
+    #genProvision {margin: 107% 2% auto;width: 92%;}
+    .titleProv {width: 90%;}
+    #provisionNote{display:none;}
+    .mensaje {margin: -113% 0% auto!important;width: 362px!important;padding: 6% 0%!important;}
+}
+@media (max-width: 320px) 
+{ 
+    .cuadro {margin: -17px 81px auto!important;padding: 0% 6% 0% 4%!important;}
+    .metro input[type="submit"].primary {width: 262px!important;}
+    #remember {margin: 6% 0%!important;}
+    .emergingView { margin: -161% -5% auto!important; padding: 34px 0px 0px 0px!important;width: 115%!important;height: 89%!important;}
+    #genProvision {margin: 83% 6% auto!important;width: 84%!important;}
+    .group {margin: -14% -9%!important;}
+    .date {margin: 23% -91%!important;}
 }
 
   /*se agrego esta clase aca .Reportes (padding-bottom: 22%!important;) y se modifico comentando .listadeReportesscroll (height: 489px!important;})*/

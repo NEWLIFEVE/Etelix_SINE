@@ -50,6 +50,7 @@
                             $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
                             $body.="</tr>";
                             $last_due_date_due=Reportes:: defineDueDateHigher($document, $last_due_date_due);
+
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
