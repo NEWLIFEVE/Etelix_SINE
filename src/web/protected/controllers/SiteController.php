@@ -390,9 +390,8 @@ class SiteController extends Controller
             return TRUE;
         
     }
-
     /**
-     *
+     * Carga los select de termino pago al iniciar la aplicacion
      */
     public static function ActionUpdateTerminoPago()
     {   
@@ -404,29 +403,42 @@ class SiteController extends Controller
         }
         echo "<option value='todos'>Todos</option>".$tp;
     }
+    /**
+     * Renderiza la vista de provisiones de forma parcial para mostrarse en la vista principal dentro de un div
+     */
     public function actionProvisions()
     {
-//        echo $this->render("Provisions");
-        echo "<div name='formProvisions'  class='formProvisions'>
-                    <h1 class='titleProv'>Provisiones </h1>
-                     <h3 class='provisionNote'>* Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
-                     <h3 class='provisionNote'>* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
-                     <div class='formInputs group'>
-                         <h3>Grupo</h3>
-                         <input type='text' name='groups' id='groups' value=''/>
-                     </div>
-                     <div class='formInputs date'>
-                         <h3>Fecha de Inicio</h3>
-                         <input type='text' name='datepickerOne' id='datepickerOne' value=''/>
-                     </div>
-             </div>
-             <div id='genProvision' class='botones'>
-                 <h2 class='H1provInput'>Generar provisiones</h2>
-             </div>";
+        $this->renderPartial("Provisions");
     }
+    /**
+     * envia los campos necesarios al componente provisions para generar las provisiones dependiendo del grupo y la fecha
+     */
     public function actionGenProvisions()
     {
-        echo Yii::app()->provisions->run($_GET['fromDate'],$_GET['grupo']);
+        $group=null;
+        $date=$_GET['datepickerOne'];
+        $final=DateManagement::calculateDate('-1',date('Y-m-d'));
+        if(isset($_GET['group'])) $group=$_GET['group'];
+        while ($date <= $final)
+        {
+                Yii::app()->provisions->run($date,$group);
+                $date=DateManagement::calculateDate('+1',$date);
+        }
+    }
+    /**
+     * calcula el tiempo necesario para generar las provisiones segun la cantidad de carriers y el numero de dias que existe desde la fecha introducida por el usuario y la fecha actual
+     */
+    public function actionCalcTimeProvisions()
+    {
+        if($_GET['group']!="")$carriersList=  carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+          else                $carriersList=  carrier::getListCarrier();
+        
+        $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
+        
+        if(count($carriersList) * 4 * $daysNum <= 60)
+            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum)." Seg";
+        else
+            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
     }
 }
 ?>

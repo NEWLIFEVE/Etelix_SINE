@@ -202,5 +202,9 @@ class DateManagement
         $arrayDate['lastday']=$array[0]."-".$array[1]."-".self::howManyDays($arrayDate['firstday']);
         return $arrayDate;
     }
+    public static function dateDiff($start, $end)
+    {
+       return ((strtotime($end)-strtotime($start))/86400);
+    }
 }
 ?>

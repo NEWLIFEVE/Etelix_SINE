@@ -62,7 +62,6 @@ $this->pageTitle = Yii::app()->name;
             <h3>Operador</h3>
             <input type="text" name="operador" id="operador"value=""/>
         </div>
-        <!--<div class='emergingView'></div>-->
         <div class="formInputs grupo">
             <h3>Grupo</h3>
             <input type="text" name="grupo" id="grupo"value=""/>
@@ -181,17 +180,6 @@ $this->pageTitle = Yii::app()->name;
         <div class='formInputs note'>
             <h3 class="h3_note">Este reporte esta en etapa de prueba y algunos datos podrian no ser confiables...</h3>  
         </div>
-        
-<!--        <div class='formInputs pronostico'>
-            <h3>Pronostico</h3>
-            <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_pron" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_pron" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
-            </div>  
-        </div>-->
-        <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
-        <div class="trabajando"><img src="/images/trabajando.png" class='ver'><h2>Estamos trabajando...</h2></div><!--este div es para indicar que la interfaz no esta lista-->
-        <!--.................-->
     </div>
 </form>
 </div>
@@ -213,22 +201,3 @@ $this->pageTitle = Yii::app()->name;
 <div class="views_not" id="views_not">
     <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
 </div>
-<!--
-<div class="viewsProvisions" id="viewsProvisions">
-    <div id="formProvisions">
-        <h1 class="titleProv">Provisiones </h1>
-        <h3 class="provisionNote">* Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
-        <h3 class="provisionNote">* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
-        <div class="formInputs group">
-            <h3>Grupo</h3>
-            <input type="text" name="grupo" id="groups"value=""/>
-        </div>
-        <div class="formInputs date">
-            <h3>Fecha de Inicio</h3>
-            <input type="text" name="datepicker" id="datepickerOne" value=""/>
-        </div>
-     </div>
-     <div id="genProvision" class="botones">
-         <h2 class="H1provInput">Generar provisiones</h2>
-     </div>
-</div>-->

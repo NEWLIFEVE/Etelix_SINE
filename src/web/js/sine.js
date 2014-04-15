@@ -1,12 +1,12 @@
 $(document).on('ready',function()
 {
      $SINE.AJAX.init();
+     $SINE.AJAX.getNamesCarriers();
 });
 /**
  * Objeto Global
  */
  var $SINE={};
- 
 /**
  * Sobmodulo UI
  */
@@ -36,7 +36,7 @@ $SINE.UI=(function()
      */
     function _datepicker() 
     {
-        $( "#datepicker,#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite
@@ -102,12 +102,12 @@ $SINE.UI=(function()
                 case "previa": case "mail": case "excel": 
                     $SINE.UI.export_report($(this));
                     break;
-                case "showProvisions": 
-                    $SINE.UI.emergingView(null);
-//                    $SINE.AJAX.provisions("GET","/site/Provisions");
+                case "showProvisions": /**revisar esta opcion, parte del js esta en la vista, hay que depurar eso, aqui solo esta funcionando ( $SINE.AJAX.provisions("GET","/site/Provisions") )*/
+                    $SINE.AJAX.provisions("GET","/site/Provisions",null);
+                    $SINE.UI.GenDatepicker("input#datepickerOne");
+                    $SINE.AJAX.getNamesCarriers();
                     break;
                 case "genProvision": 
-                    console.log("dio click genProvision");
                     $SINE.UI.genProvisions($(this));
                     break;
                 case "views_not":
@@ -135,6 +135,16 @@ $SINE.UI=(function()
                     break;
             } 
         });
+    };
+    /**
+    * asigna datepicker a el input que se le pase, este metodo aplica para aquellos casos donde la 
+    * llamada del datePicker desde el inicio no funcionan, por ejemplo en la llamada de vistas por ajax
+    * @param {type} obj
+    * @returns {undefined}
+    */
+    function GenDatepicker(obj) 
+    {
+        $( obj ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
     };
     /**
      * administra el menu vertical
@@ -328,43 +338,54 @@ $SINE.UI=(function()
     {
         if($SINE.UI.seleccionaCampos($('#tipo_report').val()) == 0)
         {
-            $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
+            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
         }else{
             var id=$(click).attr('id');
             if(id=="mail"){    
                 $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
-                $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
+                $SINE.UI.msjCargando("<h2>Enviando Email</h2>","cargando.gif");
              }
             else if(id=="previa"){    
                 $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize());
-                $SINE.UI.msj_cargando("<h2>Cargando Vista Previa</h2>","cargando.gif");
+                $SINE.UI.msjCargando("<h2>Cargando Vista Previa</h2>","cargando.gif");
              }else{                                            
                   $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
                   $( document ).ajaxError(function() {
-                      $SINE.UI.msj_cargando("<h2>Exportando Archivo Excel </h2>","cargando.gif");
+                      $SINE.UI.msjCargando("<h2>Exportando Archivo Excel </h2>","cargando.gif");
                       $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
                   });
                   } 
         }
     }
+    /**
+     * metodo encargado de guardar las provisiones desde interfaz
+     * @param {type} click
+     * @returns {undefined}
+     */
     function genProvisions(click)
     {
-        console.log("paso a genProvision");
         if($SINE.UI.seleccionaCampos($(click).attr('id')) == 0)
         {
-            $SINE.UI.msj_cargando("","");$SINE.UI.msj_change("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
+            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
         }else{
-              console.log("ya esta listo para el ajax");
-                $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#formProvisions").serialize());
-//                $SINE.UI.msj_cargando("<h2>Enviando Email</h2>","cargando.gif");
-
+            $SINE.UI.msjConfirm("<h3>Esta a punto de generar las provisiones para" + $SINE.UI.ifNull($("#group").val(), "<b>TODOS</b> los carriers", "el carrier <b>"+$("#group").val()+"</b>") + " desde la fecha <b>"+$("#datepickerOne").val()+"</b></h3>");
+            $('#confirm,#cancel').on('click', function()
+            {
+                if($(this).attr('id')=="confirm")
+                {
+                    $SINE.AJAX.provisions("GET","/site/CalcTimeProvisions",$("#datepickerOne,#group").serialize(),"time");
+                    $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#datepickerOne,#group").serialize(),"gen");
+                }else{
+                    $(".fondo_negro, .mensaje").fadeOut();
+                }
+            });
         }
     }
-     /**
-     * 
-     * @param {type} tipo
-     * @returns {unresolved}
-     */
+    /**
+    * metodo encargado de seleccionar los campos que se enviaran por formulario dependiendo el tipo de reporte a ccion a realizar
+    * @param {type} tipo
+    * @returns {unresolved}
+    */
     function seleccionaCampos(tipo)
     {  
         switch (tipo){
@@ -396,7 +417,7 @@ $SINE.UI=(function()
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
              break               
          case 'genProvision':
-             var respuesta=$SINE.UI.validaCampos($('#datepicker').serializeArray());
+             var respuesta=$SINE.UI.validaCampos($('#datepickerOne').serializeArray());
              break               
         }
         console.log(respuesta);
@@ -421,7 +442,7 @@ $SINE.UI=(function()
         return respuesta;
     }
     /**
-     * 
+     * genera excel de la forma tradicional, (generando un popup)valido para generar multiples excel en una sola llamada
      * @param {type} action
      * @param {type} formulario
      * @returns {undefined}
@@ -430,62 +451,69 @@ $SINE.UI=(function()
     {
         window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200");  
     }
+    function msjConfirm(body)
+    {
+        $(".fondo_negro, .mensaje").remove();
+        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body+"Si esta de acuerdo, presione Aceptar, de lo contrario Cancelar<div class='confirmButtons'><div id='cancel'class='cancel'>Cancelar</div>&nbsp;<div id='confirm'class='confirm'>Aceptar</div></div></div></div>").hide(); 
+        $("body").append(msj);  msj.fadeIn('slow');
+    }
     /**
-     * 
-     * @param {type} body_msj
+     * metodo encargado de generar el msj principal de cargando...
+     * @param {type} bodyMsj
      * @param {type} img
      * @returns {undefined}
      */
-    function msj_cargando(body_msj,img)
+    function msjCargando(bodyMsj,img)
     {
         $(".fondo_negro, .mensaje, .fancybox").remove();
-        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body_msj+"<p><br><img src='/images/"+img+"'></div>").hide(); 
+        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+bodyMsj+"<p><br><img src='/images/"+img+"'></div>").hide(); 
         $("body").append(msj); 
         msj.fadeIn('slow');
     }
     /**
-     * 
-     * @param {type} body_msj
+     * metodo encargado de mostrar vistas traidas por ajax, no tiene opciones, solo muestra lo que se quiera
+     * @param {type} body
      * @param {type} additional
      * @returns {undefined}
      */
-    function emergingView(body_msj,additional)
+    function emergingView(body,additional)
     {
-        $(".emergingBackground,.emergingView, .fondo_negro, .mensaje, .fancybox").remove();
-        var msj=$("<div class='emergingBackground'></div><div class='emergingView'>"+body_msj+"</div>").hide(); 
+        $(".emergingBackground,.emergingView, .fondo_negro, .mensaje, .fancybox").remove();$(".emergingView").html("");
+        var msj=$("<div class='emergingBackground'></div><div class='emergingView'>"+body+"</div>").hide(); 
         $("body").append(msj); 
         msj.slideDown('slow');
         $(".emergingBackground").click(function(){  $(".emergingBackground,.emergingView").slideToggle("slow");});
     }
     /**
-     * 
-     * @param {type} cuerpo_msj
-     * @param {type} imagen
-     * @param {type} tiempo
-     * @param {type} img_width
+     * cambia el contenido del msj principal
+     * @param {type} bodyMsj
+     * @param {type} img
+     * @param {type} time
+     * @param {type} imgWidth
      * @returns {undefined}
      */
-    function msj_change(cuerpo_msj,imagen,tiempo,img_width)
+    function msjChange(bodyMsj,img,time,imgWidth)
     {
-        $(".mensaje").html(""+cuerpo_msj+"<p><img style='width:"+img_width+";' src='/images/"+imagen+"'>");
-        setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, tiempo);
+        $(".mensaje").html(""+bodyMsj+"<p><img style='width:"+imgWidth+";' src='/images/"+img+"'>");
+        if(time!=null)
+        setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, time);
     }
     /**
-     * 
-     * @param {type} cuerpo
+     * muestra los listado en una vista previa, por ahora solo tiene la opcion de imprimir
+     * @param {type} body
      * @returns {undefined}
      */
-    function fancy_box(cuerpo)
+    function fancyBox(body)
     {
         $(".mensaje").addClass("fancybox").removeClass("mensaje");
         $(".fondo_negro").addClass("emergingBackground");
         $(".fancybox").css("display", "none");
-        $(".fancybox").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'></div><div class='a_imprimir'>"+cuerpo+"</div>");
+        $(".fancybox").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'></div><div class='a_imprimir'>"+body+"</div>");
         $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
         $('.fondo_negro').on('click',function () { $(".fondo_negro, .fancybox").removeClass("emergingBackground").fadeOut('slow');});
     }
     /**
-     * 
+     * imprime el fancybox
      * @param {type} div
      * @returns {undefined}
      */
@@ -502,6 +530,20 @@ $SINE.UI=(function()
         imp.close();                                        //cierra la ventana nueva
     };
     /**
+     * 
+     * @param {type} value
+     * @param {type} ifNull
+     * @param {type} notNull
+     * @returns {undefined}
+     */
+    function ifNull(value, ifNull, notNull)
+    {
+        if(value==null||value=="")
+           return ifNull
+        else
+           return notNull
+    }
+    /**
      * Retorna los mestodos publicos
      */
     return{
@@ -513,18 +555,21 @@ $SINE.UI=(function()
             agrega_Val_radio:agrega_Val_radio,
             export_report:export_report,
             resolvedButton:resolvedButton,
-            msj_cargando:msj_cargando,
-            msj_change:msj_change,
+            msjCargando:msjCargando,
+            msjChange:msjChange,
             genExcel:genExcel,
             validaCampos:validaCampos,
             seleccionaCampos:seleccionaCampos,
             changeHtml:changeHtml,
-            fancy_box:fancy_box,
+            fancyBox:fancyBox,
             imprimir:imprimir,
             adminInput:adminInput,
             genProvisions:genProvisions,
             adminTp:adminTp,
-            emergingView:emergingView
+            emergingView:emergingView,
+            GenDatepicker:GenDatepicker,
+            msjConfirm:msjConfirm,
+            ifNull:ifNull
     };
 })();
 
@@ -538,7 +583,7 @@ $SINE.AJAX=(function()
      * @param {type} id
      * @returns {@exp;@call;$@call;serializeArray}
      */
-    function _getFormPost(id)
+    function getFormPost(id)
     {
         return $(id).serializeArray();
     }
@@ -546,18 +591,8 @@ $SINE.AJAX=(function()
      * Crea un array con los nombres de carrier y los grupos de carriers
      * @access private
      */
-    function _getNamesCarriers()
+    function getNamesCarriers()
     {
-//            $.ajax({url:"../Carrier/Nombres",success:function(datos)
-//            {
-//                    $SINE.DATA.carriers=JSON.parse(datos);
-//                    $SINE.DATA.nombresCarriers=Array();
-//                    for(var i=0, j=$SINE.DATA.carriers.length-1; i<=j; i++)
-//                    {
-//                            $SINE.DATA.nombresCarriers[i]=$SINE.DATA.carriers[i].name;
-//                    };$('input#operador').autocomplete({source:$SINE.DATA.nombresCarriers});
-//            }
-//            });
         $.ajax({url:"../Grupos/Nombres",success:function(datos)
         {
                 $SINE.DATA.groups=JSON.parse(datos);
@@ -565,7 +600,7 @@ $SINE.AJAX=(function()
                 for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
                 {
                         $SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
-                };$('input#grupo,input#groups').autocomplete({source:$SINE.DATA.nombresGroups});
+                };$('input#grupo, input#group').autocomplete({source:$SINE.DATA.nombresGroups});
         }
         });
     }
@@ -575,9 +610,7 @@ $SINE.AJAX=(function()
      */
     function init()
     {
-            _getNamesCarriers();
-//                _updateFactPeriod();
-            _UpdateTerminoPago();
+            _updateTerminoPago();
     }
     /**
     * funcion encargada de pasar datos del formulario al componente para enviarse por correo o exportarse a excel
@@ -595,20 +628,28 @@ $SINE.AJAX=(function()
              success: function(data)
              {   
                  if(action=="/site/Excel"){         
-                     $SINE.UI.msj_change("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
+                     $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
                      $(".excel_a").removeAttr("href");
                      console.log("Descarga Exitosa");
                  }else if(action=="/site/previa"){ 
-                     $SINE.UI.fancy_box(data);
+                     $SINE.UI.fancyBox(data);
                      console.log("Vista Previa Exitosa");
                  }else{                              
-                     $SINE.UI.msj_change("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                     $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
                      console.log(data);
                  }    
              }
         });
     }
-    function provisions(type,action,formulario)
+    /**
+     * busca la vista de provisiones y guarda las provisiones desde interfaz
+     * @param {type} type
+     * @param {type} action
+     * @param {type} formulario
+     * @param {type} request
+     * @returns {undefined}
+     */
+    function provisions(type,action,formulario, request)
     {
         $.ajax({
              type: type,
@@ -616,21 +657,24 @@ $SINE.AJAX=(function()
              data: formulario,
              success: function(data)
              {     
-                 console.log(data);
-                 $SINE.UI.emergingView(data);
+                 if(formulario==null){        /*Busca la vista de provisiones para mostrarla en el div emergingView*/
+                     $SINE.UI.emergingView(data);
+                 }else{              
+                     if(request == "time"){   /*consulta el tiempo estimado para generar las consultas y lo muestra cambiando el msj actual confirm*/
+                         $SINE.UI.msjChange("<h2>Se están generando las provisiones</h2><h3> este proceso puede tomar <b>"+data+"</b></h3> no cierre su navegador durante ese tiempo","cargando.gif",null,"70%"); 
+                     }else{                   /*manda la los datos al metodo encargado de generar las provisiones, espera que el mismo termine para cerrar el msj indicando que las provisiones fueron generadas*/
+                         console.log(data);
+                         $SINE.UI.msjChange("<h2>Provisiones Generadas con exito</h2>","si.png","1000","33%");  
+                     }
+                 }
              }
         });
     }
-//        function _updateFactPeriod()
-//        {
-//            $.ajax({url:"/site/updateFactPeriod",success:function(data)
-//                {
-//                    console.log(data);
-//                    $("#id_periodo_Supp").append(data);
-//                }
-//            });
-//        }
-    function _UpdateTerminoPago()
+    /**
+     * carga el listado de termino pago 
+     * @returns {undefined}
+     */
+    function _updateTerminoPago()
     {
         $.ajax({url:"/site/UpdateTerminoPago",success:function(data)
             {
@@ -640,7 +684,8 @@ $SINE.AJAX=(function()
     }
 
     return {init:init,
-            _getFormPost:_getFormPost,
+            getNamesCarriers:getNamesCarriers,
+            getFormPost:getFormPost,
             send:send,
             provisions:provisions
            }
@@ -652,11 +697,3 @@ $SINE.constructor=(function()
  {
     $SINE.UI.init();
  })();
- 
-//            /** se usaria en caso de ser necesario cambiar carrier-groups
-//            * cambia operador por grupo  grupo por operador
-//            */
-//           $('#chang_Oper_Grup,#chang_Grup_Oper').on('click',function()
-//           {   
-//                 $SINE.UI.resolvedButton($(this));
-//           });

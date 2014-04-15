@@ -530,7 +530,7 @@ li.ui-menu-item a
     font-size: larger!important;
     font-weight: bold;
 }
-.fondo_negro,.emergingBackground
+.fondo_negro
 {
     background-color: rgba(0,0,0,0.7);
     content: "";
@@ -544,6 +544,15 @@ li.ui-menu-item a
 }
 .emergingBackground
 {
+    background-color: rgba(0,0,0,0.7);
+    content: "";
+    height: 100%;
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    width: 100%;
+    /*z-index: 1030;*/
+    display:none;
     cursor: url('../img/exit.cur'), url('img/exit.cur'), pointer;
 }
 
@@ -580,18 +589,54 @@ li.ui-menu-item a
     width: 490px;
     z-index: 1031;
 }
+.cancel 
+{
+    background: #FA4646;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.cancel:hover
+{
+    background: #FA7B7B;
+}
+.confirm 
+{
+    background: #06ACFA;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.confirm:hover
+{
+    background: #35C7F5;
+}
+.confirmButtons 
+{
+    position: initial;
+    display: flex;
+    text-align: center;
+    margin: 3% 23% 0%;
+    width: 116%;
+}
 .emergingView
 {
     background-color: white;
     color: #6E6E6E;
-    margin: -37% 23% auto;
+    margin: -36% 23% auto;
     /*margin: -67% 23% auto;*/
-    padding: 87px 4px 43px 28px;
+    padding: 35px 4px 43px 28px;
     position: fixed;
     text-align: left;
     width: 756px;
-    z-index: 1031;
-    height: 85%;
+    /*z-index: 1031;*/
+    height: 75%;
 }
 
 .fancybox
@@ -727,8 +772,12 @@ select
 .provisionNote 
 {
     color: #06ACFA !important;
-    width: 100%;
-    font-size: medium!important;
+    width: 227%;
+    font-size: 12px!important;
+}
+#provisionNote 
+{
+    margin: 45% 7%;
 }
 .note_ref_pro
 {
@@ -755,7 +804,7 @@ select
     background: #3466B4;
     height: 62px;
     padding: 2px 11px 10px 15px;
-    margin: 342px 121px auto;
+    margin: 33% 17% auto;
     position: absolute;
     width: 60%;
 }
@@ -772,7 +821,7 @@ select
 #formProvisions 
 {
     position: absolute;
-    margin: 0px 42px;
+    margin: -2px 21px;
 }
 .date
 {
@@ -783,7 +832,9 @@ select
 {
     display:none;
 }
-.titleProv
+.titleProv 
 {
+    border-bottom: solid silver 1px;
+    width: 238%;
     margin: 0px 0px 45px 0px!important;
 }
