@@ -22,6 +22,7 @@ switch ($server)
        $user_db='postgres';
        $pass_db='123';
        break;
+
 }
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
@@ -68,6 +69,9 @@ return array(
         ),
         'format'=>array(
             'class'=>"application.components.Formatter",
+        ),
+        'provisions'=>array(
+            'class'=>"application.components.Provisions",
         ),
         'bootstrap'=>array(
             'class'=>'application.extensions.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions

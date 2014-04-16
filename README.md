@@ -2,6 +2,16 @@
 ============
 
 Sistema de Reportes para Billing
+    - Nueva interfaz para generar provisiones.
+    - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
+    - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
+
+    - Nueva version de Provisiones: 
+        * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
+        * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
+
+    - Pequeñas mejoras en SINE.js.
+    - pequeñas mejoras en refac y reprov.
     - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.
     - Modificado refac y reprov para que genere summary por medio de un check adicional donde se define si se muestra o no.
     - Modificacion de  refac y reprov a nivel de estilos.

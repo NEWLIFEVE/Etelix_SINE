@@ -134,9 +134,10 @@ class InvoiceReport extends Reportes
             $backPeriods=self::getBackPeriods($paymentTerm, $toDate, $typeReport);
             $segTwo=count($backPeriods)*30;
                 ini_set('max_execution_time', $segTwo);
-            $body.="<tr>
-                       <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
-                   </tr>";
+            if(count($backPeriods)>1)
+                $body.="<tr>
+                           <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
+                       </tr>";
             foreach ($backPeriods as $key => $periods) 
             {
                 $pos=$key+1;
@@ -260,37 +261,37 @@ class InvoiceReport extends Reportes
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
                                (SELECT minutes
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_minutes,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_minutes,
                                (SELECT amount
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_amount,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_amount,
                                (SELECT doc_number
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS doc_number
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS doc_number
                         FROM carrier c, accounting_document ad
                         WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date{$from}'{$startDate}' AND ad.to_date{$to}'{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')
-                        ORDER BY c.name ASC) b $summaryFilter ";
+                        ORDER BY c.name ASC) b $summaryFilter";
             $return=AccountingDocument::model()->findAllBySql($sql); 
             
         }else{
                 $sql="SELECT SUM(b.minutes) AS minutes,
-                                       SUM(b.amount) AS amount, 
-                                       SUM(b.fac_minutes) AS fac_minutes, 
-                                       SUM(b.fac_amount) AS fac_amount, 
-                                       SUM(b.fac_minutes-b.minutes) AS min_diference, 
-                                       SUM(b.fac_amount-b.amount) AS monto_diference,
-                                       '{$startDate}' AS from_date,
-                                       '{$endDate}' AS to_date
+                             SUM(b.amount) AS amount, 
+                             SUM(b.fac_minutes) AS fac_minutes, 
+                             SUM(b.fac_amount) AS fac_amount, 
+                             SUM(b.fac_minutes-b.minutes) AS min_diference, 
+                             SUM(b.fac_amount-b.amount) AS monto_diference,
+                             '{$startDate}' AS from_date,
+                             '{$endDate}' AS to_date
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
                                (SELECT minutes
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_minutes,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_minutes,
                                (SELECT amount
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS fac_amount,
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS fac_amount,
                                (SELECT doc_number
                                 FROM accounting_document
-                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.from_date=from_date AND ad.to_date=to_date AND c.id=id_carrier) AS doc_number
+                                WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$factura}') AND ad.id_accounting_document=id) AS doc_number
                         FROM carrier c, accounting_document ad
                         WHERE c.id IN({$carriers}) AND ad.id_carrier=c.id AND ad.from_date{$from}'{$startDate}' AND ad.to_date{$to}'{$endDate}' AND ad.id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE  name='{$provision}')) b";
                  
@@ -302,10 +303,11 @@ class InvoiceReport extends Reportes
     }
     public static function getBackPeriods($periodPaymentTerm, $date, $typeReport)
     {
+        $period=NULL;
         if($typeReport=="REFAC") //obtengo el atributo periodo
             $period=$periodPaymentTerm;
         else
-            $period=TerminoPago::getModelFind($period)->period;
+            $period=TerminoPago::getModelFind($periodPaymentTerm)->period;
 
        $key=0;//obtengo el array de los periodos pasados
        $array=array(); 

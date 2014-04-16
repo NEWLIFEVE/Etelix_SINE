@@ -124,7 +124,7 @@ class SiteController extends Controller
 
             if(($_POST['grupo'])!=NULL) $group=$_POST['grupo'];
 
-            if(isset($_POST['No_prov'])) $provition=Reportes::define_prov($_POST['No_prov']);
+            if(isset($_POST['No_prov'])) $provision=Reportes::define_prov($_POST['No_prov'],$group);
 
             if(isset($_POST['No_disp'])) $dispute=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$group,$date);
 
@@ -132,7 +132,7 @@ class SiteController extends Controller
             {
                case 'soa':
                     $correos['soa']['asunto']="SINE - SOA de {$group}".self::reportTitle($date);
-                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
+                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
                case 'summary':
@@ -196,7 +196,7 @@ class SiteController extends Controller
 
             if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
 
-            if(isset($_GET['No_prov'])) $provition=SOA::define_prov($_GET['No_prov']);
+            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
 
             if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
@@ -205,7 +205,7 @@ class SiteController extends Controller
             {
                 case 'soa':
                     $archivos['soa']['nombre']="SINE - SOA de {$group}".self::reportTitle($date)."-".date("g:i a");
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition,$_GET['grupo']);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$_GET['grupo']);
                     break;
                 case 'summary':
                     $archivos['summary']['nombre']="SINE - SUMMARY ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']))." ".self::reportTitle($date)."-".date("g:i a");
@@ -259,7 +259,7 @@ class SiteController extends Controller
 
             if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
 
-            if(isset($_GET['No_prov'])) $provition=SOA::define_prov($_GET['No_prov']);
+            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
 
             if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
@@ -267,7 +267,7 @@ class SiteController extends Controller
             switch($_GET['tipo_report'])
             {
                 case 'soa':
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provition);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
                     break;
                 case 'summary':
                     $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
@@ -390,9 +390,8 @@ class SiteController extends Controller
             return TRUE;
         
     }
-
     /**
-     *
+     * Carga los select de termino pago al iniciar la aplicacion
      */
     public static function ActionUpdateTerminoPago()
     {   
@@ -403,6 +402,43 @@ class SiteController extends Controller
             $tp.= "<option value=".$model->id.">".$model->name."</option>";
         }
         echo "<option value='todos'>Todos</option>".$tp;
+    }
+    /**
+     * Renderiza la vista de provisiones de forma parcial para mostrarse en la vista principal dentro de un div
+     */
+    public function actionProvisions()
+    {
+        $this->renderPartial("Provisions");
+    }
+    /**
+     * envia los campos necesarios al componente provisions para generar las provisiones dependiendo del grupo y la fecha
+     */
+    public function actionGenProvisions()
+    {
+        $group=null;
+        $date=$_GET['datepickerOne'];
+        $final=DateManagement::calculateDate('-1',date('Y-m-d'));
+        if(isset($_GET['group'])) $group=$_GET['group'];
+        while ($date <= $final)
+        {
+                Yii::app()->provisions->run($date,$group);
+                $date=DateManagement::calculateDate('+1',$date);
+        }
+    }
+    /**
+     * calcula el tiempo necesario para generar las provisiones segun la cantidad de carriers y el numero de dias que existe desde la fecha introducida por el usuario y la fecha actual
+     */
+    public function actionCalcTimeProvisions()
+    {
+        if($_GET['group']!="")$carriersList=  carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+          else                $carriersList=  carrier::getListCarrier();
+        
+        $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
+        
+        if(count($carriersList) * 4 * $daysNum <= 60)
+            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum)." Seg";
+        else
+            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
     }
 }
 ?>

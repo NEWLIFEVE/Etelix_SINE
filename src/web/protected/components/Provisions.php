@@ -84,6 +84,9 @@ class Provisions extends CApplicationComponent
     		$this->carriers=Carrier::model()->findAll();
     	}
 
+        $seg=count($this->carriers) * 5 * DateManagement::dateDiff($dateSet,date('Y-m-d'));
+        ini_set('max_execution_time', $seg);
+        
     	$this->getDate($dateSet);
     	//Obtengo la data de clientes
     	$this->getData(true);
@@ -97,8 +100,11 @@ class Provisions extends CApplicationComponent
     	$this->runInvoiceProvision(true);
     	//Genero las provisions de factura recibidas
     	$this->runInvoiceProvision(false);
-
-    	if(!YII_DEBUG) $this->sendNotification();
+    	
+    	if($this->numInvoicesSend>0 || $this->numInvoicesReceived>0)
+            var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas y ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+    	
+        if(!YII_DEBUG) $this->sendNotification();
     }
 
 	/**
@@ -146,8 +152,14 @@ class Provisions extends CApplicationComponent
 		$values="";
 		$count=0;
 
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
-		if($type) $data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
+		if($type) 
+		{
+			$data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'num'=>"numTrafficSend");
+		}
+		else
+		{
+			$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'num'=>"numTrafficReceived");
+		}
 
 		$type_document=TypeAccountingDocument::model()->find($data['condition'])->id;
 
@@ -203,7 +215,6 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionCustomer($carrier->id);
 			}
-			var_dump("Se generaron ".$this->numInvoicesSend." facturas enviadas para el dia ".$this->date);
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 		else
@@ -212,7 +223,7 @@ class Provisions extends CApplicationComponent
 			{
 				$this->_generateInvoiceProvisionSupplier($carrier->id);
 			}
-			var_dump("Se generaron ".$this->numInvoicesReceived." facturas recibidas para el dia ".$this->date);
+			
 			$this->numTrafficSend=$this->numTrafficReceived=0;
 		}
 	}
@@ -235,7 +246,7 @@ class Provisions extends CApplicationComponent
 						<footer style='font-size:0.8em;'>Correo enviado automaticamente a las ".date("H:i:s A")."</footer>
 					</body>
 				</html>";
-		$user="mmzmm3z@gmail.com";
+		$user="manuelz@sacet.biz";
 		Yii::app()->mail->enviar($body, $user, "Provisiones Generadas");
 	}
 
@@ -246,10 +257,10 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _generateInvoiceProvisionCustomer($idCarrier)
 	{
-		$data=array('variable'=>'invoicesSent','condition'=>"name='Provision Trafico Enviada'",'invoice'=>"name='Provision Factura Enviada'",'real'=>"name='Factura Enviada'");
-		$typeProvisions['traffic']=TypeAccountingDocument::model()->find($data['condition'])->id;
-		$typeProvisions['invoice']=TypeAccountingDocument::model()->find($data['invoice'])->id;
-		$typeProvisions['real']=TypeAccountingDocument::model()->find($data['real'])->id;
+		//$data=array('variable'=>'invoicesSent');
+		$typeProvisions['traffic']=TypeAccountingDocument::model()->find("name='Provision Trafico Enviada'")->id;
+		$typeProvisions['invoice']=TypeAccountingDocument::model()->find("name='Provision Factura Enviada'")->id;
+		$typeProvisions['real']=TypeAccountingDocument::model()->find("name='Factura Enviada'")->id;
 		$typeProvisions['currency']=Currency::model()->find("name='$'")->id;
 		$typeProvisions['num']="numInvoicesSend";
 
@@ -295,13 +306,13 @@ class Provisions extends CApplicationComponent
 
 				case 7:
 					$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+					$num=DateManagement::getDayNumberWeek($this->date);
 					if($tempdate===$this->date)
 					{
 						$firstDay=DateManagement::getMonday($this->date);
 						$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
 					}
-					$num=DateManagement::getDayNumberWeek($this->date);
-					if($num==7)
+					elseif($num==7)
 					{
 						$monday=DateManagement::getMonday($this->date);
 						if(DateManagement::separatesDate($monday)['month']==DateManagement::separatesDate($this->date)['month'])
@@ -325,7 +336,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _generateInvoiceProvisionSupplier($idCarrier)
 	{
-		$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
+		//$data=array('variable'=>'invoicesReceived','condition'=>"name='Provision Trafico Recibida'",'invoice'=>"name='Provision Factura Recibida'",'real'=>"name='Factura Recibida'");
 
 		$typeProvisions['traffic']=TypeAccountingDocument::model()->find("name='Provision Trafico Recibida'")->id;
 		$typeProvisions['invoice']=TypeAccountingDocument::model()->find("name='Provision Factura Recibida'")->id;
@@ -515,12 +526,13 @@ class Provisions extends CApplicationComponent
 	 * @param int $idDocument
 	 * @return boolean
 	 */
-	private function _changeStatusProvisions($startDate,$endDate,$idCarrier,$idDocument)
+	private function _changeStatusProvisions($startDate,$endDate,$idCarrier,$idDocument,$otherDocument)
 	{
+		var_dump($startDate,$endDate,$idCarrier,TypeAccountingDocument::model()->findByPk($idDocument)->name);
 		$model=AccountingDocument::model()->findAll('from_date>=:start AND from_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$idDocument));
 		foreach ($model as $key => $value)
 		{
-			$this->_changeStatusProvision($value->id);
+			$this->_changeStatusProvision($value->id,$otherDocument);
 		}
 	}
 
@@ -533,10 +545,11 @@ class Provisions extends CApplicationComponent
 	 * @param int $idDocument
 	 * @return boolean
 	 */
-	private function _changeStatusProvision($id)
+	private function _changeStatusProvision($id,$otherDocument)
 	{
 		$provision=AccountingDocumentProvisions::model()->findByPk($id);
 		$provision->confirm=-1;
+		$provision->id_accounting_document=$otherDocument;
 		if($provision->save())
 		{
 			return true;
@@ -559,6 +572,7 @@ class Provisions extends CApplicationComponent
 		{
 			$provision=AccountingDocumentProvisions::model()->find('from_date>=:start AND to_date<=:end AND id_carrier=:id AND id_type_accounting_document=:type', array(':start'=>$startDate,':end'=>$endDate,':id'=>$idCarrier,':type'=>$data['invoice']));
 			$provision->confirm=-1;
+			$provision->id_accounting_document=$invoice->id;
 			if($provision->save())
 			{
 				return true;
@@ -580,12 +594,13 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _insertInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions)
 	{
+		//var_dump("la suma desde ".TypeAccountingDocument::model()->findByPk($typeProvisions['traffic'])->name." para generar una ".TypeAccountingDocument::model()->findByPk($typeProvisions['invoice'])->name." en las fechas ".$startDate." ".$endDate);
 		$trafficProvisions=$this->_getTrafficProvision($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
 		if($trafficProvisions->amount!=null)
 		{
 			$this->_deleteProvision($startDate,$endDate,$idCarrier,$typeProvisions['invoice']);
 			$doccument=new AccountingDocumentProvisions;
-			$doccument->issue_date=$endDate;
+			$doccument->issue_date=DateManagement::calculateDate('+1',$endDate);
 			$doccument->from_date=$startDate;
 			$doccument->to_date=$endDate;
 			$doccument->minutes=$trafficProvisions->minutes;
@@ -596,7 +611,7 @@ class Provisions extends CApplicationComponent
 			$doccument->confirm=1;
 			if($doccument->save())
 			{
-				$this->_changeStatusProvisions($startDate,$endDate,$idCarrier,$typeProvisions['traffic']);
+				$this->_changeStatusProvisions($startDate,$endDate,$idCarrier,$typeProvisions['traffic'],$doccument->id);
 				$this->_changeStatusInvoiceProvision($startDate,$endDate,$idCarrier,$typeProvisions);
 				$this->$typeProvisions['num']=$this->$typeProvisions['num']+1;
 			}
@@ -613,7 +628,7 @@ class Provisions extends CApplicationComponent
 	 */
 	private function _deleteProvision($startDate,$endDate,$idCarrier,$typeProvision)
 	{
-		var_dump($startDate,$endDate,$idCarrier,$typeProvision);
+		//var_dump($startDate,$endDate,$idCarrier,TypeAccountingDocument::model()->findByPk($typeProvision)->name);
 		return AccountingDocumentProvisions::model()->deleteAll('from_date=:from AND to_date=:to AND id_carrier=:id AND id_type_accounting_document=:type',array(':from'=>$startDate,':to'=>$endDate,':id'=>$idCarrier,':type'=>$typeProvision));
 	}
 

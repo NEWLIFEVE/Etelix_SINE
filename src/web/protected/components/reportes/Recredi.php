@@ -24,17 +24,17 @@ class Recredi extends Reportes
         $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
 
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
-        $style_number_row="style='border:1px solid black;text-align:center;background:#83898F;color:white;'";
-        $style_basic="style='border:1px solid black;text-align:center;'";
-        $style_carrier_head="style='border:0px solid black;background:silver;text-align:center;color:white;'";
-        $style_soa_head="style='border:1px solid black;background:#3466B4;text-align:center;color:white;'";
-        $style_prov_fact_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
-        $style_prov_traf_head="style='border:1px solid black;background:#248CB4;text-align:center;color:white;'";
-        $style_prov_disp_head="style='border:1px solid black;background:#C37881;text-align:center;color:white;'";
-        $style_balance_head="style='border:0px solid black;background:#2E62B4;text-align:center;color:white;'";
-        $style_cost_head="style='border:1px solid black;background:#E99241;text-align:center;color:white;'";
-        $style_revenue_head="style='border:1px solid black;background:#06ACFA;text-align:center;color:white;'";
-        $style_margin_head="style='border:1px solid black;background:#049C47;text-align:center;color:white;'";
+        $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+        $style_basic="style='border:1px solid silver;text-align:center;'";
+        $style_carrier_head="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
+        $style_soa_head="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
+        $style_prov_fact_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $style_prov_traf_head="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
+        $style_prov_disp_head="style='border:1px solid silver;background:#C37881;text-align:center;color:white;'";
+        $style_balance_head="style='border:1px solid silver;background:#2E62B4;text-align:center;color:white;'";
+        $style_cost_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $style_revenue_head="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
+        $style_margin_head="style='border:1px solid silver;background:#049C47;text-align:center;color:white;'";
 
         $body="<table>
                 <tr>
@@ -326,19 +326,19 @@ class Recredi extends Reportes
                     /*Traigo provisiones de facturas enviadas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
-                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) AS provision_invoice_sent,
+                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_invoice_sent,
                     /*Traigo provisiones de facturas recibidas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
-                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) AS provision_invoice_received,
+                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_invoice_received,
                     /*Traigo provisiones de trafico enviada*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
-                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) AS provision_traffic_sent,
+                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_traffic_sent,
                     /*Traigo provisiones de trafico recibida*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
-                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) AS provision_traffic_received,
+                      WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_traffic_received,
                     /*Traigo las disputas recibidas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
@@ -348,10 +348,12 @@ class Recredi extends Reportes
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Disputa Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') AS sent_dispute,
                     /*Balance*/
-                     (SELECT (i.amount+(p.amount-n.amount)) AS amount
+                     (SELECT (i.amount + p.amount + pp.amount - n.amount - pn.amount) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
-                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,6,8,10,12,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) p,
-                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,5,7,11,13,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND confirm != -1) n) AS balance
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,6,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) p,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,5,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) n,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10,12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pp,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pn) AS balance
               FROM carrier_groups cg,
                    carrier c {$tableNext}
                    
