@@ -30,9 +30,5 @@
 <script>
     $SINE.UI.GenDatepicker($( "#datepickerOne" ));
     $SINE.AJAX.getNamesCarriers();
-
-    $('#genProvision').on('click',function()
-    {   
-        $SINE.UI.genProvisions($(this));
-    });
+    $('#genProvision').on('click',function(){$SINE.UI.genProvisions($(this));});
 </script>
