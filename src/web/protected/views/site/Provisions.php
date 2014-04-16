@@ -26,7 +26,23 @@
     <h3 class='provisionNote'>* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
 </div>
     
-<script src="<?php echo Yii::app()->baseUrl; ?>/js/sine.js"></script>
+
 <script>
-$( "#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+    $( "#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+
+    $('#genProvision').on('click',function()
+    {   
+        $SINE.UI.genProvisions($(this));
+    });
+
+    $.ajax({url:"../Grupos/Nombres",success:function(datos)
+        {
+            $SINE.DATA.groups=JSON.parse(datos);
+            $SINE.DATA.nombresGroups=Array();
+            for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
+            {
+                    $SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
+            };$('input#group').autocomplete({source:$SINE.DATA.nombresGroups});
+        }
+    });
 </script>
