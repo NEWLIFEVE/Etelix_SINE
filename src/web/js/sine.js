@@ -368,7 +368,7 @@ $SINE.UI=(function()
         {
             $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
         }else{
-            $SINE.UI.msjConfirm("<h3>Esta a punto de generar las provisiones para" + $SINE.UI.ifNull($("#group").val(), "<b>TODOS</b> los carriers", "el carrier <b>"+$("#group").val()+"</b>") + " desde la fecha <b>"+$("#datepickerOne").val()+"</b></h3>");
+            $SINE.UI.msjConfirm("<h3>Esta a punto de generar las provisiones para " + $SINE.UI.ifNull($("#group").val(), "<b>TODOS</b> los carriers", "el carrier <b>"+$("#group").val()+"</b>") + " desde la fecha <b>"+$("#datepickerOne").val()+"</b></h3>");
             $('#confirm,#cancel').on('click', function()
             {
                 if($(this).attr('id')=="confirm")

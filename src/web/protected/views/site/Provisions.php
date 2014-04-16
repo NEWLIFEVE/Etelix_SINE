@@ -26,7 +26,9 @@
     <h3 class='provisionNote'>* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
 </div>
     
-<script src="<?php echo Yii::app()->baseUrl; ?>/js/sine.js"></script>
+
 <script>
-$( "#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+    $SINE.UI.GenDatepicker($( "#datepickerOne" ));
+    $SINE.AJAX.getNamesCarriers();
+    $('#genProvision').on('click',function(){$SINE.UI.genProvisions($(this));});
 </script>
