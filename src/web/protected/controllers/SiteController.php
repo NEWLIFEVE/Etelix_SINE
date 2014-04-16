@@ -416,8 +416,8 @@ class SiteController extends Controller
     public function actionGenProvisions()
     {
         $group=null;
-        $date=$_GET['datepickerOne'];
-        $final=DateManagement::calculateDate('-1',date('Y-m-d'));
+        $date=DateManagement::calculateDate('+1',$_GET['datepickerOne']);
+        $final=date('Y-m-d');
         if(isset($_GET['group'])) $group=$_GET['group'];
         while ($date <= $final)
         {
