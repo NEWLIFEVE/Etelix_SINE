@@ -28,21 +28,11 @@
     
 
 <script>
-    $( "#datepickerOne" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+    $SINE.UI.GenDatepicker($( "#datepickerOne" ));
+    $SINE.AJAX.getNamesCarriers();
 
     $('#genProvision').on('click',function()
     {   
         $SINE.UI.genProvisions($(this));
-    });
-
-    $.ajax({url:"../Grupos/Nombres",success:function(datos)
-        {
-            $SINE.DATA.groups=JSON.parse(datos);
-            $SINE.DATA.nombresGroups=Array();
-            for(var i=0, j=$SINE.DATA.groups.length-1; i<=j; i++)
-            {
-                    $SINE.DATA.nombresGroups[i]=$SINE.DATA.groups[i].name;
-            };$('input#group').autocomplete({source:$SINE.DATA.nombresGroups});
-        }
     });
 </script>
