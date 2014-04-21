@@ -183,21 +183,21 @@ $this->pageTitle = Yii::app()->name;
     </div>
 </form>
 </div>
-<div class="barra_tools_click">
-    <footer id="botones_exportar">
-        <div id="previa" class="botones">
-            <img src="/images/previa.png" title='Vista previa del reporte'>
-        </div>
-        <div id="excel" class="botones">
-            <a class="excel_a">
-               <img src="/images/excel.png" title='Exportar Reportes en Excel'>
-            </a>
-        </div>
-        <div id="mail" class="botones">
-            <img src="/images/mail.png" title='Enviar Reportes a su Correo Electronico'>
-        </div>
-    </footer>
-</div>
+    <div class="barra_tools_click">
+        <footer id="botones_exportar">
+            <div id="previa" class="botones">
+                <img src="/images/previa.png" title='Vista previa del reporte'>
+            </div>
+            <div id="excel" class="botones">
+                <a class="excel_a">
+                   <img src="/images/excel.png" title='Exportar Reportes en Excel'>
+                </a>
+            </div>
+            <div id="mail" class="botones">
+                <img src="/images/mail.png" title='Enviar Reportes a su Correo Electronico'>
+            </div>
+        </footer>
+    </div>
 <div class="views_not" id="views_not">
-    <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
+    <h1 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h1>
 </div>
