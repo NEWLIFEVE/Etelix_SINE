@@ -92,13 +92,13 @@ class Provisions extends CApplicationComponent
     	$this->getData(true);
     	//Obtengo la data de proveedores
     	$this->getData(false);
-    	//Genero las provisiones de trafico y facturas enviadas
+    	//Genero las provisiones de trafico enviadas
     	$this->generateTrafficProvision(true);
-    	//Genero las provisions de trafico y facturas recibidas
+    	//Genero las provisions de trafico recibidas
     	$this->generateTrafficProvision(false);
-    	//
+    	//Genero las provisions de factura enviadas
     	$this->runInvoiceProvision(true);
-    	//
+    	//Genero las provisions de factura recibidas
     	$this->runInvoiceProvision(false);
     	
     	if($this->numInvoicesSend>0 || $this->numInvoicesReceived>0)
