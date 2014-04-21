@@ -417,7 +417,8 @@ class SiteController extends Controller
     {
         $group=null;
         $date=DateManagement::calculateDate('+1',$_GET['datepickerOne']);
-        $final=date('Y-m-d');
+        $final='2014-04-07';
+        // $final=date('Y-m-d');
         if(isset($_GET['group'])) $group=$_GET['group'];
         while ($date <= $final)
         {
@@ -430,8 +431,8 @@ class SiteController extends Controller
      */
     public function actionCalcTimeProvisions()
     {
-        if($_GET['group']!="")$carriersList=  carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
-          else                $carriersList=  carrier::getListCarrier();
+        if($_GET['group']!="")$carriersList=Carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+          else                $carriersList=Carrier::getListCarrier();
         
         $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
         
