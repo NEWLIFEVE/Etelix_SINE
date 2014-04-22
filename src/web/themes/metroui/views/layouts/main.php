@@ -26,6 +26,11 @@
                         <?php echo Yii::app()->name; ?>
                     </a>
                     <?php if (!Yii::app()->user->isGuest): ?>
+                    <span class="element-divider"></span>
+                        <label id='showProvisions'class="element">
+                            Provisiones
+                        </label>
+                    
                         <span class="element-divider"></span>
                         <?php echo CHtml::link('<i class="icon-locked on-right on-left"></i> Logout ('.Yii::app()->user->name.')', array('/site/logout'), array('class'=>'element')); ?>
                         <span class="element-divider"></span>
@@ -49,6 +54,7 @@
             </div>
             <div class="clear"></div>
         </div>
+        
         <script>
         var _root_ = "<?php echo Yii::app()->getBaseUrl(true) . '/'; ?>";
         </script>

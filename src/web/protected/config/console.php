@@ -23,7 +23,7 @@ if($server==SERVER_NAME_PROD)
 }
 else
 {
-	$server_db='172.16.17.190';
+	$server_db='localhost';
     $sine_db='sori';
     $user_db='postgres';
     $pass_db='123';
@@ -42,7 +42,7 @@ return array(
 		),
 	// application components
 	'components'=>array(
-		'provisions'=>array(
+	'provisions'=>array(
             'class'=>"application.components.Provisions",
         ),
         'mail'=>array(
