@@ -417,13 +417,12 @@ class SiteController extends Controller
     {
         $group=null;
         $date=DateManagement::calculateDate('+1',$_GET['datepickerOne']);
-        $final='2014-04-07';
-        // $final=date('Y-m-d');
+        $final=date('Y-m-d');
         if(isset($_GET['group'])) $group=$_GET['group'];
         while ($date <= $final)
         {
-                Yii::app()->provisions->run($date,$group);
-                $date=DateManagement::calculateDate('+1',$date);
+            Yii::app()->provisions->run($date,$group);
+            $date=DateManagement::calculateDate('+1',$date);
         }
     }
     /**
