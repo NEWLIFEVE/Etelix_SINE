@@ -136,7 +136,8 @@ class SiteController extends Controller
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
                case 'summary':
-                    $correos['summary']['asunto']="SINE - SUMMARY ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+//                    $correos['summary']['asunto']="SINE - SUMMARY ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+                    $correos['summary']['asunto']="SINE - SUMMARY ".self::reportTitle($date);
                     $correos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
                     break;
@@ -163,7 +164,8 @@ class SiteController extends Controller
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                case 'recredi':
-                    $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+//                  $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+                    $correos['recredi']['asunto']="SINE - RECREDI".self::reportTitle($date);
                     $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                     break;

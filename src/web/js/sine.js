@@ -36,7 +36,7 @@ $SINE.UI=(function()
      */
     function _datepicker() 
     {
-        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-09-30"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite
@@ -144,7 +144,7 @@ $SINE.UI=(function()
     */
     function GenDatepicker(obj) 
     {
-        $( obj ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D"});
+        $( obj ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-09-30"});
     };
     /**
      * administra el menu vertical
@@ -268,7 +268,7 @@ $SINE.UI=(function()
               break;
         }
         $("#tipo_report").val(nombre);
-        $('.formulario').css('display','block').css('width','81%').css('margin-left','39%');
+        $('.formulario').css('display','block').css('width','64%').css('margin-left','39%');
             $('.barra_tools_click').show("fast");
 
 

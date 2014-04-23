@@ -315,6 +315,7 @@ div.login.error input#LoginForm_password
     position: absolute;
     margin-left: 0%;
 }
+
 .h1_report
 {
     color:#2E62B4!important;
@@ -333,7 +334,7 @@ div.login.error input#LoginForm_password
     position: static;
     margin-left: 19%;
     padding-left: 49px;
-    padding-right: 164px;
+    padding-right: 89px;
     display:none;
 }
 
@@ -430,7 +431,7 @@ img.oculta
 {
     background: #3F3C3C!important;
     color: #2E62B4;
-    width: 21%;
+    width: 23%;
     border: 0px solid;
     border-radius: initial!important;
 }
