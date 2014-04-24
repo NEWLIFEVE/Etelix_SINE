@@ -25,6 +25,54 @@ class SiteController extends Controller
     }
 
     /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+        );
+    }
+
+    public function accessRules()
+    {
+        return array(
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    'provisions',
+                    'genProvisions',
+                    'calcTimeProvisions'
+                    ),
+                'users'=>UsersSine::getUsersByRole("Administrador")
+                ),
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    ),
+                'users'=>UsersSine::getUsersByRole("Finanzas")
+                )
+            );
+    }
+
+    /**
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
      * @access public
@@ -136,7 +184,8 @@ class SiteController extends Controller
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
                case 'summary':
-                    $correos['summary']['asunto']="SINE - SUMMARY ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+//                    $correos['summary']['asunto']="SINE - SUMMARY ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+                    $correos['summary']['asunto']="SINE - SUMMARY ".self::reportTitle($date);
                     $correos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['summary']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['summary']['asunto'].".xls";
                     break;
@@ -163,7 +212,8 @@ class SiteController extends Controller
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                case 'recredi':
-                    $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+//                  $correos['recredi']['asunto']="SINE - RECREDI ".Reportes::defineNameExtra($_POST['id_termino_pago'],$this->trueFalse($_POST['type_termino_pago']))." ".self::reportTitle($date);
+                    $correos['recredi']['asunto']="SINE - RECREDI".self::reportTitle($date);
                     $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                     break;
@@ -393,7 +443,7 @@ class SiteController extends Controller
     /**
      * Carga los select de termino pago al iniciar la aplicacion
      */
-    public static function ActionUpdateTerminoPago()
+    public static function actionUpdateTerminoPago()
     {   
         $tp="";
         $TerminoPago=TerminoPago::getModel();
@@ -421,8 +471,8 @@ class SiteController extends Controller
         if(isset($_GET['group'])) $group=$_GET['group'];
         while ($date <= $final)
         {
-                Yii::app()->provisions->run($date,$group);
-                $date=DateManagement::calculateDate('+1',$date);
+            Yii::app()->provisions->run($date,$group);
+            $date=DateManagement::calculateDate('+1',$date);
         }
     }
     /**
@@ -430,8 +480,8 @@ class SiteController extends Controller
      */
     public function actionCalcTimeProvisions()
     {
-        if($_GET['group']!="")$carriersList=  carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
-          else                $carriersList=  carrier::getListCarrier();
+        if($_GET['group']!="")$carriersList=Carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+          else                $carriersList=Carrier::getListCarrier();
         
         $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
         
@@ -439,6 +489,40 @@ class SiteController extends Controller
             echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum)." Seg";
         else
             echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
+    }
+    /**
+     * 
+     * @return string
+     */
+    public function actionCalcTimeReport()
+    {
+        switch($_GET['tipo_report'])
+            {
+                case 'summary':case 'recredi':
+                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*0.5;
+                    if($time <= 60)
+                        $time= Yii::app()->format->format_decimal( $time )." Seg";
+                    else
+                        $time= Yii::app()->format->format_decimal( $time / 60)." Min";
+                    echo "<h3> este proceso puede tomar <b>".$time."</b></h3> no cierre su navegador durante ese tiempo";
+                    break;
+                default:
+                    echo "<br>";
+                    break;
+            } 
+    }
+    /**
+     * Establece los links para cada tipo de usuarios
+     */
+    public static function accessControl($idUser)
+    {
+        $tipo=UsersSine::model()->findByPk($idUser)->idTypeOfUser->nombre;
+        if($tipo=="Administrador")
+        {
+            return "<span class='element-divider'></span>
+                <label id='showProvisions'class='element'>Provisiones</label>";
+        }
+        return false;
     }
 }
 ?>

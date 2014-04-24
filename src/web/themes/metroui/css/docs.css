@@ -127,8 +127,10 @@ text-shadow: none;
     margin-left: -187px;
     margin-top: -20px;
     padding-top: 20px;
-    position: absolute;
-    width: 158.5%;
+/*    position: absolute;
+    width: 158.5%;*/
+    position: fixed;
+    width: 100.5%;
 }
 @media screen and (max-width: 600px) { /* 13 / 390 */
     .contratoForm{ width: 45%;}
@@ -286,8 +288,8 @@ div.login.error input#LoginForm_password
     float: left;
     padding-left: 28px;
     border-bottom: 1px solid silver;
-    transition:width 0.3s;
-    -webkit-transition:width 0.3s;
+    transition:width 0.5s;
+    -webkit-transition:width, background 0.3s;
     /*padding-bottom: 25%;quitar al tener todos los reportes*/
 
 }
@@ -303,6 +305,10 @@ div.login.error input#LoginForm_password
     border-bottom: 1px solid white;
     width: 96%;
 }
+/*.Reportes:active 
+{
+    background:#06ACFA;
+}*/
 .subtitulos
 {
     font-size: xx-large;
@@ -311,6 +317,7 @@ div.login.error input#LoginForm_password
     position: absolute;
     margin-left: 0%;
 }
+
 .h1_report
 {
     color:#2E62B4!important;
@@ -329,7 +336,7 @@ div.login.error input#LoginForm_password
     position: static;
     margin-left: 19%;
     padding-left: 49px;
-    padding-right: 164px;
+    padding-right: 89px;
     display:none;
 }
 
@@ -426,7 +433,7 @@ img.oculta
 {
     background: #3F3C3C!important;
     color: #2E62B4;
-    width: 21%;
+    width: 23%;
     border: 0px solid;
     border-radius: initial!important;
 }
@@ -535,7 +542,7 @@ li.ui-menu-item a
     background-color: rgba(0,0,0,0.7);
     content: "";
     height: 100%;
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 0px;
     width: 100%;
@@ -547,7 +554,7 @@ li.ui-menu-item a
     background-color: rgba(0,0,0,0.7);
     content: "";
     height: 100%;
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 0px;
     width: 100%;
@@ -558,20 +565,19 @@ li.ui-menu-item a
 
 .views_not
 {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.7);
     content: "";
-    height: 11%;
     position: fixed;
     text-align: center;
-    top: 48px;
-    left: 2%;
-    width: 96%;
     z-index: 1030;
+    height: 60%;
+    margin: -106% -4%;
+    width: 95%;
     display:none;
 }
 .views_not:hover
 {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.4) ;
 }
 .h1_views_not
 {
@@ -838,3 +844,4 @@ select
     width: 238%;
     margin: 0px 0px 45px 0px!important;
 }
+

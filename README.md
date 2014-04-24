@@ -2,6 +2,15 @@
 ============
 
 Sistema de Reportes para Billing
+    - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.
+    - Se agrego columna en summary, (soa provisioned) la cual muestra el soa next tomando en cuenta las provisiones, dando una idea mas segura de lo que seria el para la fecha.
+    - se agrego valor (incremental) para los soa next y soa provisioned, esta es la operacion entre el soa next/soa provisioned menos el soa due.
+    - Se agrego indicador de tiempo de espera para la generacion de reportes.
+    - Se solvento problema en el envio de emails para los reportes recredi y summary.
+    - Correcciones en recredi listas.
+    - Mejoras en calculo de disputas y balance para recredi.
+    - cambio en datepickers para que la fecha minima de seleccion sea 2013-10-01.
+    - Correccion de scroll para la interfaz principal.
     - Nueva interfaz para generar provisiones.
     - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
     - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 

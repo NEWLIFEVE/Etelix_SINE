@@ -115,12 +115,25 @@ class UsersSine extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-                public function validatePassword($password){
-return $this->hashPassword($password)===$this->password;
-}
- 
-public function hashPassword($password){
-return md5($password);
-        
-}
+
+	public function validatePassword($password)
+	{
+		return $this->hashPassword($password)===$this->password;
+	}
+
+	public function hashPassword($password)
+	{
+		return md5($password);
+	}
+
+	public static function getUsersByRole($rol)
+	{
+		$users=TypeOfUser::model()->find('nombre=:name',array(':name'=>$rol))->usersSines;
+		$array=array();
+		foreach ($users as $key => $user)
+		{
+		 	$array[]=$user->username;
+		}
+		return $array;
+	}
 }

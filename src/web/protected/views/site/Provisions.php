@@ -25,8 +25,6 @@
     <h3 class='provisionNote'>* Introduzca el grupo y la fecha desde donde quiere generar provisiones</h3>  
     <h3 class='provisionNote'>* Puede dejar el grupo vacio, de esta forma se generaran provisiones a todos los carriers</h3>  
 </div>
-    
-
 <script>
     $SINE.UI.GenDatepicker($( "#datepickerOne" ));
     $SINE.AJAX.getNamesCarriers();

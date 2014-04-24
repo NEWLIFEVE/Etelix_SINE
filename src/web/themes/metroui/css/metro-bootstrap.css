@@ -2221,7 +2221,7 @@ a {
 }
 .metro .page .page-region .page-region-content {
   min-height: 530px; /*content*/
-  position: fixed;
+  position: absolute;
 }
 .metro .page .page-region .page-region-content:before,
 .metro .page .page-region .page-region-content:after {
