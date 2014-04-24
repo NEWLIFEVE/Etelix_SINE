@@ -1074,11 +1074,22 @@ class Reportes extends CApplicationComponent
                 }
             }
         }
+        /**
+         * METODO ENCARGADO DE ESTIMAR EL VALOR INCREMENTAL ENTRE EL SOA_DUE Y EL SOA_NEXT, SUPONIENDO QUE SE PAGARA EL SOA ACTUAL, EN SI SOLO ES LA RESTA DEL NEXT - DUE
+         * SI EL DUE_SOA LLEGA VACIO, SOLO RETORNARA EL MISMO VALOR DE NEXT, PERO SI LLEGA CON DATA, HACE LA OPERACION Y RETORNA EL VALOR NEXT ACOMPAÑADO DE DIFERENCIAL.
+         * @param type $resultDue
+         * @param type $resultNext
+         * @return string
+         */
         public static function defineIncremental($resultDue, $resultNext)
         {
-            if($resultNext!="")
-                return " (".$resultDue - $resultNext. ") ";
-            return "";          
+            if($resultNext!=""){
+                if($resultDue!=""&&$resultNext!="")
+                    return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
+                return Yii::app()->format->format_decimal($resultNext);
+            }else{
+                return "";
+            }
         }
         /**
          * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD

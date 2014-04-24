@@ -343,15 +343,15 @@ $SINE.UI=(function()
             var id=$(click).attr('id');
             if(id=="mail"){    
                 $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize(),null);
-                $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Enviando Email</h2>");
+                $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Enviando Email</h2>");
              }
             else if(id=="previa"){    
                 $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
-                $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
+                $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
              }else{                                            
                   $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   $( document ).ajaxError(function() {
-                      $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
+                      $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
                       $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   });
                   } 

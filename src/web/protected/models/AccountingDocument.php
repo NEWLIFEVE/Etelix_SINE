@@ -54,7 +54,8 @@ class AccountingDocument extends CActiveRecord
 	public $received_dispute;
 	public $sent_dispute;
 	public $balance;
-          
+	
+        public $soa_provisioned; 
         public $group;
         public $carrier;
         public $type;
