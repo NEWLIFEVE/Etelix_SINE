@@ -139,12 +139,14 @@ class Reportes extends CApplicationComponent
                      return " ";
                   }else{
                      return "UNION
-                             SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
-                                    amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
+                             SELECT NULL as id, issue_date, valid_received_date, doc_number, from_date, to_date, sum(minutes) as minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
+                                    sum(amount) as amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                              FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                              WHERE a.id_carrier IN(Select id from carrier where $group)
                                      AND a.id_type_accounting_document=tad.id AND a.id_carrier=c.id AND a.id_currency=s.id AND c.id_carrier_groups = g.id AND confirm != -1
-                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
+                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                            GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
+                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name";
                   }
                 break;
             case "balance": 
@@ -152,10 +154,13 @@ class Reportes extends CApplicationComponent
                     return " ";
                  }else{
                     return "UNION
-                            SELECT a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+                            SELECT NULL as id, sum(minutes) as minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, sum(a.amount) as amount,s.name AS currency 
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                            WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$date}'
-                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
+                            WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id 
+                                    AND a.issue_date<='{$date}'
+                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                            GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
+                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name, tp.name,t.name";
                  }
                 break;
             default:
