@@ -25,6 +25,54 @@ class SiteController extends Controller
     }
 
     /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+        );
+    }
+
+    public function accessRules()
+    {
+        return array(
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    'provisions',
+                    'genProvisions',
+                    'calcTimeProvisions'
+                    ),
+                'users'=>UsersSine::getUsersByRole("Administrador")
+                ),
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    ),
+                'users'=>UsersSine::getUsersByRole("Finanzas")
+                )
+            );
+    }
+
+    /**
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
      * @access public
@@ -395,7 +443,7 @@ class SiteController extends Controller
     /**
      * Carga los select de termino pago al iniciar la aplicacion
      */
-    public static function ActionUpdateTerminoPago()
+    public static function actionUpdateTerminoPago()
     {   
         $tp="";
         $TerminoPago=TerminoPago::getModel();
@@ -423,8 +471,8 @@ class SiteController extends Controller
         if(isset($_GET['group'])) $group=$_GET['group'];
         while ($date <= $final)
         {
-                Yii::app()->provisions->run($date,$group);
-                $date=DateManagement::calculateDate('+1',$date);
+            Yii::app()->provisions->run($date,$group);
+            $date=DateManagement::calculateDate('+1',$date);
         }
     }
     /**
@@ -432,8 +480,8 @@ class SiteController extends Controller
      */
     public function actionCalcTimeProvisions()
     {
-        if($_GET['group']!="")$carriersList=  carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
-          else                $carriersList=  carrier::getListCarrier();
+        if($_GET['group']!="")$carriersList=Carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+          else                $carriersList=Carrier::getListCarrier();
         
         $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
         
@@ -462,6 +510,19 @@ class SiteController extends Controller
                     echo "<br>";
                     break;
             } 
+    }
+    /**
+     * Establece los links para cada tipo de usuarios
+     */
+    public static function accessControl($idUser)
+    {
+        $tipo=UsersSine::model()->findByPk($idUser)->idTypeOfUser->nombre;
+        if($tipo=="Administrador")
+        {
+            return "<span class='element-divider'></span>
+                <label id='showProvisions'class='element'>Provisiones</label>";
+        }
+        return false;
     }
 }
 ?>

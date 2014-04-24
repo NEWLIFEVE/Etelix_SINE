@@ -1041,7 +1041,7 @@ class Reportes extends CApplicationComponent
         }
  
         /**
-         * METODO ENCARGADO DE POSICIONAR LOS MONTOS Y LOS DUE_DATE DEPENDIENDO DE LA SEMANA
+         * Metodo encargado de posicionar los montos y los due_date dependiendo de la semana
          * @param type $value
          * @param type $dueDate
          * @param type $date

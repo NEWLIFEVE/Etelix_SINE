@@ -1,23 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "type_accounting_document".
+ * This is the model class for table "type_of_user".
  *
- * The followings are the available columns in table 'type_accounting_document':
+ * The followings are the available columns in table 'type_of_user':
  * @property integer $id
- * @property string $name
- * @property string $description
+ * @property string $nombre
  *
  * The followings are the available model relations:
- * @property AccountingDocument[] $accountingDocuments
- * @property AccountingDocumentTemp[] $accountingDocumentTemps
+ * @property UsersSine[] $usersSines
+ * @property Users[] $users
+ * @property UsersRenoc[] $usersRenocs
  */
-class TypeAccountingDocument extends CActiveRecord
+class TypeOfUser extends CActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
-     * @return TypeAccountingDocument the static model class
+     * @return TypeOfUser the static model class
      */
     public static function model($className=__CLASS__)
     {
@@ -29,7 +29,7 @@ class TypeAccountingDocument extends CActiveRecord
      */
     public function tableName()
     {
-        return 'type_accounting_document';
+        return 'type_of_user';
     }
 
     /**
@@ -40,12 +40,11 @@ class TypeAccountingDocument extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
-            array('name', 'length', 'max'=>50),
-            array('description', 'length', 'max'=>250),
+            array('nombre', 'required'),
+            array('nombre', 'length', 'max'=>45),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, name, description', 'safe', 'on'=>'search'),
+            array('id, nombre', 'safe', 'on'=>'search'),
         );
     }
 
@@ -57,8 +56,9 @@ class TypeAccountingDocument extends CActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'accountingDocuments' => array(self::HAS_MANY, 'AccountingDocument', 'id_type_accounting_document'),
-            'accountingDocumentTemps' => array(self::HAS_MANY, 'AccountingDocumentTemp', 'id_type_accounting_document'),
+            'usersSines' => array(self::HAS_MANY, 'UsersSine', 'id_type_of_user'),
+            'users' => array(self::HAS_MANY, 'Users', 'id_type_of_user'),
+            'usersRenocs' => array(self::HAS_MANY, 'UsersRenoc', 'id_type_of_user'),
         );
     }
 
@@ -69,8 +69,7 @@ class TypeAccountingDocument extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
+            'nombre' => 'Nombre',
         );
     }
 
@@ -86,8 +85,7 @@ class TypeAccountingDocument extends CActiveRecord
         $criteria=new CDbCriteria;
 
         $criteria->compare('id',$this->id);
-        $criteria->compare('name',$this->name,true);
-        $criteria->compare('description',$this->description,true);
+        $criteria->compare('nombre',$this->nombre,true);
 
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,
