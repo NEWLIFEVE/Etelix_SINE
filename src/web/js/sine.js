@@ -36,7 +36,7 @@ $SINE.UI=(function()
      */
     function _datepicker() 
     {
-        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-09-30"});
+        $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-10-01"});
     };
     /**
      * metodo encargado de escuchar changes desde la interfaz y redireccionar a la accion que se necesite
@@ -144,7 +144,7 @@ $SINE.UI=(function()
     */
     function GenDatepicker(obj) 
     {
-        $( obj ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-09-30"});
+        $( obj ).datepicker({ dateFormat: "yy-mm-dd", maxDate: "-0D", minDate: "2013-10-01"});
     };
     /**
      * administra el menu vertical
@@ -342,17 +342,17 @@ $SINE.UI=(function()
         }else{
             var id=$(click).attr('id');
             if(id=="mail"){    
-                $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize());
-                $SINE.UI.msjCargando("<h2>Enviando Email</h2>","cargando.gif");
+                $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize(),null);
+                $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Enviando Email</h2>");
              }
             else if(id=="previa"){    
-                $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize());
-                $SINE.UI.msjCargando("<h2>Cargando Vista Previa</h2>","cargando.gif");
+                $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
+                $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
              }else{                                            
-                  $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
+                  $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   $( document ).ajaxError(function() {
-                      $SINE.UI.msjCargando("<h2>Exportando Archivo Excel </h2>","cargando.gif");
-                      $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize()); 
+                      $SINE.UI.msjCargando("","");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
+                      $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   });
                   } 
         }
@@ -617,27 +617,32 @@ $SINE.AJAX=(function()
     * @param {type} type
     * @param {type} action
     * @param {type} formulario
+    * @param {type} msjTime
     * @returns {undefined}
     */
-    function send(type,action,formulario)
+    function send(type,action,formulario,msjTime)
     {
         $.ajax({
              type: type,
              url: action,
              data: formulario,
              success: function(data)
-             {   
-                 if(action=="/site/Excel"){         
-                     $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
-                     $(".excel_a").removeAttr("href");
-                     console.log("Descarga Exitosa");
-                 }else if(action=="/site/previa"){ 
-                     $SINE.UI.fancyBox(data);
-                     console.log("Vista Previa Exitosa");
-                 }else{                              
-                     $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
-                     console.log(data);
-                 }    
+             {  
+                 if(msjTime != null){   /*consulta el tiempo estimado para generar los reportes y lo muestra cambiando el msj actual confirm, por ahora solo tiene impacto sobre recredi y summary*/
+                    $SINE.UI.msjChange(msjTime+data,"cargando.gif",null,"80%"); 
+                 }else{
+                    if(action=="/site/Excel"){         
+                        $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
+                        $(".excel_a").removeAttr("href");
+                        console.log("Descarga Exitosa");
+                    }else if(action=="/site/previa"){ 
+                        $SINE.UI.fancyBox(data);
+                        console.log("Vista Previa Exitosa");
+                    }else{                              
+                        $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                        console.log(data);
+                    }  
+                 }
              }
         });
     }

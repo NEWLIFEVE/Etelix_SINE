@@ -1074,6 +1074,12 @@ class Reportes extends CApplicationComponent
                 }
             }
         }
+        public static function defineIncremental($resultDue, $resultNext)
+        {
+            if($resultNext!="")
+                return " (".$resultDue - $resultNext. ") ";
+            return "";          
+        }
         /**
          * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD
          * @param type $dateModel
@@ -1128,5 +1134,52 @@ class Reportes extends CApplicationComponent
         /**
          * fin RETECO
          */
+        
+        /**
+         * SQL USADO PARA TRAER NUMERO DE CARRIERS Y ASI CALCULAR EL TIEMPO DE ESPERA PARA LOS MENSAJES DE SUMMARY Y RECREDI 
+         * @param type $date
+         * @param type $intercompany
+         * @param type $noActivity
+         * @param type $typePaymentTerm
+         * @param type $paymentTerm
+         * @return type
+         */
+        public static function getNumCarriersForTime($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+        {
+            if($intercompany)           $intercompany="";
+            elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+
+            if($paymentTerm=="todos") {
+                $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
+            }else{
+                $filterPaymentTerm="{$paymentTerm}";
+            }
+
+            if($typePaymentTerm===NULL){
+                $tableNext="";
+                $wherePaymentTerm="";
+            }
+            if($typePaymentTerm===FALSE){
+                $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
+                $wherePaymentTerm="AND con.id_carrier=c.id
+                                   AND ctp.id_contrato=con.id
+                                   AND ctp.id_termino_pago=tp.id
+                                   AND ctp.end_date IS NULL
+                                   AND tp.id IN({$filterPaymentTerm})";
+            }
+            if($typePaymentTerm===TRUE){
+                $tableNext=", contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp";
+                $wherePaymentTerm="AND con.id_carrier=c.id
+                                   AND ctps.id_contrato=con.id
+                                   AND ctps.id_termino_pago_supplier=tp.id
+                                   AND ctps.end_date IS NULL
+                                   AND tp.id IN({$filterPaymentTerm})";
+            }
+            $sql="SELECT * 
+                  FROM (SELECT DISTINCT cg.id AS id
+                        FROM carrier_groups cg,  carrier c {$tableNext}
+                        WHERE c.id_carrier_groups=cg.id  {$wherePaymentTerm} {$intercompany})activity {$noActivity}";
+            return AccountingDocument::model()->findAllBySql($sql);
+        }
 }
 ?>

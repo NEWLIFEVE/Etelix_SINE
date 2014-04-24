@@ -31,7 +31,7 @@ class summary extends Reportes
         $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
         $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;'";
         $styleActived="style='background:#F0950C;color:white;border:1px solid silver;text-align:center;'";
-        $styleNull="style='border:0px solid white;text-align: left:'";
+        $styleNull="style='border:1px solid white!important;text-align: left:'";
         $styleCarrier="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
         $styleDatePC="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
         $styleSoaDue="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
@@ -50,7 +50,7 @@ class summary extends Reportes
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");                               
         $last_payment_collect=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
         $soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=$soaWeekThreeLess=$soaWeekFourLess=0;
-        $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=0;
+        $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=$balanceTotal=$incremental=0;
         $dueDaysDue=$dueDaysNext="";
         
         $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
@@ -70,7 +70,8 @@ class summary extends Reportes
                     <td colspan='5'></td>
                     <td {$styleSoaDue} colspan='2'> PREVIOUS </td>
                     <td {$styleSoaDue} colspan='2'> THIS WEEK </td>
-                    <td></td>
+                    <td {$styleSoaDue}> CURRENCY </td>
+                    <td ></td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
@@ -87,7 +88,8 @@ class summary extends Reportes
                     <td {$styleDueDateD} > DUE DATE(D) </td>
                     <td {$styleSoaDue} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
-                    <td {$styleDueDateD} > DUE DAYS </td> 
+                    <td {$styleDueDateD} > BALANCE </td> 
+                    <td {$styleSoaDue} > DUE DAYS </td>
                     <td {$styleSoaNext} > SOA(NEXT) </td>
                     <td {$styleDueDateN} > DUE DATE(N) </td>
                     <td {$styleSoaNext} > SOA(NEXT) </td>
@@ -133,6 +135,7 @@ class summary extends Reportes
             $soaWeekTwoTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoTotal);
             $soaWeekThreeTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeTotal);
             $soaWeekFourTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourTotal);
+            $balanceTotal+=$document->balance;
 
             $body.="<tr>
                       <td {$styleNumberRow} > {$pos} </td>
@@ -144,7 +147,9 @@ class summary extends Reportes
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
                       <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueThisNext(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL),$document->soa_next,$document->due_date_next, $date))." </td>
                       <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueThisNext(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),$document->due_date_next,$document->due_date_next, $date),"Y-m-d")." </td>
-                      <td {$styleBasicDateDue} > {$dueDaysDue} </td>
+                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal($document->balance)." </td>
+                      <td {$styleBasicDateDueTwo} > {$dueDaysDue} </td>    
+
                       <td {$styleBasicNumNext} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL))." </td>
                       <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
                       <td {$styleBasicNumNextTwo} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL))." </td>
@@ -161,12 +166,14 @@ class summary extends Reportes
                     <td {$styleNull} colspan='3'></td>
                     <td {$styleDatePC} colspan='2'> PAYMENT/COLLECTION </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)PREVIOUS </td>
-                    <td {$styleSoaDue} colspan='2'> SOA(DUE)THIS WEEK </td>
-                    <td {$styleNull} ></td>
+                    <td {$styleSoaDue} colspan='2'> SOA(DUE)THIS WEEK </td>                   
+                    <td {$styleSoaDue} > BALANCE </td>
+                    <td {$styleNull} ></td> 
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekFour,"d")."-".Utility::formatDateSINE($lastWeekFour,"d")."".Utility::formatDateSINE($lastWeekFour,"M")." </td>
+                    <td {$styleNull}></td>
                     <td {$styleNull} ></td>
                  </tr>";
          $body.="<tr>
@@ -174,7 +181,8 @@ class summary extends Reportes
                     <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($last_payment_collect)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
-                    <td {$styleNull} ></td>
+                    <td {$styleBasicCenterHigherDue} >".Yii::app()->format->format_decimal($balanceTotal)."</td>
+                    <td {$styleNull}></td>
                     <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneHigher)."</td>
                     <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoHigher)."</td>
                     <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeHigher)."</td>
@@ -185,18 +193,18 @@ class summary extends Reportes
                     <td {$styleNull} colspan='2'></td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaPrevLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekLess)."</td>
-                    <td {$styleNull} ></td>
+                    <td {$styleNull} colspan='2'></td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeLess)."</td>
-                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourLess)."</td>   
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourLess)."</td>  
                  </tr>";   
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
                     <td {$styleNull} colspan='2'></td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevTotal)."</td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekTotal)."</td>
-                    <td {$styleNull} ></td>
+                    <td {$styleNull} colspan='2'></td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneTotal)."</td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoTotal)."</td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeTotal)."</td>
@@ -366,9 +374,18 @@ class summary extends Reportes
                    
                    /*el due date del soa next*/
 
-                           {$due_date}) AS due_date_next
+                           {$due_date}) AS due_date_next,
                                 
                            /*fin segmento para soas y due_dates*/
+                   /*Balance*/
+                     (SELECT (i.amount + p.amount + pp.amount + dp.amount - n.amount - dn.amount - pn.amount) AS amount
+                      FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) p,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) n,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(6) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL)) dp,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL)) dn,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10,12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pp,
+                           (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pn) AS balance
               FROM carrier_groups cg,
                    carrier c {$tableNext}
                    

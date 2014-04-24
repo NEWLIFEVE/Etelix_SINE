@@ -442,5 +442,26 @@ class SiteController extends Controller
         else
             echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
     }
+    /**
+     * 
+     * @return string
+     */
+    public function actionCalcTimeReport()
+    {
+        switch($_GET['tipo_report'])
+            {
+                case 'summary':case 'recredi':
+                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*0.5;
+                    if($time <= 60)
+                        $time= Yii::app()->format->format_decimal( $time )." Seg";
+                    else
+                        $time= Yii::app()->format->format_decimal( $time / 60)." Min";
+                    echo "<h3> este proceso puede tomar <b>".$time."</b></h3> no cierre su navegador durante ese tiempo";
+                    break;
+                default:
+                    echo "<br>";
+                    break;
+            } 
+    }
 }
 ?>

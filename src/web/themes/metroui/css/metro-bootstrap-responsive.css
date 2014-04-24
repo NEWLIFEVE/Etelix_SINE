@@ -2,6 +2,7 @@
 /***************************                 RESPONSIVE BASICO PARA COMPUTADORAS                 ****************************/
 @media (max-width:1360px)
 {
+    .bodylogin {position: absolute!important;width: 158.5%!important;}
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 42px!important;margin-top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
@@ -16,6 +17,7 @@
 }
 @media (min-width: 900px)  and (max-width: 999px)
 {
+   .bodylogin {position: fixed!important;width: 158.5%!important;}
    .emergingView { margin: -55% 8% auto!important;}
 }
 @media (min-width: 800px)  and (max-width: 899px)
@@ -94,7 +96,7 @@
 /*resolucion para iphone "VERTICAL"*/
 @media (max-width: 480px) and (max-height: 320px)
 {
-    .bodylogin {margin-left: -21%!important;}
+    .bodylogin {margin-left: -21%!important;position: fixed!important;width: 158.5%!important;}
     .tile { width: 80px; height: 80px;}
     .cuadro {height: 762px!important;width: 34%!important;margin-left: 157px!important;margin-top: -20px!important;}
     .titulo {display: none;}  

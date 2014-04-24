@@ -127,8 +127,10 @@ text-shadow: none;
     margin-left: -187px;
     margin-top: -20px;
     padding-top: 20px;
-    position: absolute;
-    width: 158.5%;
+/*    position: absolute;
+    width: 158.5%;*/
+    position: fixed;
+    width: 100.5%;
 }
 @media screen and (max-width: 600px) { /* 13 / 390 */
     .contratoForm{ width: 45%;}

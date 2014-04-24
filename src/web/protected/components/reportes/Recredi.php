@@ -26,6 +26,9 @@ class Recredi extends Reportes
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
         $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
         $style_basic="style='border:1px solid silver;text-align:center;'";
+        $style_basic_revenue="style='border:1px solid silver;text-align:center;background:#E2F5FF;'";
+        $style_basic_cost="style='border:1px solid silver;text-align:center;background:#FAF7F4;'";
+        $style_basic_margin="style='border:1px solid silver;text-align:center;background:#DDF8E9;'";
         $style_carrier_head="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
         $style_soa_head="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
         $style_prov_fact_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
@@ -102,38 +105,38 @@ class Recredi extends Reportes
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa_next)."</td>";
             $soaNext+=$document->soa_next;
             $body.="<td {$style_basic} >".Utility::ifNull($document->due_date_next, "Nota") ."</td>";
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_invoice_sent)."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->provision_invoice_sent)."</td>";
             $provisionInvoiceSent+=$document->provision_invoice_sent;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_invoice_received)."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->provision_invoice_received)."</td>";
             $provisionInvoiceReceived+=$document->provision_invoice_received;
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_traffic_sent)."</td>";
             $provisionTrafficSent+=$document->provision_traffic_sent;
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_traffic_received)."</td>";
             $provisionTrafficReceived+=$document->provision_traffic_received;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->received_dispute)."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->received_dispute)."</td>";
             $receivedDispute+=$document->received_dispute;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->sent_dispute)."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->sent_dispute)."</td>";
             $sentDispute+=$document->sent_dispute;
             $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->balance)."</td>";
             $balance+=$document->balance;
             
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"revenue"))."</td>";
+            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"revenue"))."</td>";
             $revenue_3+=self::_getBalance($balances_3,$document->id,"revenue");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"cost"))."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"cost"))."</td>";
             $cost_3+=self::_getBalance($balances_3,$document->id,"cost");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"margin"))."</td>";
+            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"margin"))."</td>";
             $margin_3+=self::_getBalance($balances_3,$document->id,"margin");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"revenue"))."</td>";
+            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"revenue"))."</td>";
             $revenue_2+=self::_getBalance($balances_2,$document->id,"revenue");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"cost"))."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"cost"))."</td>";
             $cost_2+=self::_getBalance($balances_2,$document->id,"cost");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"margin"))."</td>";
+            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"margin"))."</td>";
             $margin_2+=self::_getBalance($balances_2,$document->id,"margin");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"revenue"))."</td>";
+            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"revenue"))."</td>";
             $revenue_1+=self::_getBalance($balances_1,$document->id,"revenue");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"cost"))."</td>";
+            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"cost"))."</td>";
             $cost_1+=self::_getBalance($balances_1,$document->id,"cost");
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"margin"))."</td>";
+            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"margin"))."</td>";
             $margin_1+=self::_getBalance($balances_1,$document->id,"margin");
             
             $body.="<td {$style_number_row} >{$pos}</td>";
@@ -172,18 +175,18 @@ class Recredi extends Reportes
                     <td {$style_basic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($balance)."</td>
                         
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_1)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_1)."</td>
-                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
+                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_3)."</td>
+                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_3)."</td>
+                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_3)."</td>
+                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_2)."</td>
+                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_2)."</td>
+                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_2)."</td>
+                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_1)."</td>
+                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_1)."</td>
+                    <td {$style_basic_margin} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
                 </tr>";        
         
-        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
+//        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
 
         if($noActivity==TRUE)$body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota 1: No presenta movimiento a la fecha</td></tr><table>";
           else  $body."";
@@ -365,7 +368,7 @@ class Recredi extends Reportes
               ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
-
+    
     /**
      * Trae la data de balance sori de los grupos
      * @access private
