@@ -25,6 +25,54 @@ class SiteController extends Controller
     }
 
     /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+        );
+    }
+
+    public function accessRules()
+    {
+        return array(
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    'provisions',
+                    'genProvisions',
+                    'calcTimeProvisions'
+                    ),
+                'users'=>UsersSine::getUsersByRole("Administrador")
+                ),
+            array(
+                'allow',
+                'actions'=>array(
+                    'index',
+                    'error',
+                    'login',
+                    'logout',
+                    'mail',
+                    'excel',
+                    'previa',
+                    'updateTerminoPago',
+                    ),
+                'users'=>UsersSine::getUsersByRole("Finanzas")
+                )
+            );
+    }
+
+    /**
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
      * @access public
@@ -393,7 +441,7 @@ class SiteController extends Controller
     /**
      * Carga los select de termino pago al iniciar la aplicacion
      */
-    public static function ActionUpdateTerminoPago()
+    public static function actionUpdateTerminoPago()
     {   
         $tp="";
         $TerminoPago=TerminoPago::getModel();
