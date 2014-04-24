@@ -488,5 +488,19 @@ class SiteController extends Controller
         else
             echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
     }
+
+    /**
+     * Establece los links para cada tipo de usuarios
+     */
+    public static function accessControl($idUser)
+    {
+        $tipo=UsersSine::model()->findByPk($idUser)->idTypeOfUser->nombre;
+        if($tipo=="Administrador")
+        {
+            return "<span class='element-divider'></span>
+                <label id='showProvisions'class='element'>Provisiones</label>";
+        }
+        return false;
+    }
 }
 ?>
