@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+    - Se agrego nuevas columnas en summary donde se desgloza los ultimos pagos y cobros realizados en tres variantes, (PREVIOUS WEEK, LAST WEEK y THIS WEEK)
     - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.
     - Se agrego columna en summary, (soa provisioned) la cual muestra el soa next tomando en cuenta las provisiones, dando una idea mas segura de lo que seria el para la fecha.
     - se agrego valor (incremental) para los soa next y soa provisioned, esta es la operacion entre el soa next/soa provisioned menos el soa due.

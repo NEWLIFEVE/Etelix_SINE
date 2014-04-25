@@ -347,7 +347,7 @@ $SINE.UI=(function()
              }
             else if(id=="previa"){    
                 $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
-                $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
+                $SINE.UI.msjCargando("<h2>Cargando Vista Previa</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
              }else{                                            
                   $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   $( document ).ajaxError(function() {
@@ -629,7 +629,7 @@ $SINE.AJAX=(function()
              success: function(data)
              {  
                  if(msjTime != null){   /*consulta el tiempo estimado para generar los reportes y lo muestra cambiando el msj actual confirm, por ahora solo tiene impacto sobre recredi y summary*/
-                    $SINE.UI.msjChange(msjTime+data,"cargando.gif",null,"80%"); 
+                    $SINE.UI.msjChange(msjTime + data,"cargando.gif",null,"80%"); 
                  }else{
                     if(action=="/site/Excel"){         
                         $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
