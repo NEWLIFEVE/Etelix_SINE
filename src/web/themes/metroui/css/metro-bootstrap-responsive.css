@@ -2,7 +2,7 @@
 /***************************                 RESPONSIVE BASICO PARA COMPUTADORAS                 ****************************/
 @media (max-width:1360px)
 {
-    .bodylogin {position: absolute!important;width: 158.5%!important;}
+    .bodylogin {width: 110.5%!important;}
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 42px!important;margin-top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
