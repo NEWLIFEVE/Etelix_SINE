@@ -341,17 +341,17 @@ $SINE.UI=(function()
             $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
         }else{
             var id=$(click).attr('id');
-            if(id=="mail"){    
+            if(id=="mail"){ 
+                $SINE.UI.msjCargando("<h2>Enviando Email</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Enviando Email</h2>");
                 $SINE.AJAX.send("POST","/site/mail",$("#formulario").serialize(),null);
-                $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Enviando Email</h2>");
-             }
+            }
             else if(id=="previa"){    
-                $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
                 $SINE.UI.msjCargando("<h2>Cargando Vista Previa</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
-             }else{                                            
+                $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
+            }else{                                            
                   $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   $( document ).ajaxError(function() {
-                      $SINE.UI.msjCargando("","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
+                      $SINE.UI.msjCargando("<h2>Exportando Archivo Excel</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
                       $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
                   });
                   } 

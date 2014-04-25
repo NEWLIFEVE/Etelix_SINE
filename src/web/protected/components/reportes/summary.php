@@ -61,7 +61,7 @@ class summary extends Reportes
         
         /***************************       SE ENCARGA DE LLAMAR EL MODELO GENERAL PARA ARMAR LA TABLA        ***************************/
         $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
-
+        /***************************                  DEFINE EL HEAD PRINCIPAL PARA LA TABLA                 ***************************/
         $body="<table>
                 <tr>
                     <td colspan='4'>
