@@ -85,33 +85,25 @@
         private static function get_Model($grupo, $fecha, $no_disp,$tipoSql) 
         {
            $grupo=Reportes::define_grupo($grupo);
-           $sql="select a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
-                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                 where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                 and a.id_type_accounting_document NOT IN (5,6,10,11,12,13)
+           $sql="SELECT a.id, minutes, a.issue_date, a.valid_received_date, a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, a.from_date, a.to_date, a.doc_number,a.amount,s.name AS currency 
+                 FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                 WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document = t.id AND a.id_carrier = c.id AND a.id_currency = s.id AND a.id_carrier = x.id_carrier AND x.id = xtp.id_contrato AND xtp.id_termino_pago = tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups = g.id AND a.issue_date <= '{$fecha}' AND a.id_type_accounting_document NOT IN(5,6,10,11,12,13)
                  $no_disp                
                  UNION
-                 select a.id, minutes, max(a.issue_date),max(a.valid_received_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
-                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                 where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		 and a.id_type_accounting_document IN (10) and a.id_accounting_document IS NULL
-		 group by a.id, minutes, a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
+                 SELECT a.id, minutes, MAX(a.issue_date), MAX(a.valid_received_date), a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, MAX(a.from_date), MAX(a.to_date), a.doc_number, SUM(a.amount) AS suma, s.name AS currency 
+                 FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                 WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document = t.id AND a.id_carrier = c.id AND a.id_currency = s.id AND a.id_carrier = x.id_carrier AND x.id = xtp.id_contrato AND xtp.id_termino_pago = tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups = g.id AND a.issue_date <= '{$fecha}' AND a.id_type_accounting_document IN(10) AND a.id_accounting_document IS NULL
+                 GROUP BY a.id, minutes, a.id_type_accounting_document, g.name, c.name, tp.name, t.name, a.doc_number, s.name
                  UNION
-                 select a.id, minutes, max(a.issue_date),max(a.valid_received_date),a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, max(a.from_date), max(a.to_date), a.doc_number, sum(a.amount) as suma,s.name as currency 
-                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                 where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-		 and a.id_type_accounting_document IN (11) and a.id_accounting_document IS NULL
-		 group by a.id, minutes, a.id_type_accounting_document,g.name, c.name,tp.name,t.name, a.doc_number,s.name
+                 SELECT a.id, minutes, MAX(a.issue_date), MAX(a.valid_received_date), a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, MAX(a.from_date), MAX(a.to_date), a.doc_number, SUM(a.amount) AS suma, s.name AS currency 
+                 FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                 WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document = t.id AND a.id_carrier = c.id AND a.id_currency = s.id AND a.id_carrier = x.id_carrier AND x.id = xtp.id_contrato AND xtp.id_termino_pago = tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups = g.id AND a.issue_date <= '{$fecha}' AND a.id_type_accounting_document IN(11) AND a.id_accounting_document IS NULL
+                 GROUP BY a.id, minutes, a.id_type_accounting_document, g.name, c.name, tp.name, t.name, a.doc_number, s.name
                  UNION 
-                 select a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number,a.amount,s.name as currency 
-                 from accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                 where a.id_carrier IN(Select id from carrier where $grupo) and a.id_type_accounting_document = t.id and a.id_carrier = c.id and a.id_currency = s.id 
-                 and a.id_carrier = x.id_carrier and x.id = xtp.id_contrato and xtp.id_termino_pago = tp.id and xtp.end_date IS NULL and c.id_carrier_groups = g.id and a.issue_date <= '{$fecha}'
-                 and a.id_type_accounting_document IN (12,13) and a.id_accounting_document IS NULL
-                 order by issue_date,from_date ";
+                 SELECT a.id, minutes, a.issue_date, a.valid_received_date, a.id_type_accounting_document, g.name AS group, c.name AS carrier, tp.name AS tp, t.name AS type, a.from_date, a.to_date, a.doc_number,a.amount,s.name AS currency
+                 FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
+                 WHERE a.id_carrier IN(SELECT id FROM carrier WHERE $grupo) AND a.id_type_accounting_document = t.id AND a.id_carrier = c.id AND a.id_currency = s.id AND a.id_carrier = x.id_carrier AND x.id = xtp.id_contrato AND xtp.id_termino_pago = tp.id AND xtp.end_date IS NULL AND c.id_carrier_groups = g.id AND a.issue_date <= '{$fecha}' AND a.id_type_accounting_document IN(12,13) AND a.id_accounting_document IS NULL
+                 ORDER BY issue_date, from_date ";
                                
             if($tipoSql=="1")return AccountingDocument::model()->findAllBySql($sql);
                else          return AccountingDocument::model()->findBySql($sql);
