@@ -2,14 +2,14 @@
 /***************************                 RESPONSIVE BASICO PARA COMPUTADORAS                 ****************************/
 @media (max-width:1360px)
 {
-    .bodylogin {position: absolute!important;width: 158.5%!important;}
+    .bodylogin {width: 110.5%!important;}
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 42px!important;margin-top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
-    .emergingView { margin: -44% 19% auto!important; padding: 87px 4px 43px 28px;height: 451px!important }
-    .mensaje {margin: -33% 367px auto!important;}   
+    .emergingView { margin: -39% 23% auto!important; padding: 87px 4px 43px 28px;height: 451px!important }
+    .mensaje {margin: -29% 427px auto!important;}   
 }
 @media (min-width: 1000px)  and (max-width: 1100px)
 {
@@ -62,7 +62,7 @@
  /*resolucion para IPAD 1-2 "HORIZONTAL"*/  
 @media (max-width: 1024px)  and (max-height: 768px)
 {
-    .bodylogin {margin-left: -327px!important;position: fixed!important;}
+    .bodylogin {margin-left: -327px!important;position: fixed!important;width: 160.5%!important;}
     .periodo {margin: -105px 219px!important;}
     .emergingView {margin: -39% 13% auto!important;}
     .mensaje {margin: -26% 26% auto!important;}
@@ -70,7 +70,7 @@
  /*resolucion para IPAD 1-2 "VERTICAL"*/ 
 @media (max-width: 768px) and (max-height: 1024px)
 {
-    .bodylogin {margin-left: -35%!important;}
+    .bodylogin {margin-left: -38%!important;width: 172.5%!important;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
     .formulario {background: white; margin-top: -427px!important;margin-left: -33px!important;width: 70%!important;position: absolute!important;}
@@ -78,18 +78,18 @@
      .disputas {margin-left: -1px!important;}
      #botones_exportar { margin-top: 188px!important;}
      #ui-datepicker-div {width: 55%!important;}
-     .mensaje{margin: -61% 17% auto!important;}
+     .mensaje{margin: -23% 18% auto!important;}
      #previa{display:none!important;}
      .views_not{display:block!important;}
-     .emergingView {margin: -65% 0% auto!important;}
+     .emergingView {margin: -39% 1% auto!important;}
      #genProvision {margin: 33% 10% auto!important;width: 71%!important;}
-     .views_not {margin: -40% 2%!important;height: 25%!important}
+     .views_not {margin: -23% 0%!important;height: 25%!important}
 }
  /*resolucion para NEXUS 7 "HORIZONTAL"*/  
 @media (max-width: 1280px)  and (max-height: 800px)
 {
-    .emergingView {margin: -35% 19% auto!important;}
-    .mensaje {margin: -25% 29% auto!important;}
+    .emergingView {margin: -43% 15% auto!important;}
+    .mensaje {margin: -32% 27% auto!important;}
 }
 
 /***************************                 RESPONSIVE ESPECIFICOS EN TELEFONOS                 ***************************/
