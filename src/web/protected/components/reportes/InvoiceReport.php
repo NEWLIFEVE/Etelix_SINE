@@ -176,8 +176,7 @@ class InvoiceReport extends Reportes
                         {
                             $pos=$key+1;
                             $style=self::style($detailSummary);
-//                            var_dump($detailSummary->doc_number);
-//                            $acumuladoNoInvoiceAmount=$acumuladoNoInvoiceMin
+                            
                             if($detailSummary->doc_number==NULL){
                                 $acumuladoNoInvoiceDiffAmountPrevious+=$detailSummary->amount;
                                 $acumuladoNoInvoiceDiffMinPrevious+=$detailSummary->minutes;
@@ -294,7 +293,9 @@ class InvoiceReport extends Reportes
 
         if($colls==NULL)
         {
-            $sql="SELECT b.*, (b.fac_minutes-b.minutes) AS min_diference, (b.fac_amount-b.amount) AS monto_diference
+            $sql="SELECT b.*, 
+                         CASE WHEN (b.minutes - b.fac_minutes) IS NULL THEN (b.minutes) ELSE (b.minutes - b.fac_minutes) END AS min_diference,
+                         CASE WHEN (b.amount - b.fac_amount) IS NULL THEN (b.amount) ELSE (b.amount - b.fac_amount) END AS monto_diference
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
                                (SELECT minutes
                                 FROM accounting_document
@@ -315,8 +316,8 @@ class InvoiceReport extends Reportes
                              SUM(b.amount) AS amount, 
                              SUM(b.fac_minutes) AS fac_minutes, 
                              SUM(b.fac_amount) AS fac_amount, 
-                             SUM(b.fac_minutes-b.minutes) AS min_diference, 
-                             SUM(b.fac_amount-b.amount) AS monto_diference,
+                             SUM(b.minutes - b.fac_minutes) AS min_diference, 
+                             SUM(b.amount - b.fac_amount) AS monto_diference,
                              '{$startDate}' AS from_date,
                              '{$endDate}' AS to_date
                   FROM (SELECT c.name AS carrier, ad.minutes AS minutes, ad.amount AS amount,
