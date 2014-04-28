@@ -366,7 +366,7 @@ class Recredi extends Reportes
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$noActivity}";
+              ORDER BY cg.name ASC)activity {$noActivity} tt";
         return AccountingDocument::model()->findAllBySql($sql);
     }
     

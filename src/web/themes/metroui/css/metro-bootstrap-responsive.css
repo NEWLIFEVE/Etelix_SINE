@@ -135,6 +135,7 @@
 /*resolucion para samsung GALAXY S3-S4, NOKIA E7-00 "VERTICAL"*/
 @media (max-width: 360px) 
 { 
+    .bodylogin{width: 412.5%!important;}
     #minifooter {margin: 0% 27%;}
     .cuadro{margin-left: 98px!important;margin-top: -14px!important;height: 660px!important;}
     input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
@@ -166,6 +167,11 @@
     #provisionNote{display:none;}
     .mensaje {margin: -113% 0% auto!important;width: 362px!important;padding: 6% 0%!important;}
     .views_not {margin: -119% -4%!important;height: 60%!important}
+}
+/*resolucion para samsung GALAXY S3-S4, NOKIA E7-00 "HORIZONTAL"*/
+@media (max-width: 640px) and (max-height: 360px) 
+{ 
+    .bodylogin{position: absolute!important;}
 }
 /*resolucion para iphone 1-5,HTC desire S, samsung GALAXY S1-S2, NOKIA lumia 800, ZTE open, HTC desire, blackberry curve 8529     "VERTICAL"*/
 @media (max-width: 320px) 
