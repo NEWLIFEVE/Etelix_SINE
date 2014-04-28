@@ -2,10 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
-<<<<<<< HEAD
 
-Realese 1.2.10
-=======
+Release 1.2.11
     - Se agrego nuevas columnas en summary donde se desgloza los ultimos pagos y cobros realizados en tres variantes, (PREVIOUS WEEK, LAST WEEK y THIS WEEK)
     - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.
     - Se agrego columna en summary, (soa provisioned) la cual muestra el soa next tomando en cuenta las provisiones, dando una idea mas segura de lo que seria el para la fecha.
@@ -20,7 +18,7 @@ Realese 1.2.10
     - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
     - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
 
->>>>>>> dev
+Realese 1.2.10
     - Nueva version de Provisiones: 
         * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
         * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
