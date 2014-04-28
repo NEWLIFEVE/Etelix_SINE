@@ -467,7 +467,7 @@ class Provisions extends CApplicationComponent
 									break;
 								}
 								//cuando esta en el fin del periodo de facturacion
-								if($end==DateManagement::getDayNumberWeek($this->date))
+								elseif($end==DateManagement::getDayNumberWeek($this->date))
 								{
 									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
 									if(DateManagement::separatesDate($firstDay)['month']==DateManagement::separatesDate($this->date)['month'])
