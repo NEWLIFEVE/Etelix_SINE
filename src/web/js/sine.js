@@ -454,7 +454,7 @@ $SINE.UI=(function()
     function msjConfirm(body)
     {
         $(".fondo_negro, .mensaje").remove();
-        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body+"Si esta de acuerdo, presione Aceptar, de lo contrario Cancelar<div class='confirmButtons'><div id='cancel'class='cancel'>Cancelar</div>&nbsp;<div id='confirm'class='confirm'>Aceptar</div></div></div></div>").hide(); 
+        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body+"Si esta de acuerdo, presione Aceptar, de lo contrario Cancelar<div class='confirmButtons'><div id='cancel'class='cancel'>Cancelar</div>&nbsp;<div id='confirm'class='confirm'>Aceptar</div></div></div>").hide(); 
         $("body").append(msj);  msj.fadeIn('slow');
     }
     /**

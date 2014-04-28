@@ -67,12 +67,24 @@ class Reportes extends CApplicationComponent
      * @param type $sum
      * @return type
      */
-    public function refac($fromDate,$toDate,$typeReport,$periodPaymentTerm,$sum)
+    public function refac($date,$typeReport,$periodPaymentTerm,$sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$periodPaymentTerm,NULL,$sum);
+        if($periodPaymentTerm=="todos") {
+           $periods= array(array("period"=>"7"),array("period"=>"15"),array("period"=>"30"));
+        }else{
+           $periods= array(array("period"=>"{$periodPaymentTerm}")); 
+        }    
+        $var="";
+        
+        foreach ($periods as $key => $period) 
+        {
+           $toDate=Reportes::defineToDatePeriod($period["period"], $date);
+           $fromDate=Reportes::defineFromDate($period["period"],$toDate);
+           $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$period["period"],NULL,$sum);
+        }
         return $var;
     }
-
+  
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
@@ -108,6 +120,39 @@ class Reportes extends CApplicationComponent
         return $var;
     }
 
+    /**
+     * se encarga de calcular el fin de periodo dependiendo del tipo de periodo que se le pase para refac aunque la fecha que se le pase sea errada
+     * ejemplo, si selecciono el dia '25' de un mes y el periodo seleccionado es 'quincenal', simplemente el metodo va a hacer que el dia sea '15'
+     * @param type $period
+     * @param type $date
+     * @return type
+     */
+    public static function defineToDatePeriod($period, $date)
+    {
+        switch ($period) {
+            case "7":
+                if(DateManagement:: getDayNumberWeek($date)==7)
+                    return $date;
+                else
+                    return DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date), "last");
+                break;
+            case "15":
+                if(date('d',strtotime($date))=="15")
+                    return $date;
+                else
+                    return date('Y-m',strtotime($date))."-15";
+                break;
+            case "30":
+                if(date('d',strtotime($date))==DateManagement::howManyDays($date))
+                    return $date;
+                else
+                    return date('Y-m',strtotime(DateManagement::calculateDate("-30", $date)))."-".DateManagement::howManyDays(DateManagement::calculateDate("-30", $date));
+                break;
+
+            default:
+                break;
+        }
+    }
     /**
      * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 
      * o en su caso especial, en cabinas peru, va a traer una serie de grupos pertenecientes a este...aun hay que meterle otras cosas a SOA para complementarlo
@@ -930,16 +975,33 @@ class Reportes extends CApplicationComponent
          * @param type $PaymentTerm
          * @return string
          */
-        public static function defineNameExtra($PaymentTerm,$relation)
+        public static function defineNameExtra($PaymentTerm,$relation, $extra)
         {
+            
             if($PaymentTerm=="todos"){ 
                 return "GENERAL";
             }else{
-                if($relation===FALSE)
-                   return "CUSTOMER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                if($extra==NULL)
+                {
+                    if($relation===FALSE)
+                       return "CUSTOMER ".TerminoPago::getModelFind($PaymentTerm)->name;
 
-                if($relation===TRUE)
-                   return "SUPPLIER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                    if($relation===TRUE)
+                       return "SUPPLIER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                }else{
+                    $complement=Reportes::defineFromDate($PaymentTerm,self::defineToDatePeriod($PaymentTerm, $extra))." - ".self::defineToDatePeriod($PaymentTerm, $extra);
+                    switch ($PaymentTerm) {
+                        case "7":
+                            return "SEMANAL ".$complement;
+                            break;
+                        case "15":
+                            return "QUINCENAL ".$complement;
+                            break;
+                        case "30":
+                            return "MENSUAL ".$complement;
+                            break;
+                    }
+                }
             }
         }
         /**
