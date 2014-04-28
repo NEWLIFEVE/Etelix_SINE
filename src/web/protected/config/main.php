@@ -25,6 +25,7 @@ switch ($server)
 //       $sine_db='sori';
 //       $user_db='postgres';
 //       $pass_db='123';
+
        break;
 
 }
