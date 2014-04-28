@@ -127,8 +127,10 @@ text-shadow: none;
     margin-left: -187px;
     margin-top: -20px;
     padding-top: 20px;
-    position: absolute;
-    width: 158.5%;
+/*    position: absolute;
+    width: 158.5%;*/
+    position: fixed;
+    width: 100.5%;
 }
 @media screen and (max-width: 600px) { /* 13 / 390 */
     .contratoForm{ width: 45%;}
@@ -286,8 +288,8 @@ div.login.error input#LoginForm_password
     float: left;
     padding-left: 28px;
     border-bottom: 1px solid silver;
-    transition:width 0.3s;
-    -webkit-transition:width 0.3s;
+    transition:width 0.5s;
+    -webkit-transition:width, background 0.3s;
     /*padding-bottom: 25%;quitar al tener todos los reportes*/
 
 }
@@ -303,6 +305,10 @@ div.login.error input#LoginForm_password
     border-bottom: 1px solid white;
     width: 96%;
 }
+/*.Reportes:active 
+{
+    background:#06ACFA;
+}*/
 .subtitulos
 {
     font-size: xx-large;
@@ -311,6 +317,7 @@ div.login.error input#LoginForm_password
     position: absolute;
     margin-left: 0%;
 }
+
 .h1_report
 {
     color:#2E62B4!important;
@@ -329,7 +336,7 @@ div.login.error input#LoginForm_password
     position: static;
     margin-left: 19%;
     padding-left: 49px;
-    padding-right: 164px;
+    padding-right: 89px;
     display:none;
 }
 
@@ -426,7 +433,7 @@ img.oculta
 {
     background: #3F3C3C!important;
     color: #2E62B4;
-    width: 21%;
+    width: 23%;
     border: 0px solid;
     border-radius: initial!important;
 }
@@ -535,29 +542,42 @@ li.ui-menu-item a
     background-color: rgba(0,0,0,0.7);
     content: "";
     height: 100%;
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 0px;
     width: 100%;
     z-index: 1030;
     display:none;
 }
-.views_not
+.emergingBackground
 {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.7);
     content: "";
-    height: 11%;
+    height: 100%;
     position: fixed;
     text-align: center;
-    top: 48px;
-    left: 2%;
-    width: 96%;
+    top: 0px;
+    width: 100%;
+    /*z-index: 1030;*/
+    display:none;
+    cursor: url('../img/exit.cur'), url('img/exit.cur'), pointer;
+}
+
+.views_not
+{
+    background-color: rgba(0,0,0,0.7);
+    content: "";
+    position: fixed;
+    text-align: center;
     z-index: 1030;
+    height: 60%;
+    margin: -106% -4%;
+    width: 95%;
     display:none;
 }
 .views_not:hover
 {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.4) ;
 }
 .h1_views_not
 {
@@ -568,13 +588,63 @@ li.ui-menu-item a
     background-color: white;
     color: #6E6E6E;
     /*left: 30%;*/
-    margin: -30% 32% auto;
+    margin: -27% 32% auto;
     padding: 23px 30px 43px 28px;
     position:fixed;
     text-align: center;
     width: 490px;
     z-index: 1031;
 }
+.cancel 
+{
+    background: #FA4646;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.cancel:hover
+{
+    background: #FA7B7B;
+}
+.confirm 
+{
+    background: #06ACFA;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.confirm:hover
+{
+    background: #35C7F5;
+}
+.confirmButtons 
+{
+    position: initial;
+    display: flex;
+    text-align: center;
+    margin: 3% 23% 0%;
+    width: 116%;
+}
+.emergingView
+{
+    background-color: white;
+    color: #6E6E6E;
+    margin: -36% 23% auto;
+    /*margin: -67% 23% auto;*/
+    padding: 35px 4px 43px 28px;
+    position: fixed;
+    text-align: left;
+    width: 756px;
+    /*z-index: 1031;*/
+    height: 75%;
+}
+
 .fancybox
 {
     background-color: white;
@@ -705,7 +775,17 @@ select
 {
     color:#06ACFA !important;
 }
-.note_ref_pro 
+.provisionNote 
+{
+    color: #06ACFA !important;
+    width: 227%;
+    font-size: 12px!important;
+}
+#provisionNote 
+{
+    margin: 45% 7%;
+}
+.note_ref_pro
 {
     margin: -17px 9px;
     position: absolute;
@@ -719,3 +799,49 @@ select
 /*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/
 
 /*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/
+
+/*PROVISIONES*/
+#showProvisions
+{
+    margin: 0px; 
+}
+#genProvision
+{
+    background: #3466B4;
+    height: 62px;
+    padding: 2px 11px 10px 15px;
+    margin: 33% 16% auto;
+    position: absolute;
+    width: 60%;
+}
+#genProvision:hover
+{
+    background: #166EB4;
+}
+.H1provInput
+{
+    color: white!important;
+    text-align: center;
+}
+
+#formProvisions 
+{
+    position: absolute;
+    margin: -2px 21px;
+}
+.date
+{
+    position: absolute;
+    margin: 0px 166px;
+}
+.viewsProvisions
+{
+    display:none;
+}
+.titleProv 
+{
+    border-bottom: solid silver 1px;
+    width: 238%;
+    margin: 0px 0px 45px 0px!important;
+}
+

@@ -95,7 +95,10 @@ class DateManagement
         $date=strtotime($date);
         return date('D',$date);
     }
-
+    
+    /**
+     *
+     */
     public static function getMonday($date)
     {
         $num=self::getDayNumberWeek($date);
@@ -201,6 +204,10 @@ class DateManagement
         $array=explode('-',$arrayDate['firstday']);
         $arrayDate['lastday']=$array[0]."-".$array[1]."-".self::howManyDays($arrayDate['firstday']);
         return $arrayDate;
+    }
+    public static function dateDiff($start, $end)
+    {
+       return ((strtotime($end)-strtotime($start))/86400);
     }
 }
 ?>

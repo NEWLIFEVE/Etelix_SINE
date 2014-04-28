@@ -1,13 +1,29 @@
 
+/***************************                 RESPONSIVE BASICO PARA COMPUTADORAS                 ****************************/
 @media (max-width:1360px)
 {
+    .bodylogin {width: 110.5%!important;}
     .tile {width: 80px;height: 80px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 42px!important;margin-top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 408px!important;margin-left: -5%!important;margin-top: -29%!important;}
     .formulario{margin-top: -402px!important;}
     .barra_tools_click {width: 16%!important;}
+    .emergingView { margin: -39% 23% auto!important; padding: 87px 4px 43px 28px;height: 451px!important }
+    .mensaje {margin: -29% 427px auto!important;}   
 }
-
+@media (min-width: 1000px)  and (max-width: 1100px)
+{
+   .emergingView { margin: -50% 13% auto!important;}
+}
+@media (min-width: 900px)  and (max-width: 999px)
+{
+   .bodylogin {position: fixed!important;width: 158.5%!important;}
+   .emergingView { margin: -55% 8% auto!important;}
+}
+@media (min-width: 800px)  and (max-width: 899px)
+{
+   .emergingView {margin: -62% 3% auto!important}
+}
 @media (min-width: 980px)  and (max-width: 1200px)
 {
     .tile {width: 80px;height: 80px;}
@@ -19,13 +35,13 @@
     #ui-datepicker-div {width: 26%!important;}
     .fancybox {left: -6%!important;top: 70%;}
    .Reportes {padding-bottom: 22%!important;}/* quitar al tener todos los reportes*/
-}
+}                             
 @media (min-width: 800px) and (max-width: 1100px) 
 {
     .fancybox {left: -12%;top: 64%;width: 871px!important;}
     .imprimir{margin-left: 817px!important;margin-top: 432px!important;}
 }
-@media (min-width: 768px) and (max-width: 979px) 
+@media (min-width: 769px) and (max-width: 979px) 
 {
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
@@ -37,8 +53,24 @@
     .imprimir{margin-left: 731px!important;margin-top: 390px!important;}
     .mensaje{margin: -49% 22% auto!important;}
 }
-@media (max-width: 767px) 
+
+
+
+
+/***************************                 RESPONSIVE ESPECIFICOS EN TABLETAS                 ****************************/
+                                   
+ /*resolucion para IPAD 1-2 "HORIZONTAL"*/  
+@media (max-width: 1024px)  and (max-height: 768px)
 {
+    .bodylogin {margin-left: -327px!important;position: fixed!important;width: 160.5%!important;}
+    .periodo {margin: -105px 219px!important;}
+    .emergingView {margin: -39% 13% auto!important;}
+    .mensaje {margin: -26% 26% auto!important;}
+}
+ /*resolucion para IPAD 1-2 "VERTICAL"*/ 
+@media (max-width: 768px) and (max-height: 1024px)
+{
+    .bodylogin {margin-left: -38%!important;width: 172.5%!important;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: 38px!important;top: 0%!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 400px!important;margin-left: -5%!important;}
     .formulario {background: white; margin-top: -427px!important;margin-left: -33px!important;width: 70%!important;position: absolute!important;}
@@ -46,16 +78,25 @@
      .disputas {margin-left: -1px!important;}
      #botones_exportar { margin-top: 188px!important;}
      #ui-datepicker-div {width: 55%!important;}
-     .mensaje{margin: -61% 9% auto!important;}
+     .mensaje{margin: -23% 18% auto!important;}
      #previa{display:none!important;}
      .views_not{display:block!important;}
+     .emergingView {margin: -39% 1% auto!important;}
+     #genProvision {margin: 33% 10% auto!important;width: 71%!important;}
+     .views_not {margin: -23% 0%!important;height: 25%!important}
+}
+ /*resolucion para NEXUS 7 "HORIZONTAL"*/  
+@media (max-width: 1280px)  and (max-height: 800px)
+{
+    .emergingView {margin: -43% 15% auto!important;}
+    .mensaje {margin: -32% 27% auto!important;}
 }
 
-/*@media only screen and (max-width: 320px) {}*/
-
-/*resolucion para iphone "vertical"*/
-@media (max-width: 480px) 
+/***************************                 RESPONSIVE ESPECIFICOS EN TELEFONOS                 ***************************/
+/*resolucion para iphone "VERTICAL"*/
+@media (max-width: 480px) and (max-height: 320px)
 {
+    .bodylogin {margin-left: -21%!important;position: fixed!important;width: 158.5%!important;}
     .tile { width: 80px; height: 80px;}
     .cuadro {height: 762px!important;width: 34%!important;margin-left: 157px!important;margin-top: -20px!important;}
     .titulo {display: none;}  
@@ -65,8 +106,8 @@
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 402px!important;width: 444px!important;}
     .formulario{padding-left: 8%!important;background: white;height: 600px!important;margin-top: -469px!important;width: 57%!important;position: absolute!important;margin-left: -3%!important;}
     #botones_exportar {margin-left: -23%!important;margin-top: -2%!important;}
-    .barra_tools_click {left: -11px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
-    .mensaje {margin: -88% 5% auto!important;width: 421px!important;} 
+    .barra_tools_click {height: 134px!important;width: 120%!important;margin: -2% 30%!important;position: absolute!important;}
+    .mensaje {margin: -107% 1% auto!important;width: 460px!important;}
     input{width: 328px!important;}
     .disputas {margin-left: 0%!important;}
     .provisiones{width: 277px!important}
@@ -75,34 +116,81 @@
     #ui-datepicker-div {width: 70%!important;}
     .metro .page .page-region .page-region-content { position: absolute!important;}
     #previa{display:none!important;}
+    .views_not {margin: -96% -2%!important;height: 66%!important;}
     /*PROVISIONAL*/
     .trabajando {width: 455px!important;padding: 92px!important;margin-left:-21%!important;margin-top: 7%!important;}
+    .emergingView {margin: -108% -11% auto!important;height: 199%!important;position: absolute!important}
+    .titleProv {width: 130%!important;}
+    .group {margin: -15% 11% !important;}
+    .date {margin: 30px 37px!important;}
+    #genProvision {margin: 37% 5% auto!important;width: 59%!important;}
+    #provisionNote {margin: 49% 7%!important;}
+    .type_termino_pago_sum_re {margin: -11px 0px!important;}
+    #type_termino_pago, #id_termino_pago{width: 328px!important;}
+    .termino_pago_sum_re {margin: 16% 0%!important;}
+    #Si_act, #No_act, #Si_inter, #No_inter {width: 62%!important;}
+    .no_activity {margin: 63% 0%;margin-bottom: -12%;
 }
-
-/*resolucion para telefonos como smasung, LG, android en general "vertical"*/
+}
+/*resolucion para samsung GALAXY S3-S4, NOKIA E7-00 "VERTICAL"*/
 @media (max-width: 360px) 
 { 
-    .cuadro{margin-left: 98px!important;margin-top: -14px!important;height: 566px!important;}
+    .bodylogin{width: 412.5%!important;}
+    #minifooter {margin: 0% 27%;}
+    .cuadro{margin-left: 98px!important;margin-top: -14px!important;height: 660px!important;}
     input#LoginForm_username,input#LoginForm_password {width: 260px!important;}
-    .metro input[type="submit"].primary{width: 213px!important;margin-top: -6%!important;}
-    #remember{display: run-in!important;}
+    .metro input[type="submit"].primary{width: 260px!important;margin-top: 16%!important;}
+    #remember {position: absolute!important; margin-left: -148px!important;}
+
     .subtitulos{width: 294px;}
     .listadeReportes {border-right: 0px solid #2E62B4!important;margin-left: -27px!important;margin-top: 0px!important;}
     .listadeReportesscroll {overflow-y:scroll;overflow-x:hidden;height: 407px!important;width: 322px!important;margin-left: 0%!important;}
-    .formulario{background: white;height: 600px!important;margin-top: -473px!important;width: 41%!important;position: absolute!important;margin-left: -2%!important;}
+    .formulario{background: white;height: 600px!important;margin-top: -473px!important;width: 41%!important;margin-left: -2%!important;}
     input{width: 296px!important;}
     .formInputs {margin-left: -46%!important;}
     .disputas {margin-left: -47%!important;}
     .provisiones{width: 192px!important}
     #botones_exportar {margin-left: -15%!important;margin-top: -2%!important;}
-    .barra_tools_click {left: -20px!important;height: 224px!important;width: 120%!important;margin-top: -110px!important;}
-    .mensaje {margin: -107% -13% auto!important;width: 421px!important;}
+    .barra_tools_click {height: 141px!important;width: 111%!important;margin: -4% 48%!important;position: absolute!important;}
+    /*.mensaje {margin: -107% -13% auto!important;width: 421px!important;}*/
     input#No_disp,input#Si_disp ,input#No_prov,input#Si_prov{ width: 36%!important; height: 1.88em!important; position: static!important;}
     #id_periodo {width: 298px!important;}
     .periodo{margin-left: -17%!important;}
     #ui-datepicker-div {width: 85%!important;}
     /*PROVISIONAL*/
     .trabajando {width: 242px!important;padding: 2px!important;margin-top: 76%!important;margin-left: -17%!important;}
+    .emergingView {margin: -147% -2% auto!important;padding: 40px 0px 3px 8px!important;width: 104%!important;position:fixed!important}
+    .group {width: 100%!important; margin: -10% -11%!important;}
+    .date {margin: 22% -89%!important;}
+    #genProvision {margin: 85% 2% auto!important;width: 92%!important;}
+    .titleProv {width: 84%;}
+    #provisionNote{display:none;}
+    .mensaje {margin: -113% 0% auto!important;width: 362px!important;padding: 6% 0%!important;}
+    .views_not {margin: -119% -4%!important;height: 60%!important}
+}
+/*resolucion para samsung GALAXY S3-S4, NOKIA E7-00 "HORIZONTAL"*/
+@media (max-width: 640px) and (max-height: 360px) 
+{ 
+    .bodylogin{position: absolute!important;}
+}
+/*resolucion para iphone 1-5,HTC desire S, samsung GALAXY S1-S2, NOKIA lumia 800, ZTE open, HTC desire, blackberry curve 8529     "VERTICAL"*/
+@media (max-width: 320px) 
+{ 
+    #footer{display: none!important}
+    .cuadro_login {width: 344%!important;margin: -49% 0%;padding: 111% 0%!important;}
+    .cuadro {margin: -17px 81px auto!important;padding: 0% 6% 0% 4%!important;}
+    .metro input[type="submit"].primary {width: 262px!important;}
+    #remember {margin: -2% -4%!important;}
+    .formulario {margin-left: -4%!important;}
+    .barra_tools_click {height: 141px!important;width: 200%!important;margin: -8px 337px!important;padding: 5% 21% 0% 0%!important;position: absolute!important;}
+    .emergingView { margin: -161% -5% auto!important; padding: 34px 0px 0px 0px!important;width: 115%!important;height: 89%!important;}
+    #genProvision {margin: 83% 6% auto!important;width: 84%!important;}
+    .group {margin: -14% -9%!important;}
+    .date {margin: 23% -91%!important;}
+    .views_not {margin: -134% -4%!important;}
+    .mensaje{margin: -137% 0% auto!important;width: 314px!important;}
+    .confirmButtons {margin: 3% 1% 0%!important;width: 209%!important;}
+    
 }
 
   /*se agrego esta clase aca .Reportes (padding-bottom: 22%!important;) y se modifico comentando .listadeReportesscroll (height: 489px!important;})*/

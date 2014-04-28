@@ -180,35 +180,24 @@ $this->pageTitle = Yii::app()->name;
         <div class='formInputs note'>
             <h3 class="h3_note">Este reporte esta en etapa de prueba y algunos datos podrian no ser confiables...</h3>  
         </div>
-        
-<!--        <div class='formInputs pronostico'>
-            <h3>Pronostico</h3>
-            <div class="btn-group" data-toggle="buttons-radio">
-                <input name="Si_pron" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">Si</input>
-                <input name="No_pron" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">No</input>
-            </div>  
-        </div>-->
-        <!--ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN-->
-        <div class="trabajando"><img src="/images/trabajando.png" class='ver'><h2>Estamos trabajando...</h2></div><!--este div es para indicar que la interfaz no esta lista-->
-        <!--.................-->
     </div>
 </form>
 </div>
-<div class="barra_tools_click">
-    <footer id="botones_exportar">
-        <div id="previa" class="botones">
-            <img src="/images/previa.png" title='Vista previa del reporte'>
-        </div>
-        <div id="excel" class="botones">
-            <a class="excel_a">
-               <img src="/images/excel.png" title='Exportar Reportes en Excel'>
-            </a>
-        </div>
-        <div id="mail" class="botones">
-            <img src="/images/mail.png" title='Enviar Reportes a su Correo Electronico'>
-        </div>
-    </footer>
-</div>
+    <div class="barra_tools_click">
+        <footer id="botones_exportar">
+            <div id="previa" class="botones">
+                <img src="/images/previa.png" title='Vista previa del reporte'>
+            </div>
+            <div id="excel" class="botones">
+                <a class="excel_a">
+                   <img src="/images/excel.png" title='Exportar Reportes en Excel'>
+                </a>
+            </div>
+            <div id="mail" class="botones">
+                <img src="/images/mail.png" title='Enviar Reportes a su Correo Electronico'>
+            </div>
+        </footer>
+    </div>
 <div class="views_not" id="views_not">
-    <h4 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h4>
+    <h1 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h1>
 </div>

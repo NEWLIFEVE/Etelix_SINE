@@ -54,7 +54,8 @@ class AccountingDocument extends CActiveRecord
 	public $received_dispute;
 	public $sent_dispute;
 	public $balance;
-          
+	
+        public $soa_provisioned; 
         public $group;
         public $carrier;
         public $type;
@@ -73,6 +74,12 @@ class AccountingDocument extends CActiveRecord
         public $last_pago_cobro;
         public $last_date_pago_cobro;
         public $type_c_p;
+        public $previous_pago_cobro;
+        public $previous_date_pago_cobro;
+        public $type_c_p_previous;
+        public $last_week_pago_cobro;
+        public $last_week_date_pago_cobro;
+        public $type_c_p_last_week;
         public $active;
 	/**
 	 * @return string the associated database table name

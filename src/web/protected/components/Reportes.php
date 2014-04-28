@@ -139,12 +139,14 @@ class Reportes extends CApplicationComponent
                      return " ";
                   }else{
                      return "UNION
-                             SELECT a.id, issue_date, valid_received_date, doc_number, from_date, to_date, minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
-                                    amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
+                             SELECT NULL as id, issue_date, valid_received_date, doc_number, from_date, to_date, sum(minutes) as minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
+                                    sum(amount) as amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                              FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                              WHERE a.id_carrier IN(Select id from carrier where $group)
                                      AND a.id_type_accounting_document=tad.id AND a.id_carrier=c.id AND a.id_currency=s.id AND c.id_carrier_groups = g.id AND confirm != -1
-                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
+                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                            GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
+                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name";
                   }
                 break;
             case "balance": 
@@ -152,10 +154,13 @@ class Reportes extends CApplicationComponent
                     return " ";
                  }else{
                     return "UNION
-                            SELECT a.id, minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, a.amount,s.name AS currency 
+                            SELECT NULL as id, sum(minutes) as minutes, a.issue_date,a.valid_received_date,a.id_type_accounting_document,g.name as group,c.name as carrier, tp.name as tp, t.name as type, a.from_date, a.to_date, a.doc_number, sum(a.amount) as amount,s.name AS currency 
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
-                            WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id AND a.issue_date<='{$date}'
-                                  AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)";
+                            WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id 
+                                    AND a.issue_date<='{$date}'
+                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                            GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
+                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name, tp.name,t.name";
                  }
                 break;
             default:
@@ -188,7 +193,36 @@ class Reportes extends CApplicationComponent
                         AND a.id_accounting_document IS NULL";
         }
     }
-
+    /**
+     * Metodo encargado de determinar los due date vencidos y por vencer en soa,
+     * para lograr filtrar el antes y el despues de la fecha consultada, 
+     * cuando no hay due_date, toma el issue_date y lo coloca como Due_date
+     * @param type $model
+     * @return type
+     */
+    public static function dueOrNext($model)
+    {
+         if($model->due_date==NULL)
+             return $model->issue_date;
+         else
+             return $model->due_date;     
+    }
+    /**
+     * se encarga de buscar y mantener siempre el due_date mas alto
+     * @param type $model
+     * @param type $dueDateNow
+     * @return type
+     */
+    public static function defineDueDateHigher($model, $dueDateNow)
+    {
+        if($model->due_date!=NULL){
+            if($model->due_date < $dueDateNow)
+                $dueDateNow=$dueDateNow;
+            else
+                $dueDateNow=$model->due_date;
+        }
+        return $dueDateNow;
+    }
     /**
      * 
      * @param type $day: la cantidad de dias para sumar o restar
@@ -1012,7 +1046,7 @@ class Reportes extends CApplicationComponent
         }
  
         /**
-         * METODO ENCARGADO DE POSICIONAR LOS MONTOS Y LOS DUE_DATE DEPENDIENDO DE LA SEMANA
+         * Metodo encargado de posicionar los montos y los due_date dependiendo de la semana
          * @param type $value
          * @param type $dueDate
          * @param type $date
@@ -1046,6 +1080,23 @@ class Reportes extends CApplicationComponent
             }
         }
         /**
+         * METODO ENCARGADO DE ESTIMAR EL VALOR INCREMENTAL ENTRE EL SOA_DUE Y EL SOA_NEXT, SUPONIENDO QUE SE PAGARA EL SOA ACTUAL, EN SI SOLO ES LA RESTA DEL NEXT - DUE
+         * SI EL DUE_SOA LLEGA VACIO, SOLO RETORNARA EL MISMO VALOR DE NEXT, PERO SI LLEGA CON DATA, HACE LA OPERACION Y RETORNA EL VALOR NEXT ACOMPAÑADO DE DIFERENCIAL.
+         * @param type $resultDue
+         * @param type $resultNext
+         * @return string
+         */
+        public static function defineIncremental($resultDue, $resultNext)
+        {
+            if($resultNext!=""){
+                if($resultDue!=""&&$resultNext!="")
+                    return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
+                return Yii::app()->format->format_decimal($resultNext);
+            }else{
+                return "";
+            }
+        }
+        /**
          * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD
          * @param type $dateModel
          * @param type $date
@@ -1060,19 +1111,20 @@ class Reportes extends CApplicationComponent
         }
         /**
          * DEFINE COLOR Y SIGNO PARA DISTINGUIR PAGOS Y COBROS
-         * @param type $model
+         * @param type $val
+         * @param type $type
          * @param type $attr
          * @return string
          */
-        public static function definePaymCollect($model,$attr)
+        public static function definePaymCollect($val,$type,$attr)
         {
             if($attr=="value"){
-                if($model->type_c_p=="Pago")
-                    return "-".$model->last_pago_cobro;
+                if($type=="Pago")
+                    return "-".$val;
                 else 
-                    return $model->last_pago_cobro;
+                    return $val;
             }else{
-                if($model->type_c_p=="Pago")
+                if($type=="Pago")
                      return "red";
                  else 
                      return "#6F7074";
@@ -1099,5 +1151,52 @@ class Reportes extends CApplicationComponent
         /**
          * fin RETECO
          */
+        
+        /**
+         * SQL USADO PARA TRAER NUMERO DE CARRIERS Y ASI CALCULAR EL TIEMPO DE ESPERA PARA LOS MENSAJES DE SUMMARY Y RECREDI 
+         * @param type $date
+         * @param type $intercompany
+         * @param type $noActivity
+         * @param type $typePaymentTerm
+         * @param type $paymentTerm
+         * @return type
+         */
+        public static function getNumCarriersForTime($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+        {
+            if($intercompany)           $intercompany="";
+            elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+
+            if($paymentTerm=="todos") {
+                $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
+            }else{
+                $filterPaymentTerm="{$paymentTerm}";
+            }
+
+            if($typePaymentTerm===NULL){
+                $tableNext="";
+                $wherePaymentTerm="";
+            }
+            if($typePaymentTerm===FALSE){
+                $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
+                $wherePaymentTerm="AND con.id_carrier=c.id
+                                   AND ctp.id_contrato=con.id
+                                   AND ctp.id_termino_pago=tp.id
+                                   AND ctp.end_date IS NULL
+                                   AND tp.id IN({$filterPaymentTerm})";
+            }
+            if($typePaymentTerm===TRUE){
+                $tableNext=", contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp";
+                $wherePaymentTerm="AND con.id_carrier=c.id
+                                   AND ctps.id_contrato=con.id
+                                   AND ctps.id_termino_pago_supplier=tp.id
+                                   AND ctps.end_date IS NULL
+                                   AND tp.id IN({$filterPaymentTerm})";
+            }
+            $sql="SELECT * 
+                  FROM (SELECT DISTINCT cg.id AS id
+                        FROM carrier_groups cg,  carrier c {$tableNext}
+                        WHERE c.id_carrier_groups=cg.id  {$wherePaymentTerm} {$intercompany})activity {$noActivity}";
+            return AccountingDocument::model()->findAllBySql($sql);
+        }
 }
 ?>

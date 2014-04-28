@@ -2,11 +2,29 @@
 ============
 
 Sistema de Reportes para Billing
+<<<<<<< HEAD
 
 Realese 1.2.10
+=======
+    - Se agrego nuevas columnas en summary donde se desgloza los ultimos pagos y cobros realizados en tres variantes, (PREVIOUS WEEK, LAST WEEK y THIS WEEK)
+    - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.
+    - Se agrego columna en summary, (soa provisioned) la cual muestra el soa next tomando en cuenta las provisiones, dando una idea mas segura de lo que seria el para la fecha.
+    - se agrego valor (incremental) para los soa next y soa provisioned, esta es la operacion entre el soa next/soa provisioned menos el soa due.
+    - Se agrego indicador de tiempo de espera para la generacion de reportes.
+    - Se solvento problema en el envio de emails para los reportes recredi y summary.
+    - Correcciones en recredi listas.
+    - Mejoras en calculo de disputas y balance para recredi.
+    - cambio en datepickers para que la fecha minima de seleccion sea 2013-10-01.
+    - Correccion de scroll para la interfaz principal.
+    - Nueva interfaz para generar provisiones.
+    - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
+    - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
+
+>>>>>>> dev
     - Nueva version de Provisiones: 
         * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
         * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
+
     - Pequeñas mejoras en SINE.js.
     - pequeñas mejoras en refac y reprov.
     - Modificado el metodo que define acumulado en soa y balance para que sume balance inicial de estar repetido.
