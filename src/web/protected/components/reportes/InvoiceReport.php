@@ -15,44 +15,57 @@ class InvoiceReport extends Reportes
      * @param type $sum
      * @return string
      */
-    public static function reporte($fromDate,$toDate,$typeReport,$paymentTerm=null,$dividedInvoice,$sum)
+    public static function reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum)
     {
-        //Estilos
-        $styleDescription="style='border:0px solid silver;text-align:left;background:#fff;color:#06ACFA;'";
-        $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-        $style_provisiones="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
-        $style_sori="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
-        $style_diference="style='border:1px solid silver;background:#18B469;text-align:center;color:white;'";
-        $style_totals="style='border:1px solid silver;text-align:right;'";
-        $style_date_null="style='background:white;text-align:center;color:silver;'";
-        $styleNoInvoice="style='background:#D1BFEC;text-align:center;color:white;border:1px solid silver;'";
-        $styleNull="style='background:white;text-align:center;color:white; border:1px solid white;'";
+        /*********************                                  ESTILOS BASICOS                                **********************/
+        $styleDescription="style='border:0px solid white;text-align:left;background:#fff;color:#06ACFA;'";
+        $styleNumberRow=$styleTotalTotal="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+        $styleProvisions="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+        $styleSori="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
+        $styleDiff="style='border:1px solid silver;background:#18B469;text-align:center;color:white;'";
+        $styleSubTotal="style='border:1px solid #D7D8E4;text-align:center;background:silver;color:white;'";
+        $styleDateNull="style='background:white;text-align:center;color:silver;'";
+        $styleNoInvoice="style='background:#D1BFEC;text-align:center;color:white;border:1px solid #D7D8E4;'";
+        $styleDifhigher="style='background:#FAE08D;text-align:center;color:silver;border:1px solid silver;'";
+        /*********************                       INICIALIZACION DE VARIABLES NUMERICAS                     **********************/
+        $acumFactura= $acumProvisions= $acumDiference= $acumInvoiceMin= $acumProvisionsMin= $acumDiferenceMin= $acumNoInvoiceDiffAmount= $acumNoInvoiceDiffMin=
+        $acumMinHigher= $acumAmountHigher= $acumMinInvoiceHigher= $acumAmountInvoiceHigher= $acumDifMinHigher= $acumDifAmountHigher= $acumNoInvoiceDiffAmountPrev= $acumNoInvoiceDiffMinPrev=0;
+        /*********************                       INICIALIZACION DE HEADER PRINCIPAL                        **********************/
         $header="<tr>
                     <td {$styleNumberRow} ></td>
-                    <td colspan='3'".$style_provisiones."><b>CAPTURA</b></td>
-                    <td colspan='4'".$style_sori."><b>FACTURACION SORI</b></td>
-                    <td colspan='3'".$style_diference."><b>DIFERENCIAS</b></td>
+                    <td colspan='3'".$styleProvisions."><b>CAPTURA</b></td>
+                    <td colspan='4'".$styleSori."><b>FACTURACION SORI</b></td>
+                    <td colspan='3'".$styleDiff."><b>DIFERENCIAS</b></td>
                     <td {$styleNumberRow} ></td>
                  </tr>
                  <tr>
                     <td {$styleNumberRow} >N°</td>
-                    <td ".$style_provisiones.">OPERADOR</td>
-                    <td ".$style_provisiones.">MINUTOS</td>
-                    <td ".$style_provisiones.">MONTO</td>
-                    <td ".$style_sori.">OPERADOR</td>
-                    <td ".$style_sori.">MINUTOS</td>
-                    <td ".$style_sori.">MONTO</td>
-                    <td ".$style_sori.">Num FACTURA</td>
-                    <td ".$style_diference.">OPERADOR</td>
-                    <td ".$style_diference.">MINUTOS</td>
-                    <td ".$style_diference.">MONTO</td>
+                    <td ".$styleProvisions.">OPERADOR</td>
+                    <td ".$styleProvisions.">MINUTOS</td>
+                    <td ".$styleProvisions.">MONTO</td>
+                    <td ".$styleSori.">OPERADOR</td>
+                    <td ".$styleSori.">MINUTOS</td>
+                    <td ".$styleSori.">MONTO</td>
+                    <td ".$styleSori.">Num FACTURA</td>
+                    <td ".$styleDiff.">OPERADOR</td>
+                    <td ".$styleDiff.">MINUTOS</td>
+                    <td ".$styleDiff.">MONTO</td>
                     <td {$styleNumberRow} >N°</td>
                  </tr>";
-        $acumulado_factura=$acumulado_provisiones=$acumulado_diference=$acumulado_factura_min=$acumulado_provisiones_min=$acumulado_diference_min=$acumuladoNoInvoiceDiffAmount=$acumuladoNoInvoiceDiffMin=$acumuladoNoInvoiceDiffAmountPrevious=$acumuladoNoInvoiceDiffMinPrevious=0;
-        //Traigo las Provisiones de base de datos
+        
+        /*********************      EXTRACCION DE PROVISIONES, FACTURAS Y DIFERENCIAS DESDE BASE DE DATOS     **********************/
         $documents=self::getModel($fromDate, $toDate,$typeReport,$paymentTerm,$dividedInvoice, NULL, NULL);
+        
         $seg=count($documents)*3;
             ini_set('max_execution_time', $seg);
+        /*********************                      NOMBRE COMPLEMENTARIO PARA LOS PERIODOS                   **********************/ 
+        
+        if($dividedInvoice!=NULL) 
+            $complementName="(". TerminoPago::getModelFind($paymentTerm)->name. ")";
+        ELSE
+            $complementName=Reportes::define_num_dias($fromDate,$toDate);
+        
+        /*********************                                   INICIO DE LA TABLA                           **********************/ 
         $body="<table style='width: 100%;'>
                     <tr rowspan='2'>
                        <td colspan='12'></td>
@@ -65,7 +78,7 @@ class InvoiceReport extends Reportes
                     </tr>
                     <tr>
                        <td colspan='3'>TIPO DE FACTURACION</td>
-                       <td {$styleDescription}colspan='3'>".Reportes::define_num_dias($fromDate,$toDate)."</td>
+                       <td {$styleDescription} colspan='3'> {$complementName} </td>
                        <td colspan='6'></td>
                     </tr>
                     <tr>
@@ -73,30 +86,43 @@ class InvoiceReport extends Reportes
                     </tr>
                     <tr>
                        <td colspan='3'>PERIODO</td>
-                       <td {$styleDescription}colspan='3'>".Utility::formatDateSINE($fromDate,"F j")." - ".Utility::formatDateSINE($toDate,"F j")."</td>
+                       <td {$styleDescription} colspan='3'>".Utility::formatDateSINE($fromDate,"F j")." - ".Utility::formatDateSINE($toDate,"F j")."</td>
                        <td colspan='6'></td>
                     </tr>
                     <tr>
                        <td colspan='12'></td>
                     </tr>
                     {$header}";
+        
         if($documents!=null)
         {
             foreach($documents as $key => $document)
             {
                 $pos=$key+1;
                 $style=self::style($document);
-                
-                $acumulado_provisiones+=$document->amount;
-                $acumulado_provisiones_min+=$document->minutes;
-                $acumulado_factura+=$document->fac_amount;
-                $acumulado_factura_min+=$document->fac_minutes;
-                $acumulado_diference+=$document->monto_diference;
-                $acumulado_diference_min+=$document->min_diference;
+            /*********************                               ACUMULADOS PRINCIPALES                        **********************/     
+                $acumProvisions+=$document->amount;
+                $acumProvisionsMin+=$document->minutes;
+                $acumFactura+=$document->fac_amount;
+                $acumInvoiceMin+=$document->fac_minutes;
+                $acumDiference+=$document->monto_diference;
+                $acumDiferenceMin+=$document->min_diference;
+            /*********************                      ACUMULADOS DE PROVISIONES SIN FACTURAS                 **********************/     
                 if($document->fac_amount==NULL){
-                    $acumuladoNoInvoiceDiffAmount+=$document->amount;
-                    $acumuladoNoInvoiceDiffMin+=$document->minutes;
+                    $acumNoInvoiceDiffAmount+=$document->amount;
+                    $acumNoInvoiceDiffMin+=$document->minutes;
+                }else{
+            /*********************                  ACUMULADOS DE DIFERENCIAS MAYORES A (1 $)                  **********************/ 
+                    if( $document->monto_diference>=1||$document->monto_diference<=-1 ){
+                        $acumMinHigher+=$document->minutes;
+                        $acumAmountHigher+=$document->amount;
+                        $acumMinInvoiceHigher+=$document->fac_minutes;
+                        $acumAmountInvoiceHigher+=$document->fac_amount;
+                        $acumDifMinHigher+=$document->min_diference;
+                        $acumDifAmountHigher+=$document->monto_diference;
+                    }
                 }
+            /*********************                             LLENA LA DATA PRINCIPAL                         **********************/     
                 $body.="<tr>
                            <td {$styleNumberRow} >{$pos}</td>
                            <td style='border:1px solid silver;text-align:left;background:{$style}'>".$document->carrier."</td>
@@ -114,44 +140,62 @@ class InvoiceReport extends Reportes
             }
         }else{
             $body.="<tr>
-                       <td {$style_date_null} colspan='12'>En este periodo no hay datos registrados</td>
+                       <td {$styleDateNull} colspan='12'>En este periodo no hay datos registrados</td>
                    </tr>";
         }
+        /*********************                                 TOTALES PRINCIPALES                              **********************/ 
+        $body.="<tr>
+                   <td {$styleTotalTotal} colspan='12'>TOTALES</td>
+               </tr>
+               <tr>
+                   <td {$styleProvisions} colspan='2'>MINUTOS</td>
+                   <td {$styleProvisions}  colspan='2'> MONTO $ </td>
+                   <td {$styleSori} colspan='2'> MINUTOS </td>
+                   <td {$styleSori} colspan='2'> MONTO $ </td>
+                   <td {$styleDiff} colspan='2'> MINUTOS </td>
+                   <td {$styleDiff} colspan='2'> MONTO $ </td>
+               </tr>
+               <tr>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumMinHigher,3)."</td>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumAmountHigher,3)."</td>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumMinInvoiceHigher,3)."</td>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumAmountInvoiceHigher,3)."</td>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumDifMinHigher,3)."</td>
+                   <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumDifAmountHigher,3)."</td>
+               </tr> 
+               <tr>
+                   <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMin,3)."</td>
+                   <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmount,3)."</td>
+                   <td {$styleNoInvoice} colspan='2'> 0,00 </td>
+                   <td {$styleNoInvoice} colspan='2'> 0,00 </td>
+                   <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMin,3)."</td>
+                   <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmount,3)."</td>
+               </tr> 
+               <tr>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumMinHigher + $acumNoInvoiceDiffMin,3)."</td>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumAmountHigher + $acumNoInvoiceDiffAmount,3)."</td>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumMinInvoiceHigher,3)."</td>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumAmountInvoiceHigher,3)."</td>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifMinHigher + $acumNoInvoiceDiffMin,3)."</td>
+                   <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifAmountHigher + $acumNoInvoiceDiffAmount,3)."</td>
+               </tr> 
+               <tr>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumProvisionsMin,3)."</td>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumProvisions,3)."</td>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumInvoiceMin,3)."</td>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumFactura,3)."</td>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDiferenceMin,3)."</td>
+                   <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDiference,3)."</td>
+               </tr>";
 
-            $body.="<tr>
-                       <td {$styleNull} colspan='12'></td>
-                    </tr>
-                    <tr>
-                       <td {$styleNull} ></td>
-                       <td {$style_provisiones} >MINUTOS</td>
-                       <td {$style_provisiones} colspan='2'>MONTO $</td>
-                       <td {$style_sori} >MINUTOS</td>
-                       <td {$style_sori} >MONTO $</td>
-                       <td {$style_diference} >MINUTOS</td>
-                       <td {$style_diference} >MONTO $</td>
-                       <td {$styleNoInvoice} >MINUTOS</td>
-                       <td {$styleNoInvoice} colspan='2'>MONTO $</td>
-                       <td {$styleNull} ></td>
-                    </tr>
-                    <tr>
-                       <td {$styleNull} ></td>
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumulado_provisiones_min,3)."</td>
-                       <td {$style_totals} colspan='2'>".Yii::app()->format->format_decimal($acumulado_provisiones,3)."</td>    
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumulado_factura_min,3)."</td>
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumulado_factura,3)."</td>
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumulado_diference_min,3)."</td>
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumulado_diference,3)."</td> 
-                       <td {$style_totals} >".Yii::app()->format->format_decimal($acumuladoNoInvoiceDiffMin,3)."</td>
-                       <td {$style_totals} colspan='2'>".Yii::app()->format->format_decimal($acumuladoNoInvoiceDiffAmount,3)."</td>
-                       <td {$styleNull} ></td>
-                    </tr>";
-
-         
+        /*********************  VERIFICA SI DESDE INTERFAZ SE ESCOGIO MOSTRAR LOS REPORTES CON SUMMARY INCLUIDO   **********************/  
         if($sum==TRUE)
         {
+        /*********************             ARMA UN ARRAY CON LOS PERIODOS PASADOS DESDE EL 2013-09-30             **********************/  
             $backPeriods=self::getBackPeriods($paymentTerm, $toDate, $typeReport);
-            $segTwo=count($backPeriods)*30;
+            $segTwo=count($backPeriods)*50;
                 ini_set('max_execution_time', $segTwo);
+                
             if(count($backPeriods)>1)
                 $body.="<tr>
                            <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
@@ -161,9 +205,17 @@ class InvoiceReport extends Reportes
                 $pos=$key+1;
                 if($pos>1)
                 {
+        /*************   LLAMA DE NUEVO AL MODELO PARA TRAER PROVISIONES, FACTURAS Y DIFERENCIAS PARA PERIODOS ANTERIORES   ************/  
                     $summary=self::getModel($periods["from"], $periods["to"],$typeReport,$paymentTerm,$dividedInvoice, NULL, TRUE);
                     $body.="<tr>
                                <td colspan='12' style='padding-bottom: 20px;'> </td>
+                            </tr>
+                            <tr>
+                               <td colspan='12' style='padding-bottom: 20px;'> </td>
+                            </tr>
+                            <tr>
+                               <td colspan='2'>TIPO DE FACTURACION</td>
+                               <td {$styleDescription} colspan='10'> {$complementName} </td>
                             </tr>
                             <tr>
                                <td colspan='2'>PERIODO </td>
@@ -176,12 +228,22 @@ class InvoiceReport extends Reportes
                         {
                             $pos=$key+1;
                             $style=self::style($detailSummary);
-                            
+         /*********************            ACUMULADOS DE PROVISIONES SIN FACTURAS EN PERIODOS ANTERIORES         **********************/                     
                             if($detailSummary->doc_number==NULL){
-                                $acumuladoNoInvoiceDiffAmountPrevious+=$detailSummary->amount;
-                                $acumuladoNoInvoiceDiffMinPrevious+=$detailSummary->minutes;
+                                $acumNoInvoiceDiffAmountPrev+=$detailSummary->amount;
+                                $acumNoInvoiceDiffMinPrev+=$detailSummary->minutes;
+                            }else{
+         /*********************           ACUMULADOS DE DIFERENCIAS MAYORES A (1 $) EN PERIODOS ANTERIORES       **********************/                            
+                                if( $detailSummary->monto_diference>=1||$detailSummary->monto_diference<=-1 ){
+                                    $acumMinHigher+=$detailSummary->minutes;
+                                    $acumAmountHigher+=$detailSummary->amount;
+                                    $acumMinInvoiceHigher+=$detailSummary->fac_minutes;
+                                    $acumAmountInvoiceHigher+=$detailSummary->fac_amount;
+                                    $acumDifMinHigher+=$detailSummary->min_diference;
+                                    $acumDifAmountHigher+=$detailSummary->monto_diference;
+                                }
                             }
-                
+          /**************** LLENA LA DATA PRINCIPAL, PERO SOLO CON PROVISIONES SIN FACTURAS Y DIFF MAYORES A (1$)  ********************/         
                             $body.="<tr>
                                        <td {$styleNumberRow} >{$pos}</td>
                                        <td style='border:1px solid silver;text-align:left;background:{$style}'>".$detailSummary->carrier."</td>
@@ -199,43 +261,81 @@ class InvoiceReport extends Reportes
                         }
                     }else{
                         $body.="<tr>
-                                   <td {$style_date_null} colspan='12'>En este periodo no hay diferencias de mas de (1 $) o provisiones sin facturas</td>
+                                   <td {$styleDateNull} colspan='12'>En este periodo no hay diferencias de mas de (1 $) o provisiones sin facturas</td>
                                </tr>";
                     }
+           /********************                OBTIENE UN MODELO CON LOS TOTALES PARA SUMMARY                ************************/            
                     $totalSummary=self::getModel($periods["from"], $periods["to"],$typeReport,$paymentTerm,$dividedInvoice, TRUE, NULL);
-
-                     $body.="<tr>
-                                <td {$styleNull} colspan='12'></td>
-                             </tr>
-                             <tr>
-                                <td {$styleNull} ></td>
-                                <td {$style_provisiones} >MINUTOS</td>
-                                <td {$style_provisiones} colspan='2'>MONTO $</td>
-                                <td {$style_sori} >MINUTOS</td>
-                                <td {$style_sori} >MONTO $</td>
-                                <td {$style_diference} >MINUTOS</td>
-                                <td {$style_diference} >MONTO $</td>
-                                <td {$styleNoInvoice} >MINUTOS</td>
-                                <td {$styleNoInvoice} colspan='2'>MONTO $</td>
-                                <td {$styleNull} ></td>
-                             </tr>
-                             <tr>
-                                <td {$styleNull} ></td>
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($totalSummary->minutes,3)."</td>
-                                <td {$style_totals} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->amount,3)."</td>    
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($totalSummary->fac_minutes,3)."</td>
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($totalSummary->fac_amount,3)."</td>
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($totalSummary->min_diference,3)."</td>
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($totalSummary->monto_diference,3)."</td> 
-                                <td {$style_totals} >".Yii::app()->format->format_decimal($acumuladoNoInvoiceDiffMinPrevious,3)."</td>
-                                <td {$style_totals} colspan='2'>".Yii::app()->format->format_decimal($acumuladoNoInvoiceDiffAmountPrevious,3)."</td>
-                                <td {$styleNull} ></td>
-                             </tr>";
+           /********************               ARMA LAS CASILLAS TOTAL PARA CADA CASO DE SUMMARY              ************************/       
+                $body.="<tr>
+                            <td {$styleTotalTotal} colspan='12'>TOTALES</td>
+                        </tr>
+                        <tr>
+                            <td {$styleProvisions} colspan='2'>MINUTOS</td>
+                            <td {$styleProvisions} colspan='2'> MONTO $ </td>
+                            <td {$styleSori} colspan='2'> MINUTOS </td>
+                            <td {$styleSori} colspan='2'> MONTO $ </td>
+                            <td {$styleDiff} colspan='2'> MINUTOS </td>
+                            <td {$styleDiff} colspan='2'> MONTO $ </td>
+                        </tr>
+                        <tr>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumMinHigher,3)."</td>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumAmountHigher,3)."</td>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumMinInvoiceHigher,3)."</td>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumAmountInvoiceHigher,3)."</td>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumDifMinHigher,3)."</td>
+                            <td {$styleDifhigher} colspan='2'>".Yii::app()->format->format_decimal($acumDifAmountHigher,3)."</td>
+                        </tr> 
+                        <tr>
+                            <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMinPrev,3)."</td>
+                            <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmountPrev,3)."</td>
+                            <td {$styleNoInvoice} colspan='2'></td>
+                            <td {$styleNoInvoice} colspan='2'></td>
+                            <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMinPrev,3)."</td>
+                            <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmountPrev,3)."</td>
+                        </tr> 
+                        <tr>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumMinHigher + $acumNoInvoiceDiffMinPrev,3)."</td>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumAmountHigher + $acumNoInvoiceDiffAmountPrev,3)."</td>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumMinInvoiceHigher,3)."</td>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumAmountInvoiceHigher,3)."</td>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifMinHigher + $acumNoInvoiceDiffMinPrev,3)."</td>
+                            <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifAmountHigher + $acumNoInvoiceDiffAmountPrev,3)."</td>
+                        </tr> 
+                        <tr>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->minutes,3)."</td>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->amount,3)."</td>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->fac_minutes,3)."</td>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->fac_amount,3)."</td>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->min_diference,3)."</td>
+                            <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->monto_diference,3)."</td>
+                        </tr>";
+                    
+                    
                 }
             }
-            $body.="</table>";
         }
-        
+        /********************                             LEYENDA DE COLORES                                ************************/      
+        $body.="<tr>
+                   <td {$styleDescription} colspan='12' > Leyenda </td>
+                </tr>
+                <tr>
+                   <td {$styleDifhigher} ></td>
+                   <td  {$styleDescription} colspan='11' > Diferencias de mas de (1 $) </td>
+                </tr>
+                <tr>
+                   <td {$styleNoInvoice} ></td>
+                   <td {$styleDescription} colspan='11' > Provisiones Sin Factura </td>
+                </tr>
+                <tr>
+                   <td {$styleSubTotal} ></td>
+                   <td {$styleDescription} colspan='11' > Diff de mas de (1 $) + Prov Sin Factura </td>
+                </tr>
+                <tr>
+                   <td {$styleTotalTotal} ></td>
+                   <td {$styleDescription} colspan='11' > Total General </td>
+                </tr>
+         </table>";
         
         return $body;
     }
@@ -263,6 +363,7 @@ class InvoiceReport extends Reportes
         { 
             if($paymentTerm==null) 
                 $paymentTerm=7;
+            
             $provision="Provision Factura Enviada";
             $factura="Factura Enviada";
             $carriers="SELECT c.id

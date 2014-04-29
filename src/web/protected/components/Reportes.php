@@ -88,18 +88,37 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fromDate
-     * @param type $toDate
+     * @param type $date
      * @param type $typeReport
-     * @param type $paymentTerm
+     * @param type $paymentTerms
      * @param type $dividedInvoice
      * @param type $sum
      * @return type
      */
-    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice, $sum)
+    public function refi_prov($date,$typeReport,$paymentTerms,$dividedInvoice, $sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
+        $var="";
+        if($paymentTerms=="todos") {
+            $paymentTerms= TerminoPago::getModel();
+           
+            foreach ($paymentTerms as $key => $paymentTerm) 
+            {
+               if($paymentTerm->name!="Sin estatus"){
+                   
+                  $toDate=Reportes::defineToDatePeriod($paymentTerm->period, $date);
+                  $fromDate=Reportes::defineFromDate($paymentTerm->period,$toDate);
+                  $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm->id,$dividedInvoice,$sum);
+               }
+            }
+        }else{
+            $toDate=Reportes::defineToDatePeriod(TerminoPago::getModelFind($paymentTerms)->period, $date);
+            $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($paymentTerms)->period,$toDate);
+            $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerms,$dividedInvoice,$sum);
+        }    
         return $var;
+//        
+//        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
+//        return $var;
     }
 
     /**
@@ -121,7 +140,7 @@ class Reportes extends CApplicationComponent
     }
 
     /**
-     * se encarga de calcular el fin de periodo dependiendo del tipo de periodo que se le pase para refac aunque la fecha que se le pase sea errada
+     * se encarga de calcular el fin de periodo dependiendo del tipo de periodo que se le pase para refac y reprov aunque la fecha que se le pase sea errada
      * ejemplo, si selecciono el dia '25' de un mes y el periodo seleccionado es 'quincenal', simplemente el metodo va a hacer que el dia sea '15'
      * @param type $period
      * @param type $date
@@ -972,34 +991,38 @@ class Reportes extends CApplicationComponent
         }
         /**
          * DEVUELVE EL NOMBRE COMPLEMENTARIO PARA LOS REPORTES DEPENDIENDO EL TERMINO PAGO
-         * @param type $PaymentTerm
+         * @param type $paymentTerm
          * @return string
          */
-        public static function defineNameExtra($PaymentTerm,$relation, $extra)
+        public static function defineNameExtra($paymentTerm,$relation, $extra)
         {
-            
-            if($PaymentTerm=="todos"){ 
+            if($paymentTerm=="todos"){ 
                 return "GENERAL";
             }else{
                 if($extra==NULL)
                 {
                     if($relation===FALSE)
-                       return "CUSTOMER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                       return "CUSTOMER ".TerminoPago::getModelFind($paymentTerm)->name;
 
                     if($relation===TRUE)
-                       return "SUPPLIER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                       return "SUPPLIER ".TerminoPago::getModelFind($paymentTerm)->name;
                 }else{
-                    $complement=Reportes::defineFromDate($PaymentTerm,self::defineToDatePeriod($PaymentTerm, $extra))." - ".self::defineToDatePeriod($PaymentTerm, $extra);
-                    switch ($PaymentTerm) {
-                        case "7":
-                            return "SEMANAL ".$complement;
-                            break;
-                        case "15":
-                            return "QUINCENAL ".$complement;
-                            break;
-                        case "30":
-                            return "MENSUAL ".$complement;
-                            break;
+                    if($relation!=NULL){
+                        $period=TerminoPago::getModelFind($paymentTerm)->period;
+                        return " (". str_replace('/','-', TerminoPago::getModelFind($paymentTerm)->name) .") ". Reportes::defineFromDate($period,self::defineToDatePeriod($period, $extra))." - ".self::defineToDatePeriod($period, $extra);
+                    }else{
+                        $complement= Reportes::defineFromDate($paymentTerm,self::defineToDatePeriod($paymentTerm, $extra))." - ".self::defineToDatePeriod($paymentTerm, $extra);
+                        switch ($paymentTerm) {
+                            case "7":
+                                return "SEMANAL ".$complement;
+                                break;
+                            case "15":
+                                return "QUINCENAL ".$complement;
+                                break;
+                            case "30":
+                                return "MENSUAL ".$complement;
+                                break;
+                        }
                     }
                 }
             }

@@ -163,7 +163,7 @@ class SiteController extends Controller
     public function actionMail()
     {
         $this->vaciarAdjuntos();
-        $date=$group=$from_date=$to_date=null;
+        $date=$group=$from_date=$to_date=$period=null;
         $correos=array();
         $user=UserIdentity::getEmail();
         if(isset($_POST['datepicker']))
@@ -205,9 +205,8 @@ class SiteController extends Controller
                     $correos['refac']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refac']['asunto'].".xls";
                     break;
                case 'refi_prov':
-                    $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($_POST['id_termino_pago'])->period,$date);
-                    $correos['refi_prov']['asunto']="SINE - REPROV ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'));
-                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_POST['id_termino_pago'],$_POST['Si_div'],$this->trueFalse($_POST['Si_sum']));
+                    $correos['refi_prov']['asunto']="SINE - REPROV ". Reportes::defineNameExtra( $_POST['id_termino_pago'],TRUE,$date ).self::reportTitle(date('Y-m-d'));
+                    $correos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($date,"REPROV",$_POST['id_termino_pago'],$_POST['Si_div'],$this->trueFalse($_POST['Si_sum']));
                     $correos['refi_prov']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['refi_prov']['asunto'].".xls";
                     break;
                case 'recredi':
@@ -273,9 +272,8 @@ class SiteController extends Controller
                     $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($date,"REFAC",$_GET['id_periodo'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'refi_prov':
-                    $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date);
-                    $archivos['refi_prov']['nombre']="SINE - REPROV ".Reportes::define_num_dias($fromDate, $date)." ".str_replace("-","",$fromDate)." - ".str_replace("-","",$date).self::reportTitle(date('Y-m-d'))." ".date("g:i a");
-                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($fromDate,$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
+                    $archivos['refi_prov']['nombre']="SINE - REPROV ". Reportes::defineNameExtra( $_GET['id_termino_pago'],TRUE,$date ).self::reportTitle(date('Y-m-d'))." ".date("g:i a");
+                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'recredi':
                     $archivos['recredi']['nombre']="SINE - RECREDI ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
@@ -330,7 +328,7 @@ class SiteController extends Controller
                     $archivos['refac']['cuerpo']=Yii::app()->reportes->refac($date,"REFAC",$_GET['id_periodo'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'refi_prov':
-                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov(Reportes::defineFromDate(TerminoPago::getModelFind($_GET['id_termino_pago'])->period,$date),$date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
+                    $archivos['refi_prov']['cuerpo']=Yii::app()->reportes->refi_prov($date,"REPROV",$_GET['id_termino_pago'],$_GET['Si_div'],$this->trueFalse($_GET['Si_sum']));
                     break;
                 case 'recredi':
                     $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
@@ -503,6 +501,22 @@ class SiteController extends Controller
                     else
                         $time= Yii::app()->format->format_decimal( $time / 60)." Min";
                     echo "<h3> este proceso puede tomar <b>".$time."</b></h3> no cierre su navegador durante ese tiempo";
+                    break;
+                case 'refi_prov':
+                    $period=0.5;
+                    if($_GET['id_termino_pago']=="todos")
+                        $period=13;
+                    if($this->trueFalse($_GET['Si_sum'])==TRUE){
+                        $daysDiff= DateManagement::howManyDaysBetween("2013-09-30",$_GET['datepicker'])/7;
+                        $time=$daysDiff * $period;
+                        if($time <= 60)
+                            $time= Yii::app()->format->format_decimal( $time )." Seg";
+                        else
+                            $time= Yii::app()->format->format_decimal( $time / 60)." Min";
+                        echo "<h3> este proceso puede tomar <b>".$time."</b></h3> no cierre su navegador durante ese tiempo";
+                    }else{
+                        echo "<br>";
+                    } 
                     break;
                 default:
                     echo "<br>";
