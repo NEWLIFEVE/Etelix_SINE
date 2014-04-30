@@ -54,9 +54,11 @@ class summary extends Reportes
         $firstWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "first");
         $lastWeekFour=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+4", $date), "last");  
         /***************************      SECCION ENCARGADA DE INICIALIZAR VARIABLES NUMERICAS Y DATE        ***************************/
-        $thisPaymentCollect=$PrevPaymentCollect=$lastWeekPaymentCollect=$soaPrevTotal=$soaThisWeekTotal=$soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=0;
-        $soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=$soaWeekThreeLess=$soaWeekFourLess=0;
-        $soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=$soaWeekFourHigher=$balanceTotal=$soaThisWeek=$soaProvisionedLess=$soaProvisionedHigher=$soaProvisionedTotal=0;
+        $thisPaymentCollectLess=$PrevPaymentCollectLess=$lastWeekPaymentCollectLess=$thisPaymentCollectHigher=$PrevPaymentCollectHigher=
+        $lastWeekPaymentCollectHigher=$thisPaymentCollect=$PrevPaymentCollect=$lastWeekPaymentCollect=$soaPrevTotal=$soaThisWeekTotal=
+        $soaWeekOneTotal=$soaWeekTwoTotal=$soaWeekThreeTotal=$soaWeekFourTotal=$soaPrevLess=$soaThisWeekLess=$soaWeekOneLess=$soaWeekTwoLess=
+        $soaWeekThreeLess=$soaWeekFourLess=$soaPrevHigher=$soaThisWeekHigher=$soaWeekOneHigher=$soaWeekTwoHigher=$soaWeekThreeHigher=
+        $soaWeekFourHigher=$balanceTotal=$soaThisWeek=$soaProvisionedLess=$soaProvisionedHigher=$soaProvisionedTotal=0;
         $dueDaysDue=$dueDaysNext="";
         
         /***************************       SE ENCARGA DE LLAMAR EL MODELO GENERAL PARA ARMAR LA TABLA        ***************************/
@@ -75,13 +77,21 @@ class summary extends Reportes
                <table style='width: 100%;'>
                 <tr>
                     <td colspan='3'></td>
+                    <td {$styleDatePCLast} colspan='6'> RECEIPTS AND PAYMENTS </td>
+                    <td > &nbsp; &nbsp; </td>
+                    <td {$styleSoaNext} colspan='13'> SOAs </td>
+                    <td colspan='3'> </td>
+                </tr>
+                <tr>
+                    <td colspan='3'></td>
                     <td {$styleDatePCPrev} colspan='2'> PREVIOUS </td>
                     <td {$styleDatePCLast} colspan='2'> LAST WEEK</td>
                     <td {$styleDatePC} colspan='2'> THIS WEEK </td>
+                    <td > </td>
                     <td {$styleSoaDue} colspan='2'> PREVIOUS </td>
                     <td {$styleSoaDue} colspan='2'> THIS WEEK </td>
-                    <td {$styleSoaDue}> CURRENCY </td>
-                    <td ></td>
+                    
+                    <td {$styleSoaDue} ></td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekThree,"d")."-".Utility::formatDateSINE($lastWeekThree,"d")."".Utility::formatDateSINE($lastWeekThree,"M")." </td>
@@ -98,11 +108,12 @@ class summary extends Reportes
                     <td {$styleDatePCLast} > DATE(Pay/Coll) </td>
                     <td {$styleDatePC} > AMOUNT(Pay/Coll) </td>
                     <td {$styleDatePC} > DATE(Pay/Coll) </td>
+                    <td  >  </td>
                     <td {$styleSoaDue} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
                     <td {$styleSoaDue} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
-                    <td {$styleDueDateD} > BALANCE </td> 
+                     
                     <td {$styleSoaDue} > DUE DAYS </td>
                     <td {$styleSoaNext} > SOA(NEXT) </td>
                     <td {$styleDueDateN} > DUE DATE(N) </td>
@@ -132,9 +143,17 @@ class summary extends Reportes
 
             $pos=$key+1;
             /***************************                    DEFINE ACUMULADOS PARA LOS PAGOS                  ***************************/
-            $PrevPaymentCollect+=$document->previous_pago_cobro;
-            $lastWeekPaymentCollect+=$document->last_week_pago_cobro;
-            $thisPaymentCollect+=$document->last_pago_cobro;
+            $PrevPaymentCollectLess+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "value"), FALSE);
+            $lastWeekPaymentCollectLess+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "value"), FALSE);
+            $thisPaymentCollectLess+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "value"), FALSE);
+            
+            $PrevPaymentCollectHigher+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "value"), TRUE);
+            $lastWeekPaymentCollectHigher+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "value"), TRUE);
+            $thisPaymentCollectHigher+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "value"), TRUE);
+
+//            $PrevPaymentCollect+=$document->previous_pago_cobro;
+//            $lastWeekPaymentCollect+=$document->last_week_pago_cobro;
+//            $thisPaymentCollect+=$document->last_pago_cobro;
             /***************************                  DEFINE ACUMULADOS PARA SOAS NEGATIVOS               ***************************/
             $soaPrevLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevLess);
             $soaThisWeekLess=Reportes::defineAcumsThisWeek(Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, FALSE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekLess),Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next, $date, $soaThisWeekLess);
@@ -175,13 +194,13 @@ class summary extends Reportes
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE($document->last_week_date_pago_cobro,"Y-m-d")." </td> 
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "value"))." </td>
                       <td {$styleBasic} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
-                          
+                      <td  >  </td>    
                       <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
                       <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal($soaThisWeek)." </td>
                       <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueThisNext(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),$document->due_date_next,$document->due_date_next, $date),"Y-m-d")." </td>
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal($document->balance)." </td>
-                      <td {$styleBasicDateDueTwo} > {$dueDaysDue} </td>    
+                      
+                      <td {$styleCollPaym} > {$dueDaysDue} </td>    
                       <td {$styleBasicNumNext} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL) )." </td>
                       <td {$styleBasicDateNext} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL),"Y-m-d")." </td>
                       <td {$styleBasicNumNextTwo} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL) )." </td>
@@ -201,9 +220,10 @@ class summary extends Reportes
                     <td {$styleDatePCPrev} colspan='2'> PREV PAYMENT/COLLECTION </td>
                     <td {$styleDatePCLast} colspan='2'> LAST PAYMENT/COLLECTION </td>
                     <td {$styleDatePC} colspan='2'> WEEK PAYMENT/COLLECTION </td>
+                    <td  >  </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)PREVIOUS </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)THIS WEEK </td>                   
-                    <td {$styleSoaDue} > BALANCE </td>
+                    
                     <td {$styleNull} ></td> 
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekOne,"d")."-".Utility::formatDateSINE($lastWeekOne,"d")."".Utility::formatDateSINE($lastWeekOne,"M")." </td>
                     <td {$styleSoaNext} colspan='2'> WEEK ".Utility::formatDateSINE($firstWeekTwo,"d")."-".Utility::formatDateSINE($lastWeekTwo,"d")."".Utility::formatDateSINE($lastWeekTwo,"M")." </td>
@@ -216,12 +236,13 @@ class summary extends Reportes
          /******************  EN SU MAYORIA SE ENCARGA DE ARMAR LOS MONTOS NEGATIVOS DE SOAS PARA EL HEAD INFERIOR   ********************/
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollect)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollect)."</td>
-                    <td {$styleBasicCenter} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollect)."</td>
+                    <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectHigher)."</td>
+                    <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectHigher)."</td>
+                    <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectHigher)."</td>
+                    <td  > </td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
-                    <td {$styleBasicCenterHigherDue} >".Yii::app()->format->format_decimal($balanceTotal)."</td>
+                    
                     <td {$styleNull}></td>
                     <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneHigher)."</td>
                     <td {$styleBasicCenterHigherNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoHigher)."</td>
@@ -233,10 +254,13 @@ class summary extends Reportes
          /************************     ENCARGA DE ARMAR LOS MONTOS POSITIVOS DE SOAS PARA EL HEAD INFERIOR     **************************/           
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
-                    <td {$styleNull} colspan='6'></td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectLess)."</td>
+                    <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectLess)."</td>
+                    <td  > </td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaPrevLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekLess)."</td>
-                    <td {$styleNull} colspan='2'></td>
+                    <td {$styleNull} ></td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeLess)."</td>
@@ -247,10 +271,13 @@ class summary extends Reportes
          /************************      ENCARGA DE ARMAR LOS MONTOS TOTALES DE SOAS PARA EL HEAD INFERIOR      **************************/             
          $body.="<tr>
                     <td {$styleNull} colspan='3'></td>
-                    <td {$styleNull} colspan='6'></td>
+                    <td {$styleDatePCPrev} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectHigher - ($PrevPaymentCollectLess*-1))."</td>
+                    <td {$styleDatePCLast} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectHigher - ($lastWeekPaymentCollectLess*-1))."</td>
+                    <td {$styleDatePC} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectHigher - ($thisPaymentCollectLess*-1))."</td>
+                    <td  > </td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevTotal)."</td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekTotal)."</td>
-                    <td {$styleNull} colspan='2'></td>
+                    <td {$styleNull} ></td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekOneTotal)."</td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekTwoTotal)."</td>
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekThreeTotal)."</td>

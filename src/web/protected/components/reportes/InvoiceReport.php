@@ -264,8 +264,7 @@ class InvoiceReport extends Reportes
                                    <td {$styleDateNull} colspan='12'>En este periodo no hay diferencias de mas de (1 $) o provisiones sin facturas</td>
                                </tr>";
                     }
-           /********************                OBTIENE UN MODELO CON LOS TOTALES PARA SUMMARY                ************************/            
-                    $totalSummary=self::getModel($periods["from"], $periods["to"],$typeReport,$paymentTerm,$dividedInvoice, TRUE, NULL);
+           
            /********************               ARMA LAS CASILLAS TOTAL PARA CADA CASO DE SUMMARY              ************************/       
                 $body.="<tr>
                             <td {$styleTotalTotal} colspan='12'>TOTALES</td>
@@ -301,19 +300,21 @@ class InvoiceReport extends Reportes
                             <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumAmountInvoiceHigher,3)."</td>
                             <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifMinHigher + $acumNoInvoiceDiffMinPrev,3)."</td>
                             <td {$styleSubTotal} colspan='2'>".Yii::app()->format->format_decimal($acumDifAmountHigher + $acumNoInvoiceDiffAmountPrev,3)."</td>
-                        </tr> 
-                        <tr>
+                        </tr>"; 
+              /********************                OBTIENE UN MODELO CON LOS TOTALES PARA SUMMARY                ************************/            
+                 $totalSummary=self::getModel($periods["from"], $periods["to"],$typeReport,$paymentTerm,$dividedInvoice, TRUE, NULL);            
+                 $body.="<tr>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->minutes,3)."</td>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->amount,3)."</td>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->fac_minutes,3)."</td>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->fac_amount,3)."</td>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->min_diference,3)."</td>
                             <td {$styleTotalTotal} colspan='2'>".Yii::app()->format->format_decimal($totalSummary->monto_diference,3)."</td>
-                        </tr>";
-                    
-                    
+                        </tr>"; 
                 }
+                $acumMinHigher=$acumAmountHigher=$acumMinInvoiceHigher=$acumAmountInvoiceHigher=$acumDifMinHigher=$acumDifAmountHigher=$acumNoInvoiceDiffMinPrev=$acumNoInvoiceDiffAmountPrev=0;
             }
+            
         }
         /********************                             LEYENDA DE COLORES                                ************************/      
         $body.="<tr>

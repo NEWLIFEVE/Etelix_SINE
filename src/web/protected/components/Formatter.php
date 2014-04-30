@@ -28,7 +28,7 @@ class Formatter extends CApplicationComponent
         }
         else
         {
-            return "0,00";
+            return "";
         }
     }
 
