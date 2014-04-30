@@ -42,7 +42,7 @@ class Recredi extends Reportes
         $body="<table>
                 <tr>
                     <td colspan='4'>
-                        <h1>RECREDI  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
+                        <h1>RECREDI  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h1>
                     </td>
                     <td colspan='8'>  AL {$date} </td>
                 <tr>
@@ -366,7 +366,7 @@ class Recredi extends Reportes
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$noActivity} tt";
+              ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
     

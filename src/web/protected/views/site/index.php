@@ -101,10 +101,10 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs periodo">
             <h3>Período</h3>
             <select name="id_periodo" id="id_periodo">
-            <option value="">Seleccione</option>
-            <option value="7">SEMANAL</option>
-            <option value="15">QUINCENAL</option>
-            <option value="30">MENSUAL</option>
+            <option value='todos'>Todos</option>
+            <option value="7">Semanal</option>
+            <option value="15">Quincenal</option>
+            <option value="30">Mensual</option>
             </select> 
         </div>
         <div class="formInputs type_termino_pago">
@@ -118,7 +118,7 @@ $this->pageTitle = Yii::app()->name;
         <div class="formInputs termino_pago">
             <h3 class="label_custom_supplier">Termino Pago</h3>
             <select name="id_termino_pago" id="id_termino_pago">
-                <option value="">Seleccione</option>
+                <!--<option value="">Seleccione</option>-->
             </select> 
         </div>
         <div class="formInputs summary_option">
