@@ -140,6 +140,9 @@ class summary extends Reportes
             $styleCollPaymPrev="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "style").";'";
             $styleCollPaymLast="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "style").";background:#DEECF7;'";
             $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "style").";'";
+            /***************************DEFINE ESTILOS LA COLUMNA ROWS MEDIANTE EL VALOR DEL SOA PROVISIONADO ***************************/
+            $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+            if(Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next)!="") $styleNumberRow=$styleSoaNext;
 
             $pos=$key+1;
             /***************************                    DEFINE ACUMULADOS PARA LOS PAGOS                  ***************************/
@@ -161,7 +164,7 @@ class summary extends Reportes
             $soaWeekTwoLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoLess);
             $soaWeekThreeLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeLess);
             $soaWeekFourLess=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, FALSE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourLess);
-            $soaProvisionedLess+=Reportes::defineLessOrHigher($document->soa_provisioned, FALSE);
+            $soaProvisionedLess+=Reportes::defineLessOrHigher( Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next), FALSE);
             /***************************                  DEFINE ACUMULADOS PARA SOAS POSITIVOS               ***************************/
             $soaPrevHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,"prev",$soaPrevHigher);
             $soaThisWeekHigher=Reportes::defineAcumsThisWeek(Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa, TRUE),$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekHigher),Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next, $date, $soaThisWeekHigher);
@@ -169,7 +172,7 @@ class summary extends Reportes
             $soaWeekTwoHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekTwo, $lastWeekTwo,NULL,$soaWeekTwoHigher);
             $soaWeekThreeHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeHigher);
             $soaWeekFourHigher=Reportes::defineAcums(Reportes::defineLessOrHigher($document->soa_next, TRUE),$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourHigher);
-            $soaProvisionedHigher+=Reportes::defineLessOrHigher($document->soa_provisioned, TRUE);
+            $soaProvisionedHigher+=Reportes::defineLessOrHigher( Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next), TRUE);
             /***************************                  DEFINE ACUMULADOS PARA SOAS TOTALES                 ***************************/
             $soaPrevTotal=Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,"prev",$soaPrevTotal);
             $soaThisWeekTotal=Reportes::defineAcumsThisWeek(Reportes::defineAcums($document->soa,$document->due_date,$date, NULL, NULL,NULL,$soaThisWeekTotal),$document->soa_next,$document->due_date_next, $date, $soaThisWeekTotal);
@@ -178,7 +181,7 @@ class summary extends Reportes
             $soaWeekThreeTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekThree, $lastWeekThree,NULL,$soaWeekThreeTotal);
             $soaWeekFourTotal=Reportes::defineAcums($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL,$soaWeekFourTotal);
             /***************************         DEFINE ACUMULADOS PARA SOAS PROVISIONADO Y BALANCE           ***************************/
-            $soaProvisionedTotal+=$document->soa_provisioned;
+            $soaProvisionedTotal+= Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next);
             $balanceTotal+=$document->balance;
             /******* DEFINE SOA ACTUAL (La particularidad de este caso es que debe determinar el THIS SOA es SOA DUE o SOA NEXT) ********/
             $soaThisWeek=Reportes::defineValueThisNext(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL),$document->soa_next,$document->due_date_next, $date);
@@ -210,7 +213,7 @@ class summary extends Reportes
                       <td {$styleBasicNumNextTwo} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL) )." </td>
                       <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
-                      <td {$styleBasicDateNextTwo} > ".Reportes::defineIncremental( $soaThisWeek,$document->soa_provisioned )." </td>
+                      <td {$styleBasicDateNextTwo} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next) )." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                     </tr>";               
         }

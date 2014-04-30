@@ -1174,12 +1174,29 @@ class Reportes extends CApplicationComponent
         public static function defineIncremental($resultDue, $resultNext)
         {
             if($resultNext!=""){
-                if($resultDue!=""&&$resultNext!="")
+                if($resultDue!="" && $resultNext!="")
                     return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
                 return Yii::app()->format->format_decimal($resultNext);
             }else{
                 return "";
             }
+        }
+        /**
+         * SE ENCARGA DE DEFINIR SI EL VALOR DEL SOA PROVISIONADO SE USARA O NO, EL TEDERMINANTE ES QUE EL VALOR SEA DIFERENTE AL SOA, SI SON IGUALES NO SE MOSTRARA
+         * @param type $soaProv
+         * @param type $soaDue
+         * @param type $soaNext
+         * @return string
+         */
+        public static function defineSoaProv($soaProv, $soaDue, $soaNext)
+        {
+            if($soaNext=="" || $soaNext==NULL)
+                return "";
+            
+            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext))
+                return "";
+            else
+               return $soaProv; 
         }
         /**
          * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD
