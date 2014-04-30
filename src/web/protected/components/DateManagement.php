@@ -95,7 +95,10 @@ class DateManagement
         $date=strtotime($date);
         return date('D',$date);
     }
-
+    
+    /**
+     *
+     */
     public static function getMonday($date)
     {
         $num=self::getDayNumberWeek($date);

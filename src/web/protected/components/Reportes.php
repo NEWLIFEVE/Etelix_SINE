@@ -1111,19 +1111,20 @@ class Reportes extends CApplicationComponent
         }
         /**
          * DEFINE COLOR Y SIGNO PARA DISTINGUIR PAGOS Y COBROS
-         * @param type $model
+         * @param type $val
+         * @param type $type
          * @param type $attr
          * @return string
          */
-        public static function definePaymCollect($model,$attr)
+        public static function definePaymCollect($val,$type,$attr)
         {
             if($attr=="value"){
-                if($model->type_c_p=="Pago")
-                    return "-".$model->last_pago_cobro;
+                if($type=="Pago")
+                    return "-".$val;
                 else 
-                    return $model->last_pago_cobro;
+                    return $val;
             }else{
-                if($model->type_c_p=="Pago")
+                if($type=="Pago")
                      return "red";
                  else 
                      return "#6F7074";

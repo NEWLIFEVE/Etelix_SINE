@@ -499,7 +499,7 @@ class SiteController extends Controller
         switch($_GET['tipo_report'])
             {
                 case 'summary':case 'recredi':
-                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*0.5;
+                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*0.7;
                     if($time <= 60)
                         $time= Yii::app()->format->format_decimal( $time )." Seg";
                     else
