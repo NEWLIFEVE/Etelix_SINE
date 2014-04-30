@@ -8,8 +8,12 @@ class Recredi extends Reportes
 {
     /**
      * Encargada de armar el html del reporte
+     * @param type $date
+     * @param type $intercompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
      * @return string
-     * @access public
      */
     public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {

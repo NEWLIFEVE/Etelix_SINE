@@ -131,21 +131,21 @@ class Reportes extends CApplicationComponent
      */
     public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms)
     {
-        $var="";
-        if($paymentTerms=="todos") {
-            $paymentTerms= TerminoPago::getModel();
-            
-            foreach ($paymentTerms as $key => $paymentTerm) 
-            {
-               if($paymentTerm->name!="Sin estatus")
-                  $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
-            }
-        }else{
-            $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
-        }    
-        return $var;
-        
-//        return $var->report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+//        $var="";
+//        if($paymentTerms=="todos") {
+//            $paymentTerms= TerminoPago::getModel();
+//            
+//            foreach ($paymentTerms as $key => $paymentTerm) 
+//            {
+//               if($paymentTerm->name!="Sin estatus")
+//                  $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
+//            }
+//        }else{
+//            $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
+//        }    
+//        return $var;
+//        
+        return Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
