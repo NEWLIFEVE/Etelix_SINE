@@ -170,17 +170,11 @@ class DateManagement
      */
     public static function getFirstDayPeriod($date,$num)
     {
-        for ($i=1; $i<=7 ; $i++) 
-        { 
-            if($num==1)
-            {
-                $num=7;
-            }
-            else
-            {
-                $date=self::calculateDate('-1',$date);
-                $num-=1;
-            }
+        $day=self::getDayNumberWeek($date);
+        while($num!=$day)
+        {
+            $date=self::calculateDate('-1',$date);
+            $day=self::getDayNumberWeek($date);
         }
         return $date;
     }
