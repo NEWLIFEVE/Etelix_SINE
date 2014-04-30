@@ -16,6 +16,7 @@ class Recredi extends Reportes
         var_dump($paymentTerm);
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
         ini_set('max_execution_time', 1500);    
+        
         if($date==null) $date=date('Y-m-d');
         $documents= self::_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
         $balances_3=self::_getBalances(DateManagement::calculateDate('-3',$date));
