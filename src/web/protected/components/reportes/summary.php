@@ -213,7 +213,7 @@ class summary extends Reportes
                       <td {$styleBasicNumNextTwo} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL) )." </td>
                       <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
-                      <td {$styleBasicDateNextTwo} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next) )." </td>
+                      <td {$styleBasicDateNextTwo} > ".Reportes::defineIncremental( $document->soa_next, Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next) )." </td>
                       <td {$styleNumberRow} >{$pos}</td>
                     </tr>";               
         }
