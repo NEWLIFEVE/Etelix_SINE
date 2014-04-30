@@ -17,6 +17,8 @@ class InvoiceReport extends Reportes
      */
     public static function reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum)
     {
+        /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
+        ini_set('max_execution_time', 1500);
         /*********************                                  ESTILOS BASICOS                                **********************/
         $styleDescription="style='border:0px solid white;text-align:left;background:#fff;color:#06ACFA;'";
         $styleNumberRow=$styleTotalTotal="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
@@ -56,13 +58,11 @@ class InvoiceReport extends Reportes
         /*********************      EXTRACCION DE PROVISIONES, FACTURAS Y DIFERENCIAS DESDE BASE DE DATOS     **********************/
         $documents=self::getModel($fromDate, $toDate,$typeReport,$paymentTerm,$dividedInvoice, NULL, NULL);
         
-        $seg=count($documents)*3;
-            ini_set('max_execution_time', $seg);
         /*********************                      NOMBRE COMPLEMENTARIO PARA LOS PERIODOS                   **********************/ 
         
         if($dividedInvoice!=NULL) 
             $complementName="(". TerminoPago::getModelFind($paymentTerm)->name. ")";
-        ELSE
+        else
             $complementName=Reportes::define_num_dias($fromDate,$toDate);
         
         /*********************                                   INICIO DE LA TABLA                           **********************/ 
