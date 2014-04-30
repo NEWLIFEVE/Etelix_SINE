@@ -8,20 +8,24 @@ class Recredi extends Reportes
 {
     /**
      * Encargada de armar el html del reporte
+     * @param type $date
+     * @param type $intercompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
      * @return string
-     * @access public
      */
-    public function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
+    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
-        $carrierGroups=CarrierGroups::getAllGroups();
-            $seg=count($carrierGroups)*3;
-            ini_set('max_execution_time', $seg);
-            
+        var_dump($paymentTerm);
+        /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
+        ini_set('max_execution_time', 1500);    
+        
         if($date==null) $date=date('Y-m-d');
-        $documents=$this->_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
-        $balances_3=$this->_getBalances(DateManagement::calculateDate('-3',$date));
-        $balances_2=$this->_getBalances(DateManagement::calculateDate('-2',$date));
-        $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
+        $documents= self::_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
+        $balances_3=self::_getBalances(DateManagement::calculateDate('-3',$date));
+        $balances_2=self::_getBalances(DateManagement::calculateDate('-2',$date));
+        $balances_1=self::_getBalances(DateManagement::calculateDate('-1',$date));
 
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
         $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
@@ -175,15 +179,15 @@ class Recredi extends Reportes
                     <td {$style_basic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($balance)."</td>
                         
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_3)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_3)."</td>
-                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_3)."</td>
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_2)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_2)."</td>
-                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_2)."</td>
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_1)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_1)."</td>
-                    <td {$style_basic_margin} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_1)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_1)."</td>
+                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
                 </tr>";        
         
 //        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
@@ -200,7 +204,7 @@ class Recredi extends Reportes
      * @since 2.0
      * @access private
      */
-    private function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+    private static function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
     {
         if($intercompany)           $intercompany="";
         elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
@@ -381,7 +385,7 @@ class Recredi extends Reportes
      * @param date $date
      * @return array
      */
-    private function _getBalances($date)
+    private static function _getBalances($date)
     {
         $sql="SELECT c.id_carrier_groups AS id, SUM(b.revenue) as revenue, SUM(b.cost) AS cost, SUM(b.revenue-b.cost) AS margin
               FROM (SELECT id_carrier_customer AS id, CASE WHEN ABS(SUM(revenue))>ABS(SUM(cost+margin)) THEN SUM(cost+margin) ELSE SUM(revenue) END AS revenue, CAST(0 AS double precision) AS cost

@@ -487,7 +487,7 @@ class SiteController extends Controller
             echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
     }
     /**
-     * 
+     * Calcula tiempo de espera para generar los reportes, recibe los mismos parametros que se le pasan al componente para generar reportes.
      * @return string
      */
     public function actionCalcTimeReport()
@@ -507,8 +507,7 @@ class SiteController extends Controller
                     if($_GET['id_termino_pago']=="todos")
                         $period=13;
                     if($this->trueFalse($_GET['Si_sum'])==TRUE){
-                        $daysDiff= DateManagement::howManyDaysBetween("2013-09-30",$_GET['datepicker'])/7;
-                        $time=$daysDiff * $period;
+                        $time=( DateManagement::howManyDaysBetween("2013-09-30",$_GET['datepicker'])/7 ) * $period;
                         if($time <= 60)
                             $time= Yii::app()->format->format_decimal( $time )." Seg";
                         else

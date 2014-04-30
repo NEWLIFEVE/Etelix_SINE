@@ -88,7 +88,9 @@ class Reportes extends CApplicationComponent
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $date
+     * Ahora verifica si se esta pidiendo un reporte general de todos los termino pago, si se quiere el summary y dependiendo de eso puede sacar todo de una vez
+     * para ello, se genera un array de termino pago y por medio del foreach se va extrayendo cada periodo con o sin summary.
+     * * @param type $date
      * @param type $typeReport
      * @param type $paymentTerms
      * @param type $dividedInvoice
@@ -127,10 +129,23 @@ class Reportes extends CApplicationComponent
      * @param type $tipo_report
      * @return type   
      */
-    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
+    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms)
     {
-        $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+//        $var="";
+//        if($paymentTerms=="todos") {
+//            $paymentTerms= TerminoPago::getModel();
+//            
+//            foreach ($paymentTerms as $key => $paymentTerm) 
+//            {
+//               if($paymentTerm->name!="Sin estatus")
+//                  $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
+//            }
+//        }else{
+//            $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
+//        }    
+//        return $var;
+//        
+        return Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)

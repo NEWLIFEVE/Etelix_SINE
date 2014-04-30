@@ -14,9 +14,7 @@ class summary extends Reportes
     public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
-        $carrierGroups=CarrierGroups::getAllGroups();
-            $seg=count($carrierGroups)*3;
-            ini_set('max_execution_time', $seg);
+        ini_set('max_execution_time', 1500);
         /***************************                      SECCION DE ESTILOS GENERALES                       ***************************/
         $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
         $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
@@ -214,6 +212,7 @@ class summary extends Reportes
                       <td {$styleBasicDateNextTwo} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date_next,$document->due_date_next,$date, $firstWeekFour, $lastWeekFour,NULL),"Y-m-d")." </td>
                       <td {$styleBasicDateNext} > ".$dueDaysNext." </td>
                       <td {$styleBasicDateNextTwo} > ".Reportes::defineIncremental( $document->soa_next, Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next) )." </td>
+
                       <td {$styleNumberRow} >{$pos}</td>
                     </tr>";               
         }
