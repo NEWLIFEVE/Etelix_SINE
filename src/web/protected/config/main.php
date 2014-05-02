@@ -10,6 +10,7 @@ return array(
     'name'=>'SINE',
     'language'=>'es',
     'timeZone'=>'America/Caracas',
+    'charset'=>'utf-8',
     // preloading 'log' component
     'theme' => 'metroui',
     'preload'=>array('log','bootstrap'),
@@ -20,21 +21,7 @@ return array(
         'application.components.reportes.*',
         'application.components.phpexcel.*',
     ),
-    'modules'=>array(
-        // uncomment the following to enable the Gii tool
-        'gii'=>array(
-            'class'=>'system.gii.GiiModule',
-			'password'=>'123',
-            // If removed, Gii defaults to localhost only. Edit carefully to taste.
-			'ipFilters'=>array(
-                '127.0.0.1',
-                '::1'
-                ),
-            'generatorPaths'=>array(
-                'bootstrap.gii',
-                ),
-            ),
-        ),
+    'modules'=>array(),
     // application components
     'components'=>array(
         'reportes'=>array(
@@ -73,9 +60,8 @@ return array(
             'class'=>'CLogRouter',
             'routes'=>array(
                 array(
-                    'class'=>'CFileLogRoute',
-                    'levels'=>'error, warning',
-                    ),
+                    'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                ),
                 // uncomment the following to show log messages on web pages
                 /*
                 array(
