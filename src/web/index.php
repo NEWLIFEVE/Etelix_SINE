@@ -1,5 +1,6 @@
 <?php
-date_default_timezone_set('America/Caracas');
+$yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
+require_once($yii);
 //Definimos nuestro servidor de produccion
 define('SERVER_NAME_PROD','sine.sacet.com.ve');
 //Definimos nuestro servidor de preproduccion
@@ -8,11 +9,6 @@ define('SERVER_NAME_PRE_PROD','devsine.sacet.com.ve');
 define('SERVER_NAME_DEV','sine.local');
 //Obtenemos el nombre del servidor actual
 $server=$_SERVER['SERVER_NAME'];
-//Obtenemos el nombre del servidor actual
-$server=$_SERVER['SERVER_NAME'];
-
-$yii='../../../yii/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/main.php';
 
 switch ($server)
 {
@@ -31,7 +27,11 @@ switch ($server)
 		break;
 }
 
-require_once($yii);
+$main=require(dirname(__FILE__).'/protected/config/main.php');
+$db=require(dirname(__FILE__).'/protected/config/db.php');
+
+$config=CMap::mergeArray($main,$db);
+
 Yii::createWebApplication($config)->run();
 
 

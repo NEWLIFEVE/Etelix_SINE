@@ -1,34 +1,4 @@
 <?php
-//Obtenemos el nombre del servidor actual
-$server=$_SERVER['SERVER_NAME'];
-switch ($server)
-{
-    case SERVER_NAME_PROD:
-        $server_db='localhost';
-        $sine_db='sori';
-        $user_db='postgres';
-        $pass_db='Nsusfd8263';
-        break;
-    case SERVER_NAME_PRE_PROD:
-        $server_db='localhost';
-        $sine_db='dev_sori';
-        $user_db='postgres';
-        $pass_db='Nsusfd8263';
-        break;
-    case SERVER_NAME_DEV:
-    default:
-        $server_db='67.215.160.89';
-        $sine_db='sori';
-        $user_db='postgres';
-        $pass_db='Nsusfd8263';
-//       $server_db='172.16.17.190';
-//       $sine_db='sori';
-//       $user_db='postgres';
-//       $pass_db='123';
-
-       break;
-
-}
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // 
@@ -39,6 +9,7 @@ return array(
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
     'name'=>'SINE',
     'language'=>'es',
+    'timeZone'=>'America/Caracas',
     // preloading 'log' component
     'theme' => 'metroui',
     'preload'=>array('log','bootstrap'),
@@ -94,13 +65,6 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-        'db'=>array(
-            'connectionString'=>'pgsql:host='.$server_db.';port=5432;dbname='.$sine_db,
-            'emulatePrepare'=>true,
-            'username'=>$user_db,
-            'password'=>$pass_db,
-            'charset'=>'utf8',
-            ),
         'errorHandler'=>array(
             // use 'site/error' action to display errors
             'errorAction'=>'site/error',

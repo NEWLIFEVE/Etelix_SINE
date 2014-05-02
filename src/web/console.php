@@ -1,5 +1,6 @@
 <?php
-date_default_timezone_set('America/Caracas');
+$yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
+require_once($yii);
 //Definimos nuestro servidor de produccion
 define('SERVER_NAME_PROD','s1248-101');
 //Definimos el directorio de desarrollo
@@ -28,8 +29,9 @@ else
 	defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 }
 
-$yii=dirname(__FILE__).'/../../../yii/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/console.php';
+$main=require(dirname(__FILE__).'/protected/config/console.php');
+$db=require(dirname(__FILE__).'/protected/config/db.php');
 
-require_once($yii);
+$config=CMap::mergeArray($main,$db);
+
 Yii::createConsoleApplication($config)->run();
