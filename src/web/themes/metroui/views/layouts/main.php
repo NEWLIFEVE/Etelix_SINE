@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="<?php echo Yii::app()->language;?>">
     <head>
-        <!--<title><?php echo CHtml::encode($this->pageTitle); ?></title>-->
-
-        <title>SINE</title>
+        <title><?php echo CHtml::encode($this->pageTitle); ?></title>
         <meta charset="<?php echo Yii::app()->charset;?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->baseUrl; ?>/css/bootstrap.min.css" />
