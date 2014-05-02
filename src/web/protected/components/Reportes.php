@@ -11,52 +11,69 @@ class Reportes extends CApplicationComponent
 
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
-     * @param type $grupo
-     * @param type $fecha
-     * @param type $no_disp
+     * @param type $group
+     * @param type $date
+     * @param type $noDisp
      * @param type $provision
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$provision)
+    public function SOA($group,$date,$noDisp,$provision)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$provision);
+        $var=SOA::reporte($group,$date,$noDisp,$provision);
         return $var;
     }
     /**
      * 
      * @param type $date
-     * @param type $intercompany
-     * @param type $no_activity
+     * @param type $interCompany
+     * @param type $noActivity
      * @param type $PaymentTerm
      * @return type
      */
-    public function summary($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
+    public function summary($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-        $var=summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+//        $var="";
+//        if($paymentTerms=="todos") {
+//            $paymentTerms= TerminoPago::getModel();
+//            
+//            foreach ($paymentTerms as $key => $paymentTerm) 
+//            {
+//               if($paymentTerm->name!="Sin estatus")
+//                  $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
+//            }
+//        }else{
+//            $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
+//        }    
+//        return $var;
+        $var=summary::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
         return $var;
     }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
-     * @param type $grupo
-     * @param type $fecha
-     * @param type $no_disp
+     * @param type $group
+     * @param type $date
+     * @param type $noDisp
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_disp)
+    public function balance_report($group,$date,$noDisp)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_disp);
+        $var=balance_report::reporte($group,$date,$noDisp);
         return $var;
     }
-
+    /**
+     * 
+     * @param type $carActived
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
+     * @return type
+     */
     public function reteco($carActived,$typePaymentTerm,$paymentTerm)
     {
         $var=reteco::report($carActived,$typePaymentTerm,$paymentTerm);
         return $var;
     }
-    
-
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
@@ -118,34 +135,20 @@ class Reportes extends CApplicationComponent
             $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerms,$dividedInvoice,$sum);
         }    
         return $var;
-//        
-//        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
-//        return $var;
     }
 
     /**
-     * @param type $fecha_from
-     * @param type $fecha_to
-     * @param type $tipo_report
-     * @return type   
+     * 
+     * @param type $date
+     * @param type $interCompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerms
+     * @return type
      */
-    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms)
+    public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-//        $var="";
-//        if($paymentTerms=="todos") {
-//            $paymentTerms= TerminoPago::getModel();
-//            
-//            foreach ($paymentTerms as $key => $paymentTerm) 
-//            {
-//               if($paymentTerm->name!="Sin estatus")
-//                  $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
-//            }
-//        }else{
-//            $var.= Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
-//        }    
-//        return $var;
-//        
-        return Recredi:: report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
+        return Recredi::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)

@@ -14,6 +14,7 @@ class summary extends Reportes
     public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
+//        ini_set('max_execution_time', 1500);
         ini_set('max_execution_time', 1500);
         /***************************                      SECCION DE ESTILOS GENERALES                       ***************************/
         $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";

@@ -2,6 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
+    - Recredi: ahora las consultas de recredi general viene desglosada por termino pago, de igual manera si se selecciona customer o supplier con todos los termino pago.
+    - Pendiente mostrar el resumen general de totales al momento de generar un recredi general.
     - Se elimino columna "BALANCE" en summary.
     - Se agregaron los titulos superiores que segmentan el reporte en pagos/cobros y SOAs.
     - Se coloco un filtro que solo muestra los soas provisionado, si este es diferentes a los soas, a su vez, si se muestra el soa provisionado se pinta la fila "num de rows" de verde para indicarlo.

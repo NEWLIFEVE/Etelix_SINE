@@ -17,7 +17,7 @@ class InvoiceReport extends Reportes
      */
     public static function reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum)
     {
-        /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
+        /********************* AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS  **********************/
         ini_set('max_execution_time', 1500);
         /*********************                                  ESTILOS BASICOS                                **********************/
         $styleDescription="style='border:0px solid white;text-align:left;background:#fff;color:#06ACFA;'";
@@ -166,8 +166,8 @@ class InvoiceReport extends Reportes
                <tr>
                    <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMin,3)."</td>
                    <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmount,3)."</td>
-                   <td {$styleNoInvoice} colspan='2'> 0,00 </td>
-                   <td {$styleNoInvoice} colspan='2'> 0,00 </td>
+                   <td {$styleNoInvoice} colspan='2'>  </td>
+                   <td {$styleNoInvoice} colspan='2'>  </td>
                    <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffMin,3)."</td>
                    <td {$styleNoInvoice} colspan='2'>".Yii::app()->format->format_decimal($acumNoInvoiceDiffAmount,3)."</td>
                </tr> 
