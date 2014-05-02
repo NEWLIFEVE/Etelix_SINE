@@ -198,7 +198,7 @@ class InvoiceReport extends Reportes
                 
             if(count($backPeriods)>1)
                 $body.="<tr>
-                           <td colspan='12'><h2>SUMMARY {$typeReport}</h2></td>
+                           <td colspan='12'><h2>SUMMARY {$typeReport} {$complementName}</h2></td>
                        </tr>";
             foreach ($backPeriods as $key => $periods) 
             {

@@ -85,7 +85,7 @@ $this->pageTitle = Yii::app()->name;
                 <h3>Mostrar Operadores</h3>
                 <select name="id_filter_oper" id="id_filter_oper">
                     <option value="">Seleccione</option>
-                    <option value="0">TODOS</option>
+                    <option value="0">Todos</option>
                     <option value="1">+2000$</option>
                     <option value="2">-2000$</option>
                 </select>
@@ -101,10 +101,10 @@ $this->pageTitle = Yii::app()->name;
             <div class="formInputs periodo">
                 <h3>Período</h3>
                 <select name="id_periodo" id="id_periodo">
-                    <option value="">Seleccione</option>
-                    <option value="7">SEMANAL</option>
-                    <option value="15">QUINCENAL</option>
-                    <option value="30">MENSUAL</option>
+                    <option value='todos'>Todos</option>
+                    <option value="7">Semanal</option>
+                    <option value="15">Quincenal</option>
+                    <option value="30">Mensual</option>
                 </select>
             </div>
             <div class="formInputs type_termino_pago">
