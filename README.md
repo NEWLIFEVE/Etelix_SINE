@@ -3,6 +3,21 @@
 
 Sistema de Reportes para Billing
 
+Release 1.2.12
+    - Recredi: ahora las consultas de recredi general viene desglosada por termino pago, de igual manera si se selecciona customer o supplier con todos los termino pago.
+    - Pendiente mostrar el resumen general de totales al momento de generar un recredi general.
+    - Se elimino columna "BALANCE" en summary.
+    - Se agregaron los titulos superiores que segmentan el reporte en pagos/cobros y SOAs.
+    - Se coloco un filtro que solo muestra los soas provisionado, si este es diferentes a los soas, a su vez, si se muestra el soa provisionado se pinta la fila "num de rows" de verde para indicarlo.
+    - Se implemento el desglose pot totales de pagos y cobros, y ahora al final de cada columna de pagos y cobros se muestra totales cobros, totales pagos y la diferencia.
+    - En refac se agrego la opcion "todos" por default en el select de periodos, si se mantiene esta opcion, el reporte traera de una vez los refac con periodos semanales, quincenales y mensuales.
+    - En reprov se agrego la opcion "todos" por default en el select de termino pago, si se mantiene asi traera los reprov de cada uno de los termino pago.
+    - Ahora el refac puede traer todos los periodos y el reprov todos los termino pago con sus respectivos summary si asi se decide.
+    - Se modifico el segmento de totales para las tablas, ahora muestra un desglose de diferencias de mas de un dolar, provisiones sin facturas, la suma entre estas y el total neto que ya se conoce. 
+    - Se agrego una pequeña tabla de leyenda de colores para especificar que significa cada uno de los colores variantes dentro del reporte.
+    - Se agrego indicador de tiempo para el reprov que hasta los momentos tarda un poco mas que el refac.
+    - Se coloco columna en blanco para diferenciar segmento pagos/cobros del segmento SOAs.
+
 Release 1.2.11
     - Se agrego nuevas columnas en summary donde se desgloza los ultimos pagos y cobros realizados en tres variantes, (PREVIOUS WEEK, LAST WEEK y THIS WEEK)
     - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.

@@ -8,20 +8,23 @@ class Recredi extends Reportes
 {
     /**
      * Encargada de armar el html del reporte
+     * @param type $date
+     * @param type $intercompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
      * @return string
-     * @access public
      */
-    public function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
+    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
-        $carrierGroups=CarrierGroups::getAllGroups();
-            $seg=count($carrierGroups)*3;
-            ini_set('max_execution_time', $seg);
-            
+        /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
+        ini_set('max_execution_time', 500);
+
         if($date==null) $date=date('Y-m-d');
-        $documents=$this->_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
-        $balances_3=$this->_getBalances(DateManagement::calculateDate('-3',$date));
-        $balances_2=$this->_getBalances(DateManagement::calculateDate('-2',$date));
-        $balances_1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
+        $documents= self::_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
+        $balances_3=self::_getBalances(DateManagement::calculateDate('-3',$date));
+        $balances_2=self::_getBalances(DateManagement::calculateDate('-2',$date));
+        $balances_1=self::_getBalances(DateManagement::calculateDate('-1',$date));
 
         $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
         $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
@@ -38,33 +41,30 @@ class Recredi extends Reportes
         $style_cost_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
         $style_revenue_head="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
         $style_margin_head="style='border:1px solid silver;background:#049C47;text-align:center;color:white;'";
+        $style_null="style='border:1px solid white;'";
 
         $body="<table>
                 <tr>
                     <td colspan='4'>
-                        <h1>RECREDI  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm)."</h1>
+                        <h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h2>
                     </td>
-                    <td colspan='8'>  AL {$date} </td>
+                    <td colspan='8'>  al
+                    {$date} </td>
                 <tr>
                     <td colspan='10'></td>
                 </tr>
                </table>
                <table {$style_basic} >
                 <tr>
-                    <td {$style_number_row} ></td>
-                    <td {$style_carrier_head} ></td>
-                    <td {$style_soa_head} ></td>
-                    <td {$style_soa_head} ></td>
-                    <td {$style_soa_head} ></td>
-                    <td {$style_soa_head} ></td>
+                    <td {$style_null} colspan='6'></td>
                     <td {$style_prov_fact_head} colspan='2'> PROVISION FACT </td>
                     <td {$style_prov_traf_head} colspan='2'> PROVISION TRAFICO </td>
                     <td {$style_prov_disp_head} colspan='2'> DISPUTAS </td>
-                    <td {$style_balance_head} ></td>
+                    <td {$style_null} ></td>
                     <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-3',$date)."</td>
                     <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-2',$date)."</td>
                     <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-1',$date)."</td>
-                    <td {$style_number_row} ></td>
+                    <td {$style_null} ></td>
                 </tr>
                 <tr>
                     <td {$style_number_row} >N°</td>
@@ -175,16 +175,17 @@ class Recredi extends Reportes
                     <td {$style_basic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
                     <td {$style_basic} >".Yii::app()->format->format_decimal($balance)."</td>
                         
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_3)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_3)."</td>
-                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_3)."</td>
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_2)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_2)."</td>
-                    <td {$style_basic_margin} >".Yii::app()->format->format_decimal($margin_2)."</td>
-                    <td {$style_basic_revenue} >".Yii::app()->format->format_decimal($revenue_1)."</td>
-                    <td {$style_basic_cost} >".Yii::app()->format->format_decimal($cost_1)."</td>
-                    <td {$style_basic_margin} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
-                </tr>";        
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_3)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_2)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_1)."</td>
+                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_1)."</td>
+                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
+                </tr>
+         </table>";        
         
 //        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
 
@@ -192,15 +193,20 @@ class Recredi extends Reportes
           else  $body."";
         return $body;
     }
-    
+
     /**
-     * Encargada de traer la data
-     * @param date $date,$intercompany=TRUE,$noActivity=TRUE,$paymentTerm
-     * @return array
+     * Encargada de traer data para los listados y para el total total con el atributo $totals=TRUE
+     * @param type $date
+     * @param type $intercompany=TRUE
+     * @param type $noActivity=TRUE
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
+     * @param type $totals=NULL
+     * @return type
      * @since 2.0
      * @access private
      */
-    private function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+    private static function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
     {
         if($intercompany)           $intercompany="";
         elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
@@ -235,7 +241,7 @@ class Recredi extends Reportes
                                AND ctps.end_date IS NULL
                                AND tp.id IN({$filterPaymentTerm})";
         }
-    //El id del grupo
+
         $sqlExpirationCustomer="SELECT tp.expiration
                                 FROM carrier c, 
                                      (SELECT id, sign_date, production_date, CASE WHEN end_date IS NULL THEN current_date ELSE end_date END AS end_date, id_carrier, id_company, up, bank_fee
@@ -280,14 +286,13 @@ class Recredi extends Reportes
                           WHERE id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_type_accounting_document=2 ) d
                             ";/* esto es lo que continua en el caso de due_date= WHERE d.date<='{$date}')*/    
                          
-        $sql="/*filtro el due_date null*/ 
-              SELECT * FROM 
-                 (SELECT DISTINCT cg.id AS id,
-                     /*El Nombre del grupo*/ 
-                     cg.name AS name,
-                     /*segmento para soas y due_dates*/
+        $sql="SELECT * 
+              FROM  (SELECT 
+                     DISTINCT cg.id AS id, 
+                     cg.name AS name, 
+                     /*la variable select completa el select principal, en su estado natural trae todos los parametros y en el interno comienza con el id y nombre de grupo para los totales el select principal extrae la suma de cada valor y no extrae los datos basicos de grupo*/
+               /*-----------------------------------------------------------------------------------------------------------*/  
                      /*El monto del soa*/ 
-
                      (SELECT (i.amount+e.amount+p.amount-n.amount-r.amount) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND 
@@ -308,48 +313,54 @@ class Recredi extends Reportes
                                               WHEN ({$sqlExpirationSupplier}) IS NULL THEN CAST(valid_received_date + interval '7 days' AS date) END<='{$date}') r,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}') n) AS soa, 
-                   
+              /*-----------------------------------------------------------------------------------------------------------*/     
                     /*el due date del soa*/
                    
                            {$due_date} WHERE d.date<='{$date}') AS due_date,
-                               
+              /*-----------------------------------------------------------------------------------------------------------*/                   
                     /*el soa next*/
 
                      (SELECT (i.amount+(p.amount-n.amount)) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) p,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) ) n) AS soa_next, 
-                   
+              /*-----------------------------------------------------------------------------------------------------------*/       
                     /*el due date del soa next*/
 
                            {$due_date}) AS due_date_next,
-                               
+              /*-----------------------------------------------------------------------------------------------------------*/                   
                     /*fin segmento para soas y due_dates*/
-                    
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Traigo provisiones de facturas enviadas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_invoice_sent,
+              /*-----------------------------------------------------------------------------------------------------------*/  
                     /*Traigo provisiones de facturas recibidas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Factura Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_invoice_received,
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Traigo provisiones de trafico enviada*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_traffic_sent,
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Traigo provisiones de trafico recibida*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Provision Trafico Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) AS provision_traffic_received,
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Traigo las disputas recibidas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Disputa Recibida') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL)) AS received_dispute,
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Traigo las disputas recibidas*/
                      (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount
                       FROM accounting_document
                       WHERE id_type_accounting_document=(SELECT id FROM type_accounting_document WHERE name='Disputa Enviada') AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL)) AS sent_dispute,
+              /*-----------------------------------------------------------------------------------------------------------*/        
                     /*Balance*/
                      (SELECT (i.amount + p.amount + pp.amount + dp.amount - n.amount - dn.amount - pn.amount) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
@@ -366,7 +377,7 @@ class Recredi extends Reportes
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
                     {$intercompany}  
-              ORDER BY cg.name ASC)activity {$noActivity} tt";
+              ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
     
@@ -376,7 +387,7 @@ class Recredi extends Reportes
      * @param date $date
      * @return array
      */
-    private function _getBalances($date)
+    private static function _getBalances($date)
     {
         $sql="SELECT c.id_carrier_groups AS id, SUM(b.revenue) as revenue, SUM(b.cost) AS cost, SUM(b.revenue-b.cost) AS margin
               FROM (SELECT id_carrier_customer AS id, CASE WHEN ABS(SUM(revenue))>ABS(SUM(cost+margin)) THEN SUM(cost+margin) ELSE SUM(revenue) END AS revenue, CAST(0 AS double precision) AS cost
@@ -405,6 +416,48 @@ class Recredi extends Reportes
             }
         }
         return "0.00";
+    }
+    /**
+     * Metodo encargado de determinar el tipo de reporte exacto y de ahi  pasar los parametros necesarios, hay varios casos:
+     * 1- Ambos tipos de relacion comercial con todos los termino pago, en este caso se ejecuta dos foreach , uno consecutivo del otro buscando data de todos los termino pago como customer y supplier sucesivamente.
+     * 2- Relacion comercial supplier o customer, donde selecciona todos los termino pago, se ejecuta un foreach buscando data en esa relacion y todos los terminos pago correspondientes.
+     * 3- Un solo tipo de relacion comercial y un solo termino pago, ahi la busqueda es directa.
+     * @param type $date
+     * @param type $interCompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerms
+     * @return type
+     */
+    public static function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    {
+        ini_set('max_execution_time', 1500);
+        $var="";
+        if($paymentTerms=="todos") {
+            $paymentTerms= TerminoPago::getModel();
+            
+            if($typePaymentTerm===NULL){/*Este caso es si se selecciono traer ambos tipos de relacion comercial*/
+                $var.="<h1 style='color:#06ACFA!important;'>RECREDI CUSTOMER</h1> <br>";
+                foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion customer*/
+                {
+                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,FALSE,$paymentTerm->id);
+                }
+                $var.="<br> <h1 style='color:#06ACFA!important;'>RECREDI SUPPLIER</h1> <br>";
+                foreach ($paymentTerms as $key => $paymentTerm) /*Concatena al customer y busca todos los termino pago en la relacion supplier*/
+                {
+                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id);
+                }
+            }else{
+                $var.="<h1>RECREDI</h1>";
+                foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
+                {
+                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id);
+                }
+            }
+        }else{/*Busca data para el termino pago y tipo de relacion comercial en especifico seleccionados*/
+            $var.="<h1>RECREDI</h1>".  Recredi:: report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        }    
+        return $var;
     }
 }
 ?>

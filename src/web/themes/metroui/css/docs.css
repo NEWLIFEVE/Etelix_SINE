@@ -539,7 +539,7 @@ li.ui-menu-item a
 }
 .fondo_negro
 {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.5);
     content: "";
     height: 100%;
     position: fixed;
@@ -551,7 +551,7 @@ li.ui-menu-item a
 }
 .emergingBackground
 {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.5);
     content: "";
     height: 100%;
     position: fixed;
@@ -565,7 +565,7 @@ li.ui-menu-item a
 
 .views_not
 {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.5);
     content: "";
     position: fixed;
     text-align: center;

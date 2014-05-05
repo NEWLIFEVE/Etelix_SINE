@@ -195,7 +195,7 @@ $SINE.UI=(function()
      */
     function adminTp(obj)
     {
-        if($(obj).val()=="1"||$(obj).val()=="3"||$(obj).val()=="4"||$(obj).val()=="5")
+        if($(obj).val()=="1"||$(obj).val()=="3"||$(obj).val()=="4"||$(obj).val()=="5"||$(obj).val()=="todos")
             $(".divide_factura").show("fast");
         else
             $(".divide_factura").hide("fast");
@@ -234,16 +234,13 @@ $SINE.UI=(function()
                   $(".termino_pago_sum_re,.termino_pago_refac_reprov").addClass("termino_pago");$(".termino_pago").removeClass("termino_pago_sum_re termino_pago_refac_reprov");
               break; 
             case "refac":
-//                var mostrar =['.fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro']; 
                 var mostrar =['.fecha,.periodo,.note_ref_pro,.summary_option']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-//                  $(".label_custom_supplier").html("Termino Pago");
-//                  $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
               break;
             case "refi_prov":
-                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,.summary_option,#id_termino_pago option[value='']"]; 
+                var mostrar =[".fecha,.termino_pago_sum_re,.termino_pago,.termino_pago_refac_reprov,.note_ref_pro,.summary_option,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
-                  $("#id_termino_pago").val("");
+                  $("#id_termino_pago").val("todos");
                   $(".label_custom_supplier").html("Termino Pago");
                   $(".termino_pago_sum_re,.termino_pago").addClass("termino_pago_refac_reprov");$(".termino_pago_refac_reprov").removeClass("termino_pago_sum_re termino_pago");
               break;
@@ -454,7 +451,7 @@ $SINE.UI=(function()
     function msjConfirm(body)
     {
         $(".fondo_negro, .mensaje").remove();
-        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body+"Si esta de acuerdo, presione Aceptar, de lo contrario Cancelar<div class='confirmButtons'><div id='cancel'class='cancel'>Cancelar</div>&nbsp;<div id='confirm'class='confirm'>Aceptar</div></div></div></div>").hide(); 
+        var msj=$("<div class='fondo_negro'></div><div class='mensaje'>"+body+"Si esta de acuerdo, presione Aceptar, de lo contrario Cancelar<div class='confirmButtons'><div id='cancel'class='cancel'>Cancelar</div>&nbsp;<div id='confirm'class='confirm'>Aceptar</div></div></div>").hide(); 
         $("body").append(msj);  msj.fadeIn('slow');
     }
     /**

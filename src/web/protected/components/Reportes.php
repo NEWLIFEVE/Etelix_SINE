@@ -11,52 +11,69 @@ class Reportes extends CApplicationComponent
 
     /**
      * busca el reporte en componente "SOA" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
-     * @param type $grupo
-     * @param type $fecha
-     * @param type $no_disp
+     * @param type $group
+     * @param type $date
+     * @param type $noDisp
      * @param type $provision
      * @param type $grupoName
      * @return type
      */
-    public function SOA($grupo,$fecha,$no_disp,$provision)
+    public function SOA($group,$date,$noDisp,$provision)
     {
-        $var=SOA::reporte($grupo,$fecha,$no_disp,$provision);
+        $var=SOA::reporte($group,$date,$noDisp,$provision);
         return $var;
     }
     /**
      * 
      * @param type $date
-     * @param type $intercompany
-     * @param type $no_activity
+     * @param type $interCompany
+     * @param type $noActivity
      * @param type $PaymentTerm
      * @return type
      */
-    public function summary($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
+    public function summary($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-        $var=summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+//        $var="";
+//        if($paymentTerms=="todos") {
+//            $paymentTerms= TerminoPago::getModel();
+//            
+//            foreach ($paymentTerms as $key => $paymentTerm) 
+//            {
+//               if($paymentTerm->name!="Sin estatus")
+//                  $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
+//            }
+//        }else{
+//            $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
+//        }    
+//        return $var;
+        $var=summary::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
         return $var;
     }
     /**
      * busca el reporte en componente "balance" hace la consulta y extrae los atributos necesarios para luego formar el html y enviarlo por correo y/o exportarlo a excel
-     * @param type $grupo
-     * @param type $fecha
-     * @param type $no_disp
+     * @param type $group
+     * @param type $date
+     * @param type $noDisp
      * @param type $grupoName
      * @return type
      */
-    public function balance_report($grupo,$fecha,$no_disp)
+    public function balance_report($group,$date,$noDisp)
     {
-        $var=balance_report::reporte($grupo,$fecha,$no_disp);
+        $var=balance_report::reporte($group,$date,$noDisp);
         return $var;
     }
-
+    /**
+     * 
+     * @param type $carActived
+     * @param type $typePaymentTerm
+     * @param type $paymentTerm
+     * @return type
+     */
     public function reteco($carActived,$typePaymentTerm,$paymentTerm)
     {
         $var=reteco::report($carActived,$typePaymentTerm,$paymentTerm);
         return $var;
     }
-    
-
     /**
      * busca el reporte refac en componente "refac" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte tiene la particularidad mas fuer de que las consltas se hacen en base a facturas enviadas y captura de carriers costummers
@@ -67,39 +84,71 @@ class Reportes extends CApplicationComponent
      * @param type $sum
      * @return type
      */
-    public function refac($fromDate,$toDate,$typeReport,$periodPaymentTerm,$sum)
+    public function refac($date,$typeReport,$periodPaymentTerm,$sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$periodPaymentTerm,NULL,$sum);
+        if($periodPaymentTerm=="todos") {
+           $periods= array(array("period"=>"7"),array("period"=>"15"),array("period"=>"30"));
+        }else{
+           $periods= array(array("period"=>"{$periodPaymentTerm}")); 
+        }    
+        $var="";
+        
+        foreach ($periods as $key => $period) 
+        {
+           $toDate=Reportes::defineToDatePeriod($period["period"], $date);
+           $fromDate=Reportes::defineFromDate($period["period"],$toDate);
+           $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$period["period"],NULL,$sum);
+        }
         return $var;
     }
-
+  
     /**
      * busca el reporte refi_prov en componente "refi_prov" trae html de tabla ya lista para ser aprovechado por la funcion mail y excel, 
      * este reporte es casi igual que refac, con la particularidad de que en este caso busca facturas recibidas y en captura se filtra por medio de carrier suppliers
-     * @param type $fromDate
-     * @param type $toDate
+     * Ahora verifica si se esta pidiendo un reporte general de todos los termino pago, si se quiere el summary y dependiendo de eso puede sacar todo de una vez
+     * para ello, se genera un array de termino pago y por medio del foreach se va extrayendo cada periodo con o sin summary.
+     * * @param type $date
      * @param type $typeReport
-     * @param type $paymentTerm
+     * @param type $paymentTerms
      * @param type $dividedInvoice
      * @param type $sum
      * @return type
      */
-    public function refi_prov($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice, $sum)
+    public function refi_prov($date,$typeReport,$paymentTerms,$dividedInvoice, $sum)
     {
-        $var=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm,$dividedInvoice,$sum);
+        $var="";
+        if($paymentTerms=="todos") {
+            $paymentTerms= TerminoPago::getModel();
+           
+            foreach ($paymentTerms as $key => $paymentTerm) 
+            {
+               if($paymentTerm->name!="Sin estatus"){
+                   
+                  $toDate=Reportes::defineToDatePeriod($paymentTerm->period, $date);
+                  $fromDate=Reportes::defineFromDate($paymentTerm->period,$toDate);
+                  $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerm->id,$dividedInvoice,$sum);
+               }
+            }
+        }else{
+            $toDate=Reportes::defineToDatePeriod(TerminoPago::getModelFind($paymentTerms)->period, $date);
+            $fromDate=Reportes::defineFromDate(TerminoPago::getModelFind($paymentTerms)->period,$toDate);
+            $var.=InvoiceReport::reporte($fromDate,$toDate,$typeReport,$paymentTerms,$dividedInvoice,$sum);
+        }    
         return $var;
     }
 
     /**
-     * @param type $fecha_from
-     * @param type $fecha_to
-     * @param type $tipo_report
-     * @return type   
+     * 
+     * @param type $date
+     * @param type $interCompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerms
+     * @return type
      */
-    public function recredi($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm)
+    public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-        $var=new Recredi;
-        return $var->report($date,$intercompany,$no_activity,$typePaymentTerm,$PaymentTerm);
+        return Recredi::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -108,6 +157,39 @@ class Reportes extends CApplicationComponent
         return $var;
     }
 
+    /**
+     * se encarga de calcular el fin de periodo dependiendo del tipo de periodo que se le pase para refac y reprov aunque la fecha que se le pase sea errada
+     * ejemplo, si selecciono el dia '25' de un mes y el periodo seleccionado es 'quincenal', simplemente el metodo va a hacer que el dia sea '15'
+     * @param type $period
+     * @param type $date
+     * @return type
+     */
+    public static function defineToDatePeriod($period, $date)
+    {
+        switch ($period) {
+            case "7":
+                if(DateManagement:: getDayNumberWeek($date)==7)
+                    return $date;
+                else
+                    return DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date), "last");
+                break;
+            case "15":
+                if(date('d',strtotime($date))=="15")
+                    return $date;
+                else
+                    return date('Y-m',strtotime($date))."-15";
+                break;
+            case "30":
+                if(date('d',strtotime($date))==DateManagement::howManyDays($date))
+                    return $date;
+                else
+                    return date('Y-m',strtotime(DateManagement::calculateDate("-30", $date)))."-".DateManagement::howManyDays(DateManagement::calculateDate("-30", $date));
+                break;
+
+            default:
+                break;
+        }
+    }
     /**
      * esta funcion es usada para por ahora el SOA, y determina el sql complementario para llamar los datos de los grupos normalmente 
      * o en su caso especial, en cabinas peru, va a traer una serie de grupos pertenecientes a este...aun hay que meterle otras cosas a SOA para complementarlo
@@ -927,19 +1009,40 @@ class Reportes extends CApplicationComponent
         }
         /**
          * DEVUELVE EL NOMBRE COMPLEMENTARIO PARA LOS REPORTES DEPENDIENDO EL TERMINO PAGO
-         * @param type $PaymentTerm
+         * @param type $paymentTerm
          * @return string
          */
-        public static function defineNameExtra($PaymentTerm,$relation)
+        public static function defineNameExtra($paymentTerm,$relation, $extra)
         {
-            if($PaymentTerm=="todos"){ 
+            if($paymentTerm=="todos"){ 
                 return "GENERAL";
             }else{
-                if($relation===FALSE)
-                   return "CUSTOMER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                if($extra==NULL)
+                {
+                    if($relation===FALSE)
+                       return "CUSTOMER ".TerminoPago::getModelFind($paymentTerm)->name;
 
-                if($relation===TRUE)
-                   return "SUPPLIER ".TerminoPago::getModelFind($PaymentTerm)->name;
+                    if($relation===TRUE)
+                       return "SUPPLIER ".TerminoPago::getModelFind($paymentTerm)->name;
+                }else{
+                    if($relation!=NULL){
+                        $period=TerminoPago::getModelFind($paymentTerm)->period;
+                        return " (". str_replace('/','-', TerminoPago::getModelFind($paymentTerm)->name) .") ". Reportes::defineFromDate($period,self::defineToDatePeriod($period, $extra))." - ".self::defineToDatePeriod($period, $extra);
+                    }else{
+                        $complement= Reportes::defineFromDate($paymentTerm,self::defineToDatePeriod($paymentTerm, $extra))." - ".self::defineToDatePeriod($paymentTerm, $extra);
+                        switch ($paymentTerm) {
+                            case "7":
+                                return "SEMANAL ".$complement;
+                                break;
+                            case "15":
+                                return "QUINCENAL ".$complement;
+                                break;
+                            case "30":
+                                return "MENSUAL ".$complement;
+                                break;
+                        }
+                    }
+                }
             }
         }
         /**
@@ -1089,12 +1192,29 @@ class Reportes extends CApplicationComponent
         public static function defineIncremental($resultDue, $resultNext)
         {
             if($resultNext!=""){
-                if($resultDue!=""&&$resultNext!="")
+                if($resultDue!="" && $resultNext!="")
                     return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
                 return Yii::app()->format->format_decimal($resultNext);
             }else{
                 return "";
             }
+        }
+        /**
+         * SE ENCARGA DE DEFINIR SI EL VALOR DEL SOA PROVISIONADO SE USARA O NO, EL TEDERMINANTE ES QUE EL VALOR SEA DIFERENTE AL SOA, SI SON IGUALES NO SE MOSTRARA
+         * @param type $soaProv
+         * @param type $soaDue
+         * @param type $soaNext
+         * @return string
+         */
+        public static function defineSoaProv($soaProv, $soaDue, $soaNext)
+        {
+            if($soaNext=="" || $soaNext==NULL)
+                return "";
+            
+            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext))
+                return "";
+            else
+               return $soaProv; 
         }
         /**
          * DEFINE ESTILOS PARA PAGOS Y COBROS DE UNA SEMANA DE ANTIGUEDAD
