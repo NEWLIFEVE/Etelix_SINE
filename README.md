@@ -2,8 +2,15 @@
 ============
 
 Sistema de Reportes para Billing
+    - Se modifico el estilo del texto en la leyenda.
+    - Se agrego validacion en siteControler para los metodos Email, excel y previa para que el valor de Group solo lo use al momento de generar soas y balances, para con esto evitar errores al momento de generar los demas reportes habiendo cualquier texto en este input.
+    - Refac y reprov, se corrigio el metodo defineToDatePeriod encargado de definir la fecha de fin de periodo segun la fecha enviada en el caso de periodo quincenal.
+    - Se modifico refac y reprov para que los totales que no tengan valor queden en (0.00).
+    - Recredi, se implemento el metodo totalsGeneral encargado de mostrar tabla de resumen de totales general para cada atributo del reporte, cabe destacar que dicha tabla solo sera mostrada en el caso de extraer un recredi de todos los termino pago y relacion comercial customer o supplier, no con ambas.
+    - Se agregaron "atributos en la clase recredi" para almacenar totales en cada llamada al reporte.
+    - Se agregaron "atributos en la clase recredi" para almacenar los estilos utilizados en los metodos report y totalsGeneral.
+    - Se agrego validacion al momento de mostrar contenido dependiendo el termino pago para que si el modelo es NULL, entonces no muestre nada (en el caso de consulta general) y muestre una nota indicando que no hay data perteneciente al termino pago y relacion seleccionado(en consulta individual).
     - Recredi: ahora las consultas de recredi general viene desglosada por termino pago, de igual manera si se selecciona customer o supplier con todos los termino pago.
-    - Pendiente mostrar el resumen general de totales al momento de generar un recredi general.
     - Se elimino columna "BALANCE" en summary.
     - Se agregaron los titulos superiores que segmentan el reporte en pagos/cobros y SOAs.
     - Se coloco un filtro que solo muestra los soas provisionado, si este es diferentes a los soas, a su vez, si se muestra el soa provisionado se pinta la fila "num de rows" de verde para indicarlo.

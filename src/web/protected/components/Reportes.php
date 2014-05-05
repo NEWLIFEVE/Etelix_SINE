@@ -148,7 +148,9 @@ class Reportes extends CApplicationComponent
      */
     public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-        return Recredi::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        ini_set('max_execution_time', 2500);
+        $var = new Recredi();
+        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -174,9 +176,13 @@ class Reportes extends CApplicationComponent
                     return DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date), "last");
                 break;
             case "15":
-                if(date('d',strtotime($date))=="15")
+                if(date('d',strtotime($date))=="15" || date('d',strtotime($date))==DateManagement::howManyDays($date))
                     return $date;
-                else
+                
+                if(date('d',strtotime($date))<="14")
+                    return date('Y-m',strtotime(DateManagement::calculateDate("-30", $date)))."-".DateManagement::howManyDays(DateManagement::calculateDate("-30", $date));  
+                
+                if(date('d',strtotime($date))>="16" && date('d',strtotime($date)) < DateManagement::howManyDays($date))
                     return date('Y-m',strtotime($date))."-15";
                 break;
             case "30":
