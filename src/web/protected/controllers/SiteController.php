@@ -515,7 +515,7 @@ class SiteController extends Controller
                 case 'refi_prov':
                     $period=0.5;
                     if($_GET['id_termino_pago']=="todos")
-                        $period=13;
+                        $period=1;
                     if($this->trueFalse($_GET['Si_sum'])==TRUE){
                         $time=( DateManagement::howManyDaysBetween("2013-09-30",$_GET['datepicker'])/7 ) * $period;
                         if($time <= 60)
