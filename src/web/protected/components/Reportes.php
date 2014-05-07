@@ -1214,12 +1214,13 @@ class Reportes extends CApplicationComponent
          */
         public static function defineSoaProv($soaProv, $soaDue, $soaNext)
         {
-            if($soaNext=="" || $soaNext==NULL)
+            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) == Yii::app()->format->format_decimal($soaProv))
                 return "";
             
-            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext))
-                return "";
-            else
+            else if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) != Yii::app()->format->format_decimal($soaProv))
+               return $soaProv; 
+            
+            else if(Yii::app()->format->format_decimal($soaDue) != Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) != Yii::app()->format->format_decimal($soaProv))
                return $soaProv; 
         }
         /**
@@ -1291,6 +1292,8 @@ class Reportes extends CApplicationComponent
         {
             if($intercompany)           $intercompany="";
             elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+            
+            $noActivity="";
 
             if($paymentTerm=="todos") {
                 $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";
