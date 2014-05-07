@@ -2,6 +2,11 @@
 ============
 
 Sistema de Reportes para Billing
+    - Summary: Se mejoro el metodo encargado de definir el soa provisionado.
+    - Summary: Se agrego un margen a las celdas que tengan soa provisionado.
+    - Summary y Recredi: Se corrigio un pequeño error que sucedia en el calculo de tiempo habiendo seleccionado ver carrier sin actividad.
+    - Summary: fueron eliminados los totales para soas provisionado.
+    - Recredi: se invirtio el orden de las columnas, ahora los datos de captura"balances" se muestra al principio despues de carriers, seguidamente se muestra el balance financiero y posteriormente los soas, provisiones y disputas.
     - Se modifico el estilo del texto en la leyenda.
     - Se agrego validacion en siteControler para los metodos Email, excel y previa para que el valor de Group solo lo use al momento de generar soas y balances, para con esto evitar errores al momento de generar los demas reportes habiendo cualquier texto en este input.
     - Refac y reprov, se corrigio el metodo defineToDatePeriod encargado de definir la fecha de fin de periodo segun la fecha enviada en el caso de periodo quincenal.
