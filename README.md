@@ -3,6 +3,7 @@
 
 Sistema de Reportes para Billing
 
+Release 1.2.13
     - Summary: Se mejoro el metodo encargado de definir el soa provisionado.
     - Summary: Se agrego un margen a las celdas que tengan soa provisionado.
     - Summary y Recredi: Se corrigio un pequeño error que sucedia en el calculo de tiempo habiendo seleccionado ver carrier sin actividad.
