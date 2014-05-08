@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+
     - Summary: Se mejoro el metodo encargado de definir el soa provisionado.
     - Summary: Se agrego un margen a las celdas que tengan soa provisionado.
     - Summary y Recredi: Se corrigio un pequeño error que sucedia en el calculo de tiempo habiendo seleccionado ver carrier sin actividad.
@@ -15,6 +16,8 @@ Sistema de Reportes para Billing
     - Se agregaron "atributos en la clase recredi" para almacenar totales en cada llamada al reporte.
     - Se agregaron "atributos en la clase recredi" para almacenar los estilos utilizados en los metodos report y totalsGeneral.
     - Se agrego validacion al momento de mostrar contenido dependiendo el termino pago para que si el modelo es NULL, entonces no muestre nada (en el caso de consulta general) y muestre una nota indicando que no hay data perteneciente al termino pago y relacion seleccionado(en consulta individual).
+
+Release 1.2.12
     - Recredi: ahora las consultas de recredi general viene desglosada por termino pago, de igual manera si se selecciona customer o supplier con todos los termino pago.
     - Se elimino columna "BALANCE" en summary.
     - Se agregaron los titulos superiores que segmentan el reporte en pagos/cobros y SOAs.
@@ -27,6 +30,8 @@ Sistema de Reportes para Billing
     - Se agrego una pequeña tabla de leyenda de colores para especificar que significa cada uno de los colores variantes dentro del reporte.
     - Se agrego indicador de tiempo para el reprov que hasta los momentos tarda un poco mas que el refac.
     - Se coloco columna en blanco para diferenciar segmento pagos/cobros del segmento SOAs.
+
+Release 1.2.11
     - Se agrego nuevas columnas en summary donde se desgloza los ultimos pagos y cobros realizados en tres variantes, (PREVIOUS WEEK, LAST WEEK y THIS WEEK)
     - Se agrego columna en summary, (currency balance)la cual muestra el balancea la fecha.
     - Se agrego columna en summary, (soa provisioned) la cual muestra el soa next tomando en cuenta las provisiones, dando una idea mas segura de lo que seria el para la fecha.
@@ -41,6 +46,7 @@ Sistema de Reportes para Billing
     - Correccion de soa, ahora va a sacar los due days y next days apartir de no solo la ultima fecha del ciclo del reporte sino tambien verifica que sea la mas alta.
     - Modificado el metodo format decimal para que cuando el valor sea null,devuelva 0,00. 
 
+Realese 1.2.10
     - Nueva version de Provisiones: 
         * Coloca el id de la provision de factura en el campo id_accounting_document de la provision de trafico.
         * Coloca el id de la factura en el campo id_accounting_document de la provision de factura
@@ -63,11 +69,11 @@ Realese 1.2.9.1
     - Mejora en generacion de reporte soa(en descripcion cuando el periodo esta conformado por meses diferentes, muestra ambos en formato "Oct-07-Sep-13", de lo contrario solo muestra el formato original "Oct-07-13")
     - Se reparo el codigo que trae los documentos contables para soa y balance para que al seleccionar 'CABINAS PERU', traiga 'FULLREDPERU' y 'R-ETELIX.COM PERU'. (anteriormente faltaba por considerar 'R-ETELIX.COM PERU').
     - Se filtro la consulta de grupos en el autocompletar para que no traiga Unknown_Carrier.
-    - Modificacion en summary, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
-    - Cambios en la forma como se muestra el nombre de los reportes reteco, summary y recredi.
-    - Modificacion de comportamiento de select termino pago en recredi, summary y reteco.
-    - Cambio de indicadores para el termino pago.
- 
+    - Modificacion en SUMMARY, ahora se muestra con una especie de pronostico por semana, ademas se diversifico la forma como se muestran los totales, segun lo requerido .
+    - Cambios en la forma como se muestra el nombre de los reportes RETECO, SUMMARY y RECREDI.
+    - Modificacion de comportamiento de select termino pago en RECREDI, SUMMARY y RETECO.
+    - Cambio de indicadores para el termino pago. 
+    
 Realese 1.2.8
     - Default los inputs de soa, balance, sumary y RETECO.
     - Arreglado Due_date y Monto Due en SUMMARY.
