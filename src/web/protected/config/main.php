@@ -25,7 +25,7 @@ return array(
     // application components
     'components'=>array(
         'reportes'=>array(
-            'class'=>"application.components.reportes",
+            'class'=>"application.components.Reportes",
         ),
         'mail'=>array(
             'class'=>"application.components.EnviarEmail",
