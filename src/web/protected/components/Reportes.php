@@ -1199,11 +1199,22 @@ class Reportes extends CApplicationComponent
         {
             if($resultNext!=""){
                 if($resultDue!="" && $resultNext!="")
-                    return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
-                return Yii::app()->format->format_decimal($resultNext);
+                    return "<font style='color:".self::defineColorNum($resultNext).";'>". Yii::app()->format->format_decimal($resultNext)."</font> (".Yii::app()->format->format_decimal( $resultNext - $resultDue ). ") ";
+                return "<font style='color:".self::defineColorNum($resultNext)."'>".Yii::app()->format->format_decimal($resultNext). "</font> ";
             }else{
                 return "";
             }
+        }
+        /**
+         * 
+         * @param type $resultNext
+         * @return string
+         */
+        public static function defineColorNum($resultNext)
+        {
+            if($resultNext < 0)
+                return "red";
+            return "#6F7074";
         }
         /**
          * SE ENCARGA DE DEFINIR SI EL VALOR DEL SOA PROVISIONADO SE USARA O NO, EL TEDERMINANTE ES QUE EL VALOR SEA DIFERENTE AL SOA, SI SON IGUALES NO SE MOSTRARA

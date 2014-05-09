@@ -2,6 +2,10 @@
 ============
 
 Sistema de Reportes para Billing
+    - SUMMARY: Ahora los valores negativos excluyendo los incrementales seran negativos.
+    - SUMMARY: Eliminada la linea que indicaba la existencia de soa provisionado.
+    - SUMMARY: Se corrigio la operacion encargada de calcular el soa provisionado.
+    - SUMMARY: Se repite la columna rows y carrier despuesde la seccion de pagos para poder navegar el reporte de forma mas sencilla.
     - Summary: Se mejoro el metodo encargado de definir el soa provisionado.
     - Summary: Se agrego un margen a las celdas que tengan soa provisionado.
     - Summary y Recredi: Se corrigio un pequeño error que sucedia en el calculo de tiempo habiendo seleccionado ver carrier sin actividad.

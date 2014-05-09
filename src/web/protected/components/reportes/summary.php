@@ -18,7 +18,7 @@ class summary extends Reportes
         ini_set('max_execution_time', 1500);
         /***************************                      SECCION DE ESTILOS GENERALES                       ***************************/
         $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-        $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
+        
         $styleBasicCenterLess="style='border:1px solid silver;text-align: center;color:red;'";
         $styleBasicCenterHigherDue="style='border:1px solid silver;text-align: center;color:#3466B4;'";
         $styleBasicCenterHigherNext="style='border:1px solid silver;text-align: center;color:#049C47;'";
@@ -32,7 +32,19 @@ class summary extends Reportes
         $styleSoaNext="style='border:1px solid silver;background:#049C47;text-align:center;color:white;white-space: nowrap;'";
         $styleDueDateD="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;white-space: nowrap;'";
         $styleDueDateN="style='border:1px solid silver;background:#049C47;text-align:center;color:white;white-space: nowrap;'";
+        
+        $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
         $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+        $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+        $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;'";
+        $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;'";
+        $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;'";
+        $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;'";
+        $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;'";
+        $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
+        $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;'";
+        $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;'";
+        
         
         /***************************          SECCION ENCARGADA DE DEFINIR LOS HEAD PARA SOAS NEXT           ***************************/
         $firstWeekOne=DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("+1", $date), "first");
@@ -69,6 +81,7 @@ class summary extends Reportes
                     <td colspan='3'></td>
                     <td {$styleDatePCLast} colspan='6'> RECEIPTS AND PAYMENTS </td>
                     <td > &nbsp; &nbsp; </td>
+                    <td colspan='2'></td>
                     <td {$styleSoaNext} colspan='13'> SOAs </td>
                     <td colspan='3'> </td>
                 </tr>
@@ -77,7 +90,7 @@ class summary extends Reportes
                     <td {$styleDatePCPrev} colspan='2'> PREVIOUS </td>
                     <td {$styleDatePCLast} colspan='2'> LAST WEEK</td>
                     <td {$styleDatePC} colspan='2'> THIS WEEK </td>
-                    <td > </td>
+                    <td colspan='3'></td>
                     <td {$styleSoaDue} colspan='2'> PREVIOUS </td>
                     <td {$styleSoaDue} colspan='2'> THIS WEEK </td>
                     
@@ -98,7 +111,10 @@ class summary extends Reportes
                     <td {$styleDatePCLast} > DATE(Pay/Coll) </td>
                     <td {$styleDatePC} > AMOUNT(Pay/Coll) </td>
                     <td {$styleDatePC} > DATE(Pay/Coll) </td>
-                    <td  >  </td>
+                    <td {$styleNull} ></td>     
+                    <td {$styleNumberRow} >N°</td>
+                    <td {$styleCarrier} > CARRIER </td>
+                        
                     <td {$styleSoaDue} > SOA(DUE) </td>
                     <td {$styleDueDateD} > DUE DATE(D) </td>
                     <td {$styleSoaDue} > SOA(DUE) </td>
@@ -131,31 +147,37 @@ class summary extends Reportes
             $styleCollPaymLast="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "style").";background:#DEECF7;'";
             $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "style").";'";
             /***************************  DEFINE ESTILOS DE LAS FILAS MEDIANTE EL VALOR DEL SOA PROVISIONADO  ***************************/
+            /*la forma para definir los estilos en este caso no es la mas adecuada, la mejorare en lo que termine el codigo que compara los recredis*/
             $styleTr="";
-            $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-            $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;'";
-            $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;'";
-            $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;'";
-            $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;'";
-            $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;'";
-            $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
-            $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;'";
-            $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;'";
-            if(Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next)!=""){
-                $styleTr="style='border-bottom: 2px #049C47 solid;'";
-                $styleNumberRow="style='border:1px solid silver!important;border-top: 2px silver solid!important; text-align:center;background:#049C47;color:white;'";
-                $styleCollPaymLast="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "style").";background:#DEECF7;border-bottom: 2px #049C47 solid;'";
-                $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;border-bottom: 2px #049C47 solid;'";
-                $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;border-bottom: 2px #049C47 solid;'";
-                $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;border-bottom: 2px #049C47 solid;'";
-                $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;border-bottom: 2px #049C47 solid;'";
-                $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;border-bottom: 2px #049C47 solid;'";
-                $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;border-bottom: 2px #049C47 solid;'";
-                $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;border-bottom: 2px #049C47 solid;'";
-                $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;border-bottom: 2px #049C47 solid;'";
-            }
+//            $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;'";
+//            $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;'";
+//            $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+//            $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;'";
+//            $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;'";
+//            $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;'";
+//            $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;'";
+//            $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;'";
+//            $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;'";
+//            $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;'";
+//            $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;'";
+//            if(Reportes::defineSoaProv($document->soa_provisioned,$document->soa,  $document->soa_next)!=""){
+//                $styleTr="style='border-bottom: 2px #049C47 solid!important;'";
+//                $styleBasic="style='border:1px solid silver;text-align:left;color:#6F7074;border-bottom: 2px #049C47 solid;'";
+//                $styleRowActiv="style='color:red;border:1px solid silver;text-align:center;font-size: x-large;padding-bottom: 0.5%;border-bottom: 2px #049C47 solid;'";
+//                $styleNumberRow="style='border:1px solid silver!important;border-top: 2px silver solid!important; text-align:center;background:#049C47;color:white;'";
+//                $styleCollPaymPrev="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "style").";border-bottom: 2px #049C47 solid;'";
+//                $styleCollPaymLast="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "style").";background:#DEECF7;border-bottom: 2px #049C47 solid;'";
+//                $styleCollPaym="style='border:1px solid silver;text-align: right;color:".Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "style").";border-bottom: 2px #049C47 solid;'";
+//                $styleBasicDateDue="style='border:1px solid silver;text-align: center;background:#DEECF7;color:#6F7074;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicNumDue="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEECF7;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicNumDueTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#F0F6FA;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicDateDueTwo="style='border:1px solid silver;text-align: center;background:#F0F6FA;color:#6F7074;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicNumNext="style='border:1px solid silver;text-align:right;color:#6F7074;background:#DEF7DF;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicNumNextTwo="style='border:1px solid silver;text-align:right;color:#6F7074;background:#EDF8EE;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicDateNextTwo="style='border:1px solid silver;text-align: center;background:#EDF8EE;color:#6F7074;border-bottom: 2px #049C47 solid;'";
+//                $styleBasicDateNext="style='border:1px solid silver;text-align: center;background:#DEF7DF;color:#6F7074;border-bottom: 2px #049C47 solid;'";
+//            }
 
-            $pos=$key+1;
             /***************************                    DEFINE ACUMULADOS PARA LOS PAGOS                  ***************************/
             $PrevPaymentCollectLess+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "value"), FALSE);
             $lastWeekPaymentCollectLess+=Reportes::defineLessOrHigher(Reportes::definePaymCollect($document->last_week_pago_cobro, $document->type_c_p_last_week, "value"), FALSE);
@@ -197,6 +219,10 @@ class summary extends Reportes
             /******* DEFINE SOA ACTUAL (La particularidad de este caso es que debe determinar el THIS SOA es SOA DUE o SOA NEXT) ********/
             $soaThisWeek=Reportes::defineValueThisNext(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,NULL),$document->soa_next,$document->due_date_next, $date);
             /***************************            SE ENCARGA DE ARMAR EL CONTENIDO DE LA TABLA              ***************************/
+            
+            $pos=$key+1;
+//            var_dump($document->monetizable);
+            
             $body.="<tr {$styleTr} >
                       <td {$styleNumberRow} > {$pos} </td>
                       <td {$styleBasic} > ".$document->name." </td>
@@ -208,11 +234,14 @@ class summary extends Reportes
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE($document->last_week_date_pago_cobro,"Y-m-d")." </td> 
                       <td {$styleCollPaym} > ".Yii::app()->format->format_decimal(Reportes::definePaymCollect($document->last_pago_cobro, $document->type_c_p, "value"))." </td>
                       <td {$styleBasic} > ".Utility::formatDateSINE($document->last_date_pago_cobro,"Y-m-d")." </td> 
-                      <td {$styleNull} >  </td>    
-                      <td {$styleBasicNumDue} > ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </td>
+                      <td {$styleNull} ></td> 
+                      <td {$styleNumberRow} > {$pos} </td>
+                      <td {$styleBasic} > ".$document->name." </td>
+                    
+                      <td {$styleBasicNumDue} ><font color='".Reportes::defineColorNum(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))."'> ".Yii::app()->format->format_decimal(Reportes::defineValueTD($document->soa,$document->due_date,$date, NULL, NULL,"prev"))." </font></td>
                       <td {$styleBasicDateDue} > ".Utility::formatDateSINE(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,"prev"),"Y-m-d")." </td>
-                      <td {$styleBasicNumDueTwo} > ".Yii::app()->format->format_decimal($soaThisWeek)." </td>
-                      <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueThisNext(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),$document->due_date_next,$document->due_date_next, $date),"Y-m-d")." </td>
+                      <td {$styleBasicNumDueTwo} ><font color='".Reportes::defineColorNum($soaThisWeek). "'>".Yii::app()->format->format_decimal($soaThisWeek)."  </font></td>
+                      <td {$styleBasicDateDueTwo} > ".Utility::formatDateSINE(Reportes::defineValueThisNext(Reportes::defineValueTD($document->due_date,$document->due_date,$date, NULL, NULL,NULL),$document->due_date_next,$document->due_date_next, $date),"Y-m-d")."</td>
                       
                       <td {$styleCollPaym} > {$dueDaysDue} </td>    
                       <td {$styleBasicNumNext} > ".Reportes::defineIncremental( $soaThisWeek, Reportes::defineValueTD($document->soa_next,$document->due_date_next,$date, $firstWeekOne, $lastWeekOne,NULL) )." </td>
@@ -235,7 +264,7 @@ class summary extends Reportes
                     <td {$styleDatePCPrev} colspan='2'> PREV PAYMENT/COLLECTION </td>
                     <td {$styleDatePCLast} colspan='2'> LAST PAYMENT/COLLECTION </td>
                     <td {$styleDatePC} colspan='2'> WEEK PAYMENT/COLLECTION </td>
-                    <td  >  </td>
+                    <td colspan='3' >  </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)PREVIOUS </td>
                     <td {$styleSoaDue} colspan='2'> SOA(DUE)THIS WEEK </td>                   
                     
@@ -253,7 +282,7 @@ class summary extends Reportes
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectHigher)."</td>
-                    <td  > </td>
+                    <td colspan='3' >  </td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevHigher)."</td>
                     <td {$styleBasicCenterHigherDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekHigher)."</td>
                     
@@ -270,7 +299,7 @@ class summary extends Reportes
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectLess)."</td>
-                    <td  > </td>
+                    <td colspan='3' >  </td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaPrevLess)."</td>
                     <td {$styleBasicCenterLess} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekLess)."</td>
                     <td {$styleNull} ></td>
@@ -286,7 +315,7 @@ class summary extends Reportes
                     <td {$styleDatePCPrev} colspan='2'>".Yii::app()->format->format_decimal($PrevPaymentCollectHigher - ($PrevPaymentCollectLess*-1))."</td>
                     <td {$styleDatePCLast} colspan='2'>".Yii::app()->format->format_decimal($lastWeekPaymentCollectHigher - ($lastWeekPaymentCollectLess*-1))."</td>
                     <td {$styleDatePC} colspan='2'>".Yii::app()->format->format_decimal($thisPaymentCollectHigher - ($thisPaymentCollectLess*-1))."</td>
-                    <td  > </td>
+                    <td colspan='3' >  </td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaPrevTotal)."</td>
                     <td {$styleSoaDue} colspan='2'>".Yii::app()->format->format_decimal($soaThisWeekTotal)."</td>
                     <td {$styleNull} ></td>
@@ -411,6 +440,18 @@ class summary extends Reportes
                     WHERE id_carrier IN(Select id from carrier where id_carrier_groups=cg.id)
                       AND end_date IS NULL
                       limit 1) AS active,
+               /*-----------------------------------------------------------------------------------------------------------*/   
+                  /*monetizable      
+                   (SELECT m.name AS monetizable 
+                    FROM carrier c, 
+                         contrato_monetizable cm, 
+                         monetizable m, contrato con
+                    WHERE c.id=con.id_carrier
+                      AND con.id=cm.id_contrato
+                      AND cm.id_monetizable=m.id
+                      AND c.id IN (select id from carrier where id_carrier_groups=cg.id)
+                      AND cm.end_date is null
+                    LIMIT 1) AS monetizable,*/ 
                /*-----------------------------------------------------------------------------------------------------------*/      
                   /*monto del pago o cobro en semanas previas a la actual y la pasada*/
                    {$paymentCollectAmount} and issue_date<='".DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-2", $date), "last")."' order by issue_date desc LIMIT 1) AS previous_pago_cobro,
