@@ -79,7 +79,7 @@ $this->pageTitle = Yii::app()->name;
                 <input type="text" name="datepicker" id="datepicker" value="<?php echo date('Y-m-d');?>"/>
             </div>
             <div class="note_ref_pro">
-                <h3 class="h3_note instructive">Seleccione el ultimo dia del ciclo</h3>
+                <!--<h3 class="h3_note instructive">Seleccione el ultimo dia del ciclo</h3>-->
             </div>
             <div class="formInputs filter_oper">
                 <h3>Mostrar Operadores</h3>
