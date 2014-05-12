@@ -11,7 +11,7 @@ class summary extends Reportes
      * @return string
      * @access public
      */
-    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
+    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm, $monetizable)
     {
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
 //        ini_set('max_execution_time', 1500);
@@ -64,19 +64,9 @@ class summary extends Reportes
         $dueDaysDue=$dueDaysNext="";
         
         /***************************       SE ENCARGA DE LLAMAR EL MODELO GENERAL PARA ARMAR LA TABLA        ***************************/
-        $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
+        $documents=  self::getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm, $monetizable);
         /***************************                  DEFINE EL HEAD PRINCIPAL PARA LA TABLA                 ***************************/
-        $body="<table>
-                <tr>
-                    <td colspan='4'>
-                        <h1>SUMMARY  ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm,NULL)."</h1>
-                    </td>
-                    <td colspan='9'>  AL {$date} </td>
-                <tr>
-                    <td colspan='11'></td>
-                </tr>
-               </table>
-               <table style='width: 100%;'>
+        $body="<table style='width: 100%;'>
                 <tr>
                     <td colspan='3'></td>
                     <td {$styleDatePCLast} colspan='6'> RECEIPTS AND PAYMENTS </td>
@@ -331,12 +321,12 @@ class summary extends Reportes
 
     /**
      * Encargada de traer la data
-     * @param date $date,$interCompany=TRUE,$noActivity=TRUE,$paymentTerm
+     * @param date $date,$interCompany=TRUE,$noActivity=TRUE,$paymentTerm, $monetizable
      * @return array
      * @since 1.0
      * @access public
      */
-    public static function getData($date,$interCompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+    public static function getData($date,$interCompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm, $monetizable)
     {
         if($interCompany)           $interCompany="";
         elseif($interCompany==FALSE) $interCompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
@@ -355,20 +345,23 @@ class summary extends Reportes
             $wherePaymentTerm="";
         }
         if($typePaymentTerm===FALSE){
-            $tableNext=", contrato con,  contrato_termino_pago ctp, termino_pago tp";
-            $wherePaymentTerm="AND con.id_carrier=c.id
-                               AND ctp.id_contrato=con.id
+            $tableNext=", contrato_termino_pago ctp, termino_pago tp";
+            $wherePaymentTerm="AND ctp.id_contrato=con.id
                                AND ctp.id_termino_pago=tp.id
                                AND ctp.end_date IS NULL
                                AND tp.id IN({$filterPaymentTerm})";
         }
         if($typePaymentTerm===TRUE){
-            $tableNext=", contrato con,  contrato_termino_pago_supplier ctps, termino_pago tp";
-            $wherePaymentTerm="AND con.id_carrier=c.id
-                               AND ctps.id_contrato=con.id
+            $tableNext=", contrato_termino_pago_supplier ctps, termino_pago tp";
+            $wherePaymentTerm="AND ctps.id_contrato=con.id
                                AND ctps.id_termino_pago_supplier=tp.id
                                AND ctps.end_date IS NULL
                                AND tp.id IN({$filterPaymentTerm})";
+        }
+        if($monetizable==TRUE){
+            $monetizable="1,2";
+        }else{
+            $monetizable="3";
         }
         /*Monto  pago o cobro*/
         $paymentCollectAmount="(select amount 
@@ -441,17 +434,8 @@ class summary extends Reportes
                       AND end_date IS NULL
                       limit 1) AS active,
                /*-----------------------------------------------------------------------------------------------------------*/   
-                  /*monetizable      
-                   (SELECT m.name AS monetizable 
-                    FROM carrier c, 
-                         contrato_monetizable cm, 
-                         monetizable m, contrato con
-                    WHERE c.id=con.id_carrier
-                      AND con.id=cm.id_contrato
-                      AND cm.id_monetizable=m.id
-                      AND c.id IN (select id from carrier where id_carrier_groups=cg.id)
-                      AND cm.end_date is null
-                    LIMIT 1) AS monetizable,*/ 
+                  /*monetizable  */    
+                   m.name AS monetizable, 
                /*-----------------------------------------------------------------------------------------------------------*/      
                   /*monto del pago o cobro en semanas previas a la actual y la pasada*/
                    {$paymentCollectAmount} and issue_date<='".DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-2", $date), "last")."' order by issue_date desc LIMIT 1) AS previous_pago_cobro,
@@ -537,13 +521,42 @@ class summary extends Reportes
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10,12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_accounting_document IS NULL AND issue_date>='2013-10-01') pp,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND id_accounting_document IS NULL AND issue_date>='2013-10-01') pn) AS soa_provisioned
               FROM carrier_groups cg,
-                   carrier c {$tableNext}
+                   carrier c ,
+                   contrato_monetizable cm, 
+                   monetizable m, 
+                   contrato con        
+                   {$tableNext}
                    
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
-                    {$interCompany}  
+                    {$interCompany}
+                    AND c.id=con.id_carrier
+                    AND con.id=cm.id_contrato
+                    AND cm.id_monetizable=m.id
+                    AND m.id IN ({$monetizable})
+                    AND cm.end_date is null
+                    
               ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
+    }
+    /**
+     * metodo encargado de traer el reporte en dos partes, (operadores monetizables y no monetizables).
+     * @param type $date
+     * @param type $interCompany
+     * @param type $noActivity
+     * @param type $typePaymentTerm
+     * @param type $paymentTerms
+     * @return type
+     */
+    public static function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    {
+        $body="<h1>SUMMARY  ".Reportes::defineNameExtra($paymentTerms,$typePaymentTerm,NULL)."</h1>  AL {$date} <br>";
+        $body.="<h3>Operadores Monetizables</h3>";
+        $body.=self::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms, TRUE);
+        
+        $body.="<br><h3>Operadores No Monetizables</h3>";
+        $body.=self::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms, FALSE);
+        return $body;
     }
 }
 ?>

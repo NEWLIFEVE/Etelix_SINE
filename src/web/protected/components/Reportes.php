@@ -46,7 +46,7 @@ class Reportes extends CApplicationComponent
 //            $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
 //        }    
 //        return $var;
-        $var=summary::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        $var=summary::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
         return $var;
     }
     /**
