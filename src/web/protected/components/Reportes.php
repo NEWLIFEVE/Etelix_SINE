@@ -33,19 +33,6 @@ class Reportes extends CApplicationComponent
      */
     public function summary($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-//        $var="";
-//        if($paymentTerms=="todos") {
-//            $paymentTerms= TerminoPago::getModel();
-//            
-//            foreach ($paymentTerms as $key => $paymentTerm) 
-//            {
-//               if($paymentTerm->name!="Sin estatus")
-//                  $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
-//            }
-//        }else{
-//            $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
-//        }    
-//        return $var;
         $var=summary::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
         return $var;
     }
