@@ -2,6 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
+    - Se corrigio el css encargado de colorear los botones para exportar.
     - SUMMARY: De ahora en adelante se muestra summary dividido en dos grupos, operadores MONETIZABLES (100% y 50%) y operadores NO MONETIZABLES (0%)
     - SUMMARY: Ahora los valores negativos excluyendo los incrementales seran negativos.
     - SUMMARY: Eliminada la linea que indicaba la existencia de soa provisionado.
