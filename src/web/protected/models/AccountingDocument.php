@@ -81,6 +81,7 @@ class AccountingDocument extends CActiveRecord
         public $last_week_date_pago_cobro;
         public $type_c_p_last_week;
         public $active;
+        public $monetizable;
 	/**
 	 * @return string the associated database table name
 	 */

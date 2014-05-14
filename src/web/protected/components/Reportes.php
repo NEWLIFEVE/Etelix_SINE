@@ -33,20 +33,7 @@ class Reportes extends CApplicationComponent
      */
     public function summary($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-//        $var="";
-//        if($paymentTerms=="todos") {
-//            $paymentTerms= TerminoPago::getModel();
-//            
-//            foreach ($paymentTerms as $key => $paymentTerm) 
-//            {
-//               if($paymentTerm->name!="Sin estatus")
-//                  $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerm->id);
-//            }
-//        }else{
-//            $var.= summary::report($date,$intercompany,$no_activity,$typePaymentTerm,$paymentTerms);
-//        }    
-//        return $var;
-        $var=summary::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        $var=summary::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
         return $var;
     }
     /**
@@ -148,7 +135,9 @@ class Reportes extends CApplicationComponent
      */
     public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
-        return Recredi::defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        ini_set('max_execution_time', 2500);
+        $var = new Recredi();
+        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -174,9 +163,13 @@ class Reportes extends CApplicationComponent
                     return DateManagement::firstOrLastDayWeek(DateManagement::calculateWeek("-1", $date), "last");
                 break;
             case "15":
-                if(date('d',strtotime($date))=="15")
+                if(date('d',strtotime($date))=="15" || date('d',strtotime($date))==DateManagement::howManyDays($date))
                     return $date;
-                else
+                
+                if(date('d',strtotime($date))<="14")
+                    return date('Y-m',strtotime(DateManagement::calculateDate("-30", $date)))."-".DateManagement::howManyDays(DateManagement::calculateDate("-30", $date));  
+                
+                if(date('d',strtotime($date))>="16" && date('d',strtotime($date)) < DateManagement::howManyDays($date))
                     return date('Y-m',strtotime($date))."-15";
                 break;
             case "30":
@@ -1193,11 +1186,22 @@ class Reportes extends CApplicationComponent
         {
             if($resultNext!=""){
                 if($resultDue!="" && $resultNext!="")
-                    return Yii::app()->format->format_decimal($resultNext)." (".Yii::app()->format->format_decimal($resultDue - $resultNext). ") ";
-                return Yii::app()->format->format_decimal($resultNext);
+                    return "<font style='color:".self::defineColorNum($resultNext).";'>". Yii::app()->format->format_decimal($resultNext)."</font> (".Yii::app()->format->format_decimal( $resultNext - $resultDue ). ") ";
+                return "<font style='color:".self::defineColorNum($resultNext)."'>".Yii::app()->format->format_decimal($resultNext). "</font> ";
             }else{
                 return "";
             }
+        }
+        /**
+         * 
+         * @param type $resultNext
+         * @return string
+         */
+        public static function defineColorNum($resultNext)
+        {
+            if($resultNext < 0)
+                return "red";
+            return "#6F7074";
         }
         /**
          * SE ENCARGA DE DEFINIR SI EL VALOR DEL SOA PROVISIONADO SE USARA O NO, EL TEDERMINANTE ES QUE EL VALOR SEA DIFERENTE AL SOA, SI SON IGUALES NO SE MOSTRARA
@@ -1208,12 +1212,13 @@ class Reportes extends CApplicationComponent
          */
         public static function defineSoaProv($soaProv, $soaDue, $soaNext)
         {
-            if($soaNext=="" || $soaNext==NULL)
+            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) == Yii::app()->format->format_decimal($soaProv))
                 return "";
             
-            if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext))
-                return "";
-            else
+            else if(Yii::app()->format->format_decimal($soaDue) == Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) != Yii::app()->format->format_decimal($soaProv))
+               return $soaProv; 
+            
+            else if(Yii::app()->format->format_decimal($soaDue) != Yii::app()->format->format_decimal($soaNext) && Yii::app()->format->format_decimal($soaNext) != Yii::app()->format->format_decimal($soaProv))
                return $soaProv; 
         }
         /**
@@ -1285,6 +1290,8 @@ class Reportes extends CApplicationComponent
         {
             if($intercompany)           $intercompany="";
             elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+            
+            $noActivity="";
 
             if($paymentTerm=="todos") {
                 $filterPaymentTerm="1,2,3,4,5,6,7,8,9,10,12,13";

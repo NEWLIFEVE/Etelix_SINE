@@ -169,13 +169,12 @@ class SiteController extends Controller
         if(isset($_POST['datepicker']))
         {
             $date=(string)$_POST['datepicker'];
-
-            if(($_POST['grupo'])!=NULL) $group=$_POST['grupo'];
-
-            if(isset($_POST['No_prov'])) $provision=Reportes::define_prov($_POST['No_prov'],$group);
-
-            if(isset($_POST['No_disp'])) $dispute=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$group,$date);
-
+            
+            if($_POST['tipo_report']=="soa"||$_POST['tipo_report']=="balance"){
+                if(($_POST['grupo'])!=NULL) $group=$_POST['grupo'];
+                if(isset($_POST['No_prov'])) $provision=Reportes::define_prov($_POST['No_prov'],$group);
+                if(isset($_POST['No_disp'])) $dispute=Reportes::define_disp($_POST['No_disp'],$_POST['tipo_report'],$group,$date);
+            }
             switch($_POST['tipo_report'])
             {
                case 'soa':
@@ -241,13 +240,12 @@ class SiteController extends Controller
         if(isset($_GET['datepicker']))
         {
             $date=(string)$_GET['datepicker'];
-
-            if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
-
-            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
-
-            if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
+            if($_GET['tipo_report']=="soa"||$_GET['tipo_report']=="balance"){
+                if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
+                if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
+                if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
+            }
 
             switch ($_GET['tipo_report'])
             {
@@ -302,13 +300,12 @@ class SiteController extends Controller
         if(isset($_GET['datepicker']))
         {
             $date=(string)$_GET['datepicker'];
-
-            if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
-
-            if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
-
-            if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
             
+            if($_GET['tipo_report']=="soa"||$_GET['tipo_report']=="balance"){
+                if(($_GET['grupo'])!=NULL) $group=$_GET['grupo'];
+                if(isset($_GET['No_prov'])) $provision=SOA::define_prov($_GET['No_prov'],$group);
+                if(isset($_GET['No_disp'])) $dispute=Reportes::define_disp($_GET['No_disp'],$_GET['tipo_report'],$group,$date);
+            }
 
             switch($_GET['tipo_report'])
             {
@@ -428,7 +425,7 @@ class SiteController extends Controller
      */
     public static function trueFalse($var)
     {
-        if($var=="null")
+        if($var=="null" || $var==null)
             return NULL;
         if($var==""||$var=="0")
             return FALSE;
@@ -503,9 +500,9 @@ class SiteController extends Controller
                     echo "<h3> este proceso puede tomar <b>".$time."</b></h3> no cierre su navegador durante ese tiempo";
                     break;
                 case 'recredi':
-                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*0.7;
+                    $time=count(Reportes::getNumCarriersForTime($_GET['datepicker'], $this->trueFalse($_GET['Si_inter']), $this->trueFalse($_GET['Si_act']), $this->trueFalse($_GET['type_termino_pago']), $_GET['id_termino_pago']))*1.2;
                     if($this->trueFalse($_GET['type_termino_pago'])===NULL)
-                        $time=$time * 2; 
+                        $time= $time * 2; 
                     if($time <= 60)
                         $time= Yii::app()->format->format_decimal( $time )." Seg";
                     else
@@ -515,7 +512,7 @@ class SiteController extends Controller
                 case 'refi_prov':
                     $period=0.5;
                     if($_GET['id_termino_pago']=="todos")
-                        $period=13;
+                        $period=1;
                     if($this->trueFalse($_GET['Si_sum'])==TRUE){
                         $time=( DateManagement::howManyDaysBetween("2013-09-30",$_GET['datepicker'])/7 ) * $period;
                         if($time <= 60)

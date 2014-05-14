@@ -6,198 +6,308 @@
  */
 class Recredi extends Reportes 
 {
+    private $totalSoaDue;
+    private $totalSoaNext;
+    private $totalProvisionInvoiceSent;
+    private $totalProvisioInvoiceReceived;
+    private $totalProvisioTrafficSent;
+    private $totalProvisioTrafficReceived;
+    private $totalReceivedDispute;
+    private $totalSentDispute;
+    private $totalBalance;
+    private $totalRevenue3;
+    private $totalCost3;
+    private $totalMargin3;
+    private $totalRevenue2;
+    private $totalCost2;
+    private $totalMargin2;
+    private $totalRevenue1;
+    private $totalCost1;
+    private $totalMargin1;
+    
+    private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
+    private $styleBasic ="style='border:1px solid silver;text-align:center;'";
+    private $styleBasicRevenue ="style='border:1px solid silver;text-align:center;background:#E2F5FF;'";
+    private $styleBasicCost ="style='border:1px solid silver;text-align:center;background:#FAF7F4;'";
+    private $styleBasicMargin ="style='border:1px solid silver;text-align:center;background:#DDF8E9;'";
+    private $styleCarrierHead ="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
+    private $styleSoaHead ="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
+    private $styleProvFactHead ="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+    private $styleProvTrafHead ="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
+    private $styleProvDispHead ="style='border:1px solid silver;background:#C37881;text-align:center;color:white;'";
+    private $styleBalanceHead ="style='border:1px solid silver;background:#2E62B4;text-align:center;color:white;'";
+    private $styleCostHead ="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
+    private $styleRevenueHead ="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
+    private $styleMarginHead ="style='border:1px solid silver;background:#049C47;text-align:center;color:white;'";
+    private $styleNull ="style='border:1px solid white;'";
+   
     /**
      * Encargada de armar el html del reporte
      * @param type $date
-     * @param type $intercompany
+     * @param type $interCompany
      * @param type $noActivity
      * @param type $typePaymentTerm
      * @param type $paymentTerm
      * @return string
      */
-    public static function report($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm)
+    public function report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm)
     {
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
         ini_set('max_execution_time', 500);
 
         if($date==null) $date=date('Y-m-d');
-        $documents= self::_getData($date,$intercompany,$noActivity,$typePaymentTerm,$paymentTerm);
-        $balances_3=self::_getBalances(DateManagement::calculateDate('-3',$date));
-        $balances_2=self::_getBalances(DateManagement::calculateDate('-2',$date));
-        $balances_1=self::_getBalances(DateManagement::calculateDate('-1',$date));
-
-        $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue_3=$cost_3=$margin_3=$revenue_2=$cost_2=$margin_2=$revenue_1=$cost_1=$margin_1=0;
-        $style_number_row="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
-        $style_basic="style='border:1px solid silver;text-align:center;'";
-        $style_basic_revenue="style='border:1px solid silver;text-align:center;background:#E2F5FF;'";
-        $style_basic_cost="style='border:1px solid silver;text-align:center;background:#FAF7F4;'";
-        $style_basic_margin="style='border:1px solid silver;text-align:center;background:#DDF8E9;'";
-        $style_carrier_head="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
-        $style_soa_head="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
-        $style_prov_fact_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
-        $style_prov_traf_head="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
-        $style_prov_disp_head="style='border:1px solid silver;background:#C37881;text-align:center;color:white;'";
-        $style_balance_head="style='border:1px solid silver;background:#2E62B4;text-align:center;color:white;'";
-        $style_cost_head="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
-        $style_revenue_head="style='border:1px solid silver;background:#06ACFA;text-align:center;color:white;'";
-        $style_margin_head="style='border:1px solid silver;background:#049C47;text-align:center;color:white;'";
-        $style_null="style='border:1px solid white;'";
-
-        $body="<table>
-                <tr>
-                    <td colspan='4'>
-                        <h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h2>
-                    </td>
-                    <td colspan='8'>  al
-                    {$date} </td>
-                <tr>
-                    <td colspan='10'></td>
-                </tr>
-               </table>
-               <table {$style_basic} >
-                <tr>
-                    <td {$style_null} colspan='6'></td>
-                    <td {$style_prov_fact_head} colspan='2'> PROVISION FACT </td>
-                    <td {$style_prov_traf_head} colspan='2'> PROVISION TRAFICO </td>
-                    <td {$style_prov_disp_head} colspan='2'> DISPUTAS </td>
-                    <td {$style_null} ></td>
-                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-3',$date)."</td>
-                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-2',$date)."</td>
-                    <td {$style_margin_head} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-1',$date)."</td>
-                    <td {$style_null} ></td>
-                </tr>
-                <tr>
-                    <td {$style_number_row} >N°</td>
-                    <td {$style_carrier_head} > CARRIER </td>
-                    <td {$style_soa_head} > SOA(DUE)</td>
-                    <td {$style_soa_head} > DUE DATE </td>
-                    <td {$style_soa_head} > SOA(NEXT)</td>
-                    <td {$style_soa_head} > DUE DATE </td>
-                    <td {$style_prov_fact_head} > CLIENTES REVENUE </td>
-                    <td {$style_prov_fact_head} > PROVEEDORES COST </td>
-                    <td {$style_prov_traf_head} > CLIENTES REVENUE </td>
-                    <td {$style_prov_traf_head} > PROVEEDORES COST </td>
-                    <td {$style_prov_disp_head} > CLIENTES RECIBIDAS </td>
-                    <td {$style_prov_disp_head} > PROVEEDORES ENVIADAS </td>
-                    <td {$style_balance_head} > BALANCE </td>
-                        
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} > MARGEN </td>
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} > MARGEN </td>
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} > MARGEN </td>
-                    <td {$style_number_row} >N°</td>
-                </tr>";
-        foreach($documents as $key => $document)
+        $documents=$this->_getData($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm);
+        $balances3=$this->_getBalances(DateManagement::calculateDate('-3',$date));
+        $balances2=$this->_getBalances(DateManagement::calculateDate('-2',$date));
+        $balances1=$this->_getBalances(DateManagement::calculateDate('-1',$date));
+        $soaDue=$soaNext=$provisionInvoiceSent=$provisionInvoiceReceived=$provisionTrafficSent=$provisionTrafficReceived=$receivedDispute=$sentDispute=$balance=$revenue3=$cost3=$margin3=$revenue2=$cost2=$margin2=$revenue1=$cost1=$margin1=0;
+        $body=NULL;
+        if($documents!=NULL)
         {
-            $pos=$key+1;
-            
-            $body.="<tr {$style_basic} >";
-            $body.="<td {$style_number_row} >{$pos}</td>";
-            $body.="<td {$style_basic} >".$document->name."</td>";
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa)."</td>";
-            $soaDue+=$document->soa;
-            $body.="<td {$style_basic} >".Utility::ifNull($document->due_date, "Nota 1") ."</td>";
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->soa_next)."</td>";
-            $soaNext+=$document->soa_next;
-            $body.="<td {$style_basic} >".Utility::ifNull($document->due_date_next, "Nota") ."</td>";
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->provision_invoice_sent)."</td>";
-            $provisionInvoiceSent+=$document->provision_invoice_sent;
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->provision_invoice_received)."</td>";
-            $provisionInvoiceReceived+=$document->provision_invoice_received;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_traffic_sent)."</td>";
-            $provisionTrafficSent+=$document->provision_traffic_sent;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->provision_traffic_received)."</td>";
-            $provisionTrafficReceived+=$document->provision_traffic_received;
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->received_dispute)."</td>";
-            $receivedDispute+=$document->received_dispute;
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal($document->sent_dispute)."</td>";
-            $sentDispute+=$document->sent_dispute;
-            $body.="<td {$style_basic} >".Yii::app()->format->format_decimal($document->balance)."</td>";
-            $balance+=$document->balance;
-            
-            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"revenue"))."</td>";
-            $revenue_3+=self::_getBalance($balances_3,$document->id,"revenue");
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"cost"))."</td>";
-            $cost_3+=self::_getBalance($balances_3,$document->id,"cost");
-            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_3,$document->id,"margin"))."</td>";
-            $margin_3+=self::_getBalance($balances_3,$document->id,"margin");
-            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"revenue"))."</td>";
-            $revenue_2+=self::_getBalance($balances_2,$document->id,"revenue");
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"cost"))."</td>";
-            $cost_2+=self::_getBalance($balances_2,$document->id,"cost");
-            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_2,$document->id,"margin"))."</td>";
-            $margin_2+=self::_getBalance($balances_2,$document->id,"margin");
-            $body.="<td {$style_basic_revenue} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"revenue"))."</td>";
-            $revenue_1+=self::_getBalance($balances_1,$document->id,"revenue");
-            $body.="<td {$style_basic_cost} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"cost"))."</td>";
-            $cost_1+=self::_getBalance($balances_1,$document->id,"cost");
-            $body.="<td {$style_basic_margin} >".Yii::app()->format->format_decimal(self::_getBalance($balances_1,$document->id,"margin"))."</td>";
-            $margin_1+=self::_getBalance($balances_1,$document->id,"margin");
-            
-            $body.="<td {$style_number_row} >{$pos}</td>";
-            $body.="</tr>";
-        }
-        $body.="<tr>
-                    <td {$style_carrier_head} colspan='2' > CARRIER </td>
-                    <td {$style_soa_head} colspan='2'> SOA(DUE)</td>
-                    <td {$style_soa_head} colspan='2'> SOA(NEXT)</td>
-                    <td {$style_prov_fact_head} > CLIENTES REVENUE </td>
-                    <td {$style_prov_fact_head} > PROVEEDORES COST </td>
-                    <td {$style_prov_traf_head} > CLIENTES REVENUE </td>
-                    <td {$style_prov_traf_head} > PROVEEDORES COST </td>
-                    <td {$style_prov_disp_head} > CLIENTES RECIBIDAS </td>
-                    <td {$style_prov_disp_head} > PROVEEDORES ENVIADAS </td>
-                    <td {$style_balance_head} > BALANCE </td>
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} > MARGEN </td>
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} > MARGEN </td>
-                    <td {$style_revenue_head} > REVENUE </td>
-                    <td {$style_cost_head} > COST </td>
-                    <td {$style_margin_head} colspan='2'> MARGEN </td>
+            $body.="<br>
+                    <table>
+                        <tr>
+                            <td colspan='12'>
+                                <h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h2>
+                                al {$date}
+                            </td>
+                        </tr>
+                   </table>
+                   <table >
+                    <tr>
+                        <td {$this->styleNull} colspan='2'></td>
+                        <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-3',$date)."</td>
+                        <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-2',$date)."</td>
+                        <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-1',$date)."</td>
+                        <td {$this->styleNull} colspan='6'></td>
+                        <td {$this->styleProvFactHead} colspan='2'> PROVISION FACT </td>
+                        <td {$this->styleProvTrafHead} colspan='2'> PROVISION TRAFICO </td>
+                        <td {$this->styleProvDispHead} colspan='2'> DISPUTAS </td>
+                        <td {$this->styleNull} ></td>
+                    </tr>
+                    <tr>
+                        <td {$this->styleNumberRow} >N°</td>
+                        <td {$this->styleCarrierHead} > CARRIER </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleBalanceHead} colspan='2'> BALANCE </td>
+                            
+                        <td {$this->styleSoaHead} > SOA(DUE)</td>
+                        <td {$this->styleSoaHead} > DUE DATE </td>
+                        <td {$this->styleSoaHead} > SOA(NEXT)</td>
+                        <td {$this->styleSoaHead} > DUE DATE </td>
+                        <td {$this->styleProvFactHead} > CLIENTES REVENUE </td>
+                        <td {$this->styleProvFactHead} > PROVEEDORES COST </td>
+                        <td {$this->styleProvTrafHead} > CLIENTES REVENUE </td>
+                        <td {$this->styleProvTrafHead} > PROVEEDORES COST </td>
+                        <td {$this->styleProvDispHead} > CLIENTES RECIBIDAS </td>
+                        <td {$this->styleProvDispHead} > PROVEEDORES ENVIADAS </td>
+                        <td {$this->styleNumberRow} >N°</td>
+                    </tr>";
+            foreach($documents as $key => $document)
+            {
+                $pos=$key+1;
+
+                $body.="<tr {$this->styleBasic} >";
+                    $body.="<td {$this->styleNumberRow} >{$pos}</td>";
+                    $body.="<td {$this->styleBasic} >".$document->name."</td>";
+                    $body.="<td {$this->styleBasicRevenue} >".Yii::app()->format->format_decimal($this->_getBalance($balances3,$document->id,"revenue"))."</td>";
+                    $revenue3+=$this->_getBalance($balances3,$document->id,"revenue");
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($this->_getBalance($balances3,$document->id,"cost"))."</td>";
+                    $cost3+=$this->_getBalance($balances3,$document->id,"cost");
+                    $body.="<td {$this->styleBasicMargin} >".Yii::app()->format->format_decimal($this->_getBalance($balances3,$document->id,"margin"))."</td>";
+                    $margin3+=$this->_getBalance($balances3,$document->id,"margin");
+                    $body.="<td {$this->styleBasicRevenue} >".Yii::app()->format->format_decimal($this->_getBalance($balances2,$document->id,"revenue"))."</td>";
+                    $revenue2+=$this->_getBalance($balances2,$document->id,"revenue");
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($this->_getBalance($balances2,$document->id,"cost"))."</td>";
+                    $cost2+=$this->_getBalance($balances2,$document->id,"cost");
+                    $body.="<td {$this->styleBasicMargin} >".Yii::app()->format->format_decimal($this->_getBalance($balances2,$document->id,"margin"))."</td>";
+                    $margin2+=$this->_getBalance($balances2,$document->id,"margin");
+                    $body.="<td {$this->styleBasicRevenue} >".Yii::app()->format->format_decimal($this->_getBalance($balances1,$document->id,"revenue"))."</td>";
+                    $revenue1+=$this->_getBalance($balances1,$document->id,"revenue");
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($this->_getBalance($balances1,$document->id,"cost"))."</td>";
+                    $cost1+=$this->_getBalance($balances1,$document->id,"cost");
+                    $body.="<td {$this->styleBasicMargin} >".Yii::app()->format->format_decimal($this->_getBalance($balances1,$document->id,"margin"))."</td>";
+                    $margin1+=$this->_getBalance($balances1,$document->id,"margin");
+                    $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->balance)."</td>";
+                    $balance+=$document->balance;
+
+                    $body.="<td {$this->styleBasic} >".Yii::app()->format->format_decimal($document->soa)."</td>";
+                    $soaDue+=$document->soa;
+                    $body.="<td {$this->styleBasic} >".Utility::ifNull($document->due_date, "Nota 1") ."</td>";
+                    $body.="<td {$this->styleBasic} >".Yii::app()->format->format_decimal($document->soa_next)."</td>";
+                    $soaNext+=$document->soa_next;
+                    $body.="<td {$this->styleBasic} >".Utility::ifNull($document->due_date_next, "Nota") ."</td>";
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($document->provision_invoice_sent)."</td>";
+                    $provisionInvoiceSent+=$document->provision_invoice_sent;
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($document->provision_invoice_received)."</td>";
+                    $provisionInvoiceReceived+=$document->provision_invoice_received;
+                    $body.="<td {$this->styleBasic} >".Yii::app()->format->format_decimal($document->provision_traffic_sent)."</td>";
+                    $provisionTrafficSent+=$document->provision_traffic_sent;
+                    $body.="<td {$this->styleBasic} >".Yii::app()->format->format_decimal($document->provision_traffic_received)."</td>";
+                    $provisionTrafficReceived+=$document->provision_traffic_received;
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($document->received_dispute)."</td>";
+                    $receivedDispute+=$document->received_dispute;
+                    $body.="<td {$this->styleBasicCost} >".Yii::app()->format->format_decimal($document->sent_dispute)."</td>";
+                    $sentDispute+=$document->sent_dispute;
+                    $body.="<td {$this->styleNumberRow} >{$pos}</td>";
+                $body.="</tr>";
+            }
+            $body.="<tr>
+                        <td {$this->styleNull} ></td>
+                        <td {$this->styleCarrierHead} rowspan='2'  > TOTAL </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleRevenueHead} > REVENUE </td>
+                        <td {$this->styleCostHead} > COST </td>
+                        <td {$this->styleMarginHead} > MARGEN </td>
+                        <td {$this->styleBalanceHead} colspan='2'> BALANCE </td>
+                            
+                        <td {$this->styleSoaHead} colspan='2'> SOA(DUE)</td>
+                        <td {$this->styleSoaHead} colspan='2'> SOA(NEXT)</td>
+                        <td {$this->styleProvFactHead} > CLIENTES REVENUE </td>
+                        <td {$this->styleProvFactHead} > PROVEEDORES COST </td>
+                        <td {$this->styleProvTrafHead} > CLIENTES REVENUE </td>
+                        <td {$this->styleProvTrafHead} > PROVEEDORES COST </td>
+                        <td {$this->styleProvDispHead} > CLIENTES RECIBIDAS </td>
+                        <td {$this->styleProvDispHead} > PROVEEDORES ENVIADAS </td>
+                        <td {$this->styleNull} ></td>
+                    </tr>
+                    <tr>
+                        <td {$this->styleNull} ></td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($revenue3)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($cost3)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($margin3)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($revenue2)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($cost2)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($margin2)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($revenue1)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($cost1)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($margin1)."</td>
+                        <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($balance)."</td>
+                            
+                        <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($soaDue)."</td>
+                        <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($soaNext)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($provisionInvoiceSent)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($provisionInvoiceReceived)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($provisionTrafficSent)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($provisionTrafficReceived)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($receivedDispute)."</td>
+                        <td {$this->styleBasic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
+                        <td {$this->styleNull} ></td>
+                    </tr>
+             </table>";        
+
+            $this->totalSoaDue+=$soaDue;
+            $this->totalSoaNext+=$soaNext;
+            $this->totalProvisionInvoiceSent+=$provisionInvoiceSent;
+            $this->totalProvisioInvoiceReceived+=$provisionInvoiceReceived;
+            $this->totalProvisioTrafficSent+=$provisionTrafficSent;
+            $this->totalProvisioTrafficReceived+=$provisionTrafficReceived;
+            $this->totalReceivedDispute+=$receivedDispute;
+            $this->totalSentDispute+=$sentDispute;
+            $this->totalBalance+=$balance;
+            $this->totalRevenue3+=$revenue3;
+            $this->totalCost3+=$cost3;
+            $this->totalMargin3+=$margin3;
+            $this->totalRevenue2+=$revenue2;
+            $this->totalCost2+=$cost2;
+            $this->totalMargin2+=$margin2;
+            $this->totalRevenue1+=$revenue1;
+            $this->totalCost1+=$cost1;
+            $this->totalMargin1+=$margin1;
+    //        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
+
+            if($noActivity==TRUE)$body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota 1: No presenta movimiento a la fecha</td></tr><table>";
+        }  
+        return $body;
+    }
+    
+    /**
+     * Metodo encargado de armar el resumen total cuando se consulta recredi para todos los termino pago.
+     * @param type $date
+     * @return string
+     */
+    public function totalsGeneral($date)
+    {
+        $body="<h2 style='color:#06ACFA!important;'>RESUMEN TOTAL GENERAL</h2> <br>";
+        $body.="<table  style='width: 100%;'>
+                <tr>
+                    <td {$this->styleNull} ></td>
+                    <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-3',$date)."</td>
+                    <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-2',$date)."</td>
+                    <td {$this->styleMarginHead} colspan='3'> CAPTURA  ".DateManagement::calculateDate('-1',$date)."</td>
+                    <td {$this->styleNull} colspan='7'></td>
+                    <td {$this->styleProvFactHead} colspan='2'> PROVISION FACT </td>
+                    <td {$this->styleProvTrafHead} colspan='2'> PROVISION TRAFICO </td>
+                    <td {$this->styleProvDispHead} colspan='2'> DISPUTAS </td>
+                    <td {$this->styleNull} ></td>
                 </tr>
                 <tr>
-                    <td {$style_basic} colspan='2' >Total</td>
-                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($soaDue)."</td>
-                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($soaNext)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceSent)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionInvoiceReceived)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionTrafficSent)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($provisionTrafficReceived)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($receivedDispute)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($sentDispute)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($balance)."</td>
+                   <td {$this->styleNull} ></td>
+                   <td {$this->styleRevenueHead} > REVENUE </td>
+                   <td {$this->styleCostHead} > COST </td>
+                   <td {$this->styleMarginHead} > MARGEN </td>
+                   <td {$this->styleRevenueHead} > REVENUE </td>
+                   <td {$this->styleCostHead} > COST </td>
+                   <td {$this->styleMarginHead} > MARGEN </td>
+                   <td {$this->styleRevenueHead} > REVENUE </td>
+                   <td {$this->styleCostHead} > COST </td>
+                   <td {$this->styleMarginHead} > MARGEN </td>
+                   <td {$this->styleSoaHead} colspan='3'> BALANCE </td>
+                       
+                   <td {$this->styleSoaHead} colspan='2'> SOA(DUE)</td>
+                   <td {$this->styleSoaHead} colspan='2'> SOA(NEXT)</td>
+                   <td {$this->styleProvFactHead} > CLIENTES REVENUE </td>
+                   <td {$this->styleProvFactHead} > PROVEEDORES COST </td>
+                   <td {$this->styleProvTrafHead} > CLIENTES REVENUE </td>
+                   <td {$this->styleProvTrafHead} > PROVEEDORES COST </td>
+                   <td {$this->styleProvDispHead} > CLIENTES RECIBIDAS </td>
+                   <td {$this->styleProvDispHead} > PROVEEDORES ENVIADAS </td>
+                   <td {$this->styleNull} ></td>
+               </tr>";
+        $body.="<tr>
+                    <td {$this->styleNull} ></td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalRevenue3)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalCost3)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalMargin3)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalRevenue2)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalCost2)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalMargin2)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalRevenue1)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalCost1)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalMargin1)."</td>
+                    <td {$this->styleBasic}  colspan='3'>".Yii::app()->format->format_decimal($this->totalBalance)."</td>
                         
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_3)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($margin_2)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($revenue_1)."</td>
-                    <td {$style_basic} >".Yii::app()->format->format_decimal($cost_1)."</td>
-                    <td {$style_basic} colspan='2'>".Yii::app()->format->format_decimal($margin_1)."</td>
-                </tr>
-         </table>";        
-        
-//        $body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota: No presenta movimiento despues de la fecha</td></tr></table>";
-
-        if($noActivity==TRUE)$body.="<table><tr style='border:0px><td style='border:0px colspan='23'>Nota 1: No presenta movimiento a la fecha</td></tr><table>";
-          else  $body."";
+                    <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($this->totalSoaDue)."</td>
+                    <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($this->totalSoaNext)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalProvisionInvoiceSent)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalProvisioInvoiceReceived)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalProvisioTrafficSent)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalProvisioTrafficReceived)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalReceivedDispute)."</td>
+                    <td {$this->styleBasic} >".Yii::app()->format->format_decimal($this->totalSentDispute)."</td>
+                    <td {$this->styleNull} ></td>
+                  </tr>
+                </table>";
         return $body;
     }
 
     /**
      * Encargada de traer data para los listados y para el total total con el atributo $totals=TRUE
      * @param type $date
-     * @param type $intercompany=TRUE
+     * @param type $interCompany=TRUE
      * @param type $noActivity=TRUE
      * @param type $typePaymentTerm
      * @param type $paymentTerm
@@ -206,10 +316,10 @@ class Recredi extends Reportes
      * @since 2.0
      * @access private
      */
-    private static function _getData($date,$intercompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
+    private function _getData($date,$interCompany=TRUE,$noActivity=TRUE,$typePaymentTerm,$paymentTerm)
     {
-        if($intercompany)           $intercompany="";
-        elseif($intercompany==FALSE) $intercompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
+        if($interCompany)           $interCompany="";
+        elseif($interCompany==FALSE) $interCompany="AND cg.id NOT IN(SELECT id FROM carrier_groups WHERE name IN('FULLREDPERU','R-ETELIX.COM PERU','CABINAS PERU'))";
 
         if($noActivity)           $noActivity="";
         elseif($noActivity==FALSE) $noActivity=" WHERE due_date IS NOT NULL";
@@ -219,7 +329,6 @@ class Recredi extends Reportes
         }else{
             $filterPaymentTerm="{$paymentTerm}";
         }
-        
         
         if($typePaymentTerm===NULL){
             $tableNext="";
@@ -264,7 +373,7 @@ class Recredi extends Reportes
                                      termino_pago tp
                                 WHERE con.id_carrier=c.id AND ctps.id_contrato=con.id AND ctps.id_termino_pago_supplier=tp.id AND con.end_date>='{$date}' AND con.sign_date IS NOT NULL AND ctps.end_date>='{$date}' AND c.id IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)
                                 LIMIT 1";
-        $due_date="(SELECT MAX(date)
+        $dueDate="(SELECT MAX(date)
                     FROM (SELECT CASE WHEN ({$sqlExpirationCustomer})=0 THEN issue_date
                                       WHEN ({$sqlExpirationCustomer})=3 THEN CAST(issue_date + interval '3 days' AS date)
                                       WHEN ({$sqlExpirationCustomer})=5 THEN CAST(issue_date + interval '5 days' AS date)
@@ -316,7 +425,7 @@ class Recredi extends Reportes
               /*-----------------------------------------------------------------------------------------------------------*/     
                     /*el due date del soa*/
                    
-                           {$due_date} WHERE d.date<='{$date}') AS due_date,
+                           {$dueDate} WHERE d.date<='{$date}') AS due_date,
               /*-----------------------------------------------------------------------------------------------------------*/                   
                     /*el soa next*/
 
@@ -327,7 +436,7 @@ class Recredi extends Reportes
               /*-----------------------------------------------------------------------------------------------------------*/       
                     /*el due date del soa next*/
 
-                           {$due_date}) AS due_date_next,
+                           {$dueDate}) AS due_date_next,
               /*-----------------------------------------------------------------------------------------------------------*/                   
                     /*fin segmento para soas y due_dates*/
               /*-----------------------------------------------------------------------------------------------------------*/        
@@ -376,7 +485,7 @@ class Recredi extends Reportes
                    
               WHERE c.id_carrier_groups=cg.id 
                     {$wherePaymentTerm}
-                    {$intercompany}  
+                    {$interCompany}  
               ORDER BY cg.name ASC)activity {$noActivity}";
         return AccountingDocument::model()->findAllBySql($sql);
     }
@@ -387,7 +496,7 @@ class Recredi extends Reportes
      * @param date $date
      * @return array
      */
-    private static function _getBalances($date)
+    private function _getBalances($date)
     {
         $sql="SELECT c.id_carrier_groups AS id, SUM(b.revenue) as revenue, SUM(b.cost) AS cost, SUM(b.revenue-b.cost) AS margin
               FROM (SELECT id_carrier_customer AS id, CASE WHEN ABS(SUM(revenue))>ABS(SUM(cost+margin)) THEN SUM(cost+margin) ELSE SUM(revenue) END AS revenue, CAST(0 AS double precision) AS cost
@@ -406,7 +515,7 @@ class Recredi extends Reportes
     /**
      *
      */
-    private static function _getBalance($balances,$id,$atributte)
+    private function _getBalance($balances,$id,$atributte)
     {
         foreach ($balances as $key => $balance)
         {
@@ -429,7 +538,7 @@ class Recredi extends Reportes
      * @param type $paymentTerms
      * @return type
      */
-    public static function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    public function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 1500);
         $var="";
@@ -440,22 +549,28 @@ class Recredi extends Reportes
                 $var.="<h1 style='color:#06ACFA!important;'>RECREDI CUSTOMER</h1> <br>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion customer*/
                 {
-                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,FALSE,$paymentTerm->id);
+                   if($paymentTerm->name!="Sin estatus") $var.= $this->report($date,$interCompany,$noActivity,FALSE,$paymentTerm->id);
                 }
                 $var.="<br> <h1 style='color:#06ACFA!important;'>RECREDI SUPPLIER</h1> <br>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Concatena al customer y busca todos los termino pago en la relacion supplier*/
                 {
-                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id);
+                   if($paymentTerm->name!="Sin estatus") $var.= $this->report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id);
                 }
             }else{
                 $var.="<h1>RECREDI</h1>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
                 {
-                   if($paymentTerm->name!="Sin estatus") $var.= Recredi:: report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id);
+                   if($paymentTerm->name!="Sin estatus") $var.= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id);
                 }
+                $var.= $this->totalsGeneral($date);
             }
-        }else{/*Busca data para el termino pago y tipo de relacion comercial en especifico seleccionados*/
-            $var.="<h1>RECREDI</h1>".  Recredi:: report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
+            $data= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+            if($data!=NULL)
+                $var.="<h1>RECREDI</h1>". $data;
+            else
+                $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
+            
         }    
         return $var;
     }

@@ -27,11 +27,16 @@ class InvoiceReport extends Reportes
         $styleDiff="style='border:1px solid silver;background:#18B469;text-align:center;color:white;'";
         $styleSubTotal="style='border:1px solid #D7D8E4;text-align:center;background:silver;color:white;'";
         $styleDateNull="style='background:white;text-align:center;color:silver;'";
+        $styleLegend="style='background:white;text-align:left;color:silver;'";
         $styleNoInvoice="style='background:#D1BFEC;text-align:center;color:white;border:1px solid #D7D8E4;'";
         $styleDifhigher="style='background:#FAE08D;text-align:center;color:silver;border:1px solid silver;'";
         /*********************                       INICIALIZACION DE VARIABLES NUMERICAS                     **********************/
         $acumFactura= $acumProvisions= $acumDiference= $acumInvoiceMin= $acumProvisionsMin= $acumDiferenceMin= $acumNoInvoiceDiffAmount= $acumNoInvoiceDiffMin=
-        $acumMinHigher= $acumAmountHigher= $acumMinInvoiceHigher= $acumAmountInvoiceHigher= $acumDifMinHigher= $acumDifAmountHigher= $acumNoInvoiceDiffAmountPrev= $acumNoInvoiceDiffMinPrev=0;
+        $acumMinHigher= $acumAmountHigher= $acumMinInvoiceHigher= $acumAmountInvoiceHigher= $acumDifMinHigher= $acumDifAmountHigher= $acumNoInvoiceDiffAmountPrev= $acumNoInvoiceDiffMinPrev="0.00";
+        
+        /*********************      EXTRACCION DE PROVISIONES, FACTURAS Y DIFERENCIAS DESDE BASE DE DATOS      **********************/
+        $documents=self::getModel($fromDate, $toDate,$typeReport,$paymentTerm,$dividedInvoice, NULL, NULL);
+
         /*********************                       INICIALIZACION DE HEADER PRINCIPAL                        **********************/
         $header="<tr>
                     <td {$styleNumberRow} ></td>
@@ -54,10 +59,7 @@ class InvoiceReport extends Reportes
                     <td ".$styleDiff.">MONTO</td>
                     <td {$styleNumberRow} >N°</td>
                  </tr>";
-        
-        /*********************      EXTRACCION DE PROVISIONES, FACTURAS Y DIFERENCIAS DESDE BASE DE DATOS     **********************/
-        $documents=self::getModel($fromDate, $toDate,$typeReport,$paymentTerm,$dividedInvoice, NULL, NULL);
-        
+
         /*********************                      NOMBRE COMPLEMENTARIO PARA LOS PERIODOS                   **********************/ 
         
         if($dividedInvoice!=NULL) 
@@ -318,23 +320,23 @@ class InvoiceReport extends Reportes
         }
         /********************                             LEYENDA DE COLORES                                ************************/      
         $body.="<tr>
-                   <td {$styleDescription} colspan='12' > Leyenda </td>
+                   <td {$styleLegend} colspan='12' > Leyenda </td>
                 </tr>
                 <tr>
                    <td {$styleDifhigher} ></td>
-                   <td  {$styleDescription} colspan='11' > Diferencias de mas de (1 $) </td>
+                   <td  {$styleLegend} colspan='11' > Diferencias de mas de (1 $) </td>
                 </tr>
                 <tr>
                    <td {$styleNoInvoice} ></td>
-                   <td {$styleDescription} colspan='11' > Provisiones Sin Factura </td>
+                   <td {$styleLegend} colspan='11' > Provisiones Sin Factura </td>
                 </tr>
                 <tr>
                    <td {$styleSubTotal} ></td>
-                   <td {$styleDescription} colspan='11' > Diff de mas de (1 $) + Prov Sin Factura </td>
+                   <td {$styleLegend} colspan='11' > Diff de mas de (1 $) + Prov Sin Factura </td>
                 </tr>
                 <tr>
                    <td {$styleTotalTotal} ></td>
-                   <td {$styleDescription} colspan='11' > Total General </td>
+                   <td {$styleLegend} colspan='11' > Total General </td>
                 </tr>
          </table>";
         
