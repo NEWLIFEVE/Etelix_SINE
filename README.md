@@ -3,12 +3,15 @@
 
 Sistema de Reportes para Billing
 
+Release 1.2.14
     - Se corrigio el css encargado de colorear los botones para exportar.
     - SUMMARY: De ahora en adelante se muestra summary dividido en dos grupos, operadores MONETIZABLES (100% y 50%) y operadores NO MONETIZABLES (0%)
     - SUMMARY: Ahora los valores negativos excluyendo los incrementales seran negativos.
     - SUMMARY: Eliminada la linea que indicaba la existencia de soa provisionado.
     - SUMMARY: Se corrigio la operacion encargada de calcular el soa provisionado.
     - SUMMARY: Se repite la columna rows y carrier despuesde la seccion de pagos para poder navegar el reporte de forma mas sencilla.
+
+Release 1.2.13
     - Summary: Se mejoro el metodo encargado de definir el soa provisionado.
     - Summary: Se agrego un margen a las celdas que tengan soa provisionado.
     - Summary y Recredi: Se corrigio un pequeño error que sucedia en el calculo de tiempo habiendo seleccionado ver carrier sin actividad.
@@ -22,6 +25,7 @@ Sistema de Reportes para Billing
     - Se agregaron "atributos en la clase recredi" para almacenar totales en cada llamada al reporte.
     - Se agregaron "atributos en la clase recredi" para almacenar los estilos utilizados en los metodos report y totalsGeneral.
     - Se agrego validacion al momento de mostrar contenido dependiendo el termino pago para que si el modelo es NULL, entonces no muestre nada (en el caso de consulta general) y muestre una nota indicando que no hay data perteneciente al termino pago y relacion seleccionado(en consulta individual).
+
 Release 1.2.12
     - Recredi: ahora las consultas de recredi general viene desglosada por termino pago, de igual manera si se selecciona customer o supplier con todos los termino pago.
     - Se elimino columna "BALANCE" en summary.
