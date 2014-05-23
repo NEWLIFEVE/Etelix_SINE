@@ -3,6 +3,9 @@
 
 Sistema de Reportes para Billing
 
+Release 1.2.14.1
+    - Habilitado menu de provisiones
+
 Release 1.2.14
     - Se corrigio el css encargado de colorear los botones para exportar.
     - SUMMARY: De ahora en adelante se muestra summary dividido en dos grupos, operadores MONETIZABLES (100% y 50%) y operadores NO MONETIZABLES (0%)
