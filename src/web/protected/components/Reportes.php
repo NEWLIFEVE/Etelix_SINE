@@ -139,6 +139,12 @@ class Reportes extends CApplicationComponent
         $var = new Recredi();
         return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
+    public function billing($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    {
+        ini_set('max_execution_time', 2500);
+        $var = new Billing();
+        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+    }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
     {
