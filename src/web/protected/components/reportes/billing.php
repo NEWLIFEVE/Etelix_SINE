@@ -48,19 +48,12 @@ class Billing extends Reportes
                         </tr>
                    </table>
                    <table style='width: 100%;'>
-                    <tr>
-                        <td {$this->styleNull} ></td>
-                        <td {$this->styleSine} colspan='3'>  RECREDI SINE </td>
-                        <td {$this->styleBilling} colspan='3'> RECREDI BILLING </td>
-                        <td {$this->styleDifference} colspan='2'> DIFFERENCE </td>
-                        <td {$this->styleNull} ></td>
-                    </tr>
+                    
                     <tr>
                         <td {$this->styleNumberRow} >N°</td>
                         <td {$this->styleCarrierHead} > CARRIER </td>
-                        <td {$this->styleSine} colspan='2'> BALANCE </td>
-                        <td {$this->styleCarrierHead} > CARRIER </td>
-                        <td {$this->styleBilling} colspan='2'> BALANCE </td>
+                        <td {$this->styleSine} colspan='3'> SINE </td>
+                        <td {$this->styleBilling} colspan='2'> BILLING </td>
                         <td {$this->styleDifference} colspan='2'> DIFFERENCE </td>
                         <td {$this->styleNumberRow} >N°</td>
                     </tr>";
@@ -86,8 +79,7 @@ class Billing extends Reportes
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                     $body.="<td {$this->styleBasic} >".$document->name."</td>";
-                    $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->balance)."</td>";
-                    $body.="<td {$this->styleBasic} >".$document->carrier_billing."</td>";
+                    $body.="<td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($document->balance)."</td>";
                     $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->balance_billing)."</td>";
                     $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->difference)."</td>";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
@@ -96,15 +88,16 @@ class Billing extends Reportes
             }
             $body.="<tr>
                         <td {$this->styleNull} ></td>
+                        <td {$this->styleCarrierHead} rowspan='2'> TOTAL </td>
                         <td {$this->styleSine} colspan='3'> SINE </td>
-                        <td {$this->styleBilling} colspan='3'> BILLING </td>
+                        <td {$this->styleBilling} colspan='2'> BILLING </td>
                         <td {$this->styleDifference} colspan='2'> DIFFERENCE </td>
                         <td {$this->styleNull} ></td>
                     </tr>
                     <tr>
                         <td {$this->styleNull} ></td>
                         <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($balanceSine)."</td>
-                        <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($balanceBilling)."</td>
+                        <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($balanceBilling)."</td>
                         <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($difference)."</td>
                         <td {$this->styleNull} ></td>
                     </tr>
