@@ -40,6 +40,17 @@ $this->pageTitle = Yii::app()->name;
             <h1 class='h1_report h1RECREDI'>RECREDI</h1>
         </div>
         <br>
+        <div class='Reportes DIFFERENCE' id='difference'>
+            <h1 class='h1_report h1DIFFERENCE'>DIFFERENCE</h1>
+        </div>
+        <br>
+        <?php 
+//            echo SiteController::accessControl(Yii::app()->user->id,
+//            "<br>
+//            <div class='Reportes DIFFERENCE' id='difference'>
+//                <h1 class='h1_report h1DIFFERENCE'>DIFFERENCE</h1>
+//            </div>"); 
+        ?>
 <!--        <div class="Reportes RECOPA" id="recopa">
             <h1 class='h1_report h1RECOPA'>RECOPA</h1>
         </div>

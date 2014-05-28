@@ -24,6 +24,7 @@
                         <?php echo Yii::app()->name; ?>
                     </a>
                     <?php if (!Yii::app()->user->isGuest): ?>
+                    <?php // echo SiteController::accessControl(Yii::app()->user->id,"<label id='showProvisions'class='element'>Provisiones</label>"); ?>
                     <?php echo SiteController::accessControl(Yii::app()->user->id); ?>
                     
                         <span class="element-divider"></span>
@@ -66,7 +67,6 @@
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery/jquery-ui-timepicker-addon.js"></script>
         <script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/bootstrap.min.js"></script>
         <script src="<?php echo Yii::app()->baseUrl; ?>/js/sine.js"></script>
-        <!--<script src="<?php // echo Yii::app()->baseUrl; ?>/js/views.js"></script>-->
         <!--<script>
                 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
                 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
