@@ -200,17 +200,18 @@ class Billing extends Reportes
                     FROM accounting_document 
                     WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date='{$toDateLastPeriod}' AND id_accounting_document IS NULL) AS provision_traffic_received,
                /*-----------------------------------------------------------------------------------------------------------*/  
-                   (SELECT count(ctps.id)
-                    FROM contrato con, 
-                         carrier c,
-                         contrato_termino_pago_supplier ctps,
-                         termino_pago tp
-                    WHERE con.id_carrier=c.id
-                      AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
-                      AND con.id=ctps.id_contrato
-                      AND ctps.id_termino_pago_supplier=tp.id
-                      AND ctps.end_date IS NOT NULL
-                    GROUP BY con.id,ctps.id,tp.name,c.name) AS tp,
+                   (SELECT count(tph)
+                        FROM(SELECT count(ctps.id)AS tph
+                             FROM contrato con, 
+                                  carrier c,
+                                  contrato_termino_pago_supplier ctps,
+                                  termino_pago tp
+                             WHERE con.id_carrier=c.id
+                               AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
+                               AND con.id=ctps.id_contrato
+                               AND ctps.id_termino_pago_supplier=tp.id
+                               AND ctps.end_date IS NOT NULL
+                             GROUP BY con.id,ctps.id,tp.name,c.name) tph) AS tp,
                /*-----------------------------------------------------------------------------------------------------------*/       
                    (SELECT amount from billing
                     where carrier = cg.name and date_balance='{$date}')AS balance_billing,
@@ -258,7 +259,7 @@ class Billing extends Reportes
                        <td style='background:#DAB6B7;width:12%;border-bottom: 3px solid white;'></td>  <td> No se encuentra el grupo en billing</td> 
                     </tr>
                     <tr> 
-                       <td style='border: 3px solid black;background:#FAD8B9;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
+                       <td style='border: 3px solid black;background:#D1BFEC;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
                     </tr>
                  </table>";
         if($paymentTerms=="todos") {
