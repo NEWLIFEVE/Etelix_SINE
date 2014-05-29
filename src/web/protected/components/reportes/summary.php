@@ -550,6 +550,7 @@ class summary extends Reportes
      */
     public static function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
+        ini_set('memory_limit', '256M');
         $body="<h1>SUMMARY  ".Reportes::defineNameExtra($paymentTerms,$typePaymentTerm,NULL)."</h1>  AL {$date} <br>";
         $body.="<h3>Operadores Monetizables</h3>";
         $body.=self::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms, TRUE);

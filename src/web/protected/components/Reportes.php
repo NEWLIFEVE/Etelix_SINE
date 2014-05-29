@@ -136,6 +136,7 @@ class Reportes extends CApplicationComponent
     public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 2500);
+        ini_set('memory_limit', '512M');
         $var = new Recredi();
         return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }

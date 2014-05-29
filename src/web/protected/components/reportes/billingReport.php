@@ -283,7 +283,7 @@ class billingReport extends Reportes
     public function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 2000);
-        ini_set("memory_limit","100M");
+        ini_set('memory_limit', '512M');
         $var="";
         $leyend="<br>
                  <h3>Leyenda</h3>
