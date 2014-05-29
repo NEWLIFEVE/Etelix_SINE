@@ -541,6 +541,7 @@ class Recredi extends Reportes
     public function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 1500);
+        ini_set('memory_limit', '512M');
         $var="";
         if($paymentTerms=="todos") {
             $paymentTerms= TerminoPago::getModel();
