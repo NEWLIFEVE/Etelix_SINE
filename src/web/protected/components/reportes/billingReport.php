@@ -4,7 +4,7 @@
  * @package reportes
  * @version 1.0
  */
-class Billing extends Reportes 
+class billingReport extends Reportes 
 {
     private $carriersSine=NULL;
     private $totalBalanceSine;
@@ -148,33 +148,32 @@ class Billing extends Reportes
     {
         $sql="SELECT * FROM billing WHERE carrier NOT IN ({$carriersBilling})";
         $modelCarrierBilling= Billing::model()->findAllBySql($sql);
-        var_dump($modelCarrierBilling);
-//        if($modelCarrierBilling!=NULL)
-//        {
-//            $body="<h2 style='color:#06ACFA!important;'>Operadores BILLING sin coincidencias con SINE </h2>";
-//            $body.="<table>
-//                         <tr>
-//                            <td {$this->styleNumberRow} >N°</td>
-//                            <td {$this->styleCarrierHead} >Carrier</td>
-//                            <td {$this->styleBilling} >Balance</td>
-//                            <td {$this->styleNumberRow} >N°</td>
-//                        </tr>";
-//            foreach ($modelCarrierBilling as $key => $model)
-//            {
-//                $pos=$key+1;
-//                $body.="<tr>
-//                            <td {$this->styleNumberRow } >{$pos}</td>
-//                            <td {$this->styleBasic} >".$model->carrier."</td>
-//                            <td {$this->styleBasic} >".$model->amount."</td>
-//                            <td {$this->styleNumberRow } >{$pos}</td>
-//                        </tr>";
-//
-//            }
-//            $body.="</table>";
-//            return $body;
-//        }else{
-//            return "<h3 style='color:#DAB6B7!important;'>No hay Operadores BILLING sin coincidencias con SINE </h3>";
-//        }   
+        if($modelCarrierBilling!=NULL)
+        {
+            $body="<h2 style='color:#06ACFA!important;'>Operadores BILLING sin coincidencias con SINE </h2>";
+            $body.="<table>
+                         <tr>
+                            <td {$this->styleNumberRow} >N°</td>
+                            <td {$this->styleCarrierHead} >Carrier</td>
+                            <td {$this->styleBilling} >Balance</td>
+                            <td {$this->styleNumberRow} >N°</td>
+                        </tr>";
+            foreach ($modelCarrierBilling as $key => $model)
+            {
+                $pos=$key+1;
+                $body.="<tr>
+                            <td {$this->styleNumberRow } >{$pos}</td>
+                            <td {$this->styleBasic} >".$model->carrier."</td>
+                            <td {$this->styleBasic} >".Yii::app()->format->format_decimal($model->amount)."</td>
+                            <td {$this->styleNumberRow } >{$pos}</td>
+                        </tr>";
+
+            }
+            $body.="</table>";
+            return $body;
+        }else{
+            return "<h3 style='color:#DAB6B7!important;'>No hay Operadores BILLING sin coincidencias con SINE </h3>";
+        }   
     }
     /**
      * Encargada de traer data para los listados y para el total total con el atributo $totals=TRUE
@@ -327,7 +326,7 @@ class Billing extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                $var.=$leyend;
+                $var.=$leyend.self::getCarriersBillingNotSine($this->carriersSine);
             }else{
                 $var.="<h1>DIFFERENCE</h1>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
@@ -339,7 +338,7 @@ class Billing extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id,$fromDateLastPeriod);
                    }
                 }
-                $var.= $this->totalsGeneral().$leyend;
+                $var.= $this->totalsGeneral().$leyend.self::getCarriersBillingNotSine($this->carriersSine);
             }
         }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
             $period=TerminoPago::getModelFind($paymentTerms)->period;
@@ -352,7 +351,7 @@ class Billing extends Reportes
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
         } 
-        return $var.self::getCarriersBillingNotSine($this->carriersSine);
+        return $var;
     }
 }
 ?>
