@@ -6,7 +6,7 @@
  */
 class Billing extends Reportes 
 {
-
+    private $carriersSine=NULL;
     private $totalBalanceSine;
     private $totalBalanceBilling;
     private $totalDifference;
@@ -59,6 +59,10 @@ class Billing extends Reportes
                     </tr>";
             foreach($documents as $key => $document)
             {
+                if($this->carriersSine==NULL)
+                    $this->carriersSine.="'".$document->name."'";    
+                else
+                    $this->carriersSine.=",'".$document->name."'";
                 $pos=$key+1;
                 $balanceSine+=$document->balance;
                 $balanceBilling+=$document->balance_billing;
@@ -135,7 +139,43 @@ class Billing extends Reportes
                 </table>";
         return $body;
     }
-
+    /**
+     * 
+     * @param type $carriersBilling
+     * @return type
+     */
+    public function getCarriersBillingNotSine($carriersBilling)
+    {
+        $sql="SELECT * FROM billing WHERE carrier NOT IN ({$carriersBilling})";
+        $modelCarrierBilling= Billing::model()->findAllBySql($sql);
+        var_dump($modelCarrierBilling);
+//        if($modelCarrierBilling!=NULL)
+//        {
+//            $body="<h2 style='color:#06ACFA!important;'>Operadores BILLING sin coincidencias con SINE </h2>";
+//            $body.="<table>
+//                         <tr>
+//                            <td {$this->styleNumberRow} >N°</td>
+//                            <td {$this->styleCarrierHead} >Carrier</td>
+//                            <td {$this->styleBilling} >Balance</td>
+//                            <td {$this->styleNumberRow} >N°</td>
+//                        </tr>";
+//            foreach ($modelCarrierBilling as $key => $model)
+//            {
+//                $pos=$key+1;
+//                $body.="<tr>
+//                            <td {$this->styleNumberRow } >{$pos}</td>
+//                            <td {$this->styleBasic} >".$model->carrier."</td>
+//                            <td {$this->styleBasic} >".$model->amount."</td>
+//                            <td {$this->styleNumberRow } >{$pos}</td>
+//                        </tr>";
+//
+//            }
+//            $body.="</table>";
+//            return $body;
+//        }else{
+//            return "<h3 style='color:#DAB6B7!important;'>No hay Operadores BILLING sin coincidencias con SINE </h3>";
+//        }   
+    }
     /**
      * Encargada de traer data para los listados y para el total total con el atributo $totals=TRUE
      * @param type $date
@@ -228,7 +268,7 @@ class Billing extends Reportes
               ORDER BY cg.name ASC)activity";
         return AccountingDocument::model()->findAllBySql($sql);
     }
-
+    
     /**
      * Metodo encargado de determinar el tipo de reporte exacto y de ahi  pasar los parametros necesarios, hay varios casos:
      * 1- Ambos tipos de relacion comercial con todos los termino pago, en este caso se ejecuta dos foreach , uno consecutivo del otro buscando data de todos los termino pago como customer y supplier sucesivamente.
@@ -311,8 +351,8 @@ class Billing extends Reportes
             else
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
-        }    
-        return $var;
+        } 
+        return $var.self::getCarriersBillingNotSine($this->carriersSine);
     }
 }
 ?>
