@@ -51,7 +51,7 @@ class LoginForm extends CFormModel
 		if(!$this->hasErrors())
 		{
 			$this->_identity=new UserIdentity($this->username,$this->password);
-			if(!$this->_identity->authenticate())
+			if($this->_identity->authenticate()){
 				if($this->_identity->errorCode==1){
 					$this->addError('username',"Usuario Invalido");
 				}
@@ -61,6 +61,7 @@ class LoginForm extends CFormModel
 				else if($this->_identity->errorCode==3){
 					$this->addError('username',"Email Invalido");
 				}
+                        }
 		}
 	}
 

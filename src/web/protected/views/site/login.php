@@ -44,9 +44,11 @@ $this->breadcrumbs=array(
                                             <?php echo $form->error($model,'rememberMe'); ?>
                                             </label>
                                         </div>
-					 <?php echo CHtml::submitButton('Ingresar', array('class' => 'primary large')); ?>
-					<?php echo $form->error($model,'username'); ?>
-					<?php echo $form->error($model,'password'); ?>
+					<?php echo CHtml::submitButton('Ingresar', array('class' => 'primary large')); ?>
+			<div class="login">
+                                <?php echo $form->error($model,'username'); ?>
+                                <?php echo $form->error($model,'password'); ?>
+			</div>		
 				</div>
 			</div>
 			<?php $this->endWidget(); ?>

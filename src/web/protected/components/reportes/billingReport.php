@@ -4,9 +4,9 @@
  * @package reportes
  * @version 1.0
  */
-class Billing extends Reportes 
+class billingReport extends Reportes 
 {
-
+    private $carriersSine=NULL;
     private $totalBalanceSine;
     private $totalBalanceBilling;
     private $totalDifference;
@@ -59,6 +59,10 @@ class Billing extends Reportes
                     </tr>";
             foreach($documents as $key => $document)
             {
+                if($this->carriersSine==NULL)
+                    $this->carriersSine.="'".$document->name."'";    
+                else
+                    $this->carriersSine.=",'".$document->name."'";
                 $pos=$key+1;
                 $balanceSine+=$document->balance;
                 $balanceBilling+=$document->balance_billing;
@@ -68,13 +72,13 @@ class Billing extends Reportes
                     $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
                 
                 if($document->provision_traffic_received >=1)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAD8B9;'";
+                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
                 
                 if($document->carrier_billing == null)
                     $this->styleBasic="style='border:1px solid silver;text-align:center;background:#DAB6B7;'";
                 
                 if($document->tp >=1)
-                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#FAD8B9;'";
+                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#D1BFEC;'";
                 
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
@@ -135,7 +139,42 @@ class Billing extends Reportes
                 </table>";
         return $body;
     }
+    /**
+     * 
+     * @param type $carriersBilling
+     * @return type
+     */
+    public function getCarriersBillingNotSine($carriersBilling)
+    {
+        $sql="SELECT * FROM billing WHERE carrier NOT IN ({$carriersBilling})";
+        $modelCarrierBilling= Billing::model()->findAllBySql($sql);
+        if($modelCarrierBilling!=NULL)
+        {
+            $body="<h2 style='color:#06ACFA!important;'>Operadores BILLING sin coincidencias con SINE </h2>";
+            $body.="<table>
+                         <tr>
+                            <td {$this->styleNumberRow} >N°</td>
+                            <td {$this->styleCarrierHead} >Carrier</td>
+                            <td {$this->styleBilling} >Balance</td>
+                            <td {$this->styleNumberRow} >N°</td>
+                        </tr>";
+            foreach ($modelCarrierBilling as $key => $model)
+            {
+                $pos=$key+1;
+                $body.="<tr>
+                            <td {$this->styleNumberRow } >{$pos}</td>
+                            <td {$this->styleBasic} >".$model->carrier."</td>
+                            <td {$this->styleBasic} >".Yii::app()->format->format_decimal($model->amount)."</td>
+                            <td {$this->styleNumberRow } >{$pos}</td>
+                        </tr>";
 
+            }
+            $body.="</table>";
+            return $body;
+        }else{
+            return "<h3 style='color:#DAB6B7!important;'>No hay Operadores BILLING sin coincidencias con SINE </h3>";
+        }   
+    }
     /**
      * Encargada de traer data para los listados y para el total total con el atributo $totals=TRUE
      * @param type $date
@@ -200,17 +239,18 @@ class Billing extends Reportes
                     FROM accounting_document 
                     WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date='{$toDateLastPeriod}' AND id_accounting_document IS NULL) AS provision_traffic_received,
                /*-----------------------------------------------------------------------------------------------------------*/  
-                   (SELECT count(ctps.id)
-                    FROM contrato con, 
-                         carrier c,
-                         contrato_termino_pago_supplier ctps,
-                         termino_pago tp
-                    WHERE con.id_carrier=c.id
-                      AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
-                      AND con.id=ctps.id_contrato
-                      AND ctps.id_termino_pago_supplier=tp.id
-                      AND ctps.end_date IS NOT NULL
-                    GROUP BY con.id,ctps.id,tp.name,c.name) AS tp,
+                   (SELECT count(tph)
+                        FROM(SELECT count(ctps.id)AS tph
+                             FROM contrato con, 
+                                  carrier c,
+                                  contrato_termino_pago_supplier ctps,
+                                  termino_pago tp
+                             WHERE con.id_carrier=c.id
+                               AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
+                               AND con.id=ctps.id_contrato
+                               AND ctps.id_termino_pago_supplier=tp.id
+                               AND ctps.end_date IS NOT NULL
+                             GROUP BY con.id,ctps.id,tp.name,c.name) tph) AS tp,
                /*-----------------------------------------------------------------------------------------------------------*/       
                    (SELECT amount from billing
                     where carrier = cg.name and date_balance='{$date}')AS balance_billing,
@@ -227,7 +267,7 @@ class Billing extends Reportes
               ORDER BY cg.name ASC)activity";
         return AccountingDocument::model()->findAllBySql($sql);
     }
-
+    
     /**
      * Metodo encargado de determinar el tipo de reporte exacto y de ahi  pasar los parametros necesarios, hay varios casos:
      * 1- Ambos tipos de relacion comercial con todos los termino pago, en este caso se ejecuta dos foreach , uno consecutivo del otro buscando data de todos los termino pago como customer y supplier sucesivamente.
@@ -258,7 +298,7 @@ class Billing extends Reportes
                        <td style='background:#DAB6B7;width:12%;border-bottom: 3px solid white;'></td>  <td> No se encuentra el grupo en billing</td> 
                     </tr>
                     <tr> 
-                       <td style='border: 3px solid black;background:#FAD8B9;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
+                       <td style='border: 3px solid black;background:#D1BFEC;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
                     </tr>
                  </table>";
         if($paymentTerms=="todos") {
@@ -286,7 +326,7 @@ class Billing extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                $var.=$leyend;
+                $var.=$leyend.self::getCarriersBillingNotSine($this->carriersSine);
             }else{
                 $var.="<h1>DIFFERENCE</h1>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
@@ -298,7 +338,7 @@ class Billing extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id,$fromDateLastPeriod);
                    }
                 }
-                $var.= $this->totalsGeneral().$leyend;
+                $var.= $this->totalsGeneral().$leyend.self::getCarriersBillingNotSine($this->carriersSine);
             }
         }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
             $period=TerminoPago::getModelFind($paymentTerms)->period;
@@ -310,7 +350,7 @@ class Billing extends Reportes
             else
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
-        }    
+        } 
         return $var;
     }
 }
