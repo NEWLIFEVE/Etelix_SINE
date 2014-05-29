@@ -68,13 +68,13 @@ class Billing extends Reportes
                     $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
                 
                 if($document->provision_traffic_received >=1)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAD8B9;'";
+                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
                 
                 if($document->carrier_billing == null)
                     $this->styleBasic="style='border:1px solid silver;text-align:center;background:#DAB6B7;'";
                 
                 if($document->tp >=1)
-                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#FAD8B9;'";
+                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#D1BFEC;'";
                 
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";

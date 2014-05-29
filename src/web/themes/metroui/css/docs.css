@@ -184,13 +184,17 @@ input#LoginForm_password
     border-left: 5px solid #16499a;
     height: initial;
 }
-div.login.error input#LoginForm_password
+input.error 
 {
     background-position: 198px -39px;
     border-bottom:1px solid red;
-    border-left: 5px solid red;
+    border-left: 5px solid red!important;
     border-right: 1px solid red;
     border-top:1px solid red;
+}
+div.errorMessage
+{
+    color:red;
 }
 
 #minifooter

@@ -242,6 +242,7 @@ class SiteController extends Controller
         $this->vaciarAdjuntos();
         $date=$group=$to_date=null;
         $archivos=array();
+        ini_set('memory_limit', '512M');
         if(isset($_GET['datepicker']))
         {
             $date=(string)$_GET['datepicker'];
