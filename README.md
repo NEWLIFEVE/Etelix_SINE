@@ -3,8 +3,11 @@
 
 Sistema de Reportes para Billing
 
-Release 1.2.14.1
-    - Habilitado menu de provisiones
+Release 1.2.16
+    - Habilitado modulo de provisiones
+
+Release 1.2.15
+    - Habilitado modulo de provisiones
 
 Release 1.2.14
     - Se corrigio el css encargado de colorear los botones para exportar.
