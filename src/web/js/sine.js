@@ -68,10 +68,10 @@ $SINE.UI=(function()
      */
     function _clickElement() 
     {
-        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#previa,#mail,#excel,#views_not').on('click',function()
+        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#previa,#mail,#excel,#views_not').on('click',function()
         {   
             switch ($(this).attr("id")){
-                case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary":
+                case "soa":case"balance": case"reteco": case"refac":case "refi_prov":case "waiver":case"recredi":case"recopa": case"redis": case"summary": case"difference":
                     $SINE.UI.resolve_reports_menu($(this));
                     $SINE.UI.elijeOpciones($(this));
                     break;
@@ -153,7 +153,7 @@ $SINE.UI=(function()
      */
     function resolve_reports_menu(selec)
     {
-        var params = $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis');
+        var params = $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference');
         params.children().removeClass('h1_reportClick').addClass('h1_report');
         params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
         params.removeAttr('style');
@@ -248,7 +248,7 @@ $SINE.UI=(function()
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
-            case "recredi":
+            case "recredi":case "difference":
                 var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $SINE.UI.adminInput($("#type_termino_pago").val("null"));
@@ -345,13 +345,14 @@ $SINE.UI=(function()
             else if(id=="previa"){    
                 $SINE.UI.msjCargando("<h2>Cargando Vista Previa</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Cargando Vista Previa</h2>");
                 $SINE.AJAX.send("GET","/site/previa",$("#formulario").serialize(), null);
-            }else{                                            
-                  $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
-                  $( document ).ajaxError(function() {
-                      $SINE.UI.msjCargando("<h2>Exportando Archivo Excel</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
-                      $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
-                  });
-                  } 
+            }else{   
+//                 $SINE.UI.genExcel("/site/Excel",$("#formulario").serialize()); 
+                $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
+                $( document ).ajaxError(function() {
+                    $SINE.UI.msjCargando("<h2>Exportando Archivo Excel</h2>","cargando.gif");$SINE.AJAX.send("GET","/site/CalcTimeReport",$("#formulario").serialize(),"<h2>Exportando Archivo Excel </h2>");
+                    $SINE.AJAX.send("GET","/site/Excel",$("#formulario").serialize(),null); 
+                });
+           } 
         }
     }
     /**
@@ -402,6 +403,9 @@ $SINE.UI=(function()
              var respuesta=$SINE.UI.validaCampos($('#id_periodo').serializeArray());
              break               
          case 'recredi':
+             var respuesta=$SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
+             break               
+         case 'difference':
              var respuesta=$SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
              break               
          case 'recopa':

@@ -136,7 +136,14 @@ class Reportes extends CApplicationComponent
     public function recredi($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 2500);
+        ini_set('memory_limit', '512M');
         $var = new Recredi();
+        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+    }
+    public function billingReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    {
+        ini_set('max_execution_time', 2500);
+        $var = new billingReport();
         return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
 
@@ -344,10 +351,10 @@ class Reportes extends CApplicationComponent
                 $description = "NC - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
             case "10":case "11":
-                $description = $model->carrier." - PT  ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PT  ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "12":case "13":
-                $description = $model->carrier." - PF  ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
+                $description = $model->carrier." - PF  ".$model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
                 break;
             case "5":case "6":
                 $description = "DISPUTE (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";

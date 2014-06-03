@@ -184,13 +184,17 @@ input#LoginForm_password
     border-left: 5px solid #16499a;
     height: initial;
 }
-div.login.error input#LoginForm_password
+input.error 
 {
     background-position: 198px -39px;
     border-bottom:1px solid red;
-    border-left: 5px solid red;
+    border-left: 5px solid red!important;
     border-right: 1px solid red;
     border-top:1px solid red;
+}
+div.errorMessage
+{
+    color:red;
 }
 
 #minifooter
@@ -262,7 +266,8 @@ div.login.error input#LoginForm_password
 .listadeReportes
 {
     border-right: 7px solid #2E62B4;
-    height: 539px;
+    height: 489px;
+    /*height: 547px;*/
     /*height: 477px;*/
     width: 358px;
     margin-top: -34%;
@@ -281,15 +286,15 @@ div.login.error input#LoginForm_password
     background: white;
     width: 92%;
     /*height: 77px;*/
-    height: 67px;
-    /*height: 65px;*/
+    /*height: 67px;*/
+    height: 59px;
     margin-top: 0%;
     margin-left: 4%;
     float: left;
     padding-left: 28px;
     border-bottom: 1px solid silver;
     transition:width 0.5s;
-    -webkit-transition:width, background 0.3s;
+    -webkit-transition:width, 0.3s;
     /*padding-bottom: 25%;quitar al tener todos los reportes*/
 
 }
@@ -321,7 +326,8 @@ div.login.error input#LoginForm_password
 .h1_report
 {
     color:#2E62B4!important;
-    /*font-size: 31pt!important;*/
+    margin: 0px 0!important;
+    font-size: 37pt!important;
 }
 .h1_reportClick
 {
@@ -634,8 +640,8 @@ li.ui-menu-item a
     position: initial;
     display: flex;
     text-align: center;
-    margin: 3% 23% 0%;
-    width: 116%;
+    margin: 3% 19% 0%;
+    width: 131%;
 }
 .emergingView
 {

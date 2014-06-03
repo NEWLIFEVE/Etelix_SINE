@@ -3,13 +3,12 @@
 
 Sistema de Reportes para Billing
 
-Release 1.2.16
-    - Habilitado modulo de provisiones
-
 Release 1.2.15
     - Habilitado modulo de provisiones
+    - Agregado reporte de DIFFERENCE.
 
 Release 1.2.14
+
     - Se corrigio el css encargado de colorear los botones para exportar.
     - SUMMARY: De ahora en adelante se muestra summary dividido en dos grupos, operadores MONETIZABLES (100% y 50%) y operadores NO MONETIZABLES (0%)
     - SUMMARY: Ahora los valores negativos excluyendo los incrementales seran negativos.

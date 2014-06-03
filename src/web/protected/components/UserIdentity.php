@@ -8,6 +8,8 @@
 class UserIdentity extends CUserIdentity
 {
 	private $_id;
+	const ERROR_USERNAME_INVALID=1;
+	const ERROR_PASSWORD_INVALID=2;
 	const ERROR_EMAIL_INVALID=3;
 	const ERROR_STATUS_INACTIV=4;
 	/**
@@ -33,7 +35,7 @@ class UserIdentity extends CUserIdentity
 			}
 		}
 		else if(UserHelp::encrypting($this->password)!==$user->password)
-		{
+		{       
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		}
 		else if($user->status!==true){

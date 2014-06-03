@@ -214,6 +214,11 @@ class SiteController extends Controller
                     $correos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['recredi']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['recredi']['asunto'].".xls";
                     break;
+               case 'difference':
+                    $correos['difference']['asunto']="SINE - DIFFERENCE".self::reportTitle($date);
+                    $correos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
+                    $correos['difference']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['difference']['asunto'].".xls";
+                    break;
                case 'recopa':
                     $correos['recopa']['asunto']="SINE - RECOPA".self::reportTitle($date);
                     $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_POST['id_filter_oper'],$_POST['No_venc'],$this->trueFalse($_POST['order_recopa']));
@@ -237,6 +242,7 @@ class SiteController extends Controller
         $this->vaciarAdjuntos();
         $date=$group=$to_date=null;
         $archivos=array();
+        ini_set('memory_limit', '512M');
         if(isset($_GET['datepicker']))
         {
             $date=(string)$_GET['datepicker'];
@@ -276,6 +282,10 @@ class SiteController extends Controller
                 case 'recredi':
                     $archivos['recredi']['nombre']="SINE - RECREDI ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
                     $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
+                    break;
+                case 'difference':
+                    $archivos['difference']['nombre']="SINE - DIFFERENCE ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
+                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'recopa':
                     $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($date)."-".date("g:i a");
@@ -329,6 +339,9 @@ class SiteController extends Controller
                     break;
                 case 'recredi':
                     $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
+                    break;
+                case 'difference':
+                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'recopa':
                     $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
