@@ -2,7 +2,10 @@
 ============
 
 Sistema de Reportes para Billing
-    - reporte de difference listo.
+    - Agregada leyenda en la parte superior de reporte difference.
+    - Agregado indicador de cantidades de casos por categorias.
+    - Mejoras en rendimiento para reporte difference.
+    - Reporte de difference listo.
     - Se corrigio el css encargado de colorear los botones para exportar.
     - SUMMARY: De ahora en adelante se muestra summary dividido en dos grupos, operadores MONETIZABLES (100% y 50%) y operadores NO MONETIZABLES (0%)
     - SUMMARY: Ahora los valores negativos excluyendo los incrementales seran negativos.
