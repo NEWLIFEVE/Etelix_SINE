@@ -320,7 +320,7 @@ class InvoiceReport extends Reportes
         }
         /********************                             LEYENDA DE COLORES                                ************************/      
         $body.="<tr>
-                   <td {$styleLegend} colspan='12' > Leyenda </td>
+                   <td {$styleLegend} colspan='12' > Legend </td>
                 </tr>
                 <tr>
                    <td {$styleDifhigher} ></td>

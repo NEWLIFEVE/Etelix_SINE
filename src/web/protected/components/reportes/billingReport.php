@@ -38,8 +38,7 @@ class billingReport extends Reportes
         $body=NULL;
         if($documents!=NULL)
         {
-            $body.="<br>
-                    <table>
+            $body.="<table>
                         <tr>
                             <td colspan='10'>
                                 <h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h2>
@@ -75,10 +74,10 @@ class billingReport extends Reportes
                     $this->styleBasic="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
                 
                 if($document->carrier_billing == null)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#DAB6B7;'";
+                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#F3D6D7;'";
                 
                 if($document->tp >=1)
-                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#D1BFEC;'";
+                    $this->styleBasic="style='text-align:center;background:#D3E7EE;border:1px solid silver;'";
                 
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
@@ -136,7 +135,7 @@ class billingReport extends Reportes
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalDifference)."</td>
                     <td {$this->styleNull} ></td>
                   </tr>
-                </table>";
+                </table><br>";
         return $body;
     }
     /**
@@ -285,27 +284,27 @@ class billingReport extends Reportes
         ini_set('max_execution_time', 2000);
         ini_set('memory_limit', '512M');
         $var="";
-        $leyend="<br>
-                 <h3>Leyenda</h3>
-                 <table {$this->styleNull}>
-                    <tr> 
-                       <td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'></td> <td> Diferencias que hay que investigar </td> 
-                    </tr>
-                    <tr> 
-                       <td style='background:#FAD8B9;width:12%;border-bottom: 3px solid white;'></td> <td> Diferencia por provisiones </td> 
-                    </tr>
-                    <tr> 
-                       <td style='background:#DAB6B7;width:12%;border-bottom: 3px solid white;'></td>  <td> No se encuentra el grupo en billing</td> 
-                    </tr>
-                    <tr> 
-                       <td style='border: 3px solid black;background:#D1BFEC;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
-                    </tr>
-                 </table>";
+        $backLegend="<table style='width: 100%;border:1px solid white;'>
+                      <tr> 
+                         <td colspan='8' style='width: 72%;'>";
+        $legend="        <td coslpan='4'>
+                            <table>
+                             <tr>    <td colspan='5' style='font-weight: bold;'> Legend </td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;border-top: 1px solid silver;'> SINE y billing sin diferencias notables </td><td style='border:solid 1px silver;width:12%;color:white;'>col</td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Diferencias que hay que investigar </td><td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Diferencia por provisiones </td><td style='background:#D1BFEC;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> No se encuentra el grupo en billing </td><td style='background:#F3D6D7;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Se han cambiado los termino pago </td><td style='background:#D3E7EE;width:12%;'></td>    </tr>
+                            </table>
+                         </td> 
+                      </tr>
+                   </table>";
+        
         if($paymentTerms=="todos") {
             $paymentTerms= TerminoPago::getModel();
             
             if($typePaymentTerm===NULL){                        /*Este caso es si se selecciono traer ambos tipos de relacion comercial*/
-                $var.="<h1 style='color:#06ACFA!important;'>DIFFERENCE CUSTOMER</h1> <br>";
+                $var.=$backLegend."<h1 style='color:#06ACFA!important;'>DIFFERENCE CUSTOMER</h1> <br>".$legend;
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion customer*/
                 {
                    
@@ -326,9 +325,9 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                $var.=$leyend.self::getCarriersBillingNotSine($this->carriersSine);
+                $var.=self::getCarriersBillingNotSine($this->carriersSine);
             }else{
-                $var.="<h1>DIFFERENCE</h1>";
+                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend;
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
                 {
                    if($paymentTerm->name!="Sin estatus"){
@@ -338,7 +337,7 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id,$fromDateLastPeriod);
                    }
                 }
-                $var.= $this->totalsGeneral().$leyend.self::getCarriersBillingNotSine($this->carriersSine);
+                $var.= $this->totalsGeneral().self::getCarriersBillingNotSine($this->carriersSine);
             }
         }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
             $period=TerminoPago::getModelFind($paymentTerms)->period;
@@ -346,7 +345,7 @@ class billingReport extends Reportes
             $fromDateLastPeriod=Reportes::defineFromDate($period,$toDateLastPeriod);
             $data= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms,$fromDateLastPeriod);
             if($data!=NULL)
-                $var.="<h1>DIFFERENCE</h1>". $data.$leyend;
+                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data;
             else
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
