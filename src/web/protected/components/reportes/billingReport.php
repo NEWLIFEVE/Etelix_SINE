@@ -13,11 +13,16 @@ class billingReport extends Reportes
     private $countEqual=0;
     private $countDiff=0;
     private $countProv=0;
-    private $countCarBilNull=0;
+    private $countBilNull=0;
     private $countHistTp=0;
 
     private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
     private $styleBasic ="style='border:1px solid silver;text-align:center;'";
+    private $styleWhite ="style='border:1px solid silver;text-align:center;'";
+    private $styleYellow ="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
+    private $stylePinck ="style='border:1px solid silver;text-align:center;background:#F3D6D7;'";
+    private $styleSky ="style='text-align:center;background:#D3E7EE;border:1px solid silver;'";
+    private $stylePurple ="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
     private $styleCarrierHead ="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
     private $styleSine ="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
     private $styleBilling ="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
@@ -82,7 +87,7 @@ class billingReport extends Reportes
                     $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->difference)."</td>";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                 $body.="</tr>";
-                $this->styleBasic="style='border:1px solid silver;text-align:center;'";
+                $this->styleBasic=$this->styleWhite;
             }
             $body.="<tr>
                         <td {$this->styleNull} ></td>
@@ -109,24 +114,24 @@ class billingReport extends Reportes
     public function defineCategoryAndStyle($document)
     {
         if($document->carrier_billing == null){
-            $this->countCarBilNull+=1;
-            return $this->styleBasic="style='border:1px solid silver;text-align:center;background:#F3D6D7;'";
+            $this->countBilNull+=1;
+            return $this->styleBasic=$this->stylePinck;
         }else{
                 if($document->difference > -1 && $document->difference < 1 ){
                     $this->countEqual+=1;
-                    return $this->styleBasic="style='border:1px solid silver;text-align:center;'";
+                    return $this->styleBasic=$this->styleWhite;
                 }
                 if($document->tp >=1){
                     $this->countHistTp+=1;
-                    return $this->styleBasic="style='text-align:center;background:#D3E7EE;border:1px solid silver;'";
+                    return $this->styleBasic=$this->styleSky;
                 }else{
                     if($document->provision_traffic_received >=1){
                         $this->countProv+=1;
-                        return $this->styleBasic="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
+                        return $this->styleBasic=$this->stylePurple;
                     }
                     if($document->difference > 1 || $document->difference < -1 ){
                     $this->countDiff+=1;
-                    return $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
+                    return $this->styleBasic=$this->styleYellow;
                     }
                 }
                 
@@ -164,11 +169,11 @@ class billingReport extends Reportes
     {
         $body="<h2 style='color:#06ACFA!important;'>Summary count by category </h2> <br>
                 <table style='width: 27%;text-align: center!important;'>
-                 <tr>    <td style='border:solid 1px silver;width:12%;'colspan='4'> {$this->countEqual} casos </td>    </tr>
-                 <tr>    <td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'colspan='4'> {$this->countDiff} casos </td>    </tr>
-                 <tr>    <td style='background:#D1BFEC;width:12%;border-bottom: 3px solid white;'colspan='4'> {$this->countProv} casos </td>    </tr>
-                 <tr>    <td style='background:#F3D6D7;width:12%;border-bottom: 3px solid white;'colspan='4'> {$this->countCarBilNull} casos </td>    </tr>
-                 <tr>    <td style='background:#D3E7EE;width:12%;'colspan='4'> {$this->countHistTp} casos </td>    </tr>
+                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos  </td>    </tr>
+                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos  </td>    </tr>
+                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos  </td>    </tr>
+                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos  </td>    </tr>
+                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos  </td>    </tr>
                 </table>";
         return $body;
     }
