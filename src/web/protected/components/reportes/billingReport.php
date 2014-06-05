@@ -10,9 +10,19 @@ class billingReport extends Reportes
     private $totalBalanceSine;
     private $totalBalanceBilling;
     private $totalDifference;
+    private $countEqual=0;
+    private $countDiff=0;
+    private $countProv=0;
+    private $countBilNull=0;
+    private $countHistTp=0;
 
     private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
     private $styleBasic ="style='border:1px solid silver;text-align:center;'";
+    private $styleWhite ="style='border:1px solid silver;text-align:center;'";
+    private $styleYellow ="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
+    private $stylePinck ="style='border:1px solid silver;text-align:center;background:#F3D6D7;'";
+    private $styleSky ="style='text-align:center;background:#D3E7EE;border:1px solid silver;'";
+    private $stylePurple ="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
     private $styleCarrierHead ="style='border:1px solid silver;background:silver;text-align:center;color:white;'";
     private $styleSine ="style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'";
     private $styleBilling ="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
@@ -38,8 +48,7 @@ class billingReport extends Reportes
         $body=NULL;
         if($documents!=NULL)
         {
-            $body.="<br>
-                    <table>
+            $body.="<table>
                         <tr>
                             <td colspan='10'>
                                 <h2> ".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</h2>
@@ -67,18 +76,8 @@ class billingReport extends Reportes
                 $balanceSine+=$document->balance;
                 $balanceBilling+=$document->balance_billing;
                 $difference+=$document->difference;
-                
-                if($document->difference > 1 || $document->difference < -1)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#FAE08D;'";
-                
-                if($document->provision_traffic_received >=1)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#D1BFEC;'";
-                
-                if($document->carrier_billing == null)
-                    $this->styleBasic="style='border:1px solid silver;text-align:center;background:#DAB6B7;'";
-                
-                if($document->tp >=1)
-                    $this->styleBasic="style='border:3px solid black;text-align:center;background:#D1BFEC;'";
+ 
+                $this->defineCategoryAndStyle($document);
                 
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
@@ -88,7 +87,7 @@ class billingReport extends Reportes
                     $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->difference)."</td>";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                 $body.="</tr>";
-                $this->styleBasic="style='border:1px solid silver;text-align:center;'";
+                $this->styleBasic=$this->styleWhite;
             }
             $body.="<tr>
                         <td {$this->styleNull} ></td>
@@ -112,6 +111,31 @@ class billingReport extends Reportes
         }  
         return $body;
     }
+    public function defineCategoryAndStyle($document)
+    {
+        if($document->carrier_billing == null){
+            $this->countBilNull+=1;
+            return $this->styleBasic=$this->stylePinck;
+        }else{
+                if($document->difference > -1 && $document->difference < 1 ){
+                    $this->countEqual+=1;
+                    return $this->styleBasic=$this->styleWhite;
+                }
+                if($document->tp >=1){
+                    $this->countHistTp+=1;
+                    return $this->styleBasic=$this->styleSky;
+                }else{
+                    if($document->provision_traffic_received >=1){
+                        $this->countProv+=1;
+                        return $this->styleBasic=$this->stylePurple;
+                    }
+                    if($document->difference > 1 || $document->difference < -1 ){
+                        $this->countDiff+=1;
+                        return $this->styleBasic=$this->styleYellow;
+                    }
+                } 
+        }
+    }
     
     /**
      * Metodo encargado de armar el resumen total cuando se consulta recredi para todos los termino pago.
@@ -122,31 +146,41 @@ class billingReport extends Reportes
         $body="<h2 style='color:#06ACFA!important;'>RESUMEN TOTAL GENERAL</h2> <br>";
         $body.="<table style='width: 100%;'>
                     <tr>
-                        <td {$this->styleNull} ></td>
                         <td {$this->styleSine} colspan='3'> SINE </td>
                         <td {$this->styleBilling} colspan='3'> BILLING </td>
                         <td {$this->styleDifference} colspan='3'> DIFFERENCE </td>
-                        <td {$this->styleNull} ></td>
                     </tr>";
        
         $body.="<tr>
-                    <td {$this->styleNull} ></td>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceSine)."</td>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceBilling)."</td>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalDifference)."</td>
-                    <td {$this->styleNull} ></td>
                   </tr>
+                </table><br>";
+        return $body;
+    }
+    /**
+     * 
+     * @return type
+     */
+    public function countCategory()
+    {
+        $body="<h2 style='color:#06ACFA!important;'>Summary count by category </h2> <br>
+                <table style='width: 27%;text-align: center!important;'>
+                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos  </td>    </tr>
+                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos  </td>    </tr>
+                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos  </td>    </tr>
+                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos  </td>    </tr>
+                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos  </td>    </tr>
                 </table>";
         return $body;
     }
     /**
      * 
-     * @param type $carriersBilling
-     * @return type
      */
-    public function getCarriersBillingNotSine($carriersBilling)
+    public function getCarriersBillingNotSine()
     {
-        $sql="SELECT * FROM billing WHERE carrier NOT IN ({$carriersBilling})";
+        $sql="SELECT * FROM billing WHERE carrier NOT IN ({$this->carriersSine})";
         $modelCarrierBilling= Billing::model()->findAllBySql($sql);
         if($modelCarrierBilling!=NULL)
         {
@@ -237,20 +271,32 @@ class billingReport extends Reportes
                /*-----------------------------------------------------------------------------------------------------------*/    
                    (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
                     FROM accounting_document 
-                    WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date='{$toDateLastPeriod}' AND id_accounting_document IS NULL) AS provision_traffic_received,
+                    WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<'{$toDateLastPeriod}' AND id_accounting_document IS NULL) AS provision_traffic_received,
                /*-----------------------------------------------------------------------------------------------------------*/  
-                   (SELECT count(tph)
-                        FROM(SELECT count(ctps.id)AS tph
-                             FROM contrato con, 
-                                  carrier c,
-                                  contrato_termino_pago_supplier ctps,
-                                  termino_pago tp
-                             WHERE con.id_carrier=c.id
-                               AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
-                               AND con.id=ctps.id_contrato
-                               AND ctps.id_termino_pago_supplier=tp.id
-                               AND ctps.end_date IS NOT NULL
-                             GROUP BY con.id,ctps.id,tp.name,c.name) tph) AS tp,
+                   (SELECT count(tph.id + tph.id) AS tph
+                    FROM(SELECT ctps.id as id
+                         FROM contrato con, 
+                              carrier c,
+                              contrato_termino_pago_supplier ctps,
+                              termino_pago tp
+                         WHERE con.id_carrier=c.id
+                           AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
+                           AND con.id=ctps.id_contrato
+                           AND ctps.id_termino_pago_supplier=tp.id
+                           AND ctps.end_date IS NOT NULL
+                         GROUP BY con.id,ctps.id,tp.name,c.name
+                         UNION
+                         SELECT ctpc.id AS id
+                         FROM contrato con, 
+                              carrier c,
+                              contrato_termino_pago ctpc,
+                              termino_pago tp
+                         WHERE con.id_carrier=c.id
+                           AND c.id IN(select id from carrier where id_carrier_groups IN(select id from carrier_groups where name=cg.name))
+                           AND con.id=ctpc.id_contrato
+                           AND ctpc.id_termino_pago=tp.id
+                           AND ctpc.end_date IS NOT NULL
+                         GROUP BY con.id,ctpc.id,tp.name,c.name) tph   ) AS tp,
                /*-----------------------------------------------------------------------------------------------------------*/       
                    (SELECT amount from billing
                     where carrier = cg.name and date_balance='{$date}')AS balance_billing,
@@ -285,27 +331,27 @@ class billingReport extends Reportes
         ini_set('max_execution_time', 2000);
         ini_set('memory_limit', '512M');
         $var="";
-        $leyend="<br>
-                 <h3>Leyenda</h3>
-                 <table {$this->styleNull}>
-                    <tr> 
-                       <td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'></td> <td> Diferencias que hay que investigar </td> 
-                    </tr>
-                    <tr> 
-                       <td style='background:#FAD8B9;width:12%;border-bottom: 3px solid white;'></td> <td> Diferencia por provisiones </td> 
-                    </tr>
-                    <tr> 
-                       <td style='background:#DAB6B7;width:12%;border-bottom: 3px solid white;'></td>  <td> No se encuentra el grupo en billing</td> 
-                    </tr>
-                    <tr> 
-                       <td style='border: 3px solid black;background:#D1BFEC;width:12%;border-bottom: 3px solid black;'></td>  <td> Se han cambiado los termino pago </td> 
-                    </tr>
-                 </table>";
+        $backLegend="<table style='width: 100%;border:1px solid white;'>
+                      <tr> 
+                         <td colspan='8' style='width: 72%;'>";
+        $legend="        <td coslpan='4'>
+                            <table>
+                             <tr>    <td colspan='5' style='font-weight: bold;'> Legend </td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;border-top: 1px solid silver;'> SINE y billing sin diferencias notables </td><td style='border:solid 1px silver;width:12%;color:white;'>col</td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Diferencias que hay que investigar </td><td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Diferencia por provisiones </td><td style='background:#D1BFEC;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> No se encuentra el grupo en billing </td><td style='background:#F3D6D7;width:12%;border-bottom: 3px solid white;'></td>    </tr>
+                             <tr>    <td coslpan='5' style='width:100%;'> Se han cambiado los termino pago </td><td style='background:#D3E7EE;width:12%;'></td>    </tr>
+                            </table>
+                         </td> 
+                      </tr>
+                   </table>";
+        
         if($paymentTerms=="todos") {
             $paymentTerms= TerminoPago::getModel();
             
             if($typePaymentTerm===NULL){                        /*Este caso es si se selecciono traer ambos tipos de relacion comercial*/
-                $var.="<h1 style='color:#06ACFA!important;'>DIFFERENCE CUSTOMER</h1> <br>";
+                $var.=$backLegend."<h1 style='color:#06ACFA!important;'>DIFFERENCE CUSTOMER</h1> <br>".$legend;
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion customer*/
                 {
                    
@@ -326,9 +372,9 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                $var.=$leyend.self::getCarriersBillingNotSine($this->carriersSine);
+                $var.=$this->countCategory().$this->getCarriersBillingNotSine();
             }else{
-                $var.="<h1>DIFFERENCE</h1>";
+                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend;
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
                 {
                    if($paymentTerm->name!="Sin estatus"){
@@ -338,7 +384,7 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerm->id,$fromDateLastPeriod);
                    }
                 }
-                $var.= $this->totalsGeneral().$leyend.self::getCarriersBillingNotSine($this->carriersSine);
+                $var.= $this->totalsGeneral().$this->countCategory().$this->getCarriersBillingNotSine();
             }
         }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
             $period=TerminoPago::getModelFind($paymentTerms)->period;
@@ -346,7 +392,7 @@ class billingReport extends Reportes
             $fromDateLastPeriod=Reportes::defineFromDate($period,$toDateLastPeriod);
             $data= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms,$fromDateLastPeriod);
             if($data!=NULL)
-                $var.="<h1>DIFFERENCE</h1>". $data.$leyend;
+                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data .$this->countCategory();
             else
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
