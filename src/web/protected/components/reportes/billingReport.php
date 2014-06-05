@@ -130,12 +130,10 @@ class billingReport extends Reportes
                         return $this->styleBasic=$this->stylePurple;
                     }
                     if($document->difference > 1 || $document->difference < -1 ){
-                    $this->countDiff+=1;
-                    return $this->styleBasic=$this->styleYellow;
+                        $this->countDiff+=1;
+                        return $this->styleBasic=$this->styleYellow;
                     }
-                }
-                
-                
+                } 
         }
     }
     
