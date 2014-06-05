@@ -165,13 +165,14 @@ class billingReport extends Reportes
      */
     public function countCategory()
     {
-        $body="<h2 style='color:#06ACFA!important;'>Summary count by category </h2> <br>
+        $acum=$this->countEqual + $this->countDiff + $this->countProv + $this->countBilNull + $this->countHistTp;
+        $body="<h2 style='color:#06ACFA!important;'> Resumen total por casos </h2> <br>
                 <table style='width: 27%;text-align: center!important;'>
-                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos  </td>    </tr>
-                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos  </td>    </tr>
-                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos  </td>    </tr>
-                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos  </td>    </tr>
-                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos  </td>    </tr>
+                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos ".Yii::app()->format->format_decimal($this->countEqual*100/$acum)."% </td>    </tr>
+                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos ".Yii::app()->format->format_decimal($this->countDiff*100/$acum)."% </td>    </tr>
+                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos ".Yii::app()->format->format_decimal($this->countProv*100/$acum)."% </td>    </tr>
+                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos ".Yii::app()->format->format_decimal($this->countBilNull*100/$acum)."% </td>    </tr>
+                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos ".Yii::app()->format->format_decimal($this->countHistTp*100/$acum)."% </td>    </tr>
                 </table>";
         return $body;
     }
@@ -336,7 +337,7 @@ class billingReport extends Reportes
                          <td colspan='8' style='width: 72%;'>";
         $legend="        <td coslpan='4'>
                             <table>
-                             <tr>    <td colspan='5' style='font-weight: bold;'> Legend </td>    </tr>
+                             <tr>    <td colspan='5' style='font-weight: bold;'> Leyenda </td>    </tr>
                              <tr>    <td coslpan='5' style='width:100%;border-top: 1px solid silver;'> SINE y billing sin diferencias notables </td><td style='border:solid 1px silver;width:12%;color:white;'>col</td>    </tr>
                              <tr>    <td coslpan='5' style='width:100%;'> Diferencias que hay que investigar </td><td style='background:#FAE08D;width:12%;border-bottom: 3px solid white;'></td>    </tr>
                              <tr>    <td coslpan='5' style='width:100%;'> Diferencia por provisiones </td><td style='background:#D1BFEC;width:12%;border-bottom: 3px solid white;'></td>    </tr>
