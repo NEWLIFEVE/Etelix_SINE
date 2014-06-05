@@ -15,6 +15,11 @@ class billingReport extends Reportes
     private $countProv=0;
     private $countBilNull=0;
     private $countHistTp=0;
+    private $countEqualNow=0;
+    private $countDiffNow=0;
+    private $countProvNow=0;
+    private $countBilNullNow=0;
+    private $countHistTpNow=0;
 
     private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
     private $styleBasic ="style='border:1px solid silver;text-align:center;'";
@@ -105,9 +110,19 @@ class billingReport extends Reportes
                         <td {$this->styleNull} ></td>
                     </tr>
                 </table>";  
+             $acum=$pos;
+             $body.="<h2 style='color:#06ACFA!important;'> Resumen por casos </h2> <br>
+                     <table style='width: 27%;text-align: center!important;'>
+                      <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqualNow}   casos ".Yii::app()->format->format_decimal($this->countEqualNow  *100/$acum)."% </td>    </tr>
+                      <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiffNow}    casos ".Yii::app()->format->format_decimal($this->countDiffNow   *100/$acum)."% </td>    </tr>
+                      <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProvNow}    casos ".Yii::app()->format->format_decimal($this->countProvNow   *100/$acum)."% </td>    </tr>
+                      <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNullNow} casos ".Yii::app()->format->format_decimal($this->countBilNullNow*100/$acum)."% </td>    </tr>
+                      <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTpNow}  casos ".Yii::app()->format->format_decimal($this->countHistTpNow *100/$acum)."% </td>    </tr>
+                     </table>";
              $this->totalBalanceSine+=$balanceSine;
              $this->totalBalanceBilling+=$balanceBilling;
              $this->totalDifference+=$difference;
+             $this->countEqualNow=$this->countDiffNow=$this->countProvNow=$this->countBilNullNow=$this->countHistTpNow=$acum=0;
         }  
         return $body;
     }
@@ -115,22 +130,27 @@ class billingReport extends Reportes
     {
         if($document->carrier_billing == null){
             $this->countBilNull+=1;
+            $this->countBilNullNow+=1;
             return $this->styleBasic=$this->stylePinck;
         }else{
                 if($document->difference > -1 && $document->difference < 1 ){
                     $this->countEqual+=1;
+                    $this->countEqualNow+=1;
                     return $this->styleBasic=$this->styleWhite;
                 }
                 if($document->tp >=1){
                     $this->countHistTp+=1;
+                    $this->countHistTpNow+=1;
                     return $this->styleBasic=$this->styleSky;
                 }else{
                     if($document->provision_traffic_received >=1){
                         $this->countProv+=1;
+                        $this->countProvNow+=1;
                         return $this->styleBasic=$this->stylePurple;
                     }
                     if($document->difference > 1 || $document->difference < -1 ){
                         $this->countDiff+=1;
+                        $this->countDiffNow+=1;
                         return $this->styleBasic=$this->styleYellow;
                     }
                 } 
@@ -393,7 +413,8 @@ class billingReport extends Reportes
             $fromDateLastPeriod=Reportes::defineFromDate($period,$toDateLastPeriod);
             $data= $this->report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms,$fromDateLastPeriod);
             if($data!=NULL)
-                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data .$this->countCategory();
+                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data ;
+//                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data .$this->countCategory();
             else
                 $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
             
