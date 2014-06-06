@@ -87,9 +87,9 @@ class billingReport extends Reportes
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                     $body.="<td {$this->styleBasic} >".$document->name."</td>";
-                    $body.="<td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($document->balance)."</td>";
-                    $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->balance_billing)."</td>";
-                    $body.="<td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($document->difference)."</td>";
+                    $body.="<td {$this->styleBasic} colspan='3'>".Utility::formatSetLessZero(Yii::app()->format->format_decimal($document->balance))."</td>";
+                    $body.="<td {$this->styleBasic} colspan='2'>".Utility::formatSetLessZero(Yii::app()->format->format_decimal($document->balance_billing))."</td>";
+                    $body.="<td {$this->styleBasic} colspan='2'>".Utility::formatSetLessZero(Yii::app()->format->format_decimal($document->difference))."</td>";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                 $body.="</tr>";
                 $this->styleBasic=$this->styleWhite;

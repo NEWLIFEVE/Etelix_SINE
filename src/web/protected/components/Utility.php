@@ -168,6 +168,17 @@ Class Utility
             return NULL;
         }
     }
+    public static function formatSetLessZero($var)
+    {
+        if($var!=NULL){
+           if($var=="-0,00") 
+               return "0,00";
+           else
+               return $var;
+        }else{
+            return NULL;
+        } 
+    }
 
     /**
      * ordena arrays con el metodo de burbuja
