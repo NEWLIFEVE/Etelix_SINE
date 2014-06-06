@@ -111,14 +111,14 @@ class billingReport extends Reportes
                     </tr>
                 </table>";  
              $acum=$pos;
-             $body.="<h2 style='color:#06ACFA!important;'> Resumen por casos </h2> <br>
-                     <table style='width: 27%;text-align: center!important;'>
-                      <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqualNow}   casos ".Yii::app()->format->format_decimal($this->countEqualNow  *100/$acum)."% </td>    </tr>
-                      <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiffNow}    casos ".Yii::app()->format->format_decimal($this->countDiffNow   *100/$acum)."% </td>    </tr>
-                      <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProvNow}    casos ".Yii::app()->format->format_decimal($this->countProvNow   *100/$acum)."% </td>    </tr>
-                      <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNullNow} casos ".Yii::app()->format->format_decimal($this->countBilNullNow*100/$acum)."% </td>    </tr>
-                      <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTpNow}  casos ".Yii::app()->format->format_decimal($this->countHistTpNow *100/$acum)."% </td>    </tr>
-                     </table>";
+             $body.="<h3 style='color:#06ACFA!important;'> Resumen por casos </h3>
+                     <table style='width: 40%;'>
+                      <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqualNow}   casos ".Yii::app()->format->format_decimal($this->countEqualNow  *100/$acum)."% (SINE y billing sin diferencias notables)</td>    </tr>
+                      <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiffNow}    casos ".Yii::app()->format->format_decimal($this->countDiffNow   *100/$acum)."% (Diferencias que hay que investigar)     </td>    </tr>
+                      <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProvNow}    casos ".Yii::app()->format->format_decimal($this->countProvNow   *100/$acum)."% (Diferencia por provisiones)             </td>    </tr>
+                      <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNullNow} casos ".Yii::app()->format->format_decimal($this->countBilNullNow*100/$acum)."% (No se encuentra el grupo en billing)    </td>    </tr>
+                      <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTpNow}  casos ".Yii::app()->format->format_decimal($this->countHistTpNow *100/$acum)."% (Se han cambiado los termino pago)       </td>    </tr>
+                     </table><br>";
              $this->totalBalanceSine+=$balanceSine;
              $this->totalBalanceBilling+=$balanceBilling;
              $this->totalDifference+=$difference;
@@ -165,11 +165,11 @@ class billingReport extends Reportes
     {
         $body="<h2 style='color:#06ACFA!important;'>RESUMEN TOTAL GENERAL</h2> <br>";
         $body.="<table style='width: 100%;'>
-                    <tr>
-                        <td {$this->styleSine} colspan='3'> SINE </td>
-                        <td {$this->styleBilling} colspan='3'> BILLING </td>
-                        <td {$this->styleDifference} colspan='3'> DIFFERENCE </td>
-                    </tr>";
+                <tr>
+                    <td {$this->styleSine} colspan='3'> SINE </td>
+                    <td {$this->styleBilling} colspan='3'> BILLING </td>
+                    <td {$this->styleDifference} colspan='3'> DIFFERENCE </td>
+                </tr>";
        
         $body.="<tr>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceSine)."</td>
@@ -187,12 +187,12 @@ class billingReport extends Reportes
     {
         $acum=$this->countEqual + $this->countDiff + $this->countProv + $this->countBilNull + $this->countHistTp;
         $body="<h2 style='color:#06ACFA!important;'> Resumen total por casos </h2> <br>
-                <table style='width: 27%;text-align: center!important;'>
-                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos ".Yii::app()->format->format_decimal($this->countEqual*100/$acum)."% </td>    </tr>
-                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos ".Yii::app()->format->format_decimal($this->countDiff*100/$acum)."% </td>    </tr>
-                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos ".Yii::app()->format->format_decimal($this->countProv*100/$acum)."% </td>    </tr>
-                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos ".Yii::app()->format->format_decimal($this->countBilNull*100/$acum)."% </td>    </tr>
-                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos ".Yii::app()->format->format_decimal($this->countHistTp*100/$acum)."% </td>    </tr>
+                <table style='width: 40%;'>
+                 <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos ".Yii::app()->format->format_decimal($this->countEqual*100/$acum)."%  (SINE y billing sin diferencias notables)</td>    </tr>
+                 <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos ".Yii::app()->format->format_decimal($this->countDiff*100/$acum)."%   (Diferencias que hay que investigar)     </td>    </tr>
+                 <tr>    <td {$this->stylePurple} colspan='4'> {$this->countProv}    casos ".Yii::app()->format->format_decimal($this->countProv*100/$acum)."%   (Diferencia por provisiones)             </td>    </tr>
+                 <tr>    <td {$this->stylePinck}  colspan='4'> {$this->countBilNull} casos ".Yii::app()->format->format_decimal($this->countBilNull*100/$acum)."%(No se encuentra el grupo en billing)    </td>    </tr>
+                 <tr>    <td {$this->styleSky}    colspan='4'> {$this->countHistTp}  casos ".Yii::app()->format->format_decimal($this->countHistTp*100/$acum)."% (Se han cambiado los termino pago)       </td>    </tr>
                 </table>";
         return $body;
     }
