@@ -372,6 +372,7 @@ $SINE.UI=(function()
                 if($(this).attr('id')=="confirm")
                 {
                     $SINE.AJAX.provisions("GET","/site/CalcTimeProvisions",$("#datepickerOne,#group").serialize(),"time");
+                    $SINE.UI.msjChange("<h2>Calculando tiempo estimado</h2>","cargando.gif",null,"70%"); 
                     $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#datepickerOne,#group").serialize(),"gen");
                 }else{
                     $(".fondo_negro, .mensaje").fadeOut();
