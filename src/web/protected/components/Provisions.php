@@ -357,7 +357,7 @@ class Provisions extends CApplicationComponent
 
 		$TerminoPago=TerminoPago::model()->findBySql($sql);
 		$carrier=Carrier::getName($idCarrier);
-		if($carrier=="BSG-SHARE")
+		if($carrier=="BSG-SHARE" /*|| $carrier=="BSG-SHARE T1" || $carrier=="BSG-SHARE T2" || $carrier=="BSG-SHARE T3" || $carrier=="BSG-SHARE PROPER"*/)
 		{
 			$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-27";
 			if(DateManagement::separatesDate($this->date)['month']=="12") $tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-25";

@@ -2,6 +2,8 @@
 ============
 
 Sistema de Reportes para Billing
+- Agregado msj preliminar que indica que se esta calculando el tiempo para generar provisiones.
+- Agregada funcionalidad js para la interfaz de provisiones(al finalizar las de generar provisiones, el msj de confirmacion se queda visible y solo se eliminara una vez se le de click en la transparencia).
 - Agregado porcentaje en resumen total por casos.
 - Cambio a español en titulño de leyenda y resumen total por casos.
 - Agregada leyenda en la parte superior de reporte difference.

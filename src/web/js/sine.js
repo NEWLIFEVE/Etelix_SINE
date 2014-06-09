@@ -371,8 +371,8 @@ $SINE.UI=(function()
             {
                 if($(this).attr('id')=="confirm")
                 {
-                    $SINE.AJAX.provisions("GET","/site/CalcTimeProvisions",$("#datepickerOne,#group").serialize(),"time");
                     $SINE.UI.msjChange("<h2>Calculando tiempo estimado</h2>","cargando.gif",null,"70%"); 
+                    $SINE.AJAX.provisions("GET","/site/CalcTimeProvisions",$("#datepickerOne,#group").serialize(),"time");
                     $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#datepickerOne,#group").serialize(),"gen");
                 }else{
                     $(".fondo_negro, .mensaje").fadeOut();
@@ -508,11 +508,18 @@ $SINE.UI=(function()
     function fancyBox(body)
     {
         $(".mensaje").addClass("fancybox").removeClass("mensaje");
-        $(".fondo_negro").addClass("emergingBackground");
         $(".fancybox").css("display", "none");
         $(".fancybox").fadeIn("slow").html("<div class='imprimir'><img src='/images/print.png'class='ver'></div><div class='a_imprimir'>"+body+"</div>");
         $('.imprimir').on('click',function (){ $SINE.UI.imprimir(".a_imprimir"); });
-        $('.fondo_negro').on('click',function () { $(".fondo_negro, .fancybox").removeClass("emergingBackground").fadeOut('slow');});
+        $SINE.UI.closeEmergingBackground();
+    }
+    function closeEmergingBackground()
+    {
+        $(".fondo_negro").addClass("emergingBackground");
+        $('.fondo_negro').on('click',function () 
+        { 
+            $(".fondo_negro, .fancybox,.mensaje").removeClass("emergingBackground").fadeOut('slow');
+        });
     }
     /**
      * imprime el fancybox
@@ -564,6 +571,7 @@ $SINE.UI=(function()
             seleccionaCampos:seleccionaCampos,
             changeHtml:changeHtml,
             fancyBox:fancyBox,
+            closeEmergingBackground:closeEmergingBackground,
             imprimir:imprimir,
             adminInput:adminInput,
             genProvisions:genProvisions,
@@ -671,7 +679,8 @@ $SINE.AJAX=(function()
                          $SINE.UI.msjChange("<h2>Se están generando las provisiones</h2><h3> este proceso puede tomar <b>"+data+"</b></h3> no cierre su navegador durante ese tiempo","cargando.gif",null,"70%"); 
                      }else{                   /*manda la los datos al metodo encargado de generar las provisiones, espera que el mismo termine para cerrar el msj indicando que las provisiones fueron generadas*/
                          console.log(data);
-                         $SINE.UI.msjChange("<h2>Provisiones Generadas con exito</h2>","si.png","1000","33%");  
+                         $SINE.UI.msjChange("<h2>Provisiones Generadas con exito</h2>","si.png",null,"33%");
+                         $SINE.UI.closeEmergingBackground();
                      }
                  }
              }

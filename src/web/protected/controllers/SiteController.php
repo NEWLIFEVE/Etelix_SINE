@@ -486,15 +486,18 @@ class SiteController extends Controller
      */
     public function actionCalcTimeProvisions()
     {
-        if($_GET['group']!="")$carriersList=Carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
-          else                $carriersList=Carrier::getListCarrier();
+        if($_GET['group']!=""){
+            $carriersList=Carrier::getListCarriersGrupo(CarrierGroups::getId($_GET['group']));
+            $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') )*2; 
+        }else{            
+            $carriersList=Carrier::getListCarrier();
+            $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') )/30; 
+        }
         
-        $daysNum=  DateManagement::dateDiff( $_GET['datepickerOne'], date('Y-m-d') ); 
-        
-        if(count($carriersList) * 4 * $daysNum <= 60)
-            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum)." Seg";
+        if(count($carriersList) * 1 * $daysNum <= 60)
+            echo Yii::app()->format->format_decimal( count($carriersList) * 1 * $daysNum)." Seg";
         else
-            echo Yii::app()->format->format_decimal( count($carriersList) * 4 * $daysNum/60)." Min";
+            echo Yii::app()->format->format_decimal( count($carriersList) * 1 * $daysNum/60)." Min";
     }
     /**
      * Calcula tiempo de espera para generar los reportes, recibe los mismos parametros que se le pasan al componente para generar reportes.
