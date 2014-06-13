@@ -335,7 +335,7 @@ $SINE.UI=(function()
     {
         if($SINE.UI.seleccionaCampos($('#tipo_report').val()) == 0)
         {
-            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Faltan campos por llenar </h2>","stop.png","1000","60px");  
+            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Faltan campos por llenar </h2>","stop.png",500,"60px");  
         }else{
             var id=$(click).attr('id');
             if(id=="mail"){ 
@@ -364,7 +364,7 @@ $SINE.UI=(function()
     {
         if($SINE.UI.seleccionaCampos($(click).attr('id')) == 0)
         {
-            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Debe llenar al menos el periodo </h2>","stop.png","1000","60px");  
+            $SINE.UI.msjCargando("","");$SINE.UI.msjChange("<h2>Debe llenar al menos el periodo </h2>","stop.png",1000,"60px");  
         }else{
             $SINE.UI.msjConfirm("<h3>Esta a punto de generar las provisiones para " + $SINE.UI.ifNull($("#group").val(), "<b>TODOS</b> los carriers", "el carrier <b>"+$("#group").val()+"</b>") + " desde la fecha <b>"+$("#datepickerOne").val()+"</b></h3>");
             $('#confirm,#cancel').on('click', function()
@@ -373,7 +373,8 @@ $SINE.UI=(function()
                 {
                     $SINE.UI.msjChange("<h2>Calculando tiempo estimado</h2>","cargando.gif",null,"70%"); 
                     $SINE.AJAX.provisions("GET","/site/CalcTimeProvisions",$("#datepickerOne,#group").serialize(),"time");
-                    $SINE.AJAX.provisions("GET","/site/GenProvisions",$("#datepickerOne,#group").serialize(),"gen");
+                    $SINE.UI.setTimeNext($SINE.AJAX.provisions("GET","/site/GenProvisions",$("#datepickerOne,#group").serialize(),"gen"), 3000);
+                    
                 }else{
                     $(".fondo_negro, .mensaje").fadeOut();
                 }
@@ -435,8 +436,8 @@ $SINE.UI=(function()
         for (var i=0, j=campos.length - 1; i <= j; i++)
         {
             if(campos[i].value==""){
-                console.dir(campos[i]);
-                console.log(campos[i]);
+//                console.dir(campos[i]);
+//                console.log(campos[i]);
                  var respuesta=0;
                 break;
              }else{respuesta=1;}
@@ -452,6 +453,14 @@ $SINE.UI=(function()
     function genExcel(action,formulario)
     {
         window.open(action+"?"+formulario , "gen_excel_SINE" , "width=450,height=150,left=450,top=200");  
+    }
+    function setTimeNext(action, time)
+    {
+        setTimeout(function() 
+        { 
+            action; 
+        }, 
+        time);
     }
     function msjConfirm(body)
     {
@@ -498,7 +507,7 @@ $SINE.UI=(function()
     {
         $(".mensaje").html(""+bodyMsj+"<p><img style='width:"+imgWidth+";' src='/images/"+img+"'>");
         if(time!=null)
-        setTimeout(function() { $(".fondo_negro, .mensaje").fadeOut('slow'); }, time);
+        $SINE.UI.setTimeNext($(".fondo_negro, .mensaje").fadeOut('slow'),time);
     }
     /**
      * muestra los listado en una vista previa, por ahora solo tiene la opcion de imprimir
@@ -579,7 +588,8 @@ $SINE.UI=(function()
             emergingView:emergingView,
             GenDatepicker:GenDatepicker,
             msjConfirm:msjConfirm,
-            ifNull:ifNull
+            ifNull:ifNull,
+            setTimeNext:setTimeNext
     };
 })();
 
@@ -642,14 +652,14 @@ $SINE.AJAX=(function()
                     $SINE.UI.msjChange(msjTime + data,"cargando.gif",null,"80%"); 
                  }else{
                     if(action=="/site/Excel"){         
-                        $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png","1500","33%");  
+                        $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png",1500,"33%");  
                         $(".excel_a").removeAttr("href");
                         console.log("Descarga Exitosa");
                     }else if(action=="/site/previa"){ 
                         $SINE.UI.fancyBox(data);
                         console.log("Vista Previa Exitosa");
                     }else{                              
-                        $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png","1000","33%"); 
+                        $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png",1000,"33%"); 
                         console.log(data);
                     }  
                  }

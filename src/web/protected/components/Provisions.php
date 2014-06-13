@@ -457,33 +457,35 @@ class Provisions extends CApplicationComponent
 							//primero verifico si pica mes
 							if($TerminoPago->month_break===1)
 							{
-								//Cuando es fin de mes
-								$tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
-								if($tempdate==$this->date)
-								{
-									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
-									$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-									//var_dump("Generando factura de 7/7 dia de semana que pican mes(fin de mes) del ".$firstDay." al ".$this->date);
-									break;
-								}
-								//cuando esta en el fin del periodo de facturacion
-								elseif($end==DateManagement::getDayNumberWeek($this->date))
-								{
-									$firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
-									if(DateManagement::separatesDate($firstDay)['month']==DateManagement::separatesDate($this->date)['month'])
-									{
-										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-										//var_dump("Generando factura de 7/7 dia de semana que pican mes(durante el mes) del ".$firstDay." al ".$this->date);
-										break;
-									}
-									else
-									{
-										$firstDay=DateManagement::getDayOne($this->date);
-										$this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
-										//var_dump("Generando factura de 7/7 dia de semana que pican mes(inicio de mes) del ".$firstDay." al ".$this->date);
-										break;
-									}
-								}
+                                                                /**/
+                                                                        //Cuando es fin de mes
+                                                                        $tempdate=DateManagement::separatesDate($this->date)['year']."-".DateManagement::separatesDate($this->date)['month']."-".DateManagement::howManyDays($this->date);
+                                                                        if($tempdate==$this->date)
+                                                                        {
+                                                                                $firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+                                                                                $this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+                                                                                //var_dump("Generando factura de 7/7 dia de semana que pican mes(fin de mes) del ".$firstDay." al ".$this->date);
+                                                                                break;
+                                                                        }
+                                                                        //cuando esta en el fin del periodo de facturacion
+                                                                        elseif($end==DateManagement::getDayNumberWeek($this->date))
+                                                                        {
+                                                                                $firstDay=DateManagement::getFirstDayPeriod($this->date,$TerminoPago->first_day);
+                                                                                if(DateManagement::separatesDate($firstDay)['month']==DateManagement::separatesDate($this->date)['month'])
+                                                                                {
+                                                                                        $this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+                                                                                        //var_dump("Generando factura de 7/7 dia de semana que pican mes(durante el mes) del ".$firstDay." al ".$this->date);
+                                                                                        break;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                        $firstDay=DateManagement::getDayOne($this->date);
+                                                                                        $this->_insertInvoiceProvision($firstDay,$this->date,$idCarrier,$typeProvisions);
+                                                                                        //var_dump("Generando factura de 7/7 dia de semana que pican mes(inicio de mes) del ".$firstDay." al ".$this->date);
+                                                                                        break;
+                                                                                }
+                                                                        }
+								/**/
 							}
 							else
 							{
