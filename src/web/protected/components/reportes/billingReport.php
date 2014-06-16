@@ -336,6 +336,7 @@ class billingReport extends Reportes
                     {$wherePaymentTerm}
                     {$interCompany}  
               ORDER BY cg.name ASC)activity";
+                    
         return AccountingDocument::model()->findAllBySql($sql);
     }
     
