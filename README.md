@@ -2,7 +2,8 @@
 ============
 
 ##Sistema de Reportes para Billing
--Agregada fecha donde hay data para ser comparada por reporte billing, al seleccionar otro reporte diferente de "Difference", la fecha vuelve a la actual.
+- Agregada fecha donde hay data para ser comparada por reporte billing, al seleccionar otro reporte diferente de "Difference", la fecha vuelve a la actual.
+- Correccion en Balance: ahora toma las provisiones de la fecha de la consulta.
 
 ###Realese 1.2.15.2
 - Agregado msj preliminar que indica que se esta calculando el tiempo para generar provisiones.
