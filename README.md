@@ -2,6 +2,8 @@
 ============
 
 ##Sistema de Reportes para Billing
+
+##Release 1.2.15.3
 - Agregada fecha donde hay data para ser comparada por reporte billing, al seleccionar otro reporte diferente de "Difference", la fecha vuelve a la actual.
 - Correccion en Balance: ahora toma las provisiones de la fecha de la consulta.
 
