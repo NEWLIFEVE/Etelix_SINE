@@ -101,4 +101,9 @@ class Billing extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        public static function billingTime()
+        {
+            $sql="select MAX(date_balance) AS date_balance from billing";
+            return self::model()->findBySql($sql);
+        }
 }

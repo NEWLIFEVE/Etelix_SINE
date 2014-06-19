@@ -6,6 +6,7 @@
  */
 $this->pageTitle = Yii::app()->name;
 ?>
+
 <article class='titulo90'>SINE</article>
 <div class='subtitulos'>
     <h2>Seleccione reporte</h2>
@@ -212,3 +213,4 @@ $this->pageTitle = Yii::app()->name;
 <div class="views_not" id="views_not">
     <h1 class="h1_views_not">la vista previa no esta disponible en esta resolucion...</h1>
 </div>
+<input type="hidden" name="timeHide" id="timeHide" value="<?php echo date('Y-m-d');?>"/>

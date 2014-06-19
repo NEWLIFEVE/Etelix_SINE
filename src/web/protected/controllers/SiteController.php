@@ -558,5 +558,9 @@ class SiteController extends Controller
         }
         return false;
     }
+    public function actionBillingTime()
+    {
+        echo Billing::billingTime()->date_balance ;
+    }
 }
 ?>

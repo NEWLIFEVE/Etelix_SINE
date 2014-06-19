@@ -2,7 +2,7 @@
 ============
 
 Sistema de Reportes para Billing
-
+-Agregada fecha donde hay data para ser comparada por reporte billing, al seleccionar otro reporte diferente de "Difference", la fecha vuelve a la actual.
 Realese 1.2.15.2
 - Agregado msj preliminar que indica que se esta calculando el tiempo para generar provisiones.
 - Agregada funcionalidad js para la interfaz de provisiones(al finalizar las de generar provisiones, el msj de confirmacion se queda visible y solo se eliminara una vez se le de click en la transparencia).

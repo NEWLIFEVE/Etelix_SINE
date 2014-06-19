@@ -207,8 +207,8 @@ $SINE.UI=(function()
          */
     function elijeOpciones(obj)
     {
+        $("#datepicker").val($("#timeHide").val());
         var ocultar =[".operador,.grupo,.fecha,.provisiones,.disputas,.vencidas,.intercompany,.termino_pago,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_sum_re,.termino_pago_refac_reprov,.divide_factura,.no_activity,.car_activity,.chang_Oper_Grup,.chang_Grup_Oper,.periodo,.filter_oper,.order_recopa,.trabajando,.note,.note_ref_pro,.summary_option,#id_termino_pago option[value='todos'],#id_termino_pago option[value='']"],
-
         nombre=obj[0].id;
         switch (nombre){
             case "soa":
@@ -248,12 +248,20 @@ $SINE.UI=(function()
                 var mostrar =['.trabajando']; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
               break; 
-            case "recredi":case "difference":
+            case "recredi":
                 var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
                   $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
                   $SINE.UI.adminInput($("#type_termino_pago").val("null"));
                   $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
                   $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
+              break; 
+            case "difference":
+                var mostrar =[".fecha,.intercompany,.no_activity,.termino_pago,.termino_pago_sum_re,.type_termino_pago,.type_termino_pago_sum_re,.termino_pago_refac_reprov,.note,#id_termino_pago option[value='todos']"]; 
+                  $SINE.UI.formChangeAccDoc(ocultar, mostrar); 
+                  $SINE.UI.adminInput($("#type_termino_pago").val("null"));
+                  $(".type_termino_pago").addClass("type_termino_pago_sum_re");$(".type_termino_pago_sum_re").removeClass("type_termino_pago");
+                  $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");$(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
+                  $SINE.AJAX.send("GET","/site/BillingTime",null,null); 
               break; 
             case "recopa":
                 var mostrar =['.fecha,.filter_oper,.vencidas,.order_recopa']; 
@@ -648,21 +656,25 @@ $SINE.AJAX=(function()
              data: formulario,
              success: function(data)
              {  
-                 if(msjTime != null){   /*consulta el tiempo estimado para generar los reportes y lo muestra cambiando el msj actual confirm, por ahora solo tiene impacto sobre recredi y summary*/
-                    $SINE.UI.msjChange(msjTime + data,"cargando.gif",null,"80%"); 
+                 if(formulario==null){
+                     $("#datepicker").val(data);
                  }else{
-                    if(action=="/site/Excel"){         
-                        $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png",1500,"33%");  
-                        $(".excel_a").removeAttr("href");
-                        console.log("Descarga Exitosa");
-                    }else if(action=="/site/previa"){ 
-                        $SINE.UI.fancyBox(data);
-                        console.log("Vista Previa Exitosa");
-                    }else{                              
-                        $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png",1000,"33%"); 
-                        console.log(data);
-                    }  
-                 }
+                    if(msjTime != null){   /*consulta el tiempo estimado para generar los reportes y lo muestra cambiando el msj actual confirm, por ahora solo tiene impacto sobre recredi y summary*/
+                       $SINE.UI.msjChange(msjTime + data,"cargando.gif",null,"80%"); 
+                    }else{
+                       if(action=="/site/Excel"){         
+                           $SINE.UI.msjChange("<h2>Descarga completada con exito</h2>","si.png",1500,"33%");  
+                           $(".excel_a").removeAttr("href");
+                           console.log("Descarga Exitosa");
+                       }else if(action=="/site/previa"){ 
+                           $SINE.UI.fancyBox(data);
+                           console.log("Vista Previa Exitosa");
+                       }else{                              
+                           $SINE.UI.msjChange("<h2>"+data+" con exito</h2>","si.png",1000,"33%"); 
+                           console.log(data);
+                       }  
+                    }
+                }
              }
         });
     }
