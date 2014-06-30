@@ -1,0 +1,860 @@
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+header {
+  height: 45px;
+}
+.metro .page {
+  width: 980px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.description {
+  margin: 10px 0;
+}
+.show-grid .row [class*="span"] {
+  line-height: 40px;
+  background: rgba(193, 179, 123, 0.52);
+  text-align: center;
+  min-height: 10px !important;
+}
+.color-stack li,
+#icon-list li {
+  margin-bottom: 5px;
+}
+
+#logueo {
+    width: 500px;
+    margin: auto !important;
+}
+.example > img {
+  margin: 5px;
+  display: inline-block;
+}
+.example .image-container {
+  margin: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.example  input[type="submit"] {
+    width: 100%;
+}
+.myClass thead tr {
+  background-color: #1ba1e2;
+  color: #ffffff;
+}
+.layout {
+  min-height: 100%;
+  position: relative;
+}
+header {
+  height: 45px;
+  position: relative;
+}
+.introduce {
+  height: 170px;
+}
+.introduce_r {
+  height: 75px;
+}
+.download_link {
+  background: #c75050 !important;
+}
+.download_link:hover {
+  background: #e04343 !important;
+}
+.download_link:active {
+  background: #b01919 !important;
+}
+.footer_spacer {
+  height: 40px;
+}
+footer {
+  width: 100%;
+  height: 25px;
+}
+::-webkit-scrollbar 
+{
+    width: 8px;    
+}
+::-webkit-scrollbar-button
+{       
+    background: #2E62B4;
+    height: 23px;  
+}
+::-webkit-scrollbar-button:hover
+{
+    background-color: #2E62B4;   
+}    
+::-webkit-scrollbar-track 
+{
+    background-color: #D8D8D8;
+}
+ ::-webkit-scrollbar-track-piece 
+{
+    background-color: #2E62B4;
+}   
+ ::-webkit-scrollbar-track-piece:hover
+{
+    background-color: #D8D8D8;
+}   
+::-webkit-scrollbar-thumb 
+{       
+    background:  #2E62B4;
+    height: 50px;
+}
+::-webkit-scrollbar-thumb:hover 
+{       
+    /*background: #16499a;*/
+    background: #12408A;
+}
+
+::selection {
+background: #2E62B4;
+color: #fff;
+text-shadow: none;
+}
+
+/** codigo nuestro*/
+.bodylogin 
+{
+    background: #585858;
+    color: #555;
+    font: normal 10pt Arial,Helvetica,sans-serif;
+    height: 200%;
+    margin-left: -187px;
+    margin-top: -20px;
+    padding-top: 20px;
+/*    position: absolute;
+    width: 158.5%;*/
+    position: fixed;
+    width: 100.5%;
+}
+@media screen and (max-width: 600px) { /* 13 / 390 */
+    .contratoForm{ width: 45%;}
+}
+.cuadro
+{
+    height: 450px;
+    margin: 85px auto;
+    width: 27%;
+}
+.titulo
+{
+    text-align: center;
+    padding-top: 10px;
+}
+.SI
+{
+   color: white;
+   font-size: xx-large; 
+}
+.NE
+{
+   color: white;
+   font-size: xx-large; 
+}
+.cuadro_login
+{
+    background: white;
+    height: 75%;
+    padding: 16%;
+    text-align: center;
+}
+
+input#LoginForm_username
+{
+    background-position:198px -17px;
+    border-left: 5px solid #16499a;
+    height: initial;
+}
+div.login.error input#LoginForm_username
+{
+    background-position:198px -17px;
+    border-bottom:1px solid red;
+    border-left: 5px solid red;
+    border-right: 1px solid red;
+    border-top:1px solid red;
+}
+input#LoginForm_password
+{
+    background-position: 198px -39px;
+    border-left: 5px solid #16499a;
+    height: initial;
+}
+input.error 
+{
+    background-position: 198px -39px;
+    border-bottom:1px solid red;
+    border-left: 5px solid red!important;
+    border-right: 1px solid red;
+    border-top:1px solid red;
+}
+div.errorMessage
+{
+    color:red;
+    margin:0% -23% 2% -24%;
+}
+
+#minifooter
+{
+    font-size: 10px;
+    height: 28px;
+    padding-top: 0.7em;
+    text-align: left;
+    width: 344px;
+}
+/*estilos de renoc*/
+#footer
+{
+    background:#333333;
+    bottom:0px;
+    color: #8B8B8B;
+    font-size: 0.8em;
+    height:30px;
+    left:0px;
+    position:fixed;
+    text-align: center;
+    width:100%;
+}
+#barrablanca
+{
+    background:white; 
+    border-left: 7px solid #2E62B4;  
+    height:420px; 
+    position:absolute; 
+    width:28px;
+}
+
+#claseboot
+{
+    height:75px; 
+    margin-left: 5em;
+    margin:0px;
+    padding-top: 3em;
+    width:458px; 
+}
+
+#flecha-forward 
+{
+    color: #848484;
+    float: right;
+    padding-right: 5%;
+    text-decoration:none !important;
+}
+
+.titulo90
+{
+    -moz-transform-origin: 50% 50%;
+    -moz-transform: rotate(-90deg);
+    -ms-transform-origin: 50% 50%;
+    -ms-transform: rotate(-90deg);
+    -o-transform-origin: 50% 50%;
+    -o-transform: rotate(-90deg);
+    -webkit-transform-origin: 50% 50%;
+    -webkit-transform:rotate(-90deg);
+    color: silver;
+    font-size: 6em;
+    margin-top: 30%;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    width: 10%;
+    margin-left: -20%;
+    font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
+}
+.listadeReportes
+{
+    border-right: 7px solid #2E62B4;
+    height: 489px;
+    /*height: 547px;*/
+    /*height: 477px;*/
+    width: 358px;
+    margin-top: -34%;
+    background: white; 
+    position: relative;
+} 
+.listadeReportesscroll 
+{
+    height: 485px;
+    width: 358px;
+    margin-top: -29%;
+    position: relative;
+} 
+.Reportes
+{
+    background: white;
+    width: 92%;
+    /*height: 77px;*/
+    /*height: 67px;*/
+    height: 59px;
+    margin-top: 0%;
+    margin-left: 4%;
+    float: left;
+    padding-left: 28px;
+    border-bottom: 1px solid silver;
+    transition:width 0.5s;
+    -webkit-transition:width, 0.3s;
+    /*padding-bottom: 25%;quitar al tener todos los reportes*/
+
+}
+.Reportes:hover 
+{
+    width: 96%;
+    background: silver;
+    border-bottom: 1px solid #2E62B4;
+}
+.Reportes:link 
+{
+    background: #2E62B4;
+    border-bottom: 1px solid white;
+    width: 96%;
+}
+/*.Reportes:active 
+{
+    background:#06ACFA;
+}*/
+.subtitulos
+{
+    font-size: xx-large;
+    text-align: center;
+    margin-top: -36%;
+    position: absolute;
+    margin-left: 0%;
+}
+
+.h1_report
+{
+    color:#2E62B4!important;
+    margin: 0px 0!important;
+    font-size: 37pt!important;
+}
+.h1_reportClick
+{
+    color:white!important;
+}
+.formulario
+{
+    /*background: red;*/
+    height: 485px;
+    margin-top: -485px;
+    width: 0%;
+    position: static;
+    margin-left: 19%;
+    padding-left: 49px;
+    padding-right: 89px;
+    display:none;
+}
+
+select, input
+{
+    height: 43px!important;
+}
+.formInputs
+{
+    display: inline-block;
+    padding-left: 10px;
+}
+.botones {
+    width: 142px;
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 2px;
+}
+
+img.ver
+{
+    width: 100%;
+}
+img.oculta
+{
+    display: none;
+    width: 100%;
+}
+.Oper_grupo:hover img.ver
+{
+    display: none;
+}
+.Oper_grupo:hover img.oculta
+{
+    display: inline;
+}
+.botones:hover img.ver
+{
+    display: none;
+}
+.botones:hover img.oculta
+{
+    display: inline;
+}
+#botones_exportar
+{
+    margin-top: 28px;
+    display: block;
+    position: absolute;
+    margin-left: 0%;
+}
+
+#previa
+{
+    background-image:-webkit-linear-gradient(180deg, #06ACFA 87px, #10469B 50px);   
+    background-image:-moz-linear-gradient(180deg, #06ACFA 87px, #10469B 50px);   
+} 
+#previa:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #35C7F5 87px, #166EB4 50px);    
+    background-image:-moz-linear-gradient(180deg, #35C7F5 87px, #166EB4 50px);    
+}
+#excel
+{
+    background-image:-webkit-linear-gradient(180deg, #049C47 87px, #10469B 50px);   
+    background-image:-moz-linear-gradient(180deg, #049C47 87px, #10469B 50px);   
+} 
+#excel:hover 
+{
+    background-image:-webkit-linear-gradient(180deg, #0AB857 87px, #166EB4 50px);    
+    background-image:-moz-linear-gradient(180deg, #0AB857 87px, #166EB4 50px);    
+}
+#mail
+{
+    background-image:-webkit-linear-gradient(180deg, #F0950C 87px, #10469B  50px);   
+    background-image:-moz-linear-gradient(180deg, #F0950C 87px, #10469B  50px);   
+} 
+#mail:hover 
+{  
+    background-image:-webkit-linear-gradient(180deg, #ECA02D 87px, #166EB4 50px);    
+    background-image:-moz-linear-gradient(180deg, #ECA02D 87px, #166EB4 50px);    
+}
+
+
+    /* < ESTILOS DE DATEPICKER UI*/
+.ui-state-default 
+{
+    background: silver !important;
+    color: #2E62B4 !important;
+    font-size: x-large;
+    border: 0px solid!important;
+}
+.ui-state-default:hover 
+{
+    background: #2E62B4!important;
+    color: white!important;
+}
+
+#ui-datepicker-div 
+{
+    background: #3F3C3C!important;
+    color: #2E62B4;
+    width: 23%;
+    border: 0px solid;
+    border-radius: initial!important;
+}
+.ui-datepicker-header.ui-widget-header.ui-helper-clearfix.ui-corner-all 
+{
+    background: #333333;
+    color:white;
+    font-size: larger;
+    border: 0px solid;
+}
+.ui-datepicker .ui-datepicker-prev-hover, .ui-datepicker-next-hover
+{
+    border-radius: initial!important;
+    background: white!important;
+}
+    /* /> ESTILOS DE DATEPICKER UI*/
+.chang_Oper_Grup,.chang_Grup_Oper
+{
+    width: 6%;
+}
+.barra_tools
+{
+    background: rgb(2, 2, 2);
+    position: fixed;
+    right: 0px;
+    height: 112%;
+    margin-top: -559px;
+    opacity: 0.5;
+    padding-top: 4%;
+    display: none;
+    width:61px;
+}
+.barra_tools_click 
+{
+    background: rgb(2, 2, 2);
+    position: fixed;
+    right: 0px;
+    height: 112%;
+    margin-top: -552px;
+    opacity: 0.5;
+    padding-top: 4%;
+    width: 12%;
+    display: none;
+    border-left: 2px solid;
+}
+#next_tool  
+{
+    width: 74%;
+    margin-left: 14%;
+    opacity: 0.8;
+    margin-top: 0px;
+}
+#back_tool  
+{
+    width: 43%;
+    margin-left: 5%;
+    opacity: 0.8;
+    margin-top: 0px;
+}
+/*Estilos del autocompletar*/
+#ui-datepicker-div table.ui-datepicker-calendar
+{
+    background: #F5F5F5 !important;
+}
+#ui-datepicker-div div.ui-datepicker-title
+{
+    color:white;
+}
+.ui-state-default
+{
+    border-color: #F5F5F5 !important;
+}
+ul.ui-widget-content
+{
+    background: #F5F5F5 !important;
+}
+li.ui-menu-item a
+{
+    color:#848484;
+}
+.ui-state-focus
+{
+    background: #2E62B4 !important;
+    color:white !important;
+    border-radius: 0px!important;
+}
+.btn, .btn-primary
+{
+    border-radius: 0px!important;
+    background: silver!important;
+    color:#2E62B4!important; 
+}
+.active
+{
+    border-radius: 0px!important;
+    background: #2E62B4!important; 
+    color:white!important; 
+}
+.titlePage 
+{
+    font-size: larger!important;
+    font-weight: bold;
+}
+.fondo_negro
+{
+    background-color: rgba(0,0,0,0.5);
+    content: "";
+    height: 100%;
+    position: fixed;
+    text-align: center;
+    top: 0px;
+    width: 100%;
+    z-index: 1030;
+    display:none;
+}
+.emergingBackground
+{
+    background-color: rgba(0,0,0,0.5);
+    content: "";
+    height: 100%;
+    position: fixed;
+    text-align: center;
+    top: 0px;
+    width: 100%;
+    /*z-index: 1030;*/
+    display:none;
+    cursor: url('../img/exit.cur'), url('img/exit.cur'), pointer;
+}
+
+.views_not
+{
+    background-color: rgba(0,0,0,0.5);
+    content: "";
+    position: fixed;
+    text-align: center;
+    z-index: 1030;
+    height: 60%;
+    margin: -106% -4%;
+    width: 95%;
+    display:none;
+}
+.views_not:hover
+{
+    background-color: rgba(0,0,0,0.4) ;
+}
+.h1_views_not
+{
+    color:white!important;
+}
+.mensaje
+{
+    background-color: white;
+    color: #6E6E6E;
+    /*left: 30%;*/
+    margin: -27% 32% auto;
+    padding: 23px 30px 43px 28px;
+    position:fixed;
+    text-align: center;
+    width: 490px;
+    z-index: 1031;
+}
+.cancel 
+{
+    background: #FA4646;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.cancel:hover
+{
+    background: #FA7B7B;
+}
+.confirm 
+{
+    background: #06ACFA;
+    color: #fff;
+    font-size: x-large;
+    width: 23%;
+    height: 40px;
+    padding: 8px;
+    display: table-cell;
+}
+.confirm:hover
+{
+    background: #35C7F5;
+}
+.confirmButtons 
+{
+    position: initial;
+    display: flex;
+    text-align: center;
+    margin: 3% 19% 0%;
+    width: 131%;
+}
+.emergingView
+{
+    background-color: white;
+    color: #6E6E6E;
+    margin: -36% 23% auto;
+    /*margin: -67% 23% auto;*/
+    padding: 35px 4px 43px 28px;
+    position: fixed;
+    text-align: left;
+    width: 756px;
+    /*z-index: 1031;*/
+    height: 75%;
+}
+
+.fancybox
+{
+    background-color: white;
+    color: #6E6E6E;
+    margin: -37% 14% auto;
+    padding: 23px 30px 43px 28px;
+    position: fixed;
+    text-align: left;
+    width: 990px;
+    z-index: 1031;
+    height: 583px;
+    overflow-y: scroll;
+}
+
+select 
+{
+    width: 207px!important;
+}
+ #No_disp::-webkit-input-placeholder ,  #Si_disp::-webkit-input-placeholder  
+,#No_prov::-webkit-input-placeholder ,  #Si_prov::-webkit-input-placeholder 
+,#No_venc::-webkit-input-placeholder ,  #Si_venc::-webkit-input-placeholder 
+,#No_act::-webkit-input-placeholder  ,  #Si_act::-webkit-input-placeholder 
+,#No_car_act::-webkit-input-placeholder,#Si_car_act::-webkit-input-placeholder 
+,#No_inter::-webkit-input-placeholder,  #Si_inter::-webkit-input-placeholder 
+,#No_div::-webkit-input-placeholder,  #Si_div::-webkit-input-placeholder 
+,#No_sum::-webkit-input-placeholder,  #Si_sum::-webkit-input-placeholder 
+{
+    color:    #2E62B4;
+}
+#No_disp,#Si_disp ,#No_prov,#Si_prov,#No_venc,#Si_venc,#No_act,#Si_act,#No_inter,#Si_inter,#No_car_act,#Si_car_act,#No_div,#Si_div,#No_sum,#Si_sum
+{
+    width: 12%;
+    height: 1.88em!important;
+    position: static;
+    font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: medium;
+    padding-bottom: 7px;
+    border:cyan;
+}
+.provisiones
+{
+    width: 392px;
+}
+.vencidas
+{
+    margin-top: 20%;
+}
+.periodo, .filter_oper
+{
+    /*margin-right: 16%;*/
+    position: absolute!important;
+    margin: -105px 233px;
+}
+.termino_pago
+{
+    position: absolute!important;
+    margin: 0px 220px;
+    width: inherit;
+}
+.type_termino_pago
+{
+    margin-bottom: 10px;
+    position: absolute;
+}
+.termino_pago_sum_re
+{
+    position: absolute!important;
+    margin: 0px 220px;
+    width: inherit;
+}
+.type_termino_pago_sum_re
+{
+    margin: -105px 219px;
+    position: absolute;
+}
+.termino_pago_refac_reprov
+{
+    margin: -105px 219px;
+    position: absolute;
+}
+.divide_factura
+{
+    margin: -31px 0px;
+    position: absolute;
+}
+.summary_option
+{
+    margin: 21px 0px;
+}
+.car_activity 
+{
+    margin-top: 100px;
+}
+.order_recopa
+{
+    position: absolute!important;
+    margin: -105px 231px;
+}
+.imprimir
+{
+    color: white;
+    background: #2E62B4;
+    position: fixed;
+    width: 83px;
+    opacity: 0.5;
+    margin-left: 955px;
+    margin-top: 473px;
+}
+.imprimir:hover
+{
+    opacity: 1;
+}
+
+
+/*ESTO HAY QUE QUITARLO CUANDO YA TODOS LOS TIPOS DE REPORTES FUNCIONEN*/
+.trabajando 
+{
+    width: 417px;
+    padding: 110px;
+    display: none;
+}
+.h3_note
+{
+    color:red!important;
+}
+.instructive
+{
+    color:#06ACFA !important;
+}
+.provisionNote 
+{
+    color: #06ACFA !important;
+    width: 227%;
+    font-size: 12px!important;
+}
+#provisionNote 
+{
+    margin: 45% 7%;
+}
+.note_ref_pro
+{
+    margin: -17px 9px;
+    position: absolute;
+}
+.label_divided 
+{
+    width: 52%;
+}
+/*....*/
+
+/*se modifico reportes, la ultima linea la cual hay que quitarla altener todos los reportes y se modifico h1_report, el tamaño de la letra fue estandarizado*/
+
+/*se modifico h1_report(font-size: 31pt!important;), reportes(padding-bottom: 25%;),  listadeReportes (height: 477px)*/
+
+/*PROVISIONES*/
+#showProvisions
+{
+    margin: 0px; 
+}
+#genProvision
+{
+    background: #3466B4;
+    height: 62px;
+    padding: 2px 11px 10px 15px;
+    margin: 33% 16% auto;
+    position: absolute;
+    width: 60%;
+}
+#genProvision:hover
+{
+    background: #166EB4;
+}
+.H1provInput
+{
+    color: white!important;
+    text-align: center;
+}
+
+#formProvisions 
+{
+    position: absolute;
+    margin: -2px 21px;
+}
+.date
+{
+    position: absolute;
+    margin: 0px 166px;
+}
+.viewsProvisions
+{
+    display:none;
+}
+.titleProv 
+{
+    border-bottom: solid silver 1px;
+    width: 238%;
+    margin: 0px 0px 45px 0px!important;
+}
+
