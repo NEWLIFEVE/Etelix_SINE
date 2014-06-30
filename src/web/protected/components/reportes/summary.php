@@ -17,7 +17,6 @@ class summary extends Reportes
 //        ini_set('max_execution_time', 1500);
         ini_set('max_execution_time', 1500);
         /***************************                      SECCION DE ESTILOS GENERALES                       ***************************/
-        $styleNumberRow="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
         
         $styleBasicCenterLess="style='border:1px solid silver;text-align: center;color:red;'";
         $styleBasicCenterHigherDue="style='border:1px solid silver;text-align: center;color:#3466B4;'";
@@ -315,7 +314,8 @@ class summary extends Reportes
                     <td {$styleSoaNext} colspan='2'>".Yii::app()->format->format_decimal($soaWeekFourTotal)."</td>
                     <td {$styleNull} colspan='2'></td>
                   </tr>
-                 </table>";   
+                 </table>"
+                    . "Nota: Los montos por operador se muestran formateados con dos decimales, mientras que para el calculo de los totales se toma en cuenta todos los decimales, si la suma manual de los valores no coinciden con el total mostrado es por este motivo.";   
           return $body;
     }
 

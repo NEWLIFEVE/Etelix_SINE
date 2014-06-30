@@ -140,11 +140,11 @@ class Reportes extends CApplicationComponent
         $var = new Recredi();
         return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
-    public function billingReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    public function billingReport($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 2500);
         $var = new billingReport();
-        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        return $var->defineReport($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -1024,6 +1024,8 @@ class Reportes extends CApplicationComponent
 
                     if($relation===TRUE)
                        return "SUPPLIER ".TerminoPago::getModelFind($paymentTerm)->name;
+                    if($relation===NULL)
+                       return "BILATERAL ".TerminoPago::getModelFind($paymentTerm)->name;
                 }else{
                     if($relation!=NULL){
                         $period=TerminoPago::getModelFind($paymentTerm)->period;

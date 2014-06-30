@@ -216,7 +216,7 @@ class SiteController extends Controller
                     break;
                case 'difference':
                     $correos['difference']['asunto']="SINE - DIFFERENCE".self::reportTitle($date);
-                    $correos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
+                    $correos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['Si_matches']),$this->trueFalse($_POST['type_termino_pago']),$_POST['id_termino_pago']);
                     $correos['difference']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['difference']['asunto'].".xls";
                     break;
                case 'recopa':
@@ -285,7 +285,7 @@ class SiteController extends Controller
                     break;
                 case 'difference':
                     $archivos['difference']['nombre']="SINE - DIFFERENCE ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
-                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
+                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'recopa':
                     $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($date)."-".date("g:i a");
@@ -341,7 +341,7 @@ class SiteController extends Controller
                     $archivos['recredi']['cuerpo']=Yii::app()->reportes->recredi($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'difference':
-                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
+                    $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse("null"),'todos');
                     break;
                 case 'recopa':
                     $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
