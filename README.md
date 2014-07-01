@@ -2,6 +2,13 @@
 ============
 
 ##Sistema de Reportes para Billing
+- Nueva validacion para recredi, balance y difference (filtrado de disputas con issue_date mas antiguos de lo que especifica los dias para solventar disputas en el contrato).
+- Para difference y recredi se agregovalidacion para que traiga disputas que con issue date menor a la fecha de consulta pero que tengan notas de credito con issue date mayor a la fecha en cuestion.
+- Agregada tabla resumen con los totales por termino pago.
+- Agregada tabla resumen por termino pago en cada caso con las diferencias entre billing y sine(solo los valores con pares en billing).
+- Agregada validacion para que traiga o no los casos en rosado(casos donde sine no tiene par en billing).
+- Agregada nueva estructura de termino pago y nueva relacion, (bilateral(casos donde los termino pago como customer y supplier son iguales)).
+- Cambiado el orden en que se muestran los termino pago tanto en los select como en los reportes, ahora se ordena por semanales, quincenales y mensuales, sin importar si es prepago.
 - Agregada fecha donde hay data para ser comparada por reporte billing, al seleccionar otro reporte diferente de "Difference", la fecha vuelve a la actual.
 - Correccion en Balance: ahora toma las provisiones de la fecha de la consulta.
 
