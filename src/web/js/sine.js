@@ -466,7 +466,8 @@ $SINE.UI = (function()
                 break
             case 'difference':
 //                var respuesta = $SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
-                var respuesta = $SINE.UI.validaCampos($('').serializeArray());
+//                var respuesta = $SINE.UI.validaCampos($('').serializeArray());
+                var respuesta=1;
                 break
             case 'recopa':
                 var respuesta = $SINE.UI.validaCampos($('#id_filter_oper,#order_recopa').serializeArray());

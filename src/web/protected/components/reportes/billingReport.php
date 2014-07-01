@@ -8,8 +8,10 @@ class billingReport extends Reportes
 {
     private $carriersSine=NULL;
     private $totalBalanceSine;
+    private $totalBalanceSineNoPink;
     private $totalBalanceBilling;
     private $totalDifference;
+    private $totalDifferenceNoPink;
     private $date;
     private $countEqual=0;
     private $countDiff=0;
@@ -22,6 +24,7 @@ class billingReport extends Reportes
     private $countBilNullNow=0;
     private $countHistTpNow=0;
 
+    private $siMatches=NULL;
     private $tp_name="Term.Pago Inverso";
     private $carriersUsed="402";
     private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
@@ -37,6 +40,7 @@ class billingReport extends Reportes
     private $styleBilling ="style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'";
     private $styleDifference ="style='border:1px solid silver;background:#E99241;text-align:center;color:white;'";
     private $styleNull ="style='border:1px solid white;'";
+    private $totalForPaymentTermn="<h2 style='color:#06ACFA!important;'>TOTAL POR TERMINO PAGO</H2><table><tr><td colspan='2' style='border:1px solid silver;background:silver;text-align:center;color:white;'>Termino pago</td><td style='border:1px solid silver;background:#3466B4;text-align:center;color:white;'>Sine</td><td style='border:1px solid silver;background:#248CB4;text-align:center;color:white;'>Billing</td><td style='border:1px solid silver;background:#E99241;text-align:center;color:white;'>Difference</td></tr>";
    
     /**
      * Encargada de armar el html del reporte
@@ -51,6 +55,7 @@ class billingReport extends Reportes
     {
         /*********************   AYUDA A AUMENTAR EL TIEMPO PARA GENERAR EL REPORTE CUANDO SON MUCHOS REGISTROS   **********************/
         ini_set('max_execution_time', 500);
+        $this->siMatches=$siMatches;
         if($date==null) $date=date('Y-m-d');
         $this->date=$date;
         if($typePaymentTerm===NULL)
@@ -58,7 +63,7 @@ class billingReport extends Reportes
         else
             $this->tp_name="Term.Pago Inverso";
         $documents=$this->_getData($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerm,$toDateLastPeriod);
-        $balanceSine=$balanceBilling=$difference=0;
+        $balanceSine=$balanceBilling=$difference=$balanceSineNoPink=$differenceNoPink=0;
         $body=NULL;
         if($documents!=NULL)
         {
@@ -97,9 +102,15 @@ class billingReport extends Reportes
                 $balanceSine+=$document->balance;
                 $balanceBilling+=$document->balance_billing;
                 $difference+=$document->difference;
+                
+                if($document->carrier_billing!=NULL){
+                    $balanceSineNoPink+=$document->balance;
+                    $differenceNoPink+=$document->balance - $document->balance_billing;
+                }
+                    
  
                 $this->defineCategoryAndStyle($document);
-                
+
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
                     $body.="<td {$this->styleBasic} >".$document->name."</td>";
@@ -125,8 +136,19 @@ class billingReport extends Reportes
                         <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($balanceBilling)."</td>
                         <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($difference)."</td>
                         <td {$this->styleNull} ></td>
-                    </tr>
-                </table>";  
+                    </tr>";
+            if($this->siMatches!=NULL){
+                if($balanceSine!=$balanceSineNoPink && $balanceSineNoPink!=0)
+                    $body.="<tr>
+                                <td {$this->styleNull} ></td>
+                                <td {$this->styleCarrierHead} colspan='2' > TOTAL COMPARABLE</td>
+                                <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($balanceSineNoPink)."</td>
+                                <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($balanceBilling)."</td>
+                                <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($differenceNoPink)."</td>
+                                <td {$this->styleNull} ></td>
+                            </tr>";
+            }
+            $body.="</table>";  
              $acum=$pos;
              $body.="<h3 style='color:#06ACFA!important;'> Resumen por casos </h3>
                      <table style='width: 40%;'>
@@ -139,7 +161,15 @@ class billingReport extends Reportes
              $this->totalBalanceSine+=$balanceSine;
              $this->totalBalanceBilling+=$balanceBilling;
              $this->totalDifference+=$difference;
+             $this->totalBalanceSineNoPink+=$balanceSineNoPink;
+             $this->totalDifferenceNoPink+=$differenceNoPink;
              $this->countEqualNow=$this->countDiffNow=$this->countProvNow=$this->countBilNullNow=$this->countHistTpNow=$acum=0;
+             $this->totalForPaymentTermn.="<tr>
+                                              <td {$this->styleBasic} colspan='2'>".Reportes::defineNameExtra($paymentTerm,$typePaymentTerm, NULL)."</td>
+                                              <td {$this->styleBasic}>".Yii::app()->format->format_decimal($balanceSine)."</td>
+                                              <td {$this->styleBasic}>".Yii::app()->format->format_decimal($balanceBilling)."</td>
+                                              <td {$this->styleBasic}>".Yii::app()->format->format_decimal($difference)."</td>
+                                          </tr>";
         }  
         return $body;
     }
@@ -192,8 +222,20 @@ class billingReport extends Reportes
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceSine)."</td>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceBilling)."</td>
                     <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalDifference)."</td>
-                  </tr>
-                </table><br>";
+                  </tr>";
+                    
+        if($this->siMatches!=NULL){
+            if($this->totalBalanceSineNoPink!=$this->totalBalanceSine && $this->totalBalanceSineNoPink!=0)           
+                $body.="<tr>
+                            <td {$this->styleBasic} colspan='9'> TOTAL COMPARABLE</td>
+                         </tr>
+                         <tr>
+                            <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceSineNoPink)."</td>
+                            <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalBalanceBilling)."</td>
+                            <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($this->totalDifferenceNoPink)."</td>
+                         </tr>";
+        }
+        $body.="</table><br>";
         return $body;
     }
     /**
@@ -203,7 +245,7 @@ class billingReport extends Reportes
     public function countCategory()
     {
         $acum=$this->countEqual + $this->countDiff + $this->countProv + $this->countBilNull + $this->countHistTp;
-        $body="<h2 style='color:#06ACFA!important;'> Resumen total por casos </h2> <br>
+        $body="<h2 style='color:#06ACFA!important;'> RESUMEN TOTAL POR CASOS </h2> <br>
                 <table style='width: 40%;'>
                  <tr>    <td {$this->styleWhite}  colspan='4'> {$this->countEqual}   casos ".Yii::app()->format->format_decimal($this->countEqual*100/$acum)."%  (SINE y billing sin diferencias notables)</td>    </tr>
                  <tr>    <td {$this->styleYellow} colspan='4'> {$this->countDiff}    casos ".Yii::app()->format->format_decimal($this->countDiff*100/$acum)."%   (Diferencias que hay que investigar)     </td>    </tr>
@@ -473,7 +515,6 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$siMatches,NULL,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-//                $var.="<br> <h1 style='color:#06ACFA!important;'>DIFFERENCE CUSTOMER</h1> <br>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion customer*/
                 {
                    
@@ -484,7 +525,6 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$siMatches,FALSE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-//                $var.="<br> <h1 style='color:#06ACFA!important;'>DIFFERENCE SUPPLIER</h1> <br>";
                 foreach ($paymentTerms as $key => $paymentTerm) /*Concatena al customer y busca todos los termino pago en la relacion supplier*/
                 {
                    if($paymentTerm->name!="Sin estatus"){
@@ -494,42 +534,9 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$siMatches,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                if($siMatches==NULL)
-                    $var.= $this->totalsGeneral().$this->countCategory();
-                else
-                    $var.= $this->totalsGeneral().$this->countCategory().$this->getCarriersBillingNotSine();
+                $var.= $this->countCategory().$this->totalForPaymentTermn.="</table>".$this->totalsGeneral().$this->getCarriersBillingNotSine();
             }
         }
-            
-            
-//            else{
-//                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend;
-//                foreach ($paymentTerms as $key => $paymentTerm) /*Busca todos los termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
-//                {
-//                   if($paymentTerm->name!="Sin estatus"){
-//                       $period=TerminoPago::getModelFind($paymentTerm->id)->period;
-//                       $toDateLastPeriod=Reportes::defineToDatePeriod($period, $date);
-//                       $fromDateLastPeriod=Reportes::defineFromDate($period,$toDateLastPeriod);
-//                       $var.= $this->report($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerm->id,$fromDateLastPeriod);
-//                   }
-//                }
-//                if($siMatches==NULL)
-//                    $var.= $this->totalsGeneral().$this->countCategory();
-//                else
-//                    $var.= $this->totalsGeneral().$this->countCategory().$this->getCarriersBillingNotSine();
-//            }
-//        }else{                                                  /*Busca un solo termino pago en la relacion seleccionada, (solo una:customer o supplier)*/
-//            $period=TerminoPago::getModelFind($paymentTerms)->period;
-//            $toDateLastPeriod=Reportes::defineToDatePeriod($period, $date);
-//            $fromDateLastPeriod=Reportes::defineFromDate($period,$toDateLastPeriod);
-//            $data= $this->report($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms,$fromDateLastPeriod);
-//            if($data!=NULL)
-//                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data ;
-////                $var.=$backLegend."<h1>DIFFERENCE</h1>".$legend. $data .$this->countCategory();
-//            else
-//                $var.="<h3>No hay data para este termino pago en la relacion comercial seleccionada</h3>";
-//            
-//        } 
         return $var;
     }
 }
