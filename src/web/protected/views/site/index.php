@@ -189,6 +189,13 @@ $this->pageTitle = Yii::app()->name;
                     <input name="No_inter" id="No_inter" placeholder="No" type="text" value=""class="btn btn-primary">
                 </div>  
             </div>
+            <div class='formInputs matches'>
+                <h3>Carrier sin coincidencias en billing</h3>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <input name="Si_matches" id="Si_matches" type="text" placeholder="Si" value=""class="btn btn-primary">
+                    <input name="No_matches" id="No_matches" placeholder="No" type="text" value=""class="btn btn-primary">
+                </div>  
+            </div>
             <div class='formInputs note'>
                 <h3 class="h3_note">Este reporte esta en etapa de prueba y algunos datos podrian no ser confiables...</h3>  
             </div>

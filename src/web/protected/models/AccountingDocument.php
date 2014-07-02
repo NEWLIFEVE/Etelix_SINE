@@ -64,6 +64,7 @@ class AccountingDocument extends CActiveRecord
         public $type;
         public $currency;
         public $tp;
+        public $tp_name;
         public $totals;
         public $monto_balance;
         public $monto_fac;

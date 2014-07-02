@@ -140,11 +140,11 @@ class Reportes extends CApplicationComponent
         $var = new Recredi();
         return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
     }
-    public function billingReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
+    public function billingReport($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms)
     {
         ini_set('max_execution_time', 2500);
         $var = new billingReport();
-        return $var->defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms);
+        return $var->defineReport($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms);
     }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
@@ -240,9 +240,9 @@ class Reportes extends CApplicationComponent
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                             WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id 
                                     AND a.issue_date<='{$date}'
-                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL) AND issue_date>=CAST('{$date}' AS DATE) - CAST((select days from solved_days_dispute_history where id_contrato=x.id and end_date IS NULL) ||' days' AS INTERVAL)
                             GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
-                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name, tp.name,t.name";
+                            issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name, tp.name,t.name ";
                  }
                 break;
             default:
@@ -1024,6 +1024,8 @@ class Reportes extends CApplicationComponent
 
                     if($relation===TRUE)
                        return "SUPPLIER ".TerminoPago::getModelFind($paymentTerm)->name;
+                    if($relation===NULL)
+                       return "BILATERAL ".TerminoPago::getModelFind($paymentTerm)->name;
                 }else{
                     if($relation!=NULL){
                         $period=TerminoPago::getModelFind($paymentTerm)->period;
