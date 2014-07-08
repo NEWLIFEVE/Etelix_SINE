@@ -161,6 +161,13 @@ $this->pageTitle = Yii::app()->name;
                     <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">
                 </div>
             </div>
+            <div class='formInputs segRetainer'>
+                <h3>DS en curso de reporte</h3>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <input name="Si_segRet" id="Si_segRet" type="text" placeholder="Si" value=""class="btn btn-primary">
+                    <input name="No_segRet" id="No_segRet" placeholder="No" type="text" value=""class="btn btn-primary">
+                </div>
+            </div>
             <div class='formInputs vencidas'>
                 <h3>Venc +2sem</h3>
                 <div class="btn-group" data-toggle="buttons-radio">

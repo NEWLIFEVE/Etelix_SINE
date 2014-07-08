@@ -15,12 +15,12 @@ class Reportes extends CApplicationComponent
      * @param type $date
      * @param type $noDisp
      * @param type $provision
-     * @param type $grupoName
+     * @param type $segRetainer
      * @return type
      */
-    public function SOA($group,$date,$noDisp,$provision)
+    public function SOA($group,$date,$noDisp,$provision,$segRetainer)
     {
-        $var=SOA::reporte($group,$date,$noDisp,$provision);
+        $var=SOA::reporte($group,$date,$noDisp,$provision,$segRetainer);
         return $var;
     }
     /**
@@ -41,12 +41,12 @@ class Reportes extends CApplicationComponent
      * @param type $group
      * @param type $date
      * @param type $noDisp
-     * @param type $grupoName
+     * @param type $segRetainer
      * @return type
      */
-    public function balance_report($group,$date,$noDisp)
+    public function balance_report($group,$date,$noDisp,$segRetainer)
     {
-        $var=balance_report::reporte($group,$date,$noDisp);
+        $var=balance_report::reporte($group,$date,$noDisp,$segRetainer);
         return $var;
     }
     /**
@@ -217,16 +217,16 @@ class Reportes extends CApplicationComponent
         switch ($type_report)
            {
             case "soa":
-                  if($no_disp=="No"){
-                     return " ";
-                  }else{
-                     return "UNION
-                             SELECT NULL as id, issue_date, valid_received_date, doc_number, from_date, to_date, sum(minutes) as minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
+                 if($no_disp=="No"){
+                    return " ";
+                 }else{
+                    return "UNION
+                            SELECT NULL as id, issue_date, valid_received_date, doc_number, from_date, to_date, sum(minutes) as minutes, g.name AS group, CAST(NULL AS date) AS due_date, 
                                     sum(amount) as amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
-                             FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
-                             WHERE a.id_carrier IN(Select id from carrier where $group)
+                            FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
+                            WHERE a.id_carrier IN(Select id from carrier where $group)
                                      AND a.id_type_accounting_document=tad.id AND a.id_carrier=c.id AND a.id_currency=s.id AND c.id_carrier_groups = g.id AND confirm != -1
-                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)
+                                     AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL)AND confirm!='-1'
                             GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
                             issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name";
                   }
@@ -240,7 +240,7 @@ class Reportes extends CApplicationComponent
                             FROM accounting_document a, type_accounting_document t, carrier c, currency s, contrato x, contrato_termino_pago xtp, termino_pago tp, carrier_groups g
                             WHERE a.id_carrier IN(Select id from carrier where $group) AND a.id_type_accounting_document=t.id AND a.id_carrier=c.id AND a.id_currency=s.id AND a.id_carrier=x.id_carrier AND x.id=xtp.id_contrato AND xtp.id_termino_pago=tp.id and xtp.end_date IS NULL AND c.id_carrier_groups=g.id 
                                     AND a.issue_date<='{$date}'
-                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL) AND issue_date>=CAST('{$date}' AS DATE) - CAST((select days from solved_days_dispute_history where id_contrato=x.id and end_date IS NULL) ||' days' AS INTERVAL)
+                                    AND a.id_type_accounting_document IN (5,6) AND a.id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7,8) AND id_accounting_document IS NOT NULL) AND confirm!='-1'
                             GROUP BY  a.id_accounting_document, a.from_date,  a.to_date,a.valid_received_date, 
                             issue_date,doc_number,g.name, a.id_type_accounting_document, s.name, c.name, tp.name,t.name ";
                  }
@@ -288,6 +288,26 @@ class Reportes extends CApplicationComponent
              return $model->issue_date;
          else
              return $model->due_date;     
+    }
+    /**
+     * 
+     * @param type $model
+     * @param type $segRetainer
+     * @return boolean
+     */
+    public static function defineSegurityRetainer($model,$segRetainer)
+    {
+        switch ($model->id_type_accounting_document) {
+            case 16:case 17:
+                if($segRetainer==TRUE)
+                    return TRUE;
+                else
+                    return FALSE;
+                break;
+            default:
+                return TRUE;
+                break;
+        }    
     }
     /**
      * se encarga de buscar y mantener siempre el due_date mas alto
@@ -359,6 +379,9 @@ class Reportes extends CApplicationComponent
             case "5":case "6":
                 $description = "DISPUTE (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
                 break;
+            case "16":case "17":
+                $description="SEGURITY RETAINER - ".Utility::formatDateSINE($model->issue_date,"M-Y");
+                break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
         }
@@ -391,7 +414,7 @@ class Reportes extends CApplicationComponent
        
         if($balanceDueDate==NULL){
         switch ($model->id_type_accounting_document){
-            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":
+            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":
                 $to_date="";
                 break;
             default:
@@ -400,7 +423,7 @@ class Reportes extends CApplicationComponent
         return $to_date;
         }else{
             switch ($model->id_type_accounting_document){
-                case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":
+                case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":
                     $to_date="";
                     break;
                 default:
@@ -437,6 +460,20 @@ class Reportes extends CApplicationComponent
                 break;
             case "11": case "13":
                 $estilos=" style='background:#FAD8B9;color:black;border:1px solid silver;'";
+                break;
+            case "16":
+                if($model->issue_date>'2013-09-30'){
+                    $estilos=" style='background:white;color:#EB5C19;border:1px solid silver;'";
+                }else{
+                    $estilos=" style='background:white;color:silver;border:1px solid silver;'";
+                }
+                break;
+            case "17":
+                if($model->issue_date>'2013-09-30'){
+                    $estilos=" style='background:white;color:green;border:1px solid silver;'";
+                }else{
+                    $estilos=" style='background:white;color:silver;border:1px solid silver;'";
+                }
                 break;
             default:
                 $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
@@ -623,7 +660,7 @@ class Reportes extends CApplicationComponent
      */    
     public static function define_pagos($model)
     {
-        if($model->id_type_accounting_document==3||$model->id_type_accounting_document==15)
+        if($model->id_type_accounting_document==3||$model->id_type_accounting_document==15||$model->id_type_accounting_document==16)
         {
             return Yii::app()->format->format_decimal($model->amount,3);
         }
@@ -657,7 +694,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_cobros($model)
     {
-        if($model->id_type_accounting_document==4||$model->id_type_accounting_document==14)
+        if($model->id_type_accounting_document==4||$model->id_type_accounting_document==14||$model->id_type_accounting_document==17)
         {
             return Yii::app()->format->format_decimal($model->amount,3);
         }
@@ -713,11 +750,22 @@ class Reportes extends CApplicationComponent
                 return $acumulado + $model->amount;
                 break;
             case "1":case "3":case "6":case "7":case"10":case "12":case "15":
-
                 return $acumulado + $model->amount;
                 break;
             case "2":case "4":case "5":case "8":case "11":case "13":case "14":
                 return $acumulado - $model->amount;
+                break;
+            case "16":
+                if($model->issue_date>'2013-09-30')
+                    return $acumulado + $model->amount;
+                else
+                    return $acumulado; 
+                break;
+            case "17":
+                if($model->issue_date>'2013-09-30')
+                    return $acumulado - $model->amount;
+                else
+                    return $acumulado; 
                 break;
             default:
                 return $acumulado;
@@ -738,6 +786,15 @@ class Reportes extends CApplicationComponent
             case "3":case "15":
                 return $acumuladoPago + $model->amount;
                 break;
+            case "16":
+                if($model->issue_date>'2013-09-30')
+                    return $acumuladoPago + ($model->amount);
+                else
+                    return $acumuladoPago;
+                break;
+            
+            
+            
             default:
                 return $acumuladoPago;
                 break;
@@ -756,8 +813,57 @@ class Reportes extends CApplicationComponent
             case "4":case "14":
                 return $acumuladoCobro + $model->amount;
                 break;
+            case "17":
+                if($model->issue_date>'2013-09-30')
+                    return $acumuladoCobro + $model->amount;
+                else
+                    return $acumuladoCobro;
+                break;
+        
             default:
                 return $acumuladoCobro;
+                break;
+        }
+    }
+    public static function totalSegurityRtetainerCobro($model,$acum)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "17":
+//                if($model->issue_date>'2013-09-30')
+                    return $acum + $model->amount;
+//                else
+//                    return $acum;
+                break;
+            default:
+                return $acum;
+                break;
+        }
+    }
+    public static function totalSegurityRtetainerPago($model,$acum)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "16":
+//                if($model->issue_date>'2013-09-30')
+                    return $acum + $model->amount;
+//                else
+//                    return $acum;
+                break;
+            default:
+                return $acum;
+                break;
+        }
+    }
+    public static function validSegurityRetainer($model,$valid)
+    {
+        switch ($model->id_type_accounting_document){        
+            case "16":case "17":
+                if($model->issue_date>'2013-09-30')
+                    return TRUE;
+                else
+                    return FALSE;
+                break;
+            default:
+                return $valid;
                 break;
         }
     }
