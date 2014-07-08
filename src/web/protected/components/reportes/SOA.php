@@ -5,10 +5,10 @@
      */
     class SOA extends Reportes 
     {
-        public static function reporte($group, $date, $dispute,$provision) 
+        public static function reporte($group, $date, $dispute,$provision, $segRetainer) 
         {
             $accumulated=$accumulatedPayment=$accumulatedCollection=$accumulatedInvoiceSend=$accumulatedInvoiceRec = 0;
-            $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext = 0;
+            $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext =$acumSegurityRetainerPayment=$acumSegurityRetainerCollection=$validSegurityRetainer= 0;
             $last_due_date_next=$last_due_date_due="";
             
             $accounting_document = SOA::get_Model($group, $date, $dispute,$provision,"1"); //trae el sql pricipal
@@ -33,24 +33,29 @@
                     {
                         if(Reportes::dueOrNext($document)<=$date)
                         {  
-                            $accumulated=Reportes::define_balance_amount($document,$accumulated);
-                            $accumulatedPayment=Reportes::define_total_pago($document,$accumulatedPayment);
-                            $accumulatedCollection =Reportes::define_total_cobro($document,$accumulatedCollection);
-                            $accumulatedInvoiceSend =Reportes::define_total_fac_env($document,$accumulatedInvoiceSend);
-                            $accumulatedInvoiceRec =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRec);
+                            $acumSegurityRetainerPayment=Reportes::totalSegurityRtetainerPago($document,$acumSegurityRetainerPayment);
+                            $acumSegurityRetainerCollection=Reportes::totalSegurityRtetainerCobro($document,$acumSegurityRetainerCollection);
+                            $validSegurityRetainer=Reportes::validSegurityRetainer($document,$validSegurityRetainer);
+                            if(Reportes::defineSegurityRetainer($document, $segRetainer)==TRUE)
+                            { 
+                                $accumulated=Reportes::define_balance_amount($document,$accumulated);
+                                $accumulatedPayment=Reportes::define_total_pago($document,$accumulatedPayment);
+                                $accumulatedCollection =Reportes::define_total_cobro($document,$accumulatedCollection);
+                                $accumulatedInvoiceSend =Reportes::define_total_fac_env($document,$accumulatedInvoiceSend);
+                                $accumulatedInvoiceRec =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRec);
 
-                            $body.="<tr " . Reportes::define_estilos($document) . ">";
-                            $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
-                            $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
-                            $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,null) . "</td>";//NULL es provisional//
-                            $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
-                            $body.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
-                            $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
-                            $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
-                            $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
-                            $body.="</tr>";
-                            $last_due_date_due=Reportes:: defineDueDateHigher($document, $last_due_date_due);
-
+                                $body.="<tr " . Reportes::define_estilos($document) . ">";
+                                $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                                $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
+                                $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,null) . "</td>";//NULL es provisional//
+                                $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
+                                $body.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
+                                $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
+                                $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
+                                $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
+                                $body.="</tr>";
+                                $last_due_date_due=Reportes:: defineDueDateHigher($document, $last_due_date_due);
+                            }
                         }
                     }
                 $body.="<tr " . Reportes::define_estilos_null() . "><td></td><td></td><td></td>
@@ -86,23 +91,29 @@
                 {
                     if(Reportes::dueOrNext($document)>$date)
                     { 
-                        $accumulated=Reportes::define_balance_amount($document,$accumulated);
-                        $accumulatedPaymentNext=Reportes::define_total_pago($document,$accumulatedPaymentNext);
-                        $accumulatedCollectionNext =Reportes::define_total_cobro($document,$accumulatedCollectionNext);
-                        $accumulatedInvoiceSendNext =Reportes::define_total_fac_env($document,$accumulatedInvoiceSendNext);
-                        $accumulatedInvoiceRecNext =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRecNext);
+                        $acumSegurityRetainerPayment=Reportes::totalSegurityRtetainerPago($document,$acumSegurityRetainerPayment);
+                        $acumSegurityRetainerCollection=Reportes::totalSegurityRtetainerCobro($document,$acumSegurityRetainerCollection);
+                        $validSegurityRetainer=Reportes::validSegurityRetainer($document,$validSegurityRetainer);
+                        if(Reportes::defineSegurityRetainer($document, $segRetainer)==TRUE)
+                        {
+                            $accumulated=Reportes::define_balance_amount($document,$accumulated);
+                            $accumulatedPaymentNext=Reportes::define_total_pago($document,$accumulatedPaymentNext);
+                            $accumulatedCollectionNext =Reportes::define_total_cobro($document,$accumulatedCollectionNext);
+                            $accumulatedInvoiceSendNext =Reportes::define_total_fac_env($document,$accumulatedInvoiceSendNext);
+                            $accumulatedInvoiceRecNext =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRecNext);
 
-                        $body.="<tr " . Reportes::define_estilos($document) . ">";
-                        $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
-                        $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
-                        $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,NULL) . "</td>";//NULL es provisional//
-                        $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
-                        $body.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
-                        $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
-                        $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
-                        $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
-                        $body.="</tr>"; 
-                        $last_due_date_next=Reportes:: defineDueDateHigher($document, $last_due_date_next);
+                            $body.="<tr " . Reportes::define_estilos($document) . ">";
+                            $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                            $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
+                            $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,NULL) . "</td>";//NULL es provisional//
+                            $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
+                            $body.="<td style='text-align: right;'>" . Reportes::define_fact_rec($document) . "</td>";
+                            $body.="<td style='text-align: right;'>" . Reportes::define_cobros($document) . "</td>";
+                            $body.="<td style='text-align: right;'>" . Reportes::define_fact_env($document) . "</td>";
+                            $body.="<td style='text-align: right;'>" . Yii::app()->format->format_decimal($accumulated,3)."</td>";
+                            $body.="</tr>"; 
+                            $last_due_date_next=Reportes:: defineDueDateHigher($document, $last_due_date_next);
+                        }
                     }         
                 }
                 if($last_due_date_next=="") { 
@@ -128,6 +139,24 @@
                             <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
                         </table>";
+                if($acumSegurityRetainerPayment!=0||$acumSegurityRetainerCollection!=0){
+                    $body.="<br>
+                            <table align='right'>
+                             <tr>
+                                <td colspan='3'></td>
+                                <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SEGURITY RETAINER</td>";
+                        if($acumSegurityRetainerPayment!=0)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSegurityRetainerPayment,3). " </td>";
+                        if($acumSegurityRetainerCollection!=0)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>COLLECT: ". Yii::app()->format->format_decimal($acumSegurityRetainerCollection,3). " </td>";
+                        if($segRetainer!=TRUE && $validSegurityRetainer==TRUE)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'> TOTAL SOA:". Yii::app()->format->format_decimal( $acumSegurityRetainerPayment + $accumulated - $acumSegurityRetainerCollection ,3). " </td>";
+                    $body.="</tr>
+                          </table>";
+                }
+                
+                
+                
                 return $body;
             }else{
                 return 'No hay data, o puede que falte datos  en las condiciones comerciales de carrier pertenecientes al grupo';
@@ -152,7 +181,7 @@
                            CAST(NULL AS date) AS due_date, amount, id_type_accounting_document,s.name AS currency, c.name AS carrier
                       FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                       WHERE a.id_carrier IN(Select id from carrier where $group)
-                          AND tad.name IN('Pago','Cobro','Nota de Credito Recibida','Nota de Credito Enviada','Bank Fee Cobro','Bank Fee Pago','Saldo Inicial') 
+                          AND tad.name IN('Pago','Cobro','Nota de Credito Recibida','Nota de Credito Enviada','Bank Fee Cobro','Bank Fee Pago','Saldo Inicial','Deposito de Seguridad Pago','Deposito de Seguridad Cobro') 
                           AND a.id_type_accounting_document=tad.id
                           AND a.id_carrier=c.id
                           AND a.id_currency=s.id
