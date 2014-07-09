@@ -20,37 +20,42 @@ class segurityRetainer extends Reportes
     {
         $body=NULL;
         $model=$this->getData($date);
-        $body.="<h1>REDS </h1>al {$date}
-                <table style='width: 100%;'>
-                    <tr>
-                        <td ".$this->styleNumberRow.">N°</td>
-                        <td ".$this->styleCarrierHead."> Carrier </td>
-                        <td ".$this->styleSegurRetaHead."> Segurity Retainer </td>
-                        <td ".$this->styleDocNumberHead."> Doc Number  </td>
-                        <td ".$this->styleIssueDateHead."> Issue Date</td>
-                        <td ".$this->styleAmountHead."> Amount </td>
-                        <td ".$this->styleNumberRow.">N°</td>
-                    </tr>";
-        foreach ($model as $key => $value) 
-        {  
-            $pos=$key+1;
-            $this->totalAmount+=$value->amount;
+        if($model!=NULL)
+        {
+            $body.="<h1>REDS </h1>al {$date}
+                    <table style='width: 100%;'>
+                        <tr>
+                            <td ".$this->styleNumberRow.">N°</td>
+                            <td ".$this->styleCarrierHead."> Carrier </td>
+                            <td ".$this->styleSegurRetaHead."> Segurity Retainer </td>
+                            <td ".$this->styleDocNumberHead."> Doc Number  </td>
+                            <td ".$this->styleIssueDateHead."> Issue Date</td>
+                            <td ".$this->styleAmountHead."> Amount </td>
+                            <td ".$this->styleNumberRow.">N°</td>
+                        </tr>";
+            foreach ($model as $key => $value) 
+            {  
+                $pos=$key+1;
+                $this->totalAmount+=$value->amount;
+                $body.="<tr>
+                            <td ".$this->styleNumberRow.">{$pos}</td>
+                            <td ".$this->styleBasic."> ".$value->carrier." </td>
+                            <td ".$this->styleBasic."> ".$value->segurity_retainer." </td>
+                            <td ".$this->styleBasic."> ".$value->doc_number."  </td>
+                            <td ".$this->styleBasic."> ".$value->issue_date." </td>
+                            <td ".$this->styleBasic."> ".Yii::app()->format->format_decimal($value->amount).$value->currency." </td>
+                            <td ".$this->styleNumberRow.">{$pos}</td>
+                        </tr>";
+            }
             $body.="<tr>
-                        <td ".$this->styleNumberRow.">{$pos}</td>
-                        <td ".$this->styleBasic."> ".$value->carrier." </td>
-                        <td ".$this->styleBasic."> ".$value->segurity_retainer." </td>
-                        <td ".$this->styleBasic."> ".$value->doc_number."  </td>
-                        <td ".$this->styleBasic."> ".$value->issue_date." </td>
-                        <td ".$this->styleBasic."> ".Yii::app()->format->format_decimal($value->amount).$value->currency." </td>
-                        <td ".$this->styleNumberRow.">{$pos}</td>
+                        <td ".$this->styleNull." colspan='5'></td>
+                        <td ".$this->styleAmountHead."> ".Yii::app()->format->format_decimal($this->totalAmount)." </td>
+                        <td ".$this->styleNull."></td>
                     </tr>";
+            $body.="</table>";
+        }else{
+            $body="<h1>No hay depositos de seguridad</h1>";
         }
-        $body.="<tr>
-                    <td ".$this->styleNull." colspan='5'></td>
-                    <td ".$this->styleAmountHead."> ".Yii::app()->format->format_decimal($this->totalAmount)." </td>
-                    <td ".$this->styleNull."></td>
-                </tr>";
-        $body.="</table>";
         return $body;
     }
     private function getData($date)
