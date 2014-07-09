@@ -214,7 +214,7 @@ class summary extends Reportes
             
             $body.="<tr {$styleTr} >
                       <td {$styleNumberRow} > {$pos} </td>
-                      <td {$styleBasic} > ".$document->name." </td>
+                      <td {$styleBasic} > ".$document->name.Reportes::showSegurityRetainer($document)." </td>
                       <td {$styleRowActiv} > ".Reportes::defineActive($document->active)." </td>
                           
                       <td {$styleCollPaymPrev} > ".Yii::app()->format->format_decimal(Reportes::definePaymCollect($document->previous_pago_cobro, $document->type_c_p_previous, "value"))." </td>
@@ -512,7 +512,10 @@ class summary extends Reportes
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL)) dn,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10,12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pp,
                            (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pn) AS balance,
-                /*-----------------------------------------------------------------------------------------------------------*/   
+                /*-----------------------------------------------------------------------------------------------------------*/  
+                   /*segurity retainer*/
+                     (SELECT COUNT(id) FROM accounting_document WHERE id_type_accounting_document IN(16,17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}')AS segurity_retainer,
+                /*-----------------------------------------------------------------------------------------------------------*/  
                    /*SOA provisionado*/
                      (SELECT (i.amount + p.amount + pp.amount - n.amount - pn.amount) AS amount
                       FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
@@ -551,13 +554,14 @@ class summary extends Reportes
     public static function defineReport($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms)
     {
         ini_set('memory_limit', '256M');
+        $legendSegurityRetainer="<br>Nota: Los carriers con <font style='color:red;'> * </font> son aquellos que tienen deposito de seguridad.";
         $body="<h1>SUMMARY  ".Reportes::defineNameExtra($paymentTerms,$typePaymentTerm,NULL)."</h1>  AL {$date} <br>";
         $body.="<h3>Operadores Monetizables</h3>";
         $body.=self::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms, TRUE);
         
         $body.="<br><h3>Operadores No Monetizables</h3>";
         $body.=self::report($date,$interCompany,$noActivity,$typePaymentTerm,$paymentTerms, FALSE);
-        return $body;
+        return $body.$legendSegurityRetainer;
     }
 }
 ?>

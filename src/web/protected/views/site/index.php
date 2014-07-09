@@ -45,6 +45,10 @@ $this->pageTitle = Yii::app()->name;
             <h1 class='h1_report h1DIFFERENCE'>DIFFERENCE</h1>
         </div>
         <br>
+        <div class='Reportes DESEG' id='dsReport'>
+            <h1 class='h1_report h1DSREPORT'>REDS</h1>
+        </div>
+        <br>
         <?php 
 //            echo SiteController::accessControl(Yii::app()->user->id,
 //            "<br>

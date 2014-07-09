@@ -219,6 +219,11 @@ class SiteController extends Controller
                     $correos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['Si_matches']),$this->trueFalse('null'),'todos');
                     $correos['difference']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['difference']['asunto'].".xls";
                     break;
+               case 'dsReport':
+                    $correos['dsReport']['asunto']="SINE - REDS".self::reportTitle($date);
+                    $correos['dsReport']['cuerpo']=Yii::app()->reportes->segurityRetainer($date);
+                    $correos['dsReport']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['dsReport']['asunto'].".xls";
+                    break;
                case 'recopa':
                     $correos['recopa']['asunto']="SINE - RECOPA".self::reportTitle($date);
                     $correos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_POST['id_filter_oper'],$_POST['No_venc'],$this->trueFalse($_POST['order_recopa']));
@@ -289,6 +294,10 @@ class SiteController extends Controller
                     $archivos['difference']['nombre']="SINE - DIFFERENCE ".Reportes::defineNameExtra('todos',$this->trueFalse('null'),NULL)." ".self::reportTitle($date)."-".date("g:i a");
                     $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse('null'),'todos');
                     break;
+                case 'dsReport':
+                    $archivos['dsReport']['nombre']="SINE - REDS ".self::reportTitle($date)."-".date("g:i a");
+                    $archivos['dsReport']['cuerpo']=Yii::app()->reportes->segurityRetainer($date);
+                    break;
                 case 'recopa':
                     $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($date)."-".date("g:i a");
                     $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
@@ -344,6 +353,9 @@ class SiteController extends Controller
                     break;
                 case 'difference':
                     $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse("null"),'todos');
+                    break;
+                case 'dsReport':
+                    $archivos['dsReport']['cuerpo']=Yii::app()->reportes->segurityRetainer($date);
                     break;
                 case 'recopa':
                     $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));
