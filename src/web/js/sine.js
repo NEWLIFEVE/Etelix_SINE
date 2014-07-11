@@ -69,7 +69,7 @@ $SINE.UI = (function()
      */
     function _clickElement()
     {
-        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#Si_matches,#No_matches,#No_segRet,#Si_segRet,#previa,#mail,#excel,#views_not').on('click', function()
+        $('#showProvisions,#genProvision,#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference,#dsReport,#No_prov,#Si_prov,#No_div,#Si_div,#No_disp,#Si_disp,#No_venc,#Si_venc,#No_inter,#Si_inter,#No_act,#Si_act,#No_car_act,#Si_car_act,#No_sum,#Si_sum,#Si_matches,#No_matches,#No_segRet,#Si_segRet,#previa,#mail,#excel,#views_not').on('click', function()
         {
             switch ($(this).attr("id")) {
                 case "soa":
@@ -83,6 +83,7 @@ $SINE.UI = (function()
                 case"redis":
                 case"summary":
                 case"difference":
+                case"dsReport":
                     $SINE.UI.resolve_reports_menu($(this));
                     $SINE.UI.elijeOpciones($(this));
                     break;
@@ -186,13 +187,13 @@ $SINE.UI = (function()
      */
     function resolve_reports_menu(selec)
     {
-        var params = $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference');
+        var params = $('#soa,#balance,#summary,#reteco,#refac,#waiver,#recredi,#recopa,#refi_prov,#redis,#difference,#dsReport');
         params.children().removeClass('h1_reportClick').addClass('h1_report');
         params.css('background', 'white').css('border-bottom', '1px solid silver').css('width', '92%');
         params.removeAttr('style');
 
         selec.children().removeClass('h1_report').addClass('h1_reportClick');
-        selec.css('background', '#2E62B4').css('border-bottom', '1px solid white').css('width', '96%').css('height', '77px');
+        selec.css('background', '#2E62B4').css('border-bottom', '1px solid white').css('width', '96%').css('height', '74px');
     }
     /**
      * administra radios
@@ -310,6 +311,10 @@ $SINE.UI = (function()
                 $(".termino_pago,.termino_pago_refac_reprov").addClass("termino_pago_sum_re");
                 $(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
                 $SINE.AJAX.send("GET", "/site/BillingTime", null, null);
+                break;
+            case "dsReport":
+                var mostrar = ['.fecha'];
+                $SINE.UI.showHideElement(ocultar, mostrar);
                 break;
             case "recopa":
                 var mostrar = ['.fecha,.filter_oper,.vencidas,.order_recopa'];
@@ -471,6 +476,9 @@ $SINE.UI = (function()
             case 'difference':
 //                var respuesta = $SINE.UI.validaCampos($('#tipo_report,#id_termino_pago').serializeArray());
 //                var respuesta = $SINE.UI.validaCampos($('').serializeArray());
+                var respuesta=1;
+                break
+            case 'dsReport':
                 var respuesta=1;
                 break
             case 'recopa':

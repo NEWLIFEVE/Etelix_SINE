@@ -146,6 +146,11 @@ class Reportes extends CApplicationComponent
         $var = new billingReport();
         return $var->defineReport($date,$interCompany,$noActivity,$siMatches,$typePaymentTerm,$paymentTerms);
     }
+    public function segurityRetainer($date)
+    {
+        $var = new segurityRetainer();
+        return $var->report($date);
+    }
 
     public function recopa($fecha,$filter_oper,$expired,$order)
     {
@@ -866,6 +871,13 @@ class Reportes extends CApplicationComponent
                 return $valid;
                 break;
         }
+    }
+    public static function showSegurityRetainer($model)
+    {
+        if($model->segurity_retainer>=1)
+            return "<font style='color:red;'> * </font>";
+        else
+            return "";
     }
 
     /**
