@@ -2,6 +2,9 @@
 ============
 
 ##Sistema de Reportes para Billing
+- Nuevas validaciones para las disputas en los reportes donde se muestra.
+- Cambio y diferenciacion de disputas vencidas a ajustes, el color de los ajustes es azul basico.
+- quitado filtro de depositos de seguridad en soa y balance, para garantizar el cumpliemiento de la regla basica para los mismos.
 - Nuevo reporte REDS, el cual muestra listado de depositos de seguridad para los grupos.
 - Agregado monto de depositos de seguridad en soa y balance, en este sentido se agrego tambien un filtro para condicionar la muestra de este monto 
   en el transcurso del reporte, asi mismo queda seteado a mostrar el total abajo y si se selecciona no mostrar los montos en el transcurso, 

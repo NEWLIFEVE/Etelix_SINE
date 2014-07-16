@@ -117,7 +117,7 @@ class billingReport extends Reportes
 
                 $body.="<tr {$this->styleBasic} >";
                     $body.="<td {$this->styleNumberRow} >{$pos}</td>";
-                    $body.="<td {$this->styleBasic} >".$document->name.Reportes::showSegurityRetainer($document)."</td>";
+                    $body.="<td {$this->styleBasic} >".$document->name.Reportes::showSecurityRetainer($document)."</td>";
                     $body.=$tpName;
                     $body.="<td {$this->styleBasic} colspan='3'>".Utility::formatSetLessZero(Yii::app()->format->format_decimal($document->balance))."</td>";
                     $body.="<td {$this->styleBasic} colspan='2'>".Utility::formatSetLessZero(Yii::app()->format->format_decimal($document->balance_billing))."</td>";
@@ -145,7 +145,7 @@ class billingReport extends Reportes
                 if($balanceSine!=$balanceSineNoPink && $balanceSineNoPink!=0)
                     $body.="<tr>
                                 <td {$this->styleNull} ></td>
-                                <td {$this->styleCarrierHead} colspan='2' > TOTAL COMPARABLE</td>
+                                <td {$this->styleCarrierHead} colspan='{$colspan}' > TOTAL COMPARABLE</td>
                                 <td {$this->styleBasic} colspan='3'>".Yii::app()->format->format_decimal($balanceSineNoPink)."</td>
                                 <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($balanceBilling)."</td>
                                 <td {$this->styleBasic} colspan='2'>".Yii::app()->format->format_decimal($differenceNoPink)."</td>
@@ -412,22 +412,26 @@ class billingReport extends Reportes
                          FROM (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document=9 and id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id)) i,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(1,3,7,15) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) p,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(2,4,8,14) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' ) n,
-                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(6) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL) AND confirm!='-1') dp,
-                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL) AND confirm!='-1') dn,
+                                  /* disputas que no tengan notas de credito y que sean procedentes*/
+                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(6) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL) AND confirm!='-1' AND id_accounting_document NOT IN (SELECT id FROM accounting_document WHERE id_type_accounting_document IN (2) AND issue_date>'{$date}' )) dn,
+                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document NOT IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL) AND confirm!='-1' ) dp,
+                                  /**/
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10,12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pp,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(10) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document IN( SELECT id FROM accounting_document WHERE id_type_accounting_document IN(12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>='{$date}' AND from_date<='{$date}'  )) pte, 
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11,13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IS NULL) pn,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(11) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document IN( SELECT id FROM accounting_document WHERE id_type_accounting_document IN(13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>='{$date}' AND from_date<='{$date}'  )) ptr,  
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(12) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IN( SELECT id FROM accounting_document WHERE id_type_accounting_document IN(1) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>='{$date}' AND from_date<='{$date}'  )) pfe,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(13) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IN( SELECT id FROM accounting_document WHERE id_type_accounting_document IN(2) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>='{$date}' AND from_date<='{$date}'  )) pfr,
-                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(6) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL AND issue_date>'{$date}' ))dcnp,
-                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date<='{$date}' AND id_accounting_document IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL AND issue_date>'{$date}' ))dcnn,
+                                  /**/
+                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(6) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (8) AND id_accounting_document IS NOT NULL AND issue_date>'{$date}' )  AND id_accounting_document NOT IN (SELECT id FROM accounting_document WHERE id_type_accounting_document IN (2) AND issue_date>'{$date}' ))dcnn,
+                              (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(5) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND to_date<='{$date}' AND id_accounting_document IN (SELECT id_accounting_document FROM accounting_document WHERE id_type_accounting_document IN (7) AND id_accounting_document IS NOT NULL AND issue_date>'{$date}' )  )dcnp,
+                                  
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(16) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}' )dsp,
                               (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount FROM accounting_document WHERE id_type_accounting_document IN(17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}' )dsn
                     ) AS balance,
                   /*-----------------------------------------------------------------------------------------------------------*/ 
-                     /*segurity retainer*/
-                      (SELECT COUNT(id) FROM accounting_document WHERE id_type_accounting_document IN(16,17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}')AS segurity_retainer,
+                     /*security retainer*/
+                      (SELECT COUNT(id) FROM accounting_document WHERE id_type_accounting_document IN(16,17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}')AS security_retainer,
                   /*-----------------------------------------------------------------------------------------------------------*/    
                       (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
                        FROM accounting_document 
@@ -498,7 +502,7 @@ class billingReport extends Reportes
         ini_set('max_execution_time', 2000);
         ini_set('memory_limit', '512M');
         $var="";
-        $legendSegurityRetainer="<br>Nota: Los carriers con <font style='color:red;'> * </font> son aquellos que tienen deposito de seguridad.";
+        $legendSecurityRetainer="<br>Nota: Los carriers con <font style='color:red;'> * </font> son aquellos que tienen deposito de seguridad.";
         $backLegend="<table style='width: 100%;border:1px solid white;'>
                       <tr> 
                          <td colspan='8' style='width: 72%;'>";
@@ -550,7 +554,7 @@ class billingReport extends Reportes
                        $var.= $this->report($date,$interCompany,$noActivity,$siMatches,TRUE,$paymentTerm->id, $fromDateLastPeriod);
                    }
                 }
-                $var.= $this->countCategory().$this->totalForPaymentTermn.="</table>".$this->totalsGeneral().$this->getCarriersBillingNotSine().$legendSegurityRetainer;
+                $var.= $this->countCategory().$this->totalForPaymentTermn.="</table>".$this->totalsGeneral().$this->getCarriersBillingNotSine().$legendSecurityRetainer;
             }
         }
         return $var;

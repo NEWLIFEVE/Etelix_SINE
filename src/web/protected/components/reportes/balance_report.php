@@ -8,7 +8,7 @@
         public static function reporte($grupo, $fecha, $no_disp,$segRetainer) 
         {
             $acumulado = $acumuladoPago = $acumuladoCobro = $acumuladoFacEnv = 
-            $acumuladoFacRec =$acumSegurityRetainerPayment=$acumSegurityRetainerCollection=$validSegurityRetainer= 0;
+            $acumuladoFacRec =$acumSecurityRetainerPayment=$acumSecurityRetainerCollection=$validSecurityRetainer= 0;
             $accounting_document = balance_report::get_Model($grupo, $fecha,$no_disp,"1"); //trae el sql pricipal
             $acc_doc_detal=balance_report::get_Model($grupo, $fecha ,$no_disp,"2");//trae el sql para consultas de elementos o atributos puntuales
             
@@ -32,10 +32,10 @@
                               </tr>";
                 foreach ($accounting_document as $key => $document) 
                     {
-                            $acumSegurityRetainerPayment=Reportes::totalSegurityRtetainerPago($document,$acumSegurityRetainerPayment);
-                            $acumSegurityRetainerCollection=Reportes::totalSegurityRtetainerCobro($document,$acumSegurityRetainerCollection);
-                            $validSegurityRetainer=Reportes::validSegurityRetainer($document,$validSegurityRetainer);
-                        if(Reportes::defineSegurityRetainer($document, $segRetainer)==TRUE)
+                            $acumSecurityRetainerPayment=Reportes::totalSecurityRtetainerPago($document,$acumSecurityRetainerPayment);
+                            $acumSecurityRetainerCollection=Reportes::totalSecurityRtetainerCobro($document,$acumSecurityRetainerCollection);
+                            $validSecurityRetainer=Reportes::validSecurityRetainer($document,$validSecurityRetainer);
+                        if(Reportes::defineSecurityRetainer($document, $segRetainer)==TRUE)
                         {
                             $due_date=Reportes::DueDate($document,CarrierGroups::getID($grupo));
                             $acumulado=Reportes::define_balance_amount($document,$acumulado);
@@ -44,8 +44,8 @@
                             $acumuladoFacEnv =Reportes::define_total_fac_env($document,$acumuladoFacEnv);
                             $acumuladoFacRec =Reportes::define_total_fac_rec($document,$acumuladoFacRec);
 
-                            $tabla.="<tr " . Reportes::define_estilos($document) . ">";
-                            $tabla.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                            $tabla.="<tr " . Reportes::define_estilos($document,$fecha) . ">";
+                            $tabla.="<td style='text-align: left;'>" . Reportes::define_description($document,$fecha)."</td>";
                             $tabla.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
                             $tabla.="<td style='text-align: center;'>" . Reportes::define_to_date($document,$due_date) . "</td>";
                             $tabla.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
@@ -70,18 +70,18 @@
                              <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($acumulado),3). "</font></h3></td>
                              </tr>
                              </table>";
-                if($acumSegurityRetainerPayment!=0||$acumSegurityRetainerCollection!=0){
+                if($acumSecurityRetainerPayment!=0||$acumSecurityRetainerCollection!=0){
                     $tabla.="<br>
                             <table align='right'>
                              <tr>
                                 <td colspan='3'></td>
-                                <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SEGURITY RETAINER</td>";
-                        if($acumSegurityRetainerPayment!=0)
-                            $tabla.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSegurityRetainerPayment,3). " </td>";
-                        if($acumSegurityRetainerCollection!=0)
-                            $tabla.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>COLLECT: ". Yii::app()->format->format_decimal($acumSegurityRetainerCollection,3). " </td>";
-                        if($segRetainer!=TRUE && $validSegurityRetainer==TRUE){
-                            $total=$acumSegurityRetainerPayment + $acumulado - $acumSegurityRetainerCollection;
+                                <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SECURITY RETAINER</td>";
+                        if($acumSecurityRetainerPayment!=0)
+                            $tabla.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSecurityRetainerPayment,3). " </td>";
+                        if($acumSecurityRetainerCollection!=0)
+                            $tabla.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>COLLECT: ". Yii::app()->format->format_decimal($acumSecurityRetainerCollection,3). " </td>";
+                        if($segRetainer!=TRUE && $validSecurityRetainer==TRUE){
+                            $total=$acumSecurityRetainerPayment + $acumulado - $acumSecurityRetainerCollection;
                             $tabla.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'> " .Reportes::define_a_favor($acc_doc_detal,$total). "</font></h3></td><td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>". Yii::app()->format->format_decimal( Reportes::define_a_favor_monto($total) ,3). " </font></h3></td>";
                         }
                     $tabla.="</tr>

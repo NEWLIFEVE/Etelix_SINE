@@ -8,7 +8,7 @@
         public static function reporte($group, $date, $dispute,$provision, $segRetainer) 
         {
             $accumulated=$accumulatedPayment=$accumulatedCollection=$accumulatedInvoiceSend=$accumulatedInvoiceRec = 0;
-            $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext =$acumSegurityRetainerPayment=$acumSegurityRetainerCollection=$validSegurityRetainer= 0;
+            $accumulatedPaymentNext=$accumulatedCollectionNext=$accumulatedInvoiceSendNext=$accumulatedInvoiceRecNext =$acumSecurityRetainerPayment=$acumSecurityRetainerCollection=$validSecurityRetainer= 0;
             $last_due_date_next=$last_due_date_due="";
             
             $accounting_document = SOA::get_Model($group, $date, $dispute,$provision,"1"); //trae el sql pricipal
@@ -33,10 +33,10 @@
                     {
                         if(Reportes::dueOrNext($document)<=$date)
                         {  
-                            $acumSegurityRetainerPayment=Reportes::totalSegurityRtetainerPago($document,$acumSegurityRetainerPayment);
-                            $acumSegurityRetainerCollection=Reportes::totalSegurityRtetainerCobro($document,$acumSegurityRetainerCollection);
-                            $validSegurityRetainer=Reportes::validSegurityRetainer($document,$validSegurityRetainer);
-                            if(Reportes::defineSegurityRetainer($document, $segRetainer)==TRUE)
+                            $acumSecurityRetainerPayment=Reportes::totalSecurityRtetainerPago($document,$acumSecurityRetainerPayment);
+                            $acumSecurityRetainerCollection=Reportes::totalSecurityRtetainerCobro($document,$acumSecurityRetainerCollection);
+                            $validSecurityRetainer=Reportes::validSecurityRetainer($document,$validSecurityRetainer);
+                            if(Reportes::defineSecurityRetainer($document, $segRetainer)==TRUE)
                             { 
                                 $accumulated=Reportes::define_balance_amount($document,$accumulated);
                                 $accumulatedPayment=Reportes::define_total_pago($document,$accumulatedPayment);
@@ -44,8 +44,8 @@
                                 $accumulatedInvoiceSend =Reportes::define_total_fac_env($document,$accumulatedInvoiceSend);
                                 $accumulatedInvoiceRec =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRec);
 
-                                $body.="<tr " . Reportes::define_estilos($document) . ">";
-                                $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                                $body.="<tr " . Reportes::define_estilos($document,$date) . ">";
+                                $body.="<td style='text-align: left;'>" . Reportes::define_description($document,$date)."</td>";
                                 $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
                                 $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,null) . "</td>";//NULL es provisional//
                                 $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
@@ -91,10 +91,10 @@
                 {
                     if(Reportes::dueOrNext($document)>$date)
                     { 
-                        $acumSegurityRetainerPayment=Reportes::totalSegurityRtetainerPago($document,$acumSegurityRetainerPayment);
-                        $acumSegurityRetainerCollection=Reportes::totalSegurityRtetainerCobro($document,$acumSegurityRetainerCollection);
-                        $validSegurityRetainer=Reportes::validSegurityRetainer($document,$validSegurityRetainer);
-                        if(Reportes::defineSegurityRetainer($document, $segRetainer)==TRUE)
+                        $acumSecurityRetainerPayment=Reportes::totalSecurityRtetainerPago($document,$acumSecurityRetainerPayment);
+                        $acumSecurityRetainerCollection=Reportes::totalSecurityRtetainerCobro($document,$acumSecurityRetainerCollection);
+                        $validSecurityRetainer=Reportes::validSecurityRetainer($document,$validSecurityRetainer);
+                        if(Reportes::defineSecurityRetainer($document, $segRetainer)==TRUE)
                         {
                             $accumulated=Reportes::define_balance_amount($document,$accumulated);
                             $accumulatedPaymentNext=Reportes::define_total_pago($document,$accumulatedPaymentNext);
@@ -102,8 +102,8 @@
                             $accumulatedInvoiceSendNext =Reportes::define_total_fac_env($document,$accumulatedInvoiceSendNext);
                             $accumulatedInvoiceRecNext =Reportes::define_total_fac_rec($document,$accumulatedInvoiceRecNext);
 
-                            $body.="<tr " . Reportes::define_estilos($document) . ">";
-                            $body.="<td style='text-align: left;'>" . Reportes::define_description($document)."</td>";
+                            $body.="<tr " . Reportes::define_estilos($document,$date) . ">";
+                            $body.="<td style='text-align: left;'>" . Reportes::define_description($document,$date)."</td>";
                             $body.="<td style='text-align: center;'>" . Utility::formatDateSINE( $document->issue_date,"d-M-y") . "</td>";
                             $body.="<td style='text-align: center;'>" . Reportes::define_to_date($document,NULL) . "</td>";//NULL es provisional//
                             $body.="<td style='text-align: right;'>" . Reportes::define_pagos($document) . "</td>";
@@ -139,18 +139,18 @@
                             <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
                         </table>";
-                if($acumSegurityRetainerPayment!=0||$acumSegurityRetainerCollection!=0){
+                if($acumSecurityRetainerPayment!=0||$acumSecurityRetainerCollection!=0){
                     $body.="<br>
                             <table align='right'>
                              <tr>
                                 <td colspan='3'></td>
                                 <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SEGURITY RETAINER</td>";
-                        if($acumSegurityRetainerPayment!=0)
-                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSegurityRetainerPayment,3). " </td>";
-                        if($acumSegurityRetainerCollection!=0)
-                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>COLLECT: ". Yii::app()->format->format_decimal($acumSegurityRetainerCollection,3). " </td>";
-                        if($segRetainer!=TRUE && $validSegurityRetainer==TRUE)
-                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'> TOTAL SOA:". Yii::app()->format->format_decimal( $acumSegurityRetainerPayment + $accumulated - $acumSegurityRetainerCollection ,3). " </td>";
+                        if($acumSecurityRetainerPayment!=0)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSecurityRetainerPayment,3). " </td>";
+                        if($acumSecurityRetainerCollection!=0)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>COLLECT: ". Yii::app()->format->format_decimal($acumSecurityRetainerCollection,3). " </td>";
+                        if($segRetainer!=TRUE && $validSecurityRetainer==TRUE)
+                            $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'> TOTAL SOA:". Yii::app()->format->format_decimal( $acumSecurityRetainerPayment + $accumulated - $acumSecurityRetainerCollection ,3). " </td>";
                     $body.="</tr>
                           </table>";
                 }

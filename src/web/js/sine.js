@@ -252,7 +252,7 @@ $SINE.UI = (function()
                 nombre = obj[0].id;
         switch (nombre) {
             case "soa":
-                var mostrar = ['.fecha,.grupo,.provisiones,.disputas,.segRetainer'];
+                var mostrar = ['.fecha,.grupo,.provisiones,.disputas'];
                 $SINE.UI.showHideElement(ocultar, mostrar);
                 break;
             case "summary":
@@ -265,7 +265,7 @@ $SINE.UI = (function()
                 $(".termino_pago_sum_re").removeClass("termino_pago termino_pago_refac_reprov");
                 break;
             case "balance":
-                var mostrar = ['.fecha,.grupo,.disputas,.note,.segRetainer'];
+                var mostrar = ['.fecha,.grupo,.disputas,.note'];
                 $SINE.UI.showHideElement(ocultar, mostrar);
                 break;
             case "reteco":

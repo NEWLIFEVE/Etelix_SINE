@@ -4,7 +4,7 @@
  * @package reportes
  * @version 1.0
  */
-class segurityRetainer extends Reportes 
+class securityRetainer extends Reportes 
 {
     private $styleNumberRow ="style='border:1px solid silver;text-align:center;background:#83898F;color:white;'";
     private $styleBasic ="style='border:1px solid silver;text-align:center;'";
@@ -40,7 +40,7 @@ class segurityRetainer extends Reportes
                 $body.="<tr>
                             <td ".$this->styleNumberRow.">{$pos}</td>
                             <td ".$this->styleBasic."> ".$value->carrier." </td>
-                            <td ".$this->styleBasic."> ".$value->segurity_retainer." </td>
+                            <td ".$this->styleBasic."> ".$value->security_retainer." </td>
                             <td ".$this->styleBasic."> ".$value->doc_number."  </td>
                             <td ".$this->styleBasic."> ".$value->issue_date." </td>
                             <td ".$this->styleBasic."> ".Yii::app()->format->format_decimal($value->amount).$value->currency." </td>
@@ -60,7 +60,7 @@ class segurityRetainer extends Reportes
     }
     private function getData($date)
     {
-        $sql="SELECT c.name AS carrier, tac.name AS segurity_retainer, ac.doc_number AS doc_number, ac.issue_date AS issue_date, ac.amount AS amount, cu.name AS currency
+        $sql="SELECT c.name AS carrier, tac.name AS security_retainer, ac.doc_number AS doc_number, ac.issue_date AS issue_date, ac.amount AS amount, cu.name AS currency
               FROM carrier c,carrier_groups cg, accounting_document ac, type_accounting_document tac, currency cu
               WHERE c.id in(SELECT id FROM carrier where id_carrier_groups=cg.id)
                 AND c.id=ac.id_carrier
