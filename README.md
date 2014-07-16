@@ -2,6 +2,7 @@
 ============
 
 ##Sistema de Reportes para Billing
+- Cambio de formula para calculo de disputas.
 - Nuevas validaciones para las disputas en los reportes donde se muestra.
 - Cambio y diferenciacion de disputas vencidas a ajustes, el color de los ajustes es azul basico.
 - quitado filtro de depositos de seguridad en soa y balance, para garantizar el cumpliemiento de la regla basica para los mismos.
