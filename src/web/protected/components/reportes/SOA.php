@@ -138,12 +138,12 @@
                             <td colspan='2' style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>" .Reportes::define_a_favor($acc_doc_detal,$accumulated). "</font></h3></td>
                             <td style='background:#3466B4;border:1px solid silver;text-align:center;width:90px;'><h3><font color='white'>"  . Yii::app()->format->format_decimal(Reportes::define_a_favor_monto($accumulated),3). "</font></h3></td>
                          </tr>
-                        </table>";
+                        </table><br>";
                 if($acumSecurityRetainerPayment!=0||$acumSecurityRetainerCollection!=0){
-                    $body.="<br>
-                            <table align='right'>
+                    $body.="
+                            <table style='margin: 2% 0%;' align='right'>
                              <tr>
-                                <td colspan='3'></td>
+                                <td colspan='5'></td>
                                 <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SEGURITY RETAINER</td>";
                         if($acumSecurityRetainerPayment!=0)
                             $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSecurityRetainerPayment,3). " </td>";
