@@ -144,7 +144,7 @@
                             <table style='margin: 2% 0%;' align='right'>
                              <tr>
                                 <td colspan='5'></td>
-                                <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SEGURITY RETAINER</td>";
+                                <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SECURITY RETAINER</td>";
                         if($acumSecurityRetainerPayment!=0)
                             $body.="<td style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>PAYMENT: ". Yii::app()->format->format_decimal($acumSecurityRetainerPayment,3). " </td>";
                         if($acumSecurityRetainerCollection!=0)
