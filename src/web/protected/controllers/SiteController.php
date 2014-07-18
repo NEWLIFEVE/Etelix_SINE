@@ -179,7 +179,7 @@ class SiteController extends Controller
             {
                case 'soa':
                     $correos['soa']['asunto']="SINE - SOA de {$group}".self::reportTitle($date);
-                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
+                    $correos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$this->trueFalse($_POST['Si_segRet']));
                     $correos['soa']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['soa']['asunto'].".xls";
                     break;
                case 'summary':
@@ -190,7 +190,7 @@ class SiteController extends Controller
                     break;
                case 'balance':
                     $correos['balance']['asunto']="SINE - BALANCE de {$group}".self::reportTitle($date);
-                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
+                    $correos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$this->trueFalse($_POST['Si_segRet']));
                     $correos['balance']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['balance']['asunto'].".xls";
                     break;
                case 'reteco':
@@ -218,6 +218,11 @@ class SiteController extends Controller
                     $correos['difference']['asunto']="SINE - DIFFERENCE".self::reportTitle($date);
                     $correos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_POST['Si_inter']),$this->trueFalse($_POST['Si_act']),$this->trueFalse($_POST['Si_matches']),$this->trueFalse('null'),'todos');
                     $correos['difference']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['difference']['asunto'].".xls";
+                    break;
+               case 'dsReport':
+                    $correos['dsReport']['asunto']="SINE - REDS".self::reportTitle($date);
+                    $correos['dsReport']['cuerpo']=Yii::app()->reportes->securityRetainer($date);
+                    $correos['dsReport']['ruta']=Yii::getPathOfAlias('webroot.adjuntos').DIRECTORY_SEPARATOR.$correos['dsReport']['asunto'].".xls";
                     break;
                case 'recopa':
                     $correos['recopa']['asunto']="SINE - RECOPA".self::reportTitle($date);
@@ -257,7 +262,8 @@ class SiteController extends Controller
             {
                 case 'soa':
                     $archivos['soa']['nombre']="SINE - SOA de {$group}".self::reportTitle($date)."-".date("g:i a");
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$_GET['grupo']);
+//                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$_GET['grupo']);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$this->trueFalse($_GET['Si_segRet']));
                     break;
                 case 'summary':
                     $archivos['summary']['nombre']="SINE - SUMMARY ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
@@ -265,7 +271,8 @@ class SiteController extends Controller
                     break;
                 case 'balance':
                     $archivos['balance']['nombre']="SINE - BALANCE de {$group}".self::reportTitle($date)."-".date("g:i a");
-                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$_GET['grupo']);
+//                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$_GET['grupo']);
+                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$this->trueFalse($_GET['Si_segRet']));
                     break;
                 case 'reteco':
                     $archivos['reteco']['nombre']="SINE - RETECO ".Reportes::defineNameExtra($_GET['id_termino_pago'],$this->trueFalse($_GET['type_termino_pago']),NULL)." ".self::reportTitle($date)."-".date("g:i a");
@@ -286,6 +293,10 @@ class SiteController extends Controller
                 case 'difference':
                     $archivos['difference']['nombre']="SINE - DIFFERENCE ".Reportes::defineNameExtra('todos',$this->trueFalse('null'),NULL)." ".self::reportTitle($date)."-".date("g:i a");
                     $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse('null'),'todos');
+                    break;
+                case 'dsReport':
+                    $archivos['dsReport']['nombre']="SINE - REDS ".self::reportTitle($date)."-".date("g:i a");
+                    $archivos['dsReport']['cuerpo']=Yii::app()->reportes->securityRetainer($date);
                     break;
                 case 'recopa':
                     $archivos['recopa']['nombre']="SINE - RECOPA ".self::reportTitle($date)."-".date("g:i a");
@@ -320,13 +331,13 @@ class SiteController extends Controller
             switch($_GET['tipo_report'])
             {
                 case 'soa':
-                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision);
+                    $archivos['soa']['cuerpo']=Yii::app()->reportes->SOA($group,$date,$dispute,$provision,$this->trueFalse($_GET['Si_segRet']));
                     break;
                 case 'summary':
                     $archivos['summary']['cuerpo']=Yii::app()->reportes->summary($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
                     break;
                 case 'balance':
-                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute);
+                    $archivos['balance']['cuerpo']=Yii::app()->reportes->balance_report($group,$date,$dispute,$this->trueFalse($_GET['Si_segRet']));
                     break;
                 case 'reteco':
                     $archivos['reteco']['cuerpo']=Yii::app()->reportes->reteco($this->trueFalse($_GET['Si_car_act']),$this->trueFalse($_GET['type_termino_pago']),$_GET['id_termino_pago']);
@@ -342,6 +353,9 @@ class SiteController extends Controller
                     break;
                 case 'difference':
                     $archivos['difference']['cuerpo']=Yii::app()->reportes->billingReport($date,$this->trueFalse($_GET['Si_inter']),$this->trueFalse($_GET['Si_act']),$this->trueFalse($_GET['Si_matches']),$this->trueFalse("null"),'todos');
+                    break;
+                case 'dsReport':
+                    $archivos['dsReport']['cuerpo']=Yii::app()->reportes->securityRetainer($date);
                     break;
                 case 'recopa':
                     $archivos['recopa']['cuerpo']=Yii::app()->reportes->recopa($date,$_GET['id_filter_oper'],$_GET['No_venc'],$this->trueFalse($_GET['order_recopa']));

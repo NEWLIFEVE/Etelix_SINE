@@ -3,6 +3,20 @@
 
 ##Sistema de Reportes para Billing
 
+##Release 1.2.17
+- Cambio de formula para calculo de disputas.
+- Nuevas validaciones para las disputas en los reportes donde se muestra.
+- Cambio y diferenciacion de disputas vencidas a ajustes, el color de los ajustes es azul basico.
+- quitado filtro de depositos de seguridad en soa y balance, para garantizar el cumpliemiento de la regla basica para los mismos.
+- Nuevo reporte REDS, el cual muestra listado de depositos de seguridad para los grupos.
+- Agregado monto de depositos de seguridad en soa y balance, en este sentido se agrego tambien un filtro para condicionar la muestra de este monto 
+  en el transcurso del reporte, asi mismo queda seteado a mostrar el total abajo y si se selecciona no mostrar los montos en el transcurso, 
+  abajo se muestra el total y el total del saldo incluyendo el deposito de seguridad.
+- Agregado monto de depositos de seguridad en recredi, difference, ahora este monto afecta el saldo del balance y ademas se agrego * en color rojo al lado del nombre del 
+  grupo para indicar que este tiene depositos de seguridad.
+- La regla basica de los depositos de seguridad es que si es despues del mes de septiembre de 2013 se tomaran en cuenta y afectaran el total del balance o saldo final, de lo contrario(en el caso de soa y balance) solo 
+  se mostrara de forma tenue y no influira en el monto final. Por otra parte, para los depositos de seguridad cobro se resalta en color verde y para pagos en naranja.
+
 ##Release 1.2.16
 - Nueva validacion para recredi, balance y difference (filtrado de disputas con issue_date mas antiguos de lo que especifica los dias para solventar disputas en el contrato).
 - Para difference y recredi se agrego validacion para que traiga disputas que con issue date menor a la fecha de consulta pero que tengan notas de credito con issue date mayor a la fecha en cuestion.

@@ -45,6 +45,10 @@ $this->pageTitle = Yii::app()->name;
             <h1 class='h1_report h1DIFFERENCE'>DIFFERENCE</h1>
         </div>
         <br>
+        <div class='Reportes DESEG' id='dsReport'>
+            <h1 class='h1_report h1DSREPORT'>REDS</h1>
+        </div>
+        <br>
         <?php 
 //            echo SiteController::accessControl(Yii::app()->user->id,
 //            "<br>
@@ -159,6 +163,13 @@ $this->pageTitle = Yii::app()->name;
                 <div class="btn-group" data-toggle="buttons-radio">
                     <input name="Si_disp" id="Si_disp" type="text" placeholder="Si" value=""class="btn btn-primary">
                     <input name="No_disp" id="No_disp" placeholder="No" type="text" value=""class="btn btn-primary">
+                </div>
+            </div>
+            <div class='formInputs segRetainer'>
+                <h3>DS en curso de reporte</h3>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <input name="Si_segRet" id="Si_segRet" type="text" placeholder="Si" value=""class="btn btn-primary">
+                    <input name="No_segRet" id="No_segRet" placeholder="No" type="text" value=""class="btn btn-primary">
                 </div>
             </div>
             <div class='formInputs vencidas'>
