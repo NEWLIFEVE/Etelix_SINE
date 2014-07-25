@@ -1429,14 +1429,21 @@ class Reportes extends CApplicationComponent
         /**
          * SE ENCARGA DE DEFINIR ESTILOS PARA RETECO
          * @param type $var
+         * @param type $valtp
          * @return string
          */
-        public static function defineStyleNeed($var)
+        public static function defineStyleNeed($var, $valtp)
         {
-            if($var==NULL)
+            if($var==NULL){
                 return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
-            else 
-                return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
+            }else {
+                if($valtp==NULL){
+                    return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
+                }else{
+                    if($var=="Sin estatus" && $var==$valtp)
+                      return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";  
+                }
+            }
         }
         /**
          * fin RETECO
