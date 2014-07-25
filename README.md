@@ -2,6 +2,8 @@
 ============
 
 ##Sistema de Reportes para Billing
+- Correccion de error en gestion de disputas y ajustes para summary.
+- Correccion de error en definicion de ajustes para balance y soa.
 - Cambio de formula para calculo de disputas.
 - Nuevas validaciones para las disputas en los reportes donde se muestra.
 - Cambio y diferenciacion de disputas vencidas a ajustes, el color de los ajustes es azul basico.
