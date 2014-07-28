@@ -255,7 +255,7 @@
 		id_type_accounting_document, s.name AS currency, c.name AS carrier
                 FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
                 WHERE a.id_carrier IN(Select id from carrier where $group)
-                  AND tad.name IN('Factura Enviada') 
+                  AND tad.name IN('Factura Enviada','VAT Enviado') 
                   AND a.id_type_accounting_document=tad.id
                   AND a.id_carrier=c.id
                   AND a.id_currency=s.id
@@ -329,7 +329,7 @@
                             s.name AS currency, c.name AS carrier
             FROM accounting_document a, type_accounting_document tad, currency s, carrier c, carrier_groups g
             WHERE a.id_carrier IN(Select id from carrier where $group)
-                AND tad.name IN('Factura Recibida') 
+                AND tad.name IN('Factura Recibida','VAT Recibido') 
                 AND a.id_type_accounting_document=tad.id
                 AND a.id_carrier=c.id
                 AND a.id_currency=s.id

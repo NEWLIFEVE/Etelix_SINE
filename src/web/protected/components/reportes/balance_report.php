@@ -72,7 +72,7 @@
                              </table>";
                 if($acumSecurityRetainerPayment!=0||$acumSecurityRetainerCollection!=0){
                     $tabla.="<br>
-                            <table style='margin: 6% -36.5%;' align='right'>
+                            <table style='margin: 9% -47.5%;' align='right'>
                              <tr>
                                 <td colspan='5'></td>
                                 <td colspan='2'style='background:#3466B4;border:1px solid silver;text-align:center;'><h3><font color='white'>SECURITY RETAINER</td>";
