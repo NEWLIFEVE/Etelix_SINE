@@ -399,6 +399,12 @@ class Reportes extends CApplicationComponent
             case "16":case "17":
                 $description="SECURITY RETAINER - ".Utility::formatDateSINE($model->issue_date,"M-Y");
                 break;
+            case "18":
+                $description ="VAT Etelix to ".$model->carrier." - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
+                break;
+            case "19":
+                $description ="VAT ".$model->carrier." to Etelix - ". $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date,self::defineFormatPeriod($model)).")";
+                break;
             default:
                 $description = $model->doc_number." (".Utility::formatDateSINE($model->from_date,"M-").Utility::formatDateSINE($model->from_date,"d-").Utility::formatDateSINE($model->to_date," d").")";
         }
@@ -415,7 +421,7 @@ class Reportes extends CApplicationComponent
     {
         $sql=" SELECT sd.days AS days FROM solved_days_dispute_history sd, contrato con WHERE con.id_carrier=(select id from carrier where name='{$model->carrier}') AND sd.id_contrato=con.id AND con.end_date IS NULL AND sd.end_date IS NULL";
         $daysSolvedDispute=Carrier::model()->findBysql($sql);
-        if($model->to_date < DateManagement::calculateDate("-".$daysSolvedDispute->days,$date)){
+        if($model->issue_date < DateManagement::calculateDate("-".$daysSolvedDispute->days,$date)){
             if($type==TRUE)
                 return "AJUSTE ";
             else
@@ -455,17 +461,17 @@ class Reportes extends CApplicationComponent
         //provisional...//
        
         if($balanceDueDate==NULL){
-        switch ($model->id_type_accounting_document){
-            case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":
-                $to_date="";
-                break;
-            default:
-                $to_date = Utility::formatDateSINE($model->due_date,"d-M-y");
-        }
-        return $to_date;
+            switch ($model->id_type_accounting_document){
+                case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":case "18":case "19":
+                    $to_date="";
+                    break;
+                default:
+                    $to_date = Utility::formatDateSINE($model->due_date,"d-M-y");
+            }
+            return $to_date;
         }else{
             switch ($model->id_type_accounting_document){
-                case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":
+                case "3": case "4":case "9":case "10":case"11":case"12":case"13":case"14":case"15":case"16":case "17":case "18":case "19":
                     $to_date="";
                     break;
                 default:
@@ -517,6 +523,9 @@ class Reportes extends CApplicationComponent
                 }else{
                     $estilos=" style='background:white;color:silver;border:1px solid silver;'";
                 }
+                break;
+            case "18":case "19":
+                $estilos=" style='background:white;color:#06ACFA ;border:1px solid silver;'";
                 break;
             default:
                 $estilos = " style='background:white;color:#5F6063;border:1px solid silver;'";
@@ -608,7 +617,7 @@ class Reportes extends CApplicationComponent
      */  
     public static function define_fact_env($model)
     {
-        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12)
+        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12||$model->id_type_accounting_document==18)
         {
             return Yii::app()->format->format_decimal($model->amount,3);
         }
@@ -657,7 +666,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_fact_rec($model)
     {
-        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13)
+        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13||$model->id_type_accounting_document==19)
         {
             return Yii::app()->format->format_decimal($model->amount,3);
         }
@@ -792,10 +801,10 @@ class Reportes extends CApplicationComponent
             case "9":
                 return $acumulado + $model->amount;
                 break;
-            case "1":case "3":case "5":case "7":case"10":case "12":case "15":
+            case "1":case "3":case "5":case "7":case"10":case "12":case "15":case "18":
                 return $acumulado + $model->amount;
                 break;
-            case "2":case "4":case "6":case "8":case "11":case "13":case "14":
+            case "2":case "4":case "6":case "8":case "11":case "13":case "14":case "19":
                 return $acumulado - $model->amount;
                 break;
             case "16":
@@ -926,7 +935,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_rec($model,$acumuladoFacRec)
     {
-        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13)
+        if($model->id_type_accounting_document==2||$model->id_type_accounting_document==11||$model->id_type_accounting_document==13||$model->id_type_accounting_document==19)
         {
             return $acumuladoFacRec + $model->amount;
         }
@@ -952,7 +961,7 @@ class Reportes extends CApplicationComponent
      */
     public static function define_total_fac_env($model,$acumuladoFacEnv)
     {
-        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12)
+        if($model->id_type_accounting_document==1||$model->id_type_accounting_document==10||$model->id_type_accounting_document==12||$model->id_type_accounting_document==18)
         {
             return $acumuladoFacEnv + $model->amount;
         }
@@ -1429,14 +1438,21 @@ class Reportes extends CApplicationComponent
         /**
          * SE ENCARGA DE DEFINIR ESTILOS PARA RETECO
          * @param type $var
+         * @param type $valtp
          * @return string
          */
-        public static function defineStyleNeed($var)
+        public static function defineStyleNeed($var, $valtp)
         {
-            if($var==NULL)
+            if($var==NULL){
                 return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";
-            else 
-                return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
+            }else {
+                if($valtp==NULL){
+                    return "style='background:white;color:#6F7074;border:1px solid silver;text-align:left;'";
+                }else{
+                    if($var=="Sin estatus" && $var==$valtp)
+                      return "style='background:#E99241;color:white;border:1px solid silver;text-align:left;'";  
+                }
+            }
         }
         /**
          * fin RETECO

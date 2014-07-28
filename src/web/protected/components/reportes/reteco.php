@@ -52,14 +52,14 @@ class reteco extends Reportes
             $body.="<tr>
                         <td {$styleRowsNumb} > {$pos} </td>
                         <td {$styleRowBasic} > ".$document->carrier." </td>
-                        <td ".Reportes::defineStyleNeed($document->group)."> ".$document->group." </td>
+                        <td ".Reportes::defineStyleNeed($document->group,NULL)."> ".$document->group." </td>
                         <td {$styleRowActiv}> ".Reportes::defineActive($document->active)." </td>
-                        <td ".Reportes::defineStyleNeed($document->sign_date)."> ".Utility::formatDateSINE($document->sign_date,"Y-m-d")." </td>
-                        <td ".Reportes::defineStyleNeed($document->production_date)."> ".Utility::formatDateSINE($document->production_date,"Y-m-d")." </td>
-                        <td ".Reportes::defineStyleNeed($document->sign_date_tp)."> ".Utility::formatDateSINE($document->sign_date_tp,"Y-m-d")." </td>
-                        <td ".Reportes::defineStyleNeed($document->payment_term)."> ".$document->payment_term." </td>
-                        <td ".Reportes::defineStyleNeed($document->sign_date_tps)."> ".Utility::formatDateSINE($document->sign_date_tps,"Y-m-d")." </td>
-                        <td ".Reportes::defineStyleNeed($document->payment_term_s)."> ".$document->payment_term_s." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date,NULL)."> ".Utility::formatDateSINE($document->sign_date,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->production_date,NULL)."> ".Utility::formatDateSINE($document->production_date,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date_tp,NULL)."> ".Utility::formatDateSINE($document->sign_date_tp,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->payment_term,$document->payment_term_s)."> ".$document->payment_term." </td>
+                        <td ".Reportes::defineStyleNeed($document->sign_date_tps,NULL)."> ".Utility::formatDateSINE($document->sign_date_tps,"Y-m-d")." </td>
+                        <td ".Reportes::defineStyleNeed($document->payment_term_s,$document->payment_term)."> ".$document->payment_term_s." </td>
                         <td {$styleRowsNumb} > {$pos} </td>
                     </tr>";
         }

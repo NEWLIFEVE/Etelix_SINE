@@ -3,6 +3,10 @@
 
 ##Sistema de Reportes para Billing
 
+##Release 1.2.18
+- Correccion de error en gestion de disputas y ajustes para summary.
+- Correccion de error en definicion de ajustes para balance y soa.
+
 ##Release 1.2.17
 - Cambio de formula para calculo de disputas.
 - Nuevas validaciones para las disputas en los reportes donde se muestra.
