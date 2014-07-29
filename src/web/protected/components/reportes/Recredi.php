@@ -511,8 +511,8 @@ class Recredi extends Reportes
                     {$wherePaymentTerm}
                     {$interCompany}  
               ORDER BY cg.name ASC)activity {$noActivity}";
- var_dump($sql);
-        //return AccountingDocument::model()->findAllBySql($sql);
+
+        return AccountingDocument::model()->findAllBySql($sql);
     }
     
     /**

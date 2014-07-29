@@ -431,7 +431,7 @@ class billingReport extends Reportes
                     ) AS balance,
                   /*-----------------------------------------------------------------------------------------------------------*/ 
                      /*security retainer*/
-                      (SELECT COUNT(id) FROM accounting_document WHERE id_type_accounting_document IN(16,17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) AND issue_date>'2013-09-30' AND issue_date<='{$date}')AS security_retainer,
+                      (SELECT COUNT(id) FROM accounting_document WHERE id_type_accounting_document IN(16,17) AND id_carrier IN(SELECT id FROM carrier WHERE id_carrier_groups=cg.id) /*AND issue_date>'2013-09-30'*/ AND issue_date<='{$date}')AS security_retainer,
                   /*-----------------------------------------------------------------------------------------------------------*/    
                       (SELECT CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END AS amount 
                        FROM accounting_document 
